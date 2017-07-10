@@ -1,6 +1,7 @@
 package com.benk97.screens;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
@@ -10,13 +11,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.benk97.components.DynamicSpriteComponent;
-import com.benk97.components.PositionComponent;
-import com.benk97.components.StaticSpriteComponent;
-import com.benk97.components.VelocityComponent;
+import com.benk97.components.*;
 import com.benk97.inputs.TouchInputHandler;
 import com.benk97.systems.InputHandlerSystem;
 import com.benk97.systems.MovementSystem;
+import com.benk97.systems.RemovableSystem;
 import com.benk97.systems.RenderingSystem;
 
 import static com.benk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
@@ -34,6 +33,17 @@ public class LevelScreen implements Screen {
         viewport = new StretchViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
         camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
         engine = new PooledEngine();
+        engine.addEntityListener(new EntityListener() {
+            @Override
+            public void entityAdded(Entity entity) {
+                Gdx.app.log("entity added", "size: " + engine.getEntities().size());
+            }
+
+            @Override
+            public void entityRemoved(Entity entity) {
+                Gdx.app.log("entity removed", "size " + engine.getEntities().size());
+            }
+        });
         Entity player = createEntityPlayer();
         createEntitiesInputController(player);
         createSystems(player);
@@ -44,6 +54,9 @@ public class LevelScreen implements Screen {
         engine.addSystem(renderingSystem);
         MovementSystem movementSystem = new MovementSystem(Family.all(PositionComponent.class, VelocityComponent.class).get());
         engine.addSystem(movementSystem);
+        RemovableSystem removableSystem = new RemovableSystem(engine,
+                Family.all(RemovableComponent.class, PositionComponent.class, DynamicSpriteComponent.class).get());
+        engine.addSystem(removableSystem);
     }
 
 
@@ -71,9 +84,11 @@ public class LevelScreen implements Screen {
         squareTouchesDirection[5] = createEntityInputController(player, texture, 0f, 135f, x, y - 2 * height);
         squareTouchesDirection[6] = createEntityInputController(player, texture, 0.2f, 180f, x + width, y - 2 * height);
         squareTouchesDirection[7] = createEntityInputController(player, texture, 0f, -135f, x + 2 * width, y - 2 * height);
+
+        Rectangle fireButton = createEntityInputController(player, new Texture(Gdx.files.internal("gfx/fire_button.png")), 0.2f, 0f, 275f, y - 2 * height);
         // input
-        InputHandlerSystem inputHandlerSystem = new InputHandlerSystem(player);
-        TouchInputHandler touchInputHandler = new TouchInputHandler(inputHandlerSystem, camera, squareTouchesDirection);
+        InputHandlerSystem inputHandlerSystem = new InputHandlerSystem(player, engine);
+        TouchInputHandler touchInputHandler = new TouchInputHandler(inputHandlerSystem, camera, squareTouchesDirection, fireButton);
         Gdx.input.setInputProcessor(touchInputHandler);
         engine.addSystem(inputHandlerSystem);
         inputHandlerSystem.addedToEngine(engine);
@@ -85,7 +100,7 @@ public class LevelScreen implements Screen {
         player.add(engine.createComponent(VelocityComponent.class));
         DynamicSpriteComponent component = engine.createComponent(DynamicSpriteComponent.class);
         component.stayInBoundaries = true;
-        component.setTexture(new Texture(Gdx.files.internal("gfx/player.png")), 1.0f, 4, new int[]{0, 1}, new int[]{2, 3});
+        component.setTexture(new Texture(Gdx.files.internal("gfx/player.png")), 4, new int[]{0, 1}, new int[]{2, 3});
         player.add(component);
         engine.addEntity(player);
         return player;

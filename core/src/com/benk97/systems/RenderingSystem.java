@@ -65,6 +65,9 @@ public class RenderingSystem extends EntitySystem {
             PositionComponent position = pm.get(entity);
             DynamicSpriteComponent display = dm.get(entity);
             Sprite sprite = display.getSprite(deltaTime);
+            if(sprite==null){
+                Gdx.app.log("toto", sprite.toString());
+            }
             sprite.setPosition(position.x, position.y);
             sprite.draw(batcher);
         }

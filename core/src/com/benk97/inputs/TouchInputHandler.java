@@ -9,12 +9,14 @@ import com.badlogic.gdx.math.Vector3;
 public class TouchInputHandler implements InputProcessor {
     private InputHandler listener;
     private Rectangle[] squareTouches;
+    private Rectangle fireButton;
     private Camera camera;
 
-    public TouchInputHandler(InputHandler inputHandler, Camera camera, Rectangle[] squareTouches) {
+    public TouchInputHandler(InputHandler inputHandler, Camera camera, Rectangle[] squareTouches, Rectangle fireButton) {
         this.listener = inputHandler;
         this.camera = camera;
         this.squareTouches = squareTouches;
+        this.fireButton = fireButton;
     }
 
     @Override
@@ -51,13 +53,21 @@ public class TouchInputHandler implements InputProcessor {
             listener.goDown();
         } else if (squareTouches[7].contains(worldTouch.x, worldTouch.y)) {
             listener.goRightBottom();
+        } else if (fireButton.contains(worldTouch.x, worldTouch.y)) {
+            listener.fire();
         }
         return true;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        listener.stop();
+        Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
+        if (squareTouches[0].contains(worldTouch.x, worldTouch.y) || squareTouches[1].contains(worldTouch.x, worldTouch.y) ||
+                squareTouches[2].contains(worldTouch.x, worldTouch.y) || squareTouches[3].contains(worldTouch.x, worldTouch.y) ||
+                squareTouches[4].contains(worldTouch.x, worldTouch.y) || squareTouches[5].contains(worldTouch.x, worldTouch.y) ||
+                squareTouches[6].contains(worldTouch.x, worldTouch.y) || squareTouches[7].contains(worldTouch.x, worldTouch.y)) {
+            listener.stop();
+        }
         return true;
     }
 
