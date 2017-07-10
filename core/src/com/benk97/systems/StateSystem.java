@@ -9,8 +9,8 @@ import static com.benk97.components.Mappers.state;
 
 public class StateSystem extends IteratingSystem {
 
-    public StateSystem() {
-        super(Family.all(StateComponent.class).get(), 0);
+    public StateSystem(int priority) {
+        super(Family.all(StateComponent.class).get(), priority);
     }
 
     @Override

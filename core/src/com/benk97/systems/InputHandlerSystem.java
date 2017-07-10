@@ -2,11 +2,11 @@ package com.benk97.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.math.Vector2;
+import com.benk97.assets.Assets;
 import com.benk97.components.Mappers;
+import com.benk97.entities.EntityFactory;
 import com.benk97.inputs.InputHandler;
-import com.benk97.screens.LevelScreen;
 
 import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.SOUND_FIRE;
@@ -14,21 +14,21 @@ import static com.benk97.components.Mappers.velocity;
 
 public class InputHandlerSystem extends EntitySystem implements InputHandler {
     private Entity player;
-    private PooledEngine engine;
-    private LevelScreen screen;
+    private EntityFactory entityFactory;
+    private Assets assets;
 
 
-    public InputHandlerSystem(Entity entity, PooledEngine engine, LevelScreen screen) {
-        super(0);
+    public InputHandlerSystem(Entity entity, EntityFactory entityFactory, Assets assets, int priority) {
+        super(priority);
         this.player = entity;
-        this.engine = engine;
-        this.screen = screen;
+        this.assets = assets;
+        this.entityFactory = entityFactory;
     }
 
     @Override
     public void fire() {
-        screen.assets.playSound(SOUND_FIRE);
-        screen.playerFires(player);
+        assets.playSound(SOUND_FIRE);
+        entityFactory.createPlayerFire(player);
     }
 
     @Override
@@ -47,14 +47,14 @@ public class InputHandlerSystem extends EntitySystem implements InputHandler {
     public void goTop() {
         velocity.get(player).x = 0;
         velocity.get(player).y = PLAYER_VELOCITY;
-        Mappers.state.get(player).set(GO_AHEAD);
+        Mappers.state.get(player).set(ANIMATION_MAIN);
     }
 
     @Override
     public void goDown() {
         velocity.get(player).x = 0;
         velocity.get(player).y = -PLAYER_VELOCITY;
-        Mappers.state.get(player).set(GO_AHEAD);
+        Mappers.state.get(player).set(ANIMATION_MAIN);
     }
 
     @Override
@@ -97,6 +97,6 @@ public class InputHandlerSystem extends EntitySystem implements InputHandler {
     public void stop() {
         velocity.get(player).x = 0;
         velocity.get(player).y = 0;
-        Mappers.state.get(player).set(GO_AHEAD);
+        Mappers.state.get(player).set(ANIMATION_MAIN);
     }
 }

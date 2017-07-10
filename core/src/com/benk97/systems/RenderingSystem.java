@@ -17,7 +17,6 @@ import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.components.Mappers.background;
 
 public class RenderingSystem extends EntitySystem {
-    private Entity player;
     private ImmutableArray<Entity> entities;
     private ImmutableArray<Entity> staticEntities;
     private ImmutableArray<Entity> backgroundEntities;
@@ -26,9 +25,8 @@ public class RenderingSystem extends EntitySystem {
     private OrthographicCamera camera;
     private BitmapFont bitmapFont;
 
-    public RenderingSystem(OrthographicCamera camera, Entity player) {
-        super(2);
-        this.player = player;
+    public RenderingSystem(OrthographicCamera camera, int priority) {
+        super(priority);
         this.batcher = new SpriteBatch();
         this.camera = camera;
         if (DEBUG) {

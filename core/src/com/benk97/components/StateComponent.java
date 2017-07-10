@@ -3,10 +3,10 @@ package com.benk97.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Pool;
 
-import static com.benk97.SpaceKillerGameConstants.GO_AHEAD;
+import static com.benk97.SpaceKillerGameConstants.ANIMATION_MAIN;
 
 public class StateComponent implements Component, Pool.Poolable {
-    private int state = GO_AHEAD;
+    private int state = ANIMATION_MAIN;
     public float time = 0.0f;
 
     public int get() {

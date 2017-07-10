@@ -17,9 +17,10 @@ public class SpaceKillerGameConstants {
 
     // animated sprites
     public static final float FRAME_DURATION = 0.05f;
+    public static final float FRAME_DURATION_EXPLOSION = 0.02f;
     public static final int GO_LEFT = 1;
     public static final int GO_RIGHT = 2;
-    public static final int GO_AHEAD = 0;
+    public static final int ANIMATION_MAIN = 0;
 
     // virtual pad
     public static final float PAD_X = 10f;
