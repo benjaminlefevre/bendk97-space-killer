@@ -37,6 +37,25 @@ public class TouchInputHandler implements InputProcessor {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
+        touchDragged(screenX, screenY, pointer);
+        if (fireButton.contains(worldTouch.x, worldTouch.y)) {
+            listener.fire();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
+        if (!fireButton.contains(worldTouch.x, worldTouch.y)) {
+            listener.stop();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
         if (squareTouches[0].contains(worldTouch.x, worldTouch.y)) {
             listener.goLeftTop();
         } else if (squareTouches[1].contains(worldTouch.x, worldTouch.y)) {
@@ -53,27 +72,8 @@ public class TouchInputHandler implements InputProcessor {
             listener.goDown();
         } else if (squareTouches[7].contains(worldTouch.x, worldTouch.y)) {
             listener.goRightBottom();
-        } else if (fireButton.contains(worldTouch.x, worldTouch.y)) {
-            listener.fire();
         }
         return true;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
-        if (squareTouches[0].contains(worldTouch.x, worldTouch.y) || squareTouches[1].contains(worldTouch.x, worldTouch.y) ||
-                squareTouches[2].contains(worldTouch.x, worldTouch.y) || squareTouches[3].contains(worldTouch.x, worldTouch.y) ||
-                squareTouches[4].contains(worldTouch.x, worldTouch.y) || squareTouches[5].contains(worldTouch.x, worldTouch.y) ||
-                squareTouches[6].contains(worldTouch.x, worldTouch.y) || squareTouches[7].contains(worldTouch.x, worldTouch.y)) {
-            listener.stop();
-        }
-        return true;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
     }
 
     @Override

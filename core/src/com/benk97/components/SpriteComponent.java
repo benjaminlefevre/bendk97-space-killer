@@ -1,11 +1,17 @@
 package com.benk97.components;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.utils.Pool;
 
-public interface SpriteComponent {
-    Sprite getSprite(float delta);
+public class SpriteComponent implements Component, Pool.Poolable {
 
-    float getWidth();
+    public Sprite sprite;
+    public boolean stayInBoundaries = false;
 
-    float getHeight();
+    @Override
+    public void reset() {
+        sprite = null;
+    }
+
 }

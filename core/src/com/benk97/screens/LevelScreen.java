@@ -2,33 +2,39 @@ package com.benk97.screens;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
-import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.benk97.assets.Assets;
 import com.benk97.components.*;
 import com.benk97.inputs.TouchInputHandler;
-import com.benk97.systems.InputHandlerSystem;
-import com.benk97.systems.MovementSystem;
-import com.benk97.systems.RemovableSystem;
-import com.benk97.systems.RenderingSystem;
+import com.benk97.systems.*;
 
-import static com.benk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
-import static com.benk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import java.util.Arrays;
 
-public class LevelScreen implements Screen {
+import static com.benk97.SpaceKillerGameConstants.*;
+import static com.benk97.assets.Assets.*;
+import static com.benk97.components.Mappers.position;
+import static com.benk97.components.Mappers.sprite;
+
+public class LevelScreen extends ScreenAdapter {
 
     protected Viewport viewport;
     protected OrthographicCamera camera;
     protected PooledEngine engine;
+    public Assets assets;
 
 
-    public LevelScreen() {
+    public LevelScreen(Assets assets) {
+        this.assets = assets;
         this.camera = new OrthographicCamera();
         viewport = new StretchViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
         camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -50,44 +56,47 @@ public class LevelScreen implements Screen {
     }
 
     private void createSystems(Entity player) {
-        RenderingSystem renderingSystem = new RenderingSystem(camera, player);
-        engine.addSystem(renderingSystem);
-        MovementSystem movementSystem = new MovementSystem(Family.all(PositionComponent.class, VelocityComponent.class).get());
-        engine.addSystem(movementSystem);
-        RemovableSystem removableSystem = new RemovableSystem(engine,
-                Family.all(RemovableComponent.class, PositionComponent.class, DynamicSpriteComponent.class).get());
-        engine.addSystem(removableSystem);
+        engine.addSystem(new RenderingSystem(camera, player));
+        engine.addSystem(new MovementSystem());
+        engine.addSystem(new RemovableSystem(engine));
+        engine.addSystem(new AnimationSystem());
+        engine.addSystem(new StateSystem());
     }
 
 
-    private Rectangle createEntityInputController(Entity player, Texture texture, float alpha, float rotation, float posX, float posY) {
-        Entity arrow = engine.createEntity();
+    private Rectangle createEntityInputController(Texture texture, float alpha, float rotation, float posX, float posY) {
+        Entity entity = engine.createEntity();
         StaticSpriteComponent component = engine.createComponent(StaticSpriteComponent.class);
         component.setTexture(texture, alpha, rotation);
         component.setPosition(posX, posY);
-        arrow.add(component);
-        engine.addEntity(arrow);
+        entity.add(component);
+        engine.addEntity(entity);
         return component.getBounds();
+
     }
 
     private void createEntitiesInputController(Entity player) {
+        Entity pad = engine.createEntity();
+        StaticSpriteComponent component = engine.createComponent(StaticSpriteComponent.class);
+        Texture texture = assets.get(GFX_PAD_ARROW);
+        component.setTexture(texture, 0.2f, 0f);
+        component.setPosition(PAD_X, PAD_Y);
+        pad.add(component);
+        engine.addEntity(pad);
+        float heightTouch = texture.getHeight() / 3f, widthTouch = texture.getWidth() / 3f;
         Rectangle[] squareTouchesDirection = new Rectangle[8];
-        float x = 10f, y = 120f, rotation = 45f, width, height;
-        Texture texture = new Texture(Gdx.files.internal("gfx/arrow.png"));
-        squareTouchesDirection[0] = createEntityInputController(player, texture, 0f, 45f, x, y);
-        width = squareTouchesDirection[0].getWidth();
-        height = squareTouchesDirection[0].getHeight();
-        squareTouchesDirection[1] = createEntityInputController(player, texture, 0.2f, 0f, x + width, y);
-        squareTouchesDirection[2] = createEntityInputController(player, texture, 0f, -45f, x + 2 * width, y);
-        squareTouchesDirection[3] = createEntityInputController(player, texture, 0.2f, 90f, x, y - height);
-        squareTouchesDirection[4] = createEntityInputController(player, texture, 0.2f, -90f, x + 2 * width, y - height);
-        squareTouchesDirection[5] = createEntityInputController(player, texture, 0f, 135f, x, y - 2 * height);
-        squareTouchesDirection[6] = createEntityInputController(player, texture, 0.2f, 180f, x + width, y - 2 * height);
-        squareTouchesDirection[7] = createEntityInputController(player, texture, 0f, -135f, x + 2 * width, y - 2 * height);
+        squareTouchesDirection[0] = new Rectangle(PAD_X, PAD_Y + 2 * heightTouch, widthTouch, heightTouch);
+        squareTouchesDirection[1] = new Rectangle(PAD_X + widthTouch, PAD_Y + 2 * heightTouch, widthTouch, heightTouch);
+        squareTouchesDirection[2] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y + 2 * heightTouch, widthTouch, heightTouch);
+        squareTouchesDirection[3] = new Rectangle(PAD_X, PAD_Y + heightTouch, widthTouch, heightTouch);
+        squareTouchesDirection[4] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y + heightTouch, widthTouch, heightTouch);
+        squareTouchesDirection[5] = new Rectangle(PAD_X, PAD_Y, widthTouch, heightTouch);
+        squareTouchesDirection[6] = new Rectangle(PAD_X + widthTouch, PAD_Y, widthTouch, heightTouch);
+        squareTouchesDirection[7] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y, widthTouch, heightTouch);
 
-        Rectangle fireButton = createEntityInputController(player, new Texture(Gdx.files.internal("gfx/fire_button.png")), 0.2f, 0f, 275f, y - 2 * height);
+        Rectangle fireButton = createEntityInputController(assets.get(GFX_PAD_BUTTON_FIRE), 0.2f, 0f, FIRE_X, FIRE_Y);
         // input
-        InputHandlerSystem inputHandlerSystem = new InputHandlerSystem(player, engine);
+        InputHandlerSystem inputHandlerSystem = new InputHandlerSystem(player, engine, this);
         TouchInputHandler touchInputHandler = new TouchInputHandler(inputHandlerSystem, camera, squareTouchesDirection, fireButton);
         Gdx.input.setInputProcessor(touchInputHandler);
         engine.addSystem(inputHandlerSystem);
@@ -98,47 +107,55 @@ public class LevelScreen implements Screen {
         Entity player = engine.createEntity();
         player.add(engine.createComponent(PositionComponent.class));
         player.add(engine.createComponent(VelocityComponent.class));
-        DynamicSpriteComponent component = engine.createComponent(DynamicSpriteComponent.class);
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
+        Texture texture = assets.get(GFX_SHIP_PLAYER);
+        TextureRegion[] regions = TextureRegion.split(texture,
+                texture.getWidth() / 4, texture.getHeight())[0];
+        Sprite[] sprites = new Sprite[6];
+        for (int i = 0; i < regions.length; ++i) {
+            sprites[i] = new Sprite(regions[i]);
+        }
+        sprites[4] = new Sprite(regions[2]);
+        sprites[5] = new Sprite(regions[3]);
+        sprites[4].flip(true, false);
+        sprites[5].flip(true, false);
+        animationComponent.animations.put(GO_AHEAD, new Animation<Sprite>(FRAME_DURATION, Arrays.copyOfRange(sprites, 0, 2)));
+        animationComponent.animations.put(GO_LEFT, new Animation<Sprite>(FRAME_DURATION, Arrays.copyOfRange(sprites, 2, 4)));
+        animationComponent.animations.put(GO_RIGHT, new Animation<Sprite>(FRAME_DURATION, Arrays.copyOfRange(sprites, 4, 6)));
+        player.add(animationComponent);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.stayInBoundaries = true;
-        component.setTexture(new Texture(Gdx.files.internal("gfx/player.png")), 4, new int[]{0, 1}, new int[]{2, 3});
         player.add(component);
+        player.add(engine.createComponent(StateComponent.class));
         engine.addEntity(player);
         return player;
     }
 
 
     @Override
-    public void show() {
-
-    }
-
-    @Override
     public void render(float delta) {
         engine.update(delta);
     }
 
-    @Override
-    public void resize(int width, int height) {
-
+    public void playerFires(Entity player) {
+        Entity bullet = engine.createEntity();
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
+        bullet.add(positionComponent);
+        VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
+        bullet.add(velocityComponent);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        bullet.add(spriteComponent);
+        bullet.add(engine.createComponent(RemovableComponent.class));
+        engine.addEntity(bullet);
+        PositionComponent playerPosition = position.get(player);
+        positionComponent.x = playerPosition.x;
+        positionComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
+        velocityComponent.y = PLAYER_BULLET_VELOCITY;
+        spriteComponent.sprite = new Sprite(assets.get(GFX_BULLET));
     }
 
     @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-
+    public void resize (int width, int height) {
+        viewport.update(width, height, true);
     }
 }
