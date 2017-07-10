@@ -1,13 +1,10 @@
 package com.benk97.components;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Pool;
 
-public class StaticSpriteComponent implements Component, Pool.Poolable, SpriteComponent {
-    private Sprite sprite;
+public class StaticSpriteComponent extends SpriteComponent  {
     public float alpha;
 
     public void setTexture(Texture texture, float alpha, float rotation) {
@@ -19,19 +16,8 @@ public class StaticSpriteComponent implements Component, Pool.Poolable, SpriteCo
 
     @Override
     public void reset() {
-    }
-
-    @Override
-    public Sprite getSprite(float delta) {
-        return sprite;
-    }
-
-    public float getWidth() {
-        return sprite.getWidth();
-    }
-
-    public float getHeight() {
-        return sprite.getHeight();
+        super.reset();
+        alpha = 0.0f;
     }
 
     public void setPosition(float x, float y) {

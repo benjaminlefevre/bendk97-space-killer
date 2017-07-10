@@ -1,6 +1,9 @@
 package com.benk97.systems;
 
-import com.badlogic.ashley.core.*;
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,12 +11,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.benk97.components.BackgroundComponent;
-import com.benk97.components.DynamicSpriteComponent;
-import com.benk97.components.PositionComponent;
-import com.benk97.components.StaticSpriteComponent;
+import com.benk97.components.*;
 
 import static com.benk97.SpaceKillerGameConstants.*;
+import static com.benk97.components.Mappers.background;
 
 public class RenderingSystem extends EntitySystem {
     private Entity player;
@@ -21,11 +22,6 @@ public class RenderingSystem extends EntitySystem {
     private ImmutableArray<Entity> staticEntities;
     private ImmutableArray<Entity> backgroundEntities;
 
-
-    private ComponentMapper<DynamicSpriteComponent> dm = ComponentMapper.getFor(DynamicSpriteComponent.class);
-    private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-    private ComponentMapper<StaticSpriteComponent> sm = ComponentMapper.getFor(StaticSpriteComponent.class);
-    private ComponentMapper<BackgroundComponent> bm = ComponentMapper.getFor(BackgroundComponent.class);
     private SpriteBatch batcher;
     private OrthographicCamera camera;
     private BitmapFont bitmapFont;
@@ -43,7 +39,7 @@ public class RenderingSystem extends EntitySystem {
 
     @Override
     public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Family.one(DynamicSpriteComponent.class).get());
+        entities = engine.getEntitiesFor(Family.one(SpriteComponent.class).get());
         staticEntities = engine.getEntitiesFor(Family.all(StaticSpriteComponent.class).get());
         backgroundEntities = engine.getEntitiesFor(Family.all(BackgroundComponent.class).get());
     }
@@ -52,36 +48,34 @@ public class RenderingSystem extends EntitySystem {
     @Override
     public void update(float deltaTime) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batcher.setProjectionMatrix(camera.combined);
+
         // background
         batcher.begin();
+        batcher.setProjectionMatrix(camera.combined);
+
         for (Entity entity : backgroundEntities) {
-            BackgroundComponent backgroundComponent = bm.get(entity);
-            PositionComponent positionComponent = pm.get(entity);
+            BackgroundComponent backgroundComponent = background.get(entity);
+            PositionComponent positionComponent = Mappers.position.get(entity);
             batcher.draw(backgroundComponent.texture, 0, 0, (int) positionComponent.x, (int) positionComponent.y, SCREEN_WIDTH, SCREEN_HEIGHT);
         }
         // sprites
         for (Entity entity : entities) {
-            PositionComponent position = pm.get(entity);
-            DynamicSpriteComponent display = dm.get(entity);
-            Sprite sprite = display.getSprite(deltaTime);
-            if(sprite==null){
-                Gdx.app.log("toto", sprite.toString());
-            }
+            PositionComponent position = Mappers.position.get(entity);
+            SpriteComponent spriteComponent = Mappers.sprite.get(entity);
+            Sprite sprite = spriteComponent.sprite;
             sprite.setPosition(position.x, position.y);
             sprite.draw(batcher);
-        }
-
-
-        for (Entity entity : staticEntities) {
-            StaticSpriteComponent staticSpriteComponent = sm.get(entity);
-            staticSpriteComponent.getSprite(deltaTime).draw(batcher, staticSpriteComponent.alpha);
         }
         if (DEBUG) {
             bitmapFont.draw(batcher, Gdx.graphics.getFramesPerSecond() + " fps", 0f, SCREEN_HEIGHT - 10f);
         }
+
+        batcher.setProjectionMatrix(camera.combined);
+        for (Entity entity : staticEntities) {
+            StaticSpriteComponent staticSpriteComponent = Mappers.staticSprite.get(entity);
+            staticSpriteComponent.sprite.draw(batcher, staticSpriteComponent.alpha);
+        }
+
         batcher.end();
-
-
     }
 }
