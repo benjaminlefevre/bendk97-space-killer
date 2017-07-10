@@ -46,6 +46,7 @@ public class LevelScreen extends ScreenAdapter {
         });
         entityFactory = new EntityFactory(engine, assets);
         Entity player = entityFactory.createEntityPlayer();
+        entityFactory.createEntityPlayerLives();
         createSystems(player);
     }
 
@@ -54,8 +55,8 @@ public class LevelScreen extends ScreenAdapter {
         engine.addSystem(new AnimationSystem(0));
         engine.addSystem(new StateSystem(1));
         engine.addSystem(new MovementSystem(2));
-        engine.addSystem(new RenderingSystem(camera, 3));
-        engine.addSystem(new CollisionSystem(assets, entityFactory, 4));
+        engine.addSystem(new RenderingSystem(camera, player, assets, 3));
+        engine.addSystem(new CollisionSystem(player, assets, entityFactory, 4));
         engine.addSystem(new RemovableSystem(5));
     }
 
@@ -86,7 +87,6 @@ public class LevelScreen extends ScreenAdapter {
     public void render(float delta) {
         engine.update(delta);
     }
-
 
 
     @Override

@@ -19,9 +19,11 @@ public class CollisionSystem extends EntitySystem {
 
     private Assets assets;
     private EntityFactory entityFactory;
+    private Entity player;
 
-    public CollisionSystem(Assets assets, EntityFactory entityFactory, int priority){
+    public CollisionSystem(Entity player, Assets assets, EntityFactory entityFactory, int priority){
         super(priority);
+        this.player = player;
         this.assets = assets;
         this.entityFactory = entityFactory;
     }
@@ -43,6 +45,7 @@ public class CollisionSystem extends EntitySystem {
                     assets.playSound(SOUND_EXPLOSION);
                     PositionComponent ennemyPosition = Mappers.position.get(ennemy);
                     entityFactory.createEntityExploding(ennemyPosition.x, ennemyPosition.y);
+                    Mappers.player.get(player).updateScore(Mappers.ennemy.get(ennemy).points);
                     getEngine().removeEntity(ennemy);
                     getEngine().removeEntity(bullet);
                 }

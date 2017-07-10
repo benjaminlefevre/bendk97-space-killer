@@ -60,7 +60,9 @@ public class EntityFactory {
 
     public Entity createEnnemySoucoupe(float posX, float posY) {
         Entity ennemy = engine.createEntity();
-        ennemy.add(engine.createComponent(EnnemyComponent.class));
+        EnnemyComponent ennemyComponent = engine.createComponent(EnnemyComponent.class);
+        ennemyComponent.points = 100;
+        ennemy.add(ennemyComponent);
         PositionComponent position = engine.createComponent(PositionComponent.class);
         ennemy.add(position);
         ennemy.add(engine.createComponent(VelocityComponent.class));
@@ -84,6 +86,7 @@ public class EntityFactory {
 
     public Entity createEntityPlayer() {
         Entity player = engine.createEntity();
+        player.add(engine.createComponent(PlayerComponent.class));
         player.add(engine.createComponent(PositionComponent.class));
         player.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
@@ -113,6 +116,23 @@ public class EntityFactory {
         player.add(engine.createComponent(StateComponent.class));
         engine.addEntity(player);
         return player;
+    }
+
+    public Array<Entity> createEntityPlayerLives() {
+        Array<Entity> entities = new Array<Entity>(3);
+        for (int i = 0; i < 3; ++i) {
+            Entity life = engine.createEntity();
+            Texture texture = assets.get(GFX_SHIP_PLAYER);
+            TextureRegion tr = TextureRegion.split(texture,
+                    texture.getWidth() / 4, texture.getHeight())[0][1];
+            StaticSpriteComponent component = engine.createComponent(StaticSpriteComponent.class);
+            component.setTexture(new Sprite(tr), 1f, 0f, 0.5f);
+            component.setPosition(LIVES_X + 20f * i, LIVES_Y - texture.getHeight());
+            life.add(component);
+            engine.addEntity(life);
+            entities.add(life);
+        }
+        return entities;
     }
 
     public Entity createEntityExploding(float x, float y) {
@@ -145,7 +165,7 @@ public class EntityFactory {
     public Entity createEntityFireButton(float alpha, float posX, float posY) {
         Entity entity = engine.createEntity();
         StaticSpriteComponent component = engine.createComponent(StaticSpriteComponent.class);
-        component.setTexture(assets.get(GFX_PAD_BUTTON_FIRE), alpha, 0);
+        component.setTexture(assets.get(GFX_PAD_BUTTON_FIRE), alpha, 0, 1f);
         component.setPosition(posX, posY);
         entity.add(component);
         engine.addEntity(entity);
@@ -156,7 +176,7 @@ public class EntityFactory {
     public Entity createEntitiesPadController(float alpha, float posX, float posY) {
         Entity pad = engine.createEntity();
         StaticSpriteComponent component = engine.createComponent(StaticSpriteComponent.class);
-        component.setTexture(assets.get(GFX_PAD_ARROW), 0.2f, 0f);
+        component.setTexture(assets.get(GFX_PAD_ARROW), 0.2f, 0f, 1f);
         component.setPosition(posX, posY);
         pad.add(component);
         engine.addEntity(pad);

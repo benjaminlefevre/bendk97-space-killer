@@ -28,5 +28,13 @@ public class SpaceKillerGameConstants {
     public static final float FIRE_X = 275f;
     public static final float FIRE_Y = 90f;
 
+    // SCORE LIVES HIGH
+    public static final float SCORE_X = 20f;
+    public static final float SCORE_Y = SCREEN_HEIGHT - 10f;
+    public static final float LIVES_X = SCREEN_WIDTH / 2f - 50f;
+    public static final float LIVES_Y = SCREEN_HEIGHT - 10f;
+    public static final float HIGH_X = SCREEN_WIDTH - 100f;
+    public static final float HIGH_Y = SCREEN_HEIGHT - 10f;
+
 
 }
