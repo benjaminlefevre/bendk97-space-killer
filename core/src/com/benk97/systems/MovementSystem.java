@@ -15,8 +15,8 @@ import static com.benk97.components.Mappers.sprite;
 public class MovementSystem extends IteratingSystem {
 
 
-    public MovementSystem() {
-        super(Family.all(PositionComponent.class, VelocityComponent.class).get(), 1);
+    public MovementSystem(int priority) {
+        super(Family.all(PositionComponent.class, VelocityComponent.class).get(), priority);
     }
 
     @Override
@@ -30,7 +30,6 @@ public class MovementSystem extends IteratingSystem {
     }
 
     private void playerCannotGetOutBoundaries(Entity entity, PositionComponent position) {
-
         SpriteComponent spriteComponent = sprite.get(entity);
         if (spriteComponent != null && spriteComponent.stayInBoundaries) {
             if (position.x < 0) {

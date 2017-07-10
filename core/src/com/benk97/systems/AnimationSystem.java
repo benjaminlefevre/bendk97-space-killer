@@ -12,9 +12,9 @@ import com.benk97.components.StateComponent;
 
 public class AnimationSystem extends IteratingSystem {
 
-    public AnimationSystem() {
-        super(Family.all(SpriteComponent.class, AnimationComponent.class, StateComponent.class).get(), 0);
-}
+    public AnimationSystem(int priority) {
+        super(Family.all(SpriteComponent.class, AnimationComponent.class, StateComponent.class).get(), priority);
+    }
 
     @Override
     public void processEntity(Entity entity, float deltaTime) {
@@ -25,7 +25,11 @@ public class AnimationSystem extends IteratingSystem {
         Animation<Sprite> animation = anim.animations.get(state.get());
 
         if (animation != null) {
-            sprite.sprite = animation.getKeyFrame(state.time);
+            if (animation.getPlayMode().equals(Animation.PlayMode.NORMAL) && animation.isAnimationFinished(state.time)) {
+                getEngine().removeEntity(entity);
+            } else {
+                sprite.sprite = animation.getKeyFrame(state.time);
+            }
         }
     }
 }

@@ -8,9 +8,11 @@ import com.badlogic.gdx.utils.Pool;
 
 public class AnimationComponent implements Component, Pool.Poolable {
     public IntMap<Animation<Sprite>> animations = new IntMap<Animation<Sprite>>();
+    public Animation.PlayMode playMode = Animation.PlayMode.LOOP;
 
     @Override
     public void reset() {
         animations = new IntMap<Animation<Sprite>>();
+        playMode = Animation.PlayMode.LOOP;
     }
 }
