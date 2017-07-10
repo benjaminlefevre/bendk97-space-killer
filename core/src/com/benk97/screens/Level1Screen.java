@@ -15,7 +15,7 @@ public class Level1Screen extends LevelScreen {
         // create ennemies, test purposes
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
-                entityFactory.createEnnemySoucoupe(x * 40, SCREEN_HEIGHT - 40 * (y + 1));
+                entityFactory.createEnnemySoucoupe(x * 40, SCREEN_HEIGHT  - 40 * (y + 3));
 
             }
         }
