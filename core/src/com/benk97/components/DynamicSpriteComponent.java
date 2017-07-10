@@ -18,18 +18,15 @@ public class DynamicSpriteComponent implements Component, Pool.Poolable, SpriteC
     public boolean stayInBoundaries = false;
 
 
-    public void setTexture(Texture texture, float alpha, int frameNumbers, int[] framesGoAhead, int[] framesGoLeft) {
+    public void setTexture(Texture texture, int frameNumbers, int[] framesGoAhead, int[] framesGoLeft) {
         TextureRegion[] regions = TextureRegion.split(texture, texture.getWidth() / frameNumbers, texture.getHeight())[0];
-        Sprite[] aheadSprites = new Sprite[2], leftSprites = new Sprite[2], rightSprites = new Sprite[2];
-        for (int i = 0; i < frameNumbers / 2; ++i) {
+        Sprite[] aheadSprites = new Sprite[(int) Math.ceil(frameNumbers / 2.0)], leftSprites = new Sprite[2], rightSprites = new Sprite[2];
+        for (int i = 0; i < Math.ceil(frameNumbers / 2.0); ++i) {
             aheadSprites[i] = new Sprite(regions[framesGoAhead[i]]);
-            aheadSprites[i].setAlpha(alpha);
             if (framesGoLeft != null) {
                 leftSprites[i] = new Sprite(regions[framesGoLeft[i]]);
-                leftSprites[i].setAlpha(alpha);
                 rightSprites[i] = new Sprite(regions[framesGoLeft[i]]);
                 rightSprites[i].flip(true, false);
-                rightSprites[i].setAlpha(alpha);
             }
         }
         this.ahead = new Animation<Sprite>(0.05f, aheadSprites);

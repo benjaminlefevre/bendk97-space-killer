@@ -18,4 +18,6 @@ public interface InputHandler {
     void goRightBottom();
 
     void stop();
+
+    void fire();
 }

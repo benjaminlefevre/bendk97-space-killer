@@ -6,6 +6,7 @@ public class SpaceKillerGameConstants {
     public final static boolean DEBUG = true;
 
     public final static float PLAYER_VELOCITY = 200.0f;
+    public final static float PLAYER_BULLET_VELOCITY = 300.0f;
 
     public final static float BGD_PARALLAX_VELOCITY = 25.0f;
     public final static float BGD_VELOCITY = 100.0f;
