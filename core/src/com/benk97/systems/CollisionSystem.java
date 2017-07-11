@@ -1,56 +1,41 @@
 package com.benk97.systems;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Intersector;
-import com.benk97.assets.Assets;
 import com.benk97.components.*;
-import com.benk97.entities.EntityFactory;
-
-import static com.benk97.assets.Assets.SOUND_EXPLOSION;
+import com.benk97.listeners.CollisionListener;
 
 public class CollisionSystem extends EntitySystem {
 
-    private ImmutableArray<Entity> playerBullets;
-    private ImmutableArray<Entity> ennemies;
+    private Family playerBullet = Family.one(PlayerBulletComponent.class).get();
+    private Family ennemies = Family.all(EnnemyComponent.class).get();
+    private Family player = Family.one(PlayerComponent.class).exclude(GameOverComponent.class).get();
 
-    private Assets assets;
-    private EntityFactory entityFactory;
-    private Entity player;
+    private CollisionListener collisionListener;
 
-    public CollisionSystem(Entity player, Assets assets, EntityFactory entityFactory, int priority){
+    public CollisionSystem(CollisionListener collisionListener, int priority) {
         super(priority);
-        this.player = player;
-        this.assets = assets;
-        this.entityFactory = entityFactory;
+        this.collisionListener = collisionListener;
     }
-
-    @Override
-    public void addedToEngine(Engine engine) {
-        playerBullets = engine.getEntitiesFor(Family.one(BulletComponent.class).get());
-        ennemies = engine.getEntitiesFor(Family.all(EnnemyComponent.class).get());
-    }
-
 
     @Override
     public void update(float delta) {
-        for(Entity ennemy : ennemies){
-            for(Entity bullet : playerBullets){
+        addedToEngine(getEngine());
+        for (Entity player : getEngine().getEntitiesFor(player)) {
+            for (Entity ennemy : getEngine().getEntitiesFor(ennemies)) {
                 SpriteComponent ennemySprite = Mappers.sprite.get(ennemy);
-                SpriteComponent bulletSprite = Mappers.sprite.get(bullet);
-                if(Intersector.overlaps(ennemySprite.sprite.getBoundingRectangle(), bulletSprite.sprite.getBoundingRectangle())){
-                    assets.playSound(SOUND_EXPLOSION);
-                    PositionComponent ennemyPosition = Mappers.position.get(ennemy);
-                    entityFactory.createEntityExploding(ennemyPosition.x, ennemyPosition.y);
-                    Mappers.player.get(player).updateScore(Mappers.ennemy.get(ennemy).points);
-                    getEngine().removeEntity(ennemy);
-                    getEngine().removeEntity(bullet);
+                if (Intersector.overlaps(ennemySprite.sprite.getBoundingRectangle(), Mappers.sprite.get(player).sprite.getBoundingRectangle())) {
+                    collisionListener.playerHitByEnnemyBody(player, ennemy);
+                }
+                for (Entity bullet : getEngine().getEntitiesFor(playerBullet)) {
+                    if (Intersector.overlaps(ennemySprite.sprite.getBoundingRectangle(), Mappers.sprite.get(bullet).sprite.getBoundingRectangle())) {
+                        collisionListener.ennemyShoot(ennemy, player, bullet);
+                    }
                 }
             }
         }
-    }
 
+    }
 }

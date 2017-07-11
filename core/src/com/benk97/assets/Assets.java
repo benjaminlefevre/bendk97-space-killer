@@ -49,20 +49,26 @@ public class Assets {
             new AssetDescriptor<Music>("sounds/level1.mid", Music.class);
     // FONTS
     public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER =
-            new AssetDescriptor<BitmapFont>("fonts/arcade.ttf", BitmapFont.class,
-                    getFontParameters());
+            new AssetDescriptor<BitmapFont>("font1.ttf", BitmapFont.class,
+                    getFontParameters("fonts/arcade.ttf", 28));
+    public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER_LARGE =
+            new AssetDescriptor<BitmapFont>("font2.ttf", BitmapFont.class,
+                    getFontParameters("fonts/arcade.ttf",100));
+    public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER_MEDIUM =
+            new AssetDescriptor<BitmapFont>("font3.ttf", BitmapFont.class,
+                    getFontParameters("fonts/regular.ttf", 35));
 
-    public static FreeTypeFontLoaderParameter getFontParameters(){
+    public static FreeTypeFontLoaderParameter getFontParameters(String filename, int size) {
         FreeTypeFontLoaderParameter parameter = new FreeTypeFontLoaderParameter();
-        parameter.fontFileName = "fonts/arcade.ttf";
-        parameter.fontParameters.size = 28;
+        parameter.fontFileName = filename;
+        parameter.fontParameters.size = size;
         return parameter;
     }
 
     public static Map<Class<? extends Screen>, List<AssetDescriptor>> assetsNeededByScreen = new HashMap<Class<? extends Screen>, List<AssetDescriptor>>() {{
         put(Level1Screen.class, Arrays.<AssetDescriptor>asList(
                 SOUND_FIRE, SOUND_EXPLOSION, MUSIC_LEVEL_1,
-                FONT_SPACE_KILLER,
+                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM,
                 GFX_SOUCOUPE, GFX_SHIP_PLAYER, GFX_BGD_LEVEL1, GFX_BGD_STARS, GFX_BULLET, GFX_PAD_ARROW, GFX_PAD_BUTTON_FIRE, GFX_EXPLOSION));
     }};
 
@@ -73,13 +79,14 @@ public class Assets {
         return manager.get(descriptor.fileName);
     }
 
-    public AssetManager getAssetManager(){
-        AssetManager manager = new AssetManager();;
+    public AssetManager getAssetManager() {
+        AssetManager manager = new AssetManager();
         FileHandleResolver resolver = new InternalFileHandleResolver();
         manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
         manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
         return manager;
     }
+
     public void loadResources(Class<? extends Screen> screen) {
         manager = getAssetManager();
         Texture.setAssetManager(manager);
@@ -97,10 +104,14 @@ public class Assets {
     }
 
     public void playSound(AssetDescriptor<Sound> sound) {
-        manager.get(sound).play();
+        playSound(sound, 1.0f);
     }
 
-    public void playMusic(AssetDescriptor<Music> music){
+    public void playSound(AssetDescriptor<Sound> sound, float volume) {
+        manager.get(sound).play(volume);
+    }
+
+    public void playMusic(AssetDescriptor<Music> music) {
         manager.get(music).play();
     }
 

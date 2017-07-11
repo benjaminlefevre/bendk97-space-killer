@@ -4,16 +4,17 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.benk97.listeners.InputListener;
 
 
-public class TouchInputHandler implements InputProcessor {
-    private InputHandler listener;
+public class TouchInputProcessor implements InputProcessor {
+    private InputListener listener;
     private Rectangle[] squareTouches;
     private Rectangle fireButton;
     private Camera camera;
 
-    public TouchInputHandler(InputHandler inputHandler, Camera camera, Rectangle[] squareTouches, Rectangle fireButton) {
-        this.listener = inputHandler;
+    public TouchInputProcessor(InputListener inputListener, Camera camera, Rectangle[] squareTouches, Rectangle fireButton) {
+        this.listener = inputListener;
         this.camera = camera;
         this.squareTouches = squareTouches;
         this.fireButton = fireButton;

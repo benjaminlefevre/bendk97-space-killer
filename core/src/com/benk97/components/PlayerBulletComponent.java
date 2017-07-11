@@ -3,7 +3,7 @@ package com.benk97.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Pool;
 
-public class BulletComponent implements Component, Pool.Poolable{
+public class PlayerBulletComponent implements Component, Pool.Poolable{
     @Override
     public void reset() {
 

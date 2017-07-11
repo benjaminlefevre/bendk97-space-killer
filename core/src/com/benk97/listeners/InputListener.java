@@ -1,6 +1,6 @@
-package com.benk97.inputs;
+package com.benk97.listeners;
 
-public interface InputHandler {
+public interface InputListener {
     void goLeft();
 
     void goRight();

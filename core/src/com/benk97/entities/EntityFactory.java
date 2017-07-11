@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.benk97.Settings;
 import com.benk97.assets.Assets;
 import com.benk97.components.*;
 
@@ -40,7 +41,7 @@ public class EntityFactory {
 
     public Entity createPlayerFire(Entity player) {
         Entity bullet = engine.createEntity();
-        bullet.add(engine.createComponent(BulletComponent.class));
+        bullet.add(engine.createComponent(PlayerBulletComponent.class));
         PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         bullet.add(positionComponent);
         VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
@@ -86,7 +87,9 @@ public class EntityFactory {
 
     public Entity createEntityPlayer() {
         Entity player = engine.createEntity();
-        player.add(engine.createComponent(PlayerComponent.class));
+        PlayerComponent playerComponent = engine.createComponent(PlayerComponent.class);
+        playerComponent.setHighScore(Settings.getHighscore());
+        player.add(playerComponent);
         player.add(engine.createComponent(PositionComponent.class));
         player.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
@@ -115,17 +118,19 @@ public class EntityFactory {
         player.add(component);
         player.add(engine.createComponent(StateComponent.class));
         engine.addEntity(player);
+        Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         return player;
     }
 
-    public Array<Entity> createEntityPlayerLives() {
-        Array<Entity> entities = new Array<Entity>(3);
-        for (int i = 0; i < 3; ++i) {
+    public Array<Entity> createEntityPlayerLives(Entity player) {
+        PlayerComponent playerComponent = Mappers.player.get(player);
+        Array<Entity> entities = new Array<Entity>(playerComponent.lives);
+        for (int i = 0; i < playerComponent.lives - 1; ++i) {
             Entity life = engine.createEntity();
             Texture texture = assets.get(GFX_SHIP_PLAYER);
             TextureRegion tr = TextureRegion.split(texture,
                     texture.getWidth() / 4, texture.getHeight())[0][1];
-            StaticSpriteComponent component = engine.createComponent(StaticSpriteComponent.class);
+            SpriteComponent component = engine.createComponent(SpriteComponent.class);
             component.setTexture(new Sprite(tr), 1f, 0f, 0.5f);
             component.setPosition(LIVES_X + 20f * i, LIVES_Y - texture.getHeight());
             life.add(component);
@@ -164,7 +169,7 @@ public class EntityFactory {
 
     public Entity createEntityFireButton(float alpha, float posX, float posY) {
         Entity entity = engine.createEntity();
-        StaticSpriteComponent component = engine.createComponent(StaticSpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.setTexture(assets.get(GFX_PAD_BUTTON_FIRE), alpha, 0, 1f);
         component.setPosition(posX, posY);
         entity.add(component);
@@ -175,7 +180,7 @@ public class EntityFactory {
 
     public Entity createEntitiesPadController(float alpha, float posX, float posY) {
         Entity pad = engine.createEntity();
-        StaticSpriteComponent component = engine.createComponent(StaticSpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.setTexture(assets.get(GFX_PAD_ARROW), 0.2f, 0f, 1f);
         component.setPosition(posX, posY);
         pad.add(component);

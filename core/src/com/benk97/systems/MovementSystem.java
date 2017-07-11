@@ -3,10 +3,7 @@ package com.benk97.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.benk97.components.Mappers;
-import com.benk97.components.PositionComponent;
-import com.benk97.components.SpriteComponent;
-import com.benk97.components.VelocityComponent;
+import com.benk97.components.*;
 
 import static com.benk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.benk97.SpaceKillerGameConstants.SCREEN_WIDTH;
@@ -16,7 +13,7 @@ public class MovementSystem extends IteratingSystem {
 
 
     public MovementSystem(int priority) {
-        super(Family.all(PositionComponent.class, VelocityComponent.class).get(), priority);
+        super(Family.all(PositionComponent.class, VelocityComponent.class).exclude(GameOverComponent.class).get(), priority);
     }
 
     @Override

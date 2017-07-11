@@ -1,50 +1,90 @@
 package com.benk97;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.Preferences;
 
 public class Settings {
-    public static boolean soundEnabled = true;
-    public static boolean musicEnabled = true;
-    public final static int[] highscores = new int[]{5000, 4000, 3000, 2000, 1000};
-    public final static String file = ".space-killer";
+    private static final String MUSIC_ON = "music-on";
+    private static final String SOUND_ON = "sound-on";
+    private static final String HIGHSCORES = "highscores";
 
-    public static void load() {
-        try {
-            FileHandle filehandle = Gdx.files.external(file);
+    private Preferences preferences;
+    private int[] highscores;
 
-            String[] strings = filehandle.readString().split("\n");
-            soundEnabled = Boolean.parseBoolean(strings[0]);
-            musicEnabled = Boolean.parseBoolean(strings[1]);
-            for (int i = 0; i < 5; i++) {
-                highscores[i] = Integer.parseInt(strings[i + 2]);
-            }
-        } catch (Throwable e) {
-            // :( It's ok we have defaults
-        }
+    public static Settings settings = new Settings();
+
+    private Settings() {
+        preferences = Gdx.app.getPreferences("space-killer");
     }
 
-    public static void save() {
-        try {
-            FileHandle filehandle = Gdx.files.external(file);
 
-            filehandle.writeString(Boolean.toString(soundEnabled) + "\n", false);
-            filehandle.writeString(Boolean.toString(musicEnabled) + "\n", true);
-            for (int i = 0; i < 5; i++) {
-                filehandle.writeString(Integer.toString(highscores[i]) + "\n", true);
-            }
-        } catch (Throwable e) {
+    public static void setMusicOn() {
+        settings.preferences.putBoolean(MUSIC_ON, true);
+        save();
+    }
+
+    public static void setMusicOff() {
+        settings.preferences.putBoolean(MUSIC_ON, false);
+        save();
+    }
+
+    public static boolean isMusicOn() {
+        return settings.preferences.getBoolean(MUSIC_ON, true);
+    }
+
+    public static void setSoundOnOn() {
+        settings.preferences.putBoolean(SOUND_ON, true);
+        save();
+    }
+
+    public static void setSoundOff() {
+        settings.preferences.putBoolean(SOUND_ON, false);
+        save();
+    }
+
+    public static boolean isSoundOn() {
+        return settings.preferences.getBoolean(SOUND_ON, true);
+    }
+
+    public void loadHighScores() {
+        String scorestr = settings.preferences.getString(HIGHSCORES, "0;0;0;0;0");
+        String[] scores = scorestr.split(";");
+        settings.highscores = new int[scores.length];
+        for (int i = 0; i < scores.length; ++i) {
+            settings.highscores[i] = Integer.valueOf(scores[i]);
         }
     }
 
     public static void addScore(int score) {
-        for (int i = 0; i < 5; i++) {
-            if (highscores[i] < score) {
+        if (settings.highscores == null) {
+            settings.loadHighScores();
+        }
+        for (int i = 0; i < settings.highscores.length; ++i) {
+            if (settings.highscores[i] < score) {
                 for (int j = 4; j > i; j--)
-                    highscores[j] = highscores[j - 1];
-                highscores[i] = score;
+                    settings.highscores[j] = settings.highscores[j - 1];
+                settings.highscores[i] = score;
                 break;
             }
         }
+        String highscoreStr = "";
+        for (int i = 0; i < settings.highscores.length; ++i) {
+            highscoreStr += settings.highscores[i];
+            highscoreStr += ";";
+        }
+        settings.preferences.putString(HIGHSCORES, highscoreStr);
+        save();
     }
+
+    public static int getHighscore() {
+        if (settings.highscores == null) {
+            settings.loadHighScores();
+        }
+        return settings.highscores[0];
+    }
+
+    public static void save() {
+        settings.preferences.flush();
+    }
+
 }
