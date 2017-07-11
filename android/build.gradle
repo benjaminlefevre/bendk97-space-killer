@@ -18,7 +18,7 @@ android {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
     defaultConfig {
-        applicationId "com.benk97"
+        applicationId "com.benk97.space.killer"
         minSdkVersion 9
         targetSdkVersion 26
         versionCode 1

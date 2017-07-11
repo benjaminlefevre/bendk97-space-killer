@@ -1,34 +1,40 @@
-package com.benk97.systems;
+package com.benk97.listeners.impl;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector2;
 import com.benk97.assets.Assets;
+import com.benk97.components.GameOverComponent;
 import com.benk97.components.Mappers;
+import com.benk97.components.PlayerComponent;
 import com.benk97.entities.EntityFactory;
-import com.benk97.inputs.InputHandler;
+import com.benk97.listeners.InputListener;
 
 import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.SOUND_FIRE;
 import static com.benk97.components.Mappers.velocity;
 
-public class InputHandlerSystem extends EntitySystem implements InputHandler {
+public class InputListenerImpl extends EntitySystem implements InputListener {
+    private Family playerFamily = Family.one(PlayerComponent.class).exclude(GameOverComponent.class).get();
     private Entity player;
     private EntityFactory entityFactory;
     private Assets assets;
 
 
-    public InputHandlerSystem(Entity entity, EntityFactory entityFactory, Assets assets, int priority) {
-        super(priority);
-        this.player = entity;
+    public InputListenerImpl(Entity player, EntityFactory entityFactory, Assets assets) {
+        this.player = player;
         this.assets = assets;
         this.entityFactory = entityFactory;
     }
 
+
     @Override
     public void fire() {
-        assets.playSound(SOUND_FIRE);
-        entityFactory.createPlayerFire(player);
+        if (playerFamily.matches(player)) {
+            assets.playSound(SOUND_FIRE, 0.2f);
+            entityFactory.createPlayerFire(player);
+        }
     }
 
     @Override
@@ -99,4 +105,5 @@ public class InputHandlerSystem extends EntitySystem implements InputHandler {
         velocity.get(player).y = 0;
         Mappers.state.get(player).set(ANIMATION_MAIN);
     }
+
 }

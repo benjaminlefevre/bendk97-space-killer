@@ -5,7 +5,10 @@ public class SpaceKillerGameConstants {
     public final static int SCREEN_WIDTH = 400;
     public final static int SCREEN_HEIGHT = 700;
     public final static boolean DEBUG = true;
-
+    // player
+    public final static int LIVES = 1;
+    public final static float PLAYER_ORIGIN_X = SCREEN_WIDTH / 2 - 16f;
+    public final static float PLAYER_ORIGIN_Y = 0f;
     // velocities
     public final static float PLAYER_VELOCITY = 200.0f;
     public final static float PLAYER_BULLET_VELOCITY = 300.0f;
@@ -17,7 +20,7 @@ public class SpaceKillerGameConstants {
 
     // animated sprites
     public static final float FRAME_DURATION = 0.05f;
-    public static final float FRAME_DURATION_EXPLOSION = 0.02f;
+    public static final float FRAME_DURATION_EXPLOSION = 0.01f;
     public static final int GO_LEFT = 1;
     public static final int GO_RIGHT = 2;
     public static final int ANIMATION_MAIN = 0;
