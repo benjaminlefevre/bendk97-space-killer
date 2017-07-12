@@ -32,7 +32,7 @@ public class Settings {
         return settings.preferences.getBoolean(MUSIC_ON, true);
     }
 
-    public static void setSoundOnOn() {
+    public static void setSoundOn() {
         settings.preferences.putBoolean(SOUND_ON, true);
         save();
     }
@@ -44,6 +44,17 @@ public class Settings {
 
     public static boolean isSoundOn() {
         return settings.preferences.getBoolean(SOUND_ON, true);
+    }
+
+    public static String getHighscoreString() {
+        if (settings.highscores == null) {
+            settings.loadHighScores();
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 5; ++i) {
+            sb.append(String.format("%7s", String.valueOf(settings.highscores[i])).replace(' ', '0')).append("\n\n");
+        }
+        return sb.toString();
     }
 
     public void loadHighScores() {
