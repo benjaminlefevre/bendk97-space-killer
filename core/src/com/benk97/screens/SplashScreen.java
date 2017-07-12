@@ -32,7 +32,7 @@ public class SplashScreen extends HDScreen {
 
 
     public SplashScreen(Assets assets, SpaceKillerGame game) {
-        super(game, assets);
+        super(game, assets,1080,1920);
         assets.playMusic(SPLASH_MUSIC);
         initGraphics();
         initFader();
@@ -66,6 +66,7 @@ public class SplashScreen extends HDScreen {
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
         logoTexture = assets.get(Assets.SPLASH_TXT_LOGO);
+
         logo = new SpriteBatch();
     }
 
@@ -99,14 +100,14 @@ public class SplashScreen extends HDScreen {
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 
         spriteBatch.begin();
-        spriteBatch.draw(currentFrame, ((VIEWPORT_WIDTH / 3) * stateTime), 0, 200, 200);
+        spriteBatch.draw(currentFrame, ((viewport.getWorldWidth() / 3) * stateTime), 0, 200, 200);
         spriteBatch.end();
         logo.setProjectionMatrix(viewport.getCamera().combined);
         logo.setColor(fader.getColor());
         logo.begin();
         logo.draw(logoTexture,
-                VIEWPORT_WIDTH / 2 - logoTexture.getWidth() / 2,
-                VIEWPORT_HEIGHT / 2 - logoTexture.getHeight() / 2);
+                viewport.getWorldWidth() / 2 - logoTexture.getWidth() / 2,
+                viewport.getWorldHeight() / 2 - logoTexture.getHeight() / 2);
         logo.end();
         if(stateTime>5 && stateTimeBefore <= 5){
             this.dispose();

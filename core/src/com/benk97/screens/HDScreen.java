@@ -13,19 +13,22 @@ import static com.benk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
 public abstract class HDScreen extends ScreenAdapter {
 
-    public static final float VIEWPORT_WIDTH = SCREEN_WIDTH;
-    public static final float VIEWPORT_HEIGHT = SCREEN_HEIGHT;
+
     protected Viewport viewport;
     protected OrthographicCamera camera;
     protected SpaceKillerGame game;
     protected Assets assets;
 
-    public HDScreen(SpaceKillerGame game, Assets assets) {
+    public HDScreen(SpaceKillerGame game, Assets assets, float width, float height) {
         this.game = game;
         this.assets = assets;
         this.camera = new OrthographicCamera();
-        viewport = new StretchViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, camera);
-        camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+        viewport = new StretchViewport(width, height, camera);
+        camera.setToOrtho(false, width, height);
+    }
+
+    public HDScreen(SpaceKillerGame game, Assets assets) {
+        this(game, assets, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
     public SpaceKillerGame getGame() {
