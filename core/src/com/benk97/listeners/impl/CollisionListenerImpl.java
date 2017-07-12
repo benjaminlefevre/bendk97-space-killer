@@ -1,5 +1,6 @@
 package com.benk97.listeners.impl;
 
+import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.benk97.assets.Assets;
@@ -16,20 +17,23 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     private Assets assets;
     private EntityFactory entityFactory;
     private PlayerListener playerListener;
+    private TweenManager tweenManager;
 
-    public CollisionListenerImpl(Assets assets, EntityFactory entityFactory, PlayerListener playerListener) {
+    public CollisionListenerImpl(TweenManager tweenManager, Assets assets, EntityFactory entityFactory, PlayerListener playerListener) {
         this.playerListener = playerListener;
         this.assets = assets;
         this.entityFactory = entityFactory;
+        this.tweenManager = tweenManager;
     }
 
     @Override
-    public void ennemyShoot(Entity ennemy, Entity player, Entity bullet) {
+    public void enemyShoot(Entity enemy, Entity player, Entity bullet) {
         assets.playSound(SOUND_EXPLOSION);
-        PositionComponent ennemyPosition = Mappers.position.get(ennemy);
+        PositionComponent ennemyPosition = Mappers.position.get(enemy);
         entityFactory.createEntityExploding(ennemyPosition.x, ennemyPosition.y);
-        playerListener.updateScore(player, ennemy);
-        getEngine().removeEntity(ennemy);
+        playerListener.updateScore(player, enemy);
+        tweenManager.killTarget(Mappers.position.get(enemy));
+        getEngine().removeEntity(enemy);
         getEngine().removeEntity(bullet);
     }
 

@@ -47,26 +47,26 @@ public class EntityFactory {
         VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
         bullet.add(velocityComponent);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        spriteComponent.sprite = new Sprite(assets.get(GFX_BULLET));
         bullet.add(spriteComponent);
         bullet.add(engine.createComponent(RemovableComponent.class));
         engine.addEntity(bullet);
         PositionComponent playerPosition = position.get(player);
-        positionComponent.x = playerPosition.x;
+        positionComponent.x = playerPosition.x + Mappers.sprite.get(player).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
         positionComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
         velocityComponent.y = PLAYER_BULLET_VELOCITY;
-        spriteComponent.sprite = new Sprite(assets.get(GFX_BULLET));
         return bullet;
     }
 
 
-    public Entity createEnnemySoucoupe(float posX, float posY) {
-        Entity ennemy = engine.createEntity();
-        EnnemyComponent ennemyComponent = engine.createComponent(EnnemyComponent.class);
-        ennemyComponent.points = 100;
-        ennemy.add(ennemyComponent);
+    public Entity createEnnemySoucoupe() {
+        Entity enemy = engine.createEntity();
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
+        enemyComponent.points = 100;
+        enemy.add(enemyComponent);
         PositionComponent position = engine.createComponent(PositionComponent.class);
-        ennemy.add(position);
-        ennemy.add(engine.createComponent(VelocityComponent.class));
+        enemy.add(position);
+        enemy.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Texture texture = assets.get(Assets.GFX_SOUCOUPE);
         TextureRegion[][] regions = TextureRegion.split(texture,
@@ -76,13 +76,13 @@ public class EntityFactory {
             sprites.add(new Sprite(regions[i][0]));
         }
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, Animation.PlayMode.LOOP));
-        ennemy.add(animationComponent);
+        enemy.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
-        ennemy.add(component);
-        ennemy.add(engine.createComponent(StateComponent.class));
-        engine.addEntity(ennemy);
-        position.setPosition(posX, posY);
-        return ennemy;
+        component.sprite = sprites.get(0);
+        enemy.add(component);
+        enemy.add(engine.createComponent(StateComponent.class));
+        engine.addEntity(enemy);
+        return enemy;
     }
 
     public Entity createEntityPlayer() {

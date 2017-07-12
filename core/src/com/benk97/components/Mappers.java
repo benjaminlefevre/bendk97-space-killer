@@ -10,6 +10,6 @@ public class Mappers{
     public static ComponentMapper<SpriteComponent> sprite = ComponentMapper.getFor(SpriteComponent.class);
     public static ComponentMapper<StateComponent> state = ComponentMapper.getFor(StateComponent.class);
     public static ComponentMapper<VelocityComponent> velocity = ComponentMapper.getFor(VelocityComponent.class);
-    public static ComponentMapper<EnnemyComponent> ennemy = ComponentMapper.getFor(EnnemyComponent.class);
+    public static ComponentMapper<EnemyComponent> ennemy = ComponentMapper.getFor(EnemyComponent.class);
     public static ComponentMapper<PlayerComponent> player = ComponentMapper.getFor(PlayerComponent.class);
 }

@@ -1,14 +1,13 @@
 package com.benk97.listeners.impl;
 
-import aurelienribon.tweenengine.Timeline;
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.*;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.Array;
 import com.benk97.Settings;
 import com.benk97.components.GameOverComponent;
+import com.benk97.components.InvulnerableComponent;
 import com.benk97.components.Mappers;
 import com.benk97.components.PlayerComponent;
 import com.benk97.entities.EntityFactory;
@@ -31,11 +30,11 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     }
 
     @Override
-    public void loseLive(Entity player) {
+    public void loseLive(final Entity player) {
         PlayerComponent playerComponent = Mappers.player.get(player);
         playerComponent.loseLife();
         if (playerComponent.isGameOver()) {
-            player.add(((PooledEngine)getEngine()).createComponent(GameOverComponent.class));
+            player.add(((PooledEngine) getEngine()).createComponent(GameOverComponent.class));
             Settings.addScore(playerComponent.getScoreInt());
             Settings.save();
         } else {
@@ -44,10 +43,19 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
             }
             Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
             Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+            player.add(((PooledEngine) getEngine()).createComponent(InvulnerableComponent.class));
             Timeline.createSequence()
                     .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
                     .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(1f))
                     .repeat(10, 0f)
+                    .setCallback(new TweenCallback() {
+                        @Override
+                        public void onEvent(int i, BaseTween<?> baseTween) {
+                            if (i == TweenCallback.COMPLETE) {
+                                player.remove(InvulnerableComponent.class);
+                            }
+                        }
+                    })
                     .start(tweenManager);
         }
     }

@@ -15,15 +15,19 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
 import com.benk97.components.Mappers;
+import com.benk97.components.PositionComponent;
 import com.benk97.components.SpriteComponent;
 import com.benk97.entities.EntityFactory;
+import com.benk97.entities.SquadronFactory;
 import com.benk97.inputs.TouchInputProcessor;
 import com.benk97.listeners.impl.CollisionListenerImpl;
 import com.benk97.listeners.impl.InputListenerImpl;
 import com.benk97.listeners.impl.PlayerListenerImpl;
 import com.benk97.systems.*;
+import com.benk97.tweens.PositionComponentAccessor;
 import com.benk97.tweens.SpriteComponentAccessor;
 
 import static com.benk97.SpaceKillerGameConstants.*;
@@ -34,12 +38,13 @@ public class LevelScreen extends ScreenAdapter {
     protected OrthographicCamera camera;
     protected PooledEngine engine;
     protected EntityFactory entityFactory;
+    protected SquadronFactory squadronFactory;
     protected TweenManager tweenManager;
     public Assets assets;
     private SpriteBatch batcher;
 
 
-    public LevelScreen(Assets assets) {
+    public LevelScreen(Assets assets, SpaceKillerGame game) {
         this.batcher = new SpriteBatch();
         this.assets = assets;
         this.tweenManager = new TweenManager();
@@ -59,6 +64,7 @@ public class LevelScreen extends ScreenAdapter {
             }
         });
         entityFactory = new EntityFactory(engine, assets);
+        squadronFactory = new SquadronFactory(tweenManager, entityFactory, engine);
         Entity player = entityFactory.createEntityPlayer();
         Array<Entity> lives = entityFactory.createEntityPlayerLives(player);
         createSystems(player, lives, batcher);
@@ -67,13 +73,14 @@ public class LevelScreen extends ScreenAdapter {
 
     private void registerTweensAccessor() {
         Tween.registerAccessor(SpriteComponent.class, new SpriteComponentAccessor());
+        Tween.registerAccessor(PositionComponent.class, new PositionComponentAccessor());
     }
 
     private void createSystems(Entity player, Array<Entity> lives, SpriteBatch batcher) {
         engine.addSystem(createInputHandlerSystem(player));
         PlayerListenerImpl playerListener = new PlayerListenerImpl(entityFactory, lives, tweenManager);
         engine.addSystem(playerListener);
-        CollisionListenerImpl collisionListener = new CollisionListenerImpl(assets, entityFactory, playerListener);
+        CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, assets, entityFactory, playerListener);
         engine.addSystem(collisionListener);
         engine.addSystem(new AnimationSystem(0));
         engine.addSystem(new StateSystem(1));
