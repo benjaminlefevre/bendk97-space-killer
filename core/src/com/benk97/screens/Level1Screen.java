@@ -47,6 +47,10 @@ public class Level1Screen extends LevelScreen {
             case 5:
             case 10:
             case 15:
+            case 20:
+            case 25:
+            case 30:
+            case 35:
                 scriptItems.poll().execute();
                 break;
 
@@ -55,10 +59,15 @@ public class Level1Screen extends LevelScreen {
 
 
     private LinkedList<ScriptItem> scriptItems = new LinkedList<ScriptItem>(Arrays.asList(
-            new ScriptItem(SOUCOUPE, LINEAR_Y, 200f, 5, 0f, SCREEN_HEIGHT),
-            new ScriptItem(SOUCOUPE, LINEAR_Y, 200f, 5, SCREEN_WIDTH - SOUCOUPE_WIDTH, SCREEN_HEIGHT),
-            new ScriptItem(SOUCOUPE, LINEAR_Y, 200f, 5, SCREEN_WIDTH / 2f - SOUCOUPE_WIDTH / 2f, SCREEN_HEIGHT),
-            new ScriptItem(SOUCOUPE, LINEAR_X, 150f, 10, -SOUCOUPE_WIDTH, SCREEN_HEIGHT / 2f))
+            new ScriptItem(SHIP, BEZIER_SPLINE, 200f, 10, 0f, SCREEN_HEIGHT, true),
+            new ScriptItem(SOUCOUPE, BEZIER_SPLINE, 200f, 10, 0f, SCREEN_HEIGHT, true),
+            new ScriptItem(SHIP, BEZIER_SPLINE, 300f, 5, 0f, SCREEN_HEIGHT, true),
+            new ScriptItem(SOUCOUPE, BEZIER_SPLINE, 300f, 5, 0f, SCREEN_HEIGHT, true),
+            new ScriptItem(SOUCOUPE, LINEAR_Y, 200f, 5, SCREEN_WIDTH - SOUCOUPE_WIDTH, SCREEN_HEIGHT, true),
+            new ScriptItem(SOUCOUPE, LINEAR_Y, 200f, 5, SCREEN_WIDTH / 2f - SOUCOUPE_WIDTH / 2f, SCREEN_HEIGHT, true),
+            new ScriptItem(SHIP, LINEAR_X, 150f, 10, -SOUCOUPE_WIDTH, SCREEN_HEIGHT / 2f, true),
+            new ScriptItem(SHIP, LINEAR_X, 150f, 10, -SOUCOUPE_WIDTH, SCREEN_HEIGHT / 2f, true)
+            )
     );
 
     class ScriptItem {
@@ -67,18 +76,20 @@ public class Level1Screen extends LevelScreen {
         float velocity;
         int number;
         float startX, startY;
+        boolean powerUp;
 
-        public ScriptItem(int typeShip, int typeSquadron, float velocity, int number, float startX, float startY) {
+        public ScriptItem(int typeShip, int typeSquadron, float velocity, int number, float startX, float startY, boolean powerUp) {
             this.typeShip = typeShip;
             this.typeSquadron = typeSquadron;
             this.velocity = velocity;
             this.number = number;
             this.startX = startX;
             this.startY = startY;
+            this.powerUp = powerUp;
         }
 
         public void execute() {
-            squadronFactory.createSquadron(typeShip, typeSquadron, velocity, number, startX, startY);
+            squadronFactory.createSquadron(typeShip, typeSquadron, velocity, number, startX, startY, powerUp);
         }
     }
 

@@ -1,11 +1,14 @@
 package com.benk97.entities;
 
+import aurelienribon.tweenengine.*;
+import aurelienribon.tweenengine.equations.Linear;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.benk97.Settings;
 import com.benk97.assets.Assets;
@@ -15,15 +18,21 @@ import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
 import static com.benk97.components.Mappers.position;
 import static com.benk97.components.Mappers.sprite;
+import static com.benk97.components.PlayerComponent.PowerLevel.DOUBLE;
+import static com.benk97.components.PlayerComponent.PowerLevel.NORMAL;
+import static com.benk97.tweens.PositionComponentAccessor.POSITION_Y;
+import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
 
 public class EntityFactory {
 
     private PooledEngine engine;
     private Assets assets;
+    private TweenManager tweenManager;
 
-    public EntityFactory(PooledEngine engine, Assets assets) {
+    public EntityFactory(PooledEngine engine, Assets assets, TweenManager tweenManager) {
         this.engine = engine;
         this.assets = assets;
+        this.tweenManager = tweenManager;
     }
 
 
@@ -47,7 +56,9 @@ public class EntityFactory {
         VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
         bullet.add(velocityComponent);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
-        spriteComponent.sprite = new Sprite(assets.get(GFX_BULLET));
+        PlayerComponent playerComponent = Mappers.player.get(player);
+        spriteComponent.sprite = new Sprite(playerComponent.powerLevel.equals(NORMAL) ? assets.get(GFX_BULLET)
+                : playerComponent.powerLevel.equals(DOUBLE) ? assets.get(GFX_BULLET2) : assets.get(GFX_BULLET3));
         bullet.add(spriteComponent);
         bullet.add(engine.createComponent(RemovableComponent.class));
         engine.addEntity(bullet);
@@ -58,11 +69,81 @@ public class EntityFactory {
         return bullet;
     }
 
+    public Entity createEnemyFire(Entity enemy, Entity player) {
+        assets.playSound(SOUND_FIRE_ENEMY);
+        Entity bullet = engine.createEntity();
+        bullet.add(engine.createComponent(EnemyBulletComponent.class));
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
+        bullet.add(positionComponent);
+        VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
+        bullet.add(velocityComponent);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        spriteComponent.sprite = new Sprite(assets.get(GFX_BULLET_ENEMY_1));
+        bullet.add(spriteComponent);
+        bullet.add(engine.createComponent(RemovableComponent.class));
+        engine.addEntity(bullet);
+        PositionComponent playerPosition = position.get(player);
+        PositionComponent enemyPosition = position.get(enemy);
+        positionComponent.x = enemyPosition.x + Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
+        positionComponent.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight();
+        Vector2 directionBullet = new Vector2(playerPosition.x - enemyPosition.x, playerPosition.y - enemyPosition.y);
+        directionBullet.nor();
+        directionBullet.scl(ENEMY_BULLET_VELOCITY);
+        velocityComponent.x = directionBullet.x;
+        velocityComponent.y = directionBullet.y;
+        return bullet;
+    }
 
-    public Entity createEnnemySoucoupe() {
+
+    public Entity createPowerUp(Entity squadron) {
+        final Entity powerUp = engine.createEntity();
+        powerUp.add(engine.createComponent(PowerUpComponent.class));
+        PositionComponent position = engine.createComponent(PositionComponent.class);
+        powerUp.add(position);
+        powerUp.add(engine.createComponent(VelocityComponent.class));
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
+        Texture texture = assets.get(Assets.GFX_POWERUP);
+        TextureRegion[][] regions = TextureRegion.split(texture,
+                texture.getWidth() / 2, texture.getHeight());
+        Array<Sprite> sprites = new Array<Sprite>(2);
+        for (int i = 0; i < regions[0].length; ++i) {
+            sprites.add(new Sprite(regions[0][i]));
+        }
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_POWERUP, sprites, Animation.PlayMode.LOOP));
+        powerUp.add(animationComponent);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.sprite = sprites.get(0);
+        powerUp.add(component);
+        position.x = Mappers.squadron.get(squadron).lastKilledPosition.x;
+        position.y = Mappers.squadron.get(squadron).lastKilledPosition.y;
+        powerUp.add(engine.createComponent(StateComponent.class));
+        Timeline.createSequence()
+                .beginParallel()
+                .push(Tween.to(position, POSITION_Y, 5f).ease(Linear.INOUT).target(SCREEN_HEIGHT - 50f))
+                .push(Tween.to(component, ALPHA, 0.5f).delay(3f).ease(Linear.INOUT).target(0f).repeat(4, 0f))
+                .end()
+                .setCallback(new TweenCallback() {
+                    @Override
+                    public void onEvent(int i, BaseTween<?> baseTween) {
+                        if (i == TweenCallback.COMPLETE) {
+                            engine.removeEntity(powerUp);
+                        }
+                    }
+                })
+                .start(tweenManager);
+        engine.addEntity(powerUp);
+        return powerUp;
+    }
+
+
+    public Entity createEnemySoucoupe(Entity squadron, boolean canAttack) {
         Entity enemy = engine.createEntity();
         EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 100;
+        enemyComponent.canAttack = canAttack;
+        if (squadron != null) {
+            enemyComponent.squadron = squadron;
+        }
         enemy.add(enemyComponent);
         PositionComponent position = engine.createComponent(PositionComponent.class);
         enemy.add(position);
@@ -74,6 +155,38 @@ public class EntityFactory {
         Array<Sprite> sprites = new Array<Sprite>(6);
         for (int i = 0; i < regions.length; ++i) {
             sprites.add(new Sprite(regions[i][0]));
+        }
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, Animation.PlayMode.LOOP));
+        enemy.add(animationComponent);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.sprite = sprites.get(0);
+        enemy.add(component);
+        enemy.add(engine.createComponent(StateComponent.class));
+        engine.addEntity(enemy);
+        return enemy;
+    }
+
+
+    public Entity createEnemyShip(Entity squadron, boolean canAttack) {
+        Entity enemy = engine.createEntity();
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
+        enemyComponent.points = 500;
+        enemyComponent.canAttack = canAttack;
+        if (squadron != null) {
+            enemyComponent.squadron = squadron;
+        }
+        enemy.add(enemyComponent);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
+        enemy.add(position);
+        enemy.add(engine.createComponent(VelocityComponent.class));
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
+        Texture texture = assets.get(Assets.GFX_ENEMY_SHIP);
+        TextureRegion[][] regions = TextureRegion.split(texture,
+                texture.getWidth() / 9, texture.getHeight());
+        Array<Sprite> sprites = new Array<Sprite>(9);
+        for (int i = 0; i < regions[0].length; ++i) {
+
+            sprites.add(new Sprite(regions[0][i]));
         }
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, Animation.PlayMode.LOOP));
         enemy.add(animationComponent);
@@ -188,4 +301,12 @@ public class EntityFactory {
         return pad;
     }
 
+    public Entity createSquadron() {
+        Entity squadron = engine.createEntity();
+        SquadronComponent squadronComponent = engine.createComponent(SquadronComponent.class);
+        squadronComponent.powerUpAfterDestruction = true;
+        squadron.add(squadronComponent);
+        engine.addEntity(squadron);
+        return squadron;
+    }
 }

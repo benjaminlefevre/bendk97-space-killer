@@ -62,6 +62,8 @@ public class Assets {
             new AssetDescriptor<Texture>("gfx/fire_button.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BULLET =
             new AssetDescriptor<Texture>("gfx/bullet.png", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_BULLET_ENEMY_1 =
+            new AssetDescriptor<Texture>("gfx/bulletEnnemy.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BULLET2 =
             new AssetDescriptor<Texture>("gfx/bullet2.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BULLET3 =
@@ -70,6 +72,10 @@ public class Assets {
             new AssetDescriptor<Texture>("gfx/player.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_SOUCOUPE =
             new AssetDescriptor<Texture>("gfx/soucoupe.png", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_ENEMY_SHIP =
+            new AssetDescriptor<Texture>("gfx/enemy.png", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_POWERUP =
+            new AssetDescriptor<Texture>("gfx/power-up.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_EXPLOSION =
             new AssetDescriptor<Texture>("gfx/explosion2.png", Texture.class);
     // SOUNDS
@@ -79,6 +85,12 @@ public class Assets {
             new AssetDescriptor<Sound>("sounds/fire.ogg", Sound.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_1 =
             new AssetDescriptor<Music>("sounds/level1.mid", Music.class);
+    public static final AssetDescriptor<Sound> SOUND_POWER_UP =
+            new AssetDescriptor<Sound>("sounds/powerUp.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_POWER_UP_VOICE =
+            new AssetDescriptor<Sound>("sounds/powerUpVoice.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_FIRE_ENEMY =
+            new AssetDescriptor<Sound>("sounds/enemyFire.ogg", Sound.class);
     // FONTS
     public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER =
             new AssetDescriptor<BitmapFont>("font1.ttf", BitmapFont.class,
@@ -99,10 +111,10 @@ public class Assets {
 
     public static Map<Class<? extends Screen>, List<AssetDescriptor>> assetsNeededByScreen = new HashMap<Class<? extends Screen>, List<AssetDescriptor>>() {{
         put(Level1Screen.class, Arrays.<AssetDescriptor>asList(
-                SOUND_FIRE, SOUND_EXPLOSION, MUSIC_LEVEL_1,
-                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM,
+                SOUND_FIRE, SOUND_EXPLOSION, MUSIC_LEVEL_1, GFX_POWERUP, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
+                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE,
                 GFX_SOUCOUPE, GFX_SHIP_PLAYER, GFX_BGD_LEVEL1, GFX_BGD_STARS, GFX_BULLET, GFX_PAD_ARROW,
-                GFX_BULLET2, GFX_BULLET3, GFX_PAD_BUTTON_FIRE, GFX_EXPLOSION));
+                GFX_BULLET2, GFX_BULLET3, GFX_PAD_BUTTON_FIRE, GFX_EXPLOSION, GFX_BULLET_ENEMY_1, GFX_ENEMY_SHIP));
         put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
                 SPLASH_MUSIC, SPLASH_TXT_HUMAN, SPLASH_TXT_LOGO
         ));

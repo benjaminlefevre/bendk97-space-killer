@@ -10,6 +10,8 @@ import com.benk97.listeners.CollisionListener;
 public class CollisionSystem extends EntitySystem {
 
     private Family playerBullet = Family.one(PlayerBulletComponent.class).get();
+    private Family enemyBullet = Family.one(EnemyBulletComponent.class).get();
+    private Family powerUp = Family.one(PowerUpComponent.class).get();
     private Family ennemies = Family.all(EnemyComponent.class).get();
     private Family playerVulnerable = Family.one(PlayerComponent.class).exclude(InvulnerableComponent.class, GameOverComponent.class).get();
     private Family player = Family.one(PlayerComponent.class).exclude(GameOverComponent.class).get();
@@ -32,6 +34,12 @@ public class CollisionSystem extends EntitySystem {
                     collisionListener.playerHitByEnnemyBody(player, ennemy);
                 }
             }
+            for(Entity bullet : getEngine().getEntitiesFor(enemyBullet)){
+                SpriteComponent enemyBullet = Mappers.sprite.get(bullet);
+                if (Intersector.overlaps(enemyBullet.sprite.getBoundingRectangle(), Mappers.sprite.get(player).sprite.getBoundingRectangle())) {
+                    collisionListener.playerHitByEnnemyBullet(player, bullet);
+                }
+            }
         }
         for (Entity player : getEngine().getEntitiesFor(player)) {
             for (Entity bullet : getEngine().getEntitiesFor(playerBullet)) {
@@ -40,6 +48,11 @@ public class CollisionSystem extends EntitySystem {
                     if (Intersector.overlaps(ennemySprite.sprite.getBoundingRectangle(), Mappers.sprite.get(bullet).sprite.getBoundingRectangle())) {
                         collisionListener.enemyShoot(ennemy, player, bullet);
                     }
+                }
+            }
+            for(Entity powerUp: getEngine().getEntitiesFor(powerUp)){
+                if(Intersector.overlaps(Mappers.sprite.get(player).sprite.getBoundingRectangle(), Mappers.sprite.get(powerUp).sprite.getBoundingRectangle())){
+                    collisionListener.playerPowerUp(player, powerUp);
                 }
             }
         }

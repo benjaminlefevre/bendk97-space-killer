@@ -62,7 +62,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
 
     @Override
     public void updateScore(Entity player, Entity ennemy) {
-        Mappers.player.get(player).updateScore(Mappers.ennemy.get(ennemy).points);
+        Mappers.player.get(player).updateScore(Mappers.enemy.get(ennemy).points);
     }
 
 
