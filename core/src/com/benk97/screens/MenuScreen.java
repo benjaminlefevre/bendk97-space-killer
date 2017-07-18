@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -61,8 +62,8 @@ public class MenuScreen extends HDScreen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 assets.playSound(MENU_CLICK);
-                dispose();
                 assets.get(MENU_MUSIC).stop();
+                dispose();
                 game.goToScreen(Level1Screen.class);
                 return true;
             }
@@ -92,14 +93,15 @@ public class MenuScreen extends HDScreen {
         });
 
 
+        TextureAtlas atlas = assets.get(MENU_ATLAS);
         table = new Table();
-        TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(assets.get(MENU_SOUND_OFF)));
+        TextureRegionDrawable drawable = new TextureRegionDrawable(atlas.findRegion("sound-off"));
         soundOff = new ImageButton(drawable);
-        drawable = new TextureRegionDrawable(new TextureRegion(assets.get(MENU_SOUND_ON)));
+        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("sound-on")));
         soundOn = new ImageButton(drawable);
-        drawable = new TextureRegionDrawable(new TextureRegion(assets.get(MENU_MUSIC_OFF)));
+        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-off")));
         musicOff = new ImageButton(drawable);
-        drawable = new TextureRegionDrawable(new TextureRegion(assets.get(MENU_MUSIC_ON)));
+        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-on")));
         musicOn = new ImageButton(drawable);
         if (Settings.isSoundOn()) {
             table.add(soundOn).size(30f, 30f);
@@ -181,7 +183,7 @@ public class MenuScreen extends HDScreen {
     @Override
     public void dispose() {
         batcher.dispose();
-        font.dispose();
+        assets.unloadResources(this.getClass());
         stage.dispose();
     }
 }

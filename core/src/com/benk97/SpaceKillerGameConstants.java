@@ -5,7 +5,7 @@ public class SpaceKillerGameConstants {
     public final static int SCREEN_WIDTH = 400;
     public final static int SCREEN_HEIGHT = 700;
     public final static boolean DEBUG = true;
-    public final static boolean SKIP_SPLASH = true;
+    public final static boolean SKIP_SPLASH = false;
     // player
     public final static int LIVES = 3;
     public final static float PLAYER_ORIGIN_X = SCREEN_WIDTH / 2 - 16f;

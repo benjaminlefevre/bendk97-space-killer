@@ -1,7 +1,6 @@
 package com.benk97.components;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Pool;
@@ -18,13 +17,6 @@ public class SpriteComponent implements Component, Pool.Poolable {
         alpha = 1.0f;
     }
 
-    public void setTexture(Texture texture, float alpha, float rotation, float scale) {
-        sprite = new Sprite(texture);
-        sprite.setOriginCenter();
-        this.alpha = alpha;
-        sprite.rotate(rotation);
-        sprite.setScale(scale);
-    }
 
     public void setTexture(Sprite sprite, float alpha, float rotation, float scale) {
         this.sprite = sprite;

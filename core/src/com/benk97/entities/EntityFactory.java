@@ -7,15 +7,17 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.benk97.Settings;
 import com.benk97.assets.Assets;
 import com.benk97.components.*;
 
+import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
 import static com.benk97.SpaceKillerGameConstants.*;
-import static com.benk97.assets.Assets.*;
+import static com.benk97.assets.Assets.GFX_LEVEL1_ATLAS;
+import static com.benk97.assets.Assets.SOUND_FIRE_ENEMY;
 import static com.benk97.components.Mappers.position;
 import static com.benk97.components.Mappers.sprite;
 import static com.benk97.components.PlayerComponent.PowerLevel.DOUBLE;
@@ -28,11 +30,12 @@ public class EntityFactory {
     private PooledEngine engine;
     private Assets assets;
     private TweenManager tweenManager;
-
+    private TextureAtlas atlas;
     public EntityFactory(PooledEngine engine, Assets assets, TweenManager tweenManager) {
         this.engine = engine;
         this.assets = assets;
         this.tweenManager = tweenManager;
+        this.atlas = assets.get(GFX_LEVEL1_ATLAS);
     }
 
 
@@ -57,8 +60,8 @@ public class EntityFactory {
         bullet.add(velocityComponent);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         PlayerComponent playerComponent = Mappers.player.get(player);
-        spriteComponent.sprite = new Sprite(playerComponent.powerLevel.equals(NORMAL) ? assets.get(GFX_BULLET)
-                : playerComponent.powerLevel.equals(DOUBLE) ? assets.get(GFX_BULLET2) : assets.get(GFX_BULLET3));
+        spriteComponent.sprite = new Sprite(playerComponent.powerLevel.equals(NORMAL) ? atlas.findRegion("bullet")
+                : playerComponent.powerLevel.equals(DOUBLE) ? atlas.findRegion("bullet2") : atlas.findRegion("bullet3"));
         bullet.add(spriteComponent);
         bullet.add(engine.createComponent(RemovableComponent.class));
         engine.addEntity(bullet);
@@ -78,7 +81,7 @@ public class EntityFactory {
         VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
         bullet.add(velocityComponent);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
-        spriteComponent.sprite = new Sprite(assets.get(GFX_BULLET_ENEMY_1));
+        spriteComponent.sprite = new Sprite(atlas.findRegion("bulletEnnemy"));
         bullet.add(spriteComponent);
         bullet.add(engine.createComponent(RemovableComponent.class));
         engine.addEntity(bullet);
@@ -102,14 +105,8 @@ public class EntityFactory {
         powerUp.add(position);
         powerUp.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        Texture texture = assets.get(Assets.GFX_POWERUP);
-        TextureRegion[][] regions = TextureRegion.split(texture,
-                texture.getWidth() / 2, texture.getHeight());
-        Array<Sprite> sprites = new Array<Sprite>(2);
-        for (int i = 0; i < regions[0].length; ++i) {
-            sprites.add(new Sprite(regions[0][i]));
-        }
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_POWERUP, sprites, Animation.PlayMode.LOOP));
+        Array<Sprite> sprites = atlas.createSprites("power-up");
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_POWERUP, sprites, LOOP));
         powerUp.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
@@ -149,14 +146,8 @@ public class EntityFactory {
         enemy.add(position);
         enemy.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        Texture texture = assets.get(Assets.GFX_SOUCOUPE);
-        TextureRegion[][] regions = TextureRegion.split(texture,
-                texture.getWidth(), texture.getHeight() / 6);
-        Array<Sprite> sprites = new Array<Sprite>(6);
-        for (int i = 0; i < regions.length; ++i) {
-            sprites.add(new Sprite(regions[i][0]));
-        }
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, Animation.PlayMode.LOOP));
+        Array<Sprite> sprites = atlas.createSprites("soucoupe");
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, LOOP));
         enemy.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
@@ -180,15 +171,8 @@ public class EntityFactory {
         enemy.add(position);
         enemy.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        Texture texture = assets.get(Assets.GFX_ENEMY_SHIP);
-        TextureRegion[][] regions = TextureRegion.split(texture,
-                texture.getWidth() / 9, texture.getHeight());
-        Array<Sprite> sprites = new Array<Sprite>(9);
-        for (int i = 0; i < regions[0].length; ++i) {
-
-            sprites.add(new Sprite(regions[0][i]));
-        }
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, Animation.PlayMode.LOOP));
+        Array<Sprite> sprites = atlas.createSprites("enemy");
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, LOOP));
         enemy.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
@@ -206,25 +190,20 @@ public class EntityFactory {
         player.add(engine.createComponent(PositionComponent.class));
         player.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        Texture texture = assets.get(GFX_SHIP_PLAYER);
-        TextureRegion[] regions = TextureRegion.split(texture,
-                texture.getWidth() / 4, texture.getHeight())[0];
         Array<Sprite> spritesMAIN = new Array<Sprite>(2);
-        for (int i = 0; i < 2; ++i) {
-            spritesMAIN.add(new Sprite(regions[i]));
-        }
+        spritesMAIN.add(atlas.createSprite("player", 1));
+        spritesMAIN.add(atlas.createSprite("player", 2));
         Array<Sprite> spritesLEFT = new Array<Sprite>(2);
-        for (int i = 2; i < 4; ++i) {
-            spritesLEFT.add(new Sprite(regions[i]));
-        }
+        spritesLEFT.add(atlas.createSprite("player", 0));
+        spritesLEFT.add(atlas.createSprite("player", 3));
         Array<Sprite> spritesRIGHT = new Array<Sprite>(2);
-        spritesRIGHT.add(new Sprite(regions[2]));
-        spritesRIGHT.add(new Sprite(regions[3]));
+        spritesRIGHT.add(atlas.createSprite("player", 0));
+        spritesRIGHT.add(atlas.createSprite("player", 3));
         spritesRIGHT.get(0).flip(true, false);
         spritesRIGHT.get(1).flip(true, false);
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, spritesMAIN, Animation.PlayMode.LOOP));
-        animationComponent.animations.put(GO_LEFT, new Animation<Sprite>(FRAME_DURATION, spritesLEFT, Animation.PlayMode.LOOP));
-        animationComponent.animations.put(GO_RIGHT, new Animation<Sprite>(FRAME_DURATION, spritesRIGHT, Animation.PlayMode.LOOP));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, spritesMAIN, LOOP));
+        animationComponent.animations.put(GO_LEFT, new Animation<Sprite>(FRAME_DURATION, spritesLEFT, LOOP));
+        animationComponent.animations.put(GO_RIGHT, new Animation<Sprite>(FRAME_DURATION, spritesRIGHT, LOOP));
         player.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.stayInBoundaries = true;
@@ -240,12 +219,10 @@ public class EntityFactory {
         Array<Entity> entities = new Array<Entity>(playerComponent.lives);
         for (int i = 0; i < playerComponent.lives - 1; ++i) {
             Entity life = engine.createEntity();
-            Texture texture = assets.get(GFX_SHIP_PLAYER);
-            TextureRegion tr = TextureRegion.split(texture,
-                    texture.getWidth() / 4, texture.getHeight())[0][1];
             SpriteComponent component = engine.createComponent(SpriteComponent.class);
-            component.setTexture(new Sprite(tr), 1f, 0f, 0.5f);
-            component.setPosition(LIVES_X + 20f * i, LIVES_Y - texture.getHeight());
+            Sprite sprite = atlas.createSprite("player", 1);
+            component.setTexture(sprite, 1f, 0f, 0.5f);
+            component.setPosition(LIVES_X + 20f * i, LIVES_Y - sprite.getHeight());
             life.add(component);
             engine.addEntity(life);
             entities.add(life);
@@ -260,16 +237,7 @@ public class EntityFactory {
         position.setPosition(x, y);
         explosion.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        Texture texture = assets.get(Assets.GFX_EXPLOSION);
-        TextureRegion[][] regions = TextureRegion.split(texture,
-                texture.getWidth() / 9, texture.getHeight() / 9);
-        Array<Sprite> sprites = new Array<Sprite>(81);
-        for (int i = 0; i < regions.length; ++i) {
-            for (int j = 0; j < regions[i].length; ++j) {
-                sprites.add(new Sprite(regions[i][j]));
-            }
-        }
-        sprites.removeRange(74, 80);
+        Array<Sprite> sprites = atlas.createSprites("explosion");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_EXPLOSION, sprites, Animation.PlayMode.NORMAL));
         animationComponent.playMode = Animation.PlayMode.NORMAL;
         explosion.add(animationComponent);
@@ -283,7 +251,7 @@ public class EntityFactory {
     public Entity createEntityFireButton(float alpha, float posX, float posY) {
         Entity entity = engine.createEntity();
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
-        component.setTexture(assets.get(GFX_PAD_BUTTON_FIRE), alpha, 0, 1f);
+        component.setTexture(atlas.createSprite("fire_button"), alpha, 0, 1f);
         component.setPosition(posX, posY);
         entity.add(component);
         engine.addEntity(entity);
@@ -294,7 +262,7 @@ public class EntityFactory {
     public Entity createEntitiesPadController(float alpha, float posX, float posY) {
         Entity pad = engine.createEntity();
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
-        component.setTexture(assets.get(GFX_PAD_ARROW), 0.2f, 0f, 1f);
+        component.setTexture(atlas.createSprite("pad"), 0.2f, 0f, 1f);
         component.setPosition(posX, posY);
         pad.add(component);
         engine.addEntity(pad);
