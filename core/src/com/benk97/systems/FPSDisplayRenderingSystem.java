@@ -26,10 +26,10 @@ public class FPSDisplayRenderingSystem extends EntitySystem {
     public void update(float deltaTime) {
         float oldTime = currentTime;
         currentTime += deltaTime;
-        if (Math.ceil(currentTime) > Math.ceil(oldTime)) {
+        if (Math.floor(currentTime) > Math.floor(oldTime)) {
             currentFps = (int) (1 / Gdx.graphics.getRawDeltaTime());
         }
         bitmapFont.draw(batcher, currentFps + " fps", SCREEN_WIDTH - 30f, 10f);
-        bitmapFont.draw(batcher, Math.ceil(currentTime) + " s", SCREEN_WIDTH - 100f, 10f);
+        bitmapFont.draw(batcher, Math.floor(currentTime) + " s", SCREEN_WIDTH - 100f, 10f);
     }
 }

@@ -4,11 +4,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.benk97.assets.Assets;
 import com.benk97.components.GameOverComponent;
 import com.benk97.components.Mappers;
 import com.benk97.components.PlayerComponent;
-import com.benk97.components.ShieldComponent;
 import com.benk97.entities.EntityFactory;
 import com.benk97.listeners.InputListener;
 import com.benk97.screens.LevelScreen;
@@ -19,7 +19,6 @@ import static com.benk97.components.Mappers.velocity;
 
 public class InputListenerImpl extends EntitySystem implements InputListener {
     private Family playerFamily = Family.one(PlayerComponent.class).exclude(GameOverComponent.class).get();
-    private Family playerShieldFamily = Family.one(ShieldComponent.class).exclude(GameOverComponent.class).get();
     private Entity player;
     private EntityFactory entityFactory;
     private Assets assets;
@@ -32,12 +31,16 @@ public class InputListenerImpl extends EntitySystem implements InputListener {
         this.screen = screen;
     }
 
+    private long lastShoot = 0;
 
     @Override
     public void fire() {
         if (playerFamily.matches(player)) {
-            assets.playSound(SOUND_FIRE, 0.2f);
-            entityFactory.createPlayerFire(player);
+            if (TimeUtils.timeSinceMillis(lastShoot) > Mappers.player.get(player).fireDelay) {
+                assets.playSound(SOUND_FIRE, 0.2f);
+                entityFactory.createPlayerFire(player);
+                lastShoot = TimeUtils.millis();
+            }
         }
     }
 

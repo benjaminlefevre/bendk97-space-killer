@@ -83,7 +83,7 @@ public class LevelScreen extends ScreenAdapter {
 
     private void createSystems(Entity player, Array<Entity> lives, SpriteBatch batcher) {
         engine.addSystem(createInputHandlerSystem(player));
-        PlayerListenerImpl playerListener = new PlayerListenerImpl(assets, entityFactory, lives, tweenManager);
+        PlayerListenerImpl playerListener = new PlayerListenerImpl(assets, entityFactory, lives, tweenManager, this);
         engine.addSystem(playerListener);
         CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, assets, entityFactory, playerListener);
         engine.addSystem(collisionListener);
@@ -109,10 +109,10 @@ public class LevelScreen extends ScreenAdapter {
 
     private InputListenerImpl createInputHandlerSystem(Entity player) {
         Entity fireButton = entityFactory.createEntityFireButton(0.2f, FIRE_X, FIRE_Y);
-        Entity padController = entityFactory.createEntitiesPadController(0.2f, PAD_X, PAD_Y);
+        Entity padController = entityFactory.createEntitiesPadController(0.2f, 1.4f, PAD_X, PAD_Y);
         // define touch area as rectangles
         Sprite padSprite = Mappers.sprite.get(padController).sprite;
-        float heightTouch = padSprite.getHeight() / 3f, widthTouch = padSprite.getWidth() / 3f;
+        float heightTouch = padSprite.getHeight() * 1.2f / 3f, widthTouch = padSprite.getWidth() * 1.2f / 3f;
         Rectangle[] squareTouchesDirection = new Rectangle[8];
         squareTouchesDirection[0] = new Rectangle(PAD_X, PAD_Y + 2 * heightTouch, widthTouch, heightTouch);
         squareTouchesDirection[1] = new Rectangle(PAD_X + widthTouch, PAD_Y + 2 * heightTouch, widthTouch, heightTouch);
@@ -124,7 +124,7 @@ public class LevelScreen extends ScreenAdapter {
         squareTouchesDirection[7] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y, widthTouch, heightTouch);
         // input
         InputListenerImpl inputListener = new InputListenerImpl(player, entityFactory, assets, this);
-        TouchInputProcessor touchInputProcessor = new TouchInputProcessor(inputListener, camera, squareTouchesDirection, Mappers.sprite.get(fireButton).getBounds(), player);
+        TouchInputProcessor touchInputProcessor = new TouchInputProcessor(inputListener, camera, squareTouchesDirection, Mappers.sprite.get(fireButton).getBounds());
         Gdx.input.setInputProcessor(touchInputProcessor);
         return inputListener;
     }
@@ -147,9 +147,7 @@ public class LevelScreen extends ScreenAdapter {
     }
 
     public void goToMenu() {
-        dispose();
-        game.goToScreen(MenuScreen.class);
-
+        game.showAd(this);
     }
 
     @Override

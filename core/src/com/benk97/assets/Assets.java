@@ -75,6 +75,10 @@ public class Assets {
             new AssetDescriptor<Sound>("sounds/powerUpVoice.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_FIRE_ENEMY =
             new AssetDescriptor<Sound>("sounds/enemyFire.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_NEW_HIGHSCORE =
+            new AssetDescriptor<Sound>("sounds/new_highscore.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_GO =
+            new AssetDescriptor<Sound>("sounds/go.ogg", Sound.class);
     // FONTS
     public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER =
             new AssetDescriptor<BitmapFont>("font1.ttf", BitmapFont.class,
@@ -97,7 +101,7 @@ public class Assets {
         put(Level1Screen.class, Arrays.<AssetDescriptor>asList(
                 SOUND_FIRE, SOUND_EXPLOSION, MUSIC_LEVEL_1, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
                 SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
-                SOUND_NEW_LIFE,
+                SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO,
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE,
                 GFX_BGD_LEVEL1, GFX_BGD_STARS, GFX_LEVEL1_ATLAS));
         put(SplashScreen.class, Arrays.<AssetDescriptor>asList(

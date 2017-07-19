@@ -3,6 +3,7 @@ package com.benk97;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.benk97.ads.AdsController;
 import com.benk97.assets.Assets;
 import com.benk97.screens.MenuScreen;
 import com.benk97.screens.SplashScreen;
@@ -11,8 +12,20 @@ import static com.benk97.SpaceKillerGameConstants.SKIP_SPLASH;
 
 public class SpaceKillerGame extends Game {
     private Assets assets = new Assets();
+    private AdsController adsController;
 
-    public SpaceKillerGame() {
+    public SpaceKillerGame(AdsController adsController) {
+        this.adsController = adsController;
+    }
+
+    public void showAd(final Screen screen) {
+        adsController.showInterstitialAd(new Runnable() {
+            @Override
+            public void run() {
+                screen.dispose();
+                goToScreen(MenuScreen.class);
+            }
+        });
     }
 
     @Override

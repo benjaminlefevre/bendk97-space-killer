@@ -3,7 +3,7 @@ package com.benk97.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Pool;
 
-import static com.benk97.SpaceKillerGameConstants.LIVES;
+import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.components.PlayerComponent.PowerLevel.*;
 
 
@@ -12,6 +12,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
         NORMAL, DOUBLE, TRIPLE
     }
 
+    public long fireDelay = FIRE_DELAY;
     private int score = 0;
     private int highscore = 0;
     public int lives = LIVES;
@@ -22,6 +23,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
         score = 0;
         lives = LIVES;
         powerLevel = NORMAL;
+        fireDelay = FIRE_DELAY;
     }
 
     public String getScore() {
@@ -39,9 +41,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
         if (score > highscore) {
             highscore = score;
         }
-        if ((oldScore < 20000 && score >= 20000)
-                || (oldScore < 50000 && score >= 50000)
-                || (oldScore < 100000 && score >= 100000)) {
+        if (Math.floor(oldScore / 50000f) < Math.floor(score / 50000f)) {
             lives++;
             return true;
         } else {
@@ -59,6 +59,10 @@ public class PlayerComponent implements Component, Pool.Poolable {
             powerLevel = DOUBLE;
         } else if (powerLevel.equals(DOUBLE)) {
             powerLevel = TRIPLE;
+        } else if (fireDelay == FIRE_DELAY) {
+            fireDelay = FIRE_DELAY_FAST;
+        } else if (fireDelay == FIRE_DELAY_FAST) {
+            fireDelay = FIRE_DELAY_VERY_FAST;
         }
     }
 
@@ -68,6 +72,10 @@ public class PlayerComponent implements Component, Pool.Poolable {
 
     public int getScoreInt() {
         return score;
+    }
+
+    public boolean isHighscore() {
+        return score == highscore;
     }
 
     public void setHighScore(int highScore) {
