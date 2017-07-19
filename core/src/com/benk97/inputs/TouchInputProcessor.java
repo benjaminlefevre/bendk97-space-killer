@@ -1,9 +1,11 @@
 package com.benk97.inputs;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.benk97.components.Mappers;
 import com.benk97.listeners.InputListener;
 
 
@@ -12,12 +14,14 @@ public class TouchInputProcessor implements InputProcessor {
     private Rectangle[] squareTouches;
     private Rectangle fireButton;
     private Camera camera;
+    private Entity player;
 
-    public TouchInputProcessor(InputListener inputListener, Camera camera, Rectangle[] squareTouches, Rectangle fireButton) {
+    public TouchInputProcessor(InputListener inputListener, Camera camera, Rectangle[] squareTouches, Rectangle fireButton, Entity player) {
         this.listener = inputListener;
         this.camera = camera;
         this.squareTouches = squareTouches;
         this.fireButton = fireButton;
+        this.player = player;
     }
 
     @Override
@@ -37,6 +41,10 @@ public class TouchInputProcessor implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (Mappers.gameover.get(player) != null) {
+            listener.goToMenu();
+            return true;
+        }
         Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
         touchDragged(screenX, screenY, pointer);
         if (fireButton.contains(worldTouch.x, worldTouch.y)) {

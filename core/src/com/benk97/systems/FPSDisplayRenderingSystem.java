@@ -19,8 +19,17 @@ public class FPSDisplayRenderingSystem extends EntitySystem {
         this.bitmapFont.getData().setScale(0.5f);
     }
 
+    float currentTime = 0f;
+    int currentFps = 0;
+
     @Override
     public void update(float deltaTime) {
-        bitmapFont.draw(batcher, Gdx.graphics.getFramesPerSecond() + " fps", SCREEN_WIDTH - 30f, 10f);
+        float oldTime = currentTime;
+        currentTime += deltaTime;
+        if (Math.ceil(currentTime) > Math.ceil(oldTime)) {
+            currentFps = (int) (1 / Gdx.graphics.getRawDeltaTime());
+        }
+        bitmapFont.draw(batcher, currentFps + " fps", SCREEN_WIDTH - 30f, 10f);
+        bitmapFont.draw(batcher, Math.ceil(currentTime) + " s", SCREEN_WIDTH - 100f, 10f);
     }
 }

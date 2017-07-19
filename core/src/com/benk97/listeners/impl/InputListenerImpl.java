@@ -8,8 +8,10 @@ import com.benk97.assets.Assets;
 import com.benk97.components.GameOverComponent;
 import com.benk97.components.Mappers;
 import com.benk97.components.PlayerComponent;
+import com.benk97.components.ShieldComponent;
 import com.benk97.entities.EntityFactory;
 import com.benk97.listeners.InputListener;
+import com.benk97.screens.LevelScreen;
 
 import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.SOUND_FIRE;
@@ -17,15 +19,17 @@ import static com.benk97.components.Mappers.velocity;
 
 public class InputListenerImpl extends EntitySystem implements InputListener {
     private Family playerFamily = Family.one(PlayerComponent.class).exclude(GameOverComponent.class).get();
+    private Family playerShieldFamily = Family.one(ShieldComponent.class).exclude(GameOverComponent.class).get();
     private Entity player;
     private EntityFactory entityFactory;
     private Assets assets;
+    private LevelScreen screen;
 
-
-    public InputListenerImpl(Entity player, EntityFactory entityFactory, Assets assets) {
+    public InputListenerImpl(Entity player, EntityFactory entityFactory, Assets assets, LevelScreen screen) {
         this.player = player;
         this.assets = assets;
         this.entityFactory = entityFactory;
+        this.screen = screen;
     }
 
 
@@ -35,6 +39,11 @@ public class InputListenerImpl extends EntitySystem implements InputListener {
             assets.playSound(SOUND_FIRE, 0.2f);
             entityFactory.createPlayerFire(player);
         }
+    }
+
+    @Override
+    public void goToMenu() {
+        screen.goToMenu();
     }
 
     @Override

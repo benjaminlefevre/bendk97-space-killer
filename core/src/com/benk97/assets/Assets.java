@@ -53,6 +53,16 @@ public class Assets {
     // GFX
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS = new AssetDescriptor<TextureAtlas>("gfx/level1.atlas", TextureAtlas.class);
     // SOUNDS
+    public static final AssetDescriptor<Sound> SOUND_LOSE_LIFE =
+            new AssetDescriptor<Sound>("sounds/loseLife.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_NEW_LIFE =
+            new AssetDescriptor<Sound>("sounds/newLife.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_GAME_OVER =
+            new AssetDescriptor<Sound>("sounds/game_over.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_SHIELD_BULLET =
+            new AssetDescriptor<Sound>("sounds/shield.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_SHIELD_UP =
+            new AssetDescriptor<Sound>("sounds/shieldUp.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_EXPLOSION =
             new AssetDescriptor<Sound>("sounds/explosion.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_FIRE =
@@ -86,6 +96,8 @@ public class Assets {
     public static Map<Class<? extends Screen>, List<AssetDescriptor>> assetsNeededByScreen = new HashMap<Class<? extends Screen>, List<AssetDescriptor>>() {{
         put(Level1Screen.class, Arrays.<AssetDescriptor>asList(
                 SOUND_FIRE, SOUND_EXPLOSION, MUSIC_LEVEL_1, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
+                SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
+                SOUND_NEW_LIFE,
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE,
                 GFX_BGD_LEVEL1, GFX_BGD_STARS, GFX_LEVEL1_ATLAS));
         put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
@@ -134,6 +146,12 @@ public class Assets {
 
     public void playSound(AssetDescriptor<Sound> sound, float volume) {
         if (Settings.isSoundOn()) {
+            if (manager.isLoaded(SOUND_FIRE.fileName)) {
+                manager.get(SOUND_FIRE).stop();
+            }
+            if(sound.equals(SOUND_EXPLOSION) && manager.isLoaded(SOUND_EXPLOSION.fileName)){
+                manager.get(SOUND_EXPLOSION).stop();
+            }
             manager.get(sound).play(volume);
         }
     }

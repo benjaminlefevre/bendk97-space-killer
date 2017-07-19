@@ -66,4 +66,31 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         tweenManager.killTarget(Mappers.sprite.get(powerUp));
         getEngine().removeEntity(powerUp);
     }
+
+
+    @Override
+    public void playerShieldUp(Entity player, Entity shieldUp) {
+        assets.playSound(SOUND_SHIELD_UP);
+        entityFactory.createShield(player);
+        tweenManager.killTarget(Mappers.position.get(shieldUp));
+        tweenManager.killTarget(Mappers.sprite.get(shieldUp));
+        getEngine().removeEntity(shieldUp);
+    }
+
+    @Override
+    public void bulletStoppedByShield(Entity bullet) {
+        assets.playSound(SOUND_SHIELD_BULLET);
+        getEngine().removeEntity(bullet);
+    }
+
+    @Override
+    public void enemyShootByShield(Entity enemy, Entity shield) {
+        assets.playSound(SOUND_EXPLOSION);
+        PositionComponent ennemyPosition = Mappers.position.get(enemy);
+        entityFactory.createEntityExploding(ennemyPosition.x, ennemyPosition.y);
+        tweenManager.killTarget(Mappers.position.get(enemy));
+        Mappers.squadron.get(Mappers.enemy.get(enemy).squadron).removeEntity(enemy);
+        getEngine().removeEntity(enemy);
+    }
+
 }

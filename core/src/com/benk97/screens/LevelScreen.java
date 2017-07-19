@@ -44,9 +44,11 @@ public class LevelScreen extends ScreenAdapter {
     protected TweenManager tweenManager;
     public Assets assets;
     private SpriteBatch batcher;
+    private SpaceKillerGame game;
 
 
     public LevelScreen(Assets assets, SpaceKillerGame game) {
+        this.game = game;
         this.batcher = new SpriteBatch();
         this.assets = assets;
         this.tweenManager = new TweenManager();
@@ -81,7 +83,7 @@ public class LevelScreen extends ScreenAdapter {
 
     private void createSystems(Entity player, Array<Entity> lives, SpriteBatch batcher) {
         engine.addSystem(createInputHandlerSystem(player));
-        PlayerListenerImpl playerListener = new PlayerListenerImpl(entityFactory, lives, tweenManager);
+        PlayerListenerImpl playerListener = new PlayerListenerImpl(assets, entityFactory, lives, tweenManager);
         engine.addSystem(playerListener);
         CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, assets, entityFactory, playerListener);
         engine.addSystem(collisionListener);
@@ -89,6 +91,7 @@ public class LevelScreen extends ScreenAdapter {
         engine.addSystem(new StateSystem(1));
         engine.addSystem(new MovementSystem(2));
         engine.addSystem(new BackgroundRenderingSystem(batcher, 3));
+        engine.addSystem(new ShieldSystem(4, player));
         engine.addSystem(new DynamicEntitiesRenderingSystem(batcher, 4));
         engine.addSystem(new StaticEntitiesRenderingSystem(batcher, 5));
         engine.addSystem(new ScoresRenderingSystem(batcher, assets, player, 6));
@@ -98,8 +101,9 @@ public class LevelScreen extends ScreenAdapter {
         }
         engine.addSystem(new CollisionSystem(collisionListener, 9));
         engine.addSystem(new EnemyAttackSystem(10, entityFactory));
-        engine.addSystem(new SquadronSystem(11, entityFactory));
-        engine.addSystem(new RemovableSystem(12));
+        engine.addSystem(new SquadronSystem(11, entityFactory, player, playerListener));
+        engine.addSystem(new ScoreSquadronSystem(12, assets, batcher));
+        engine.addSystem(new RemovableSystem(13));
     }
 
 
@@ -119,8 +123,8 @@ public class LevelScreen extends ScreenAdapter {
         squareTouchesDirection[6] = new Rectangle(PAD_X + widthTouch, PAD_Y, widthTouch, heightTouch);
         squareTouchesDirection[7] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y, widthTouch, heightTouch);
         // input
-        InputListenerImpl inputListener = new InputListenerImpl(player, entityFactory, assets);
-        TouchInputProcessor touchInputProcessor = new TouchInputProcessor(inputListener, camera, squareTouchesDirection, Mappers.sprite.get(fireButton).getBounds());
+        InputListenerImpl inputListener = new InputListenerImpl(player, entityFactory, assets, this);
+        TouchInputProcessor touchInputProcessor = new TouchInputProcessor(inputListener, camera, squareTouchesDirection, Mappers.sprite.get(fireButton).getBounds(), player);
         Gdx.input.setInputProcessor(touchInputProcessor);
         return inputListener;
     }
@@ -132,6 +136,7 @@ public class LevelScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batcher.begin();
         batcher.setProjectionMatrix(camera.combined);
+
         engine.update(delta);
         batcher.end();
     }
@@ -139,5 +144,16 @@ public class LevelScreen extends ScreenAdapter {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
+    }
+
+    public void goToMenu() {
+        dispose();
+        game.goToScreen(MenuScreen.class);
+
+    }
+
+    @Override
+    public void dispose() {
+        batcher.dispose();
     }
 }

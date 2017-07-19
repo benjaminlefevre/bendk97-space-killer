@@ -23,11 +23,11 @@ public class ScoresRenderingSystem extends EntitySystem {
         this.player = player;
         this.batcher = batcher;
         this.bitmapFont = assets.get(FONT_SPACE_KILLER);
-        bitmapFont.setColor(Color.WHITE);
     }
 
     @Override
     public void update(float deltaTime) {
+        bitmapFont.setColor(Color.WHITE);
         bitmapFont.draw(batcher, "SCORE", SCORE_X, SCORE_Y);
         bitmapFont.draw(batcher, Mappers.player.get(player).getScore(), SCORE_X - 10f, SCORE_Y - 20f);
         bitmapFont.draw(batcher, "LIVES", LIVES_X, LIVES_Y);

@@ -14,6 +14,8 @@ import com.benk97.Settings;
 import com.benk97.assets.Assets;
 import com.benk97.components.*;
 
+import java.util.Random;
+
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
 import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.GFX_LEVEL1_ATLAS;
@@ -31,6 +33,8 @@ public class EntityFactory {
     private Assets assets;
     private TweenManager tweenManager;
     private TextureAtlas atlas;
+    private Random random = new Random(System.currentTimeMillis());
+
     public EntityFactory(PooledEngine engine, Assets assets, TweenManager tweenManager) {
         this.engine = engine;
         this.assets = assets;
@@ -91,7 +95,8 @@ public class EntityFactory {
         positionComponent.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight();
         Vector2 directionBullet = new Vector2(playerPosition.x - enemyPosition.x, playerPosition.y - enemyPosition.y);
         directionBullet.nor();
-        directionBullet.scl(ENEMY_BULLET_VELOCITY);
+        directionBullet.rotate(-10 + random.nextFloat() * 20f);
+        directionBullet.scl(Mappers.enemy.get(enemy).bulletVelocity);
         velocityComponent.x = directionBullet.x;
         velocityComponent.y = directionBullet.y;
         return bullet;
@@ -116,8 +121,8 @@ public class EntityFactory {
         powerUp.add(engine.createComponent(StateComponent.class));
         Timeline.createSequence()
                 .beginParallel()
-                .push(Tween.to(position, POSITION_Y, 5f).ease(Linear.INOUT).target(SCREEN_HEIGHT - 50f))
-                .push(Tween.to(component, ALPHA, 0.5f).delay(3f).ease(Linear.INOUT).target(0f).repeat(4, 0f))
+                .push(Tween.to(position, POSITION_Y, 8f).ease(Linear.INOUT).target(50f))
+                .push(Tween.to(component, ALPHA, 0.5f).delay(4f).ease(Linear.INOUT).target(0f).repeat(8, 0f))
                 .end()
                 .setCallback(new TweenCallback() {
                     @Override
@@ -132,11 +137,46 @@ public class EntityFactory {
         return powerUp;
     }
 
+    public Entity createShieldUp(Entity squadron) {
+        final Entity shieldUp = engine.createEntity();
+        shieldUp.add(engine.createComponent(ShieldUpComponent.class));
+        PositionComponent position = engine.createComponent(PositionComponent.class);
+        shieldUp.add(position);
+        shieldUp.add(engine.createComponent(VelocityComponent.class));
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
+        Array<Sprite> sprites = atlas.createSprites("shieldup");
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_POWERUP, sprites, LOOP));
+        shieldUp.add(animationComponent);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.sprite = sprites.get(0);
+        shieldUp.add(component);
+        position.x = Mappers.squadron.get(squadron).lastKilledPosition.x;
+        position.y = Mappers.squadron.get(squadron).lastKilledPosition.y;
+        shieldUp.add(engine.createComponent(StateComponent.class));
+        Timeline.createSequence()
+                .beginParallel()
+                .push(Tween.to(position, POSITION_Y, 8f).ease(Linear.INOUT).target(50f))
+                .push(Tween.to(component, ALPHA, 0.5f).delay(4f).ease(Linear.INOUT).target(0f).repeat(8, 0f))
+                .end()
+                .setCallback(new TweenCallback() {
+                    @Override
+                    public void onEvent(int i, BaseTween<?> baseTween) {
+                        if (i == TweenCallback.COMPLETE) {
+                            engine.removeEntity(shieldUp);
+                        }
+                    }
+                })
+                .start(tweenManager);
+        engine.addEntity(shieldUp);
+        return shieldUp;
+    }
 
-    public Entity createEnemySoucoupe(Entity squadron, boolean canAttack) {
+
+    public Entity createEnemySoucoupe(Entity squadron, boolean canAttack, float velocityBullet) {
         Entity enemy = engine.createEntity();
         EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 100;
+        enemyComponent.bulletVelocity = velocityBullet;
         enemyComponent.canAttack = canAttack;
         if (squadron != null) {
             enemyComponent.squadron = squadron;
@@ -158,10 +198,11 @@ public class EntityFactory {
     }
 
 
-    public Entity createEnemyShip(Entity squadron, boolean canAttack) {
+    public Entity createEnemyShip(Entity squadron, boolean canAttack, float velocityBullet) {
         Entity enemy = engine.createEntity();
         EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
-        enemyComponent.points = 500;
+        enemyComponent.points = 200;
+        enemyComponent.bulletVelocity = velocityBullet;
         enemyComponent.canAttack = canAttack;
         if (squadron != null) {
             enemyComponent.squadron = squadron;
@@ -172,6 +213,29 @@ public class EntityFactory {
         enemy.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlas.createSprites("enemy");
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, LOOP));
+        enemy.add(animationComponent);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.sprite = sprites.get(0);
+        enemy.add(component);
+        enemy.add(engine.createComponent(StateComponent.class));
+        engine.addEntity(enemy);
+        return enemy;
+    }
+
+    public Entity createAsteroid(Entity squadron) {
+        Entity enemy = engine.createEntity();
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
+        enemyComponent.points = 50;
+        if (squadron != null) {
+            enemyComponent.squadron = squadron;
+        }
+        enemy.add(enemyComponent);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
+        enemy.add(position);
+        enemy.add(engine.createComponent(VelocityComponent.class));
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
+        Array<Sprite> sprites = atlas.createSprites("asteroid");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, LOOP));
         enemy.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
@@ -206,12 +270,43 @@ public class EntityFactory {
         animationComponent.animations.put(GO_RIGHT, new Animation<Sprite>(FRAME_DURATION, spritesRIGHT, LOOP));
         player.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.sprite = spritesMAIN.get(0);
         component.stayInBoundaries = true;
         player.add(component);
         player.add(engine.createComponent(StateComponent.class));
         engine.addEntity(player);
         Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         return player;
+    }
+
+    public Entity createShield(Entity player) {
+        final Entity shield = engine.createEntity();
+        PositionComponent playerPosition = Mappers.position.get(player);
+        SpriteComponent playerSprite = Mappers.sprite.get(player);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        spriteComponent.sprite = atlas.createSprite("shield");
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
+        positionComponent.setPosition(playerPosition.x - (spriteComponent.sprite.getWidth() - playerSprite.sprite.getWidth()) / 2f,
+                playerPosition.y - (spriteComponent.sprite.getHeight() - playerSprite.sprite.getHeight()) / 2f);
+        shield.add(positionComponent);
+        shield.add(spriteComponent);
+        shield.add(engine.createComponent(ShieldComponent.class));
+        engine.addEntity(shield);
+        Timeline.createSequence().beginSequence()
+                .delay(5f)
+                .push(Tween.to(spriteComponent, ALPHA, 0.2f).target(0.2f))
+                .push(Tween.to(spriteComponent, ALPHA, 0.2f).target(0.8f))
+                .repeat(5, 0f)
+                .setCallback(new TweenCallback() {
+                    @Override
+                    public void onEvent(int i, BaseTween<?> baseTween) {
+                        if (i == TweenCallback.COMPLETE) {
+                            engine.removeEntity(shield);
+                        }
+                    }
+                })
+                .start(tweenManager);
+        return shield;
     }
 
     public Array<Entity> createEntityPlayerLives(Entity player) {
@@ -269,12 +364,28 @@ public class EntityFactory {
         return pad;
     }
 
-    public Entity createSquadron() {
+    public Entity createSquadron(boolean powerUp, boolean displayScoreBonus, int bonus) {
         Entity squadron = engine.createEntity();
         SquadronComponent squadronComponent = engine.createComponent(SquadronComponent.class);
-        squadronComponent.powerUpAfterDestruction = true;
+        squadronComponent.powerUpAfterDestruction = powerUp;
+        squadronComponent.displayBonusSquadron = displayScoreBonus;
+        squadronComponent.scoreBonus = bonus;
         squadron.add(squadronComponent);
         engine.addEntity(squadron);
         return squadron;
+    }
+
+    public Entity createScoreSquadron(Entity squadron) {
+        Entity scoreSquadron = engine.createEntity();
+        ScoreSquadronComponent score = engine.createComponent(ScoreSquadronComponent.class);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
+        SquadronComponent squadronComponent = Mappers.squadron.get(squadron);
+        score.score = squadronComponent.scoreBonus + "";
+        position.x = squadronComponent.lastKilledPosition.x;
+        position.y = squadronComponent.lastKilledPosition.y;
+        scoreSquadron.add(position);
+        scoreSquadron.add(score);
+        engine.addEntity(scoreSquadron);
+        return scoreSquadron;
     }
 }

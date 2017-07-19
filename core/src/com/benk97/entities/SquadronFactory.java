@@ -5,12 +5,14 @@ import aurelienribon.tweenengine.equations.Linear;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Bezier;
+import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Vector2;
 import com.benk97.components.EnemyComponent;
 import com.benk97.components.Mappers;
 import com.benk97.components.PositionComponent;
 import com.benk97.tweens.PositionComponentAccessor;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import static com.benk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
@@ -19,10 +21,13 @@ import static com.benk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 public class SquadronFactory {
     public final static int SOUCOUPE = 0;
     public final static int SHIP = 1;
+    public final static int ASTEROID = 2;
     public final static int LINEAR_X = 0;
     public final static int LINEAR_Y = 1;
     public final static int SEMI_CIRCLE = 2;
     public final static int BEZIER_SPLINE = 3;
+    public final static int CATMULL_ROM_SPLINE = 4;
+    public final static int LINEAR_XY = 5;
 
 
     private TweenManager tweenManager;
@@ -36,64 +41,85 @@ public class SquadronFactory {
         this.engine = engine;
     }
 
-    public void createSquadron(int shipType, int squadronType, float velocity, int number, float posX, float posY, boolean powerUp) {
-        Entity squadron = entityFactory.createSquadron();
+    public void createSquadron(int shipType, int squadronType, float velocity, int number, boolean powerUp,
+                               boolean displayBonus, int bonus, float bulletVelocity,
+                               Object... params) {
+        Entity squadron = entityFactory.createSquadron(powerUp, displayBonus, bonus);
 
         Entity[] entities = new Entity[number];
         for (int i = 0; i < number; ++i) {
             Entity ship = null;
             switch (shipType) {
                 case SOUCOUPE:
-                    ship = entityFactory.createEnemySoucoupe(squadron, random.nextBoolean());
+                    ship = entityFactory.createEnemySoucoupe(squadron, random.nextBoolean(), bulletVelocity);
                     break;
                 case SHIP:
-                    ship = entityFactory.createEnemyShip(squadron, random.nextBoolean());
+                    ship = entityFactory.createEnemyShip(squadron, random.nextBoolean(), bulletVelocity);
                     break;
+                case ASTEROID:
+                    ship = entityFactory.createAsteroid(squadron);
             }
             entities[i] = ship;
         }
-        formSquadron(entities, squadronType, velocity, posX, posY);
+        formSquadron(entities, squadronType, velocity, params);
         Mappers.squadron.get(squadron).addEntities(entities);
     }
 
-    private void formSquadron(Entity[] entities, int squadronType, float velocity, float posX, float posY) {
+    private void formSquadron(Entity[] entities, int squadronType, float velocity, Object... params) {
         switch (squadronType) {
             case LINEAR_Y:
-                createLinearYSquadron(entities, velocity, posX, posY);
+                createLinearYSquadron(entities, velocity, (Float) params[0], (Float) params[1]);
                 break;
             case LINEAR_X:
-                createLinearXSquadron(entities, velocity, posX, posY);
+                createLinearXSquadron(entities, velocity, (Float) params[0], (Float) params[1], (Float) params[2]);
+                break;
+            case LINEAR_XY:
+                createLinearXYSquadron(entities, velocity, (Float) params[0], (Float) params[1], (Float) params[2], (Float) params[3]);
                 break;
             case SEMI_CIRCLE:
-                createSemiCircleSquadron(entities, velocity, posX, posY);
+                createSemiCircleSquadron(entities, velocity, (Float) params[0], (Float) params[1]);
                 break;
             case BEZIER_SPLINE:
-                createBezierSplineSquadron(entities, velocity);
+                createBezierSplineSquadron(entities, velocity, Arrays.copyOf(params, params.length, Vector2[].class));
+                break;
+            case CATMULL_ROM_SPLINE:
+                createCatmullSplineSquadron(entities, velocity, Arrays.copyOf(params, params.length, Vector2[].class));
         }
     }
 
-    private void createBezierSplineSquadron(Entity[] entities, float velocity) {
+    private void createBezierSplineSquadron(Entity[] entities, float velocity, Vector2... vector2s) {
         int k = 100;
-        Bezier<Vector2> catmull = new Bezier<Vector2>(
-                new Vector2(0f, SCREEN_HEIGHT),
-                new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT),
-                new Vector2(SCREEN_WIDTH, 0f),
-                new Vector2(0f, 0f)
-        );
+        Bezier<Vector2> bezier = new Bezier<Vector2>(vector2s);
+        Vector2[] points = new Vector2[k];
+        for (int i = 0; i < k; ++i) {
+            points[i] = new Vector2();
+            bezier.valueAt(points[i], ((float) i) / ((float) k - 1));
+        }
+        placeEntitiesOnSpline(entities, velocity, points, vector2s[0]);
+    }
+
+
+    private void createCatmullSplineSquadron(Entity[] entities, float velocity, Vector2... vector2s) {
+        int k = 100;
+        CatmullRomSpline<Vector2> catmull = new CatmullRomSpline<Vector2>(vector2s, false);
         Vector2[] points = new Vector2[k];
         for (int i = 0; i < k; ++i) {
             points[i] = new Vector2();
             catmull.valueAt(points[i], ((float) i) / ((float) k - 1));
         }
+        placeEntitiesOnSpline(entities, velocity, points, vector2s[0]);
+    }
+
+    private void placeEntitiesOnSpline(Entity[] entities, float velocity, Vector2[] points, Vector2 startPoint) {
         for (int i = 0; i < entities.length; ++i) {
             final Entity entity = entities[i];
             PositionComponent position = Mappers.position.get(entity);
-            position.setPosition(0f, SCREEN_HEIGHT + i * Mappers.sprite.get(entity).sprite.getHeight());
+            position.setPosition(startPoint.x, SCREEN_HEIGHT + i * Mappers.sprite.get(entity).sprite.getHeight());
             Timeline timeline = Timeline.createSequence();
             timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, points[0].dst(position.x, position.y) / velocity)
                     .ease(Linear.INOUT)
                     .target(points[0].x, points[0].y));
-            for (int j = 1; j < k; ++j) {
+            for (int j = 1; j < points.length; ++j) {
                 timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, points[j].dst(points[j - 1].x, points[j - 1].y) / velocity)
                         .ease(Linear.INOUT)
                         .target(points[j].x, points[j].y));
@@ -120,15 +146,15 @@ public class SquadronFactory {
     }
 
 
-    private void createLinearXSquadron(final Entity[] entities, float velocity, float posX, float posY) {
+    private void createLinearXSquadron(final Entity[] entities, float velocity, float posX, float posY, float direction) {
         for (int i = 0; i < entities.length; ++i) {
             final Entity entity = entities[i];
             PositionComponent position = Mappers.position.get(entity);
-            position.setPosition(posX - i * Mappers.sprite.get(entity).sprite.getWidth(), posY);
+            position.setPosition(posX - direction * i * Mappers.sprite.get(entity).sprite.getWidth(), posY);
             Timeline.createSequence()
-                    .push(Tween.to(position, PositionComponentAccessor.POSITION_X, 2 * SCREEN_WIDTH / velocity)
+                    .push(Tween.to(position, PositionComponentAccessor.POSITION_X, 3f * SCREEN_WIDTH / velocity)
                             .ease(Linear.INOUT)
-                            .targetRelative(2f * SCREEN_WIDTH))
+                            .targetRelative(direction * 3f * SCREEN_WIDTH))
                     .setCallback(new TweenCallback() {
                         @Override
                         public void onEvent(int i, BaseTween<?> baseTween) {
@@ -147,9 +173,31 @@ public class SquadronFactory {
             PositionComponent position = Mappers.position.get(entity);
             position.setPosition(posX, posY + i * Mappers.sprite.get(entity).sprite.getHeight());
             Timeline.createSequence()
-                    .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, 2 * SCREEN_HEIGHT / velocity)
+                    .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, 3 * SCREEN_HEIGHT / velocity)
                             .ease(Linear.INOUT)
-                            .targetRelative(-2f * SCREEN_HEIGHT))
+                            .targetRelative(-3f * SCREEN_HEIGHT))
+                    .setCallback(new TweenCallback() {
+                        @Override
+                        public void onEvent(int i, BaseTween<?> baseTween) {
+                            if (i == TweenCallback.COMPLETE) {
+                                removeEntitySquadron(entity);
+                            }
+                        }
+                    })
+                    .start(tweenManager);
+        }
+    }
+
+
+    private void createLinearXYSquadron(Entity[] entities, float velocity, float startX, float startY, float endX, float endY) {
+        for (int i = 0; i < entities.length; ++i) {
+            final Entity entity = entities[i];
+            PositionComponent position = Mappers.position.get(entity);
+            position.setPosition(startX, startY + i * Mappers.sprite.get(entity).sprite.getHeight());
+            Timeline.createSequence()
+                    .push(Tween.to(position, PositionComponentAccessor.POSITION_XY, (new Vector2(startX, startY)).dst(new Vector2(endX, endY)) / velocity)
+                            .ease(Linear.INOUT)
+                            .target(endX, endY))
                     .setCallback(new TweenCallback() {
                         @Override
                         public void onEvent(int i, BaseTween<?> baseTween) {

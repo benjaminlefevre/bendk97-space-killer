@@ -25,6 +25,6 @@ public class BackgroundRenderingSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         BackgroundComponent backgroundComponent = background.get(entity);
         PositionComponent positionComponent = Mappers.position.get(entity);
-        batcher.draw(backgroundComponent.texture, 0, 0, (int) positionComponent.x, (int) positionComponent.y, SCREEN_WIDTH, SCREEN_HEIGHT);
+        batcher.draw(backgroundComponent.texture, 0, 0, (int) positionComponent.x, ((int) positionComponent.y) % (backgroundComponent.texture.getHeight()), SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 }

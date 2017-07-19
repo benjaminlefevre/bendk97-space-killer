@@ -12,4 +12,10 @@ public interface CollisionListener {
     void playerHitByEnnemyBullet(Entity player, Entity bullet);
 
     void playerPowerUp(Entity player, Entity powerUp);
+
+    void bulletStoppedByShield(Entity bullet);
+
+    void enemyShootByShield(Entity enemy, Entity shield);
+
+    void playerShieldUp(Entity player, Entity shieldUp);
 }

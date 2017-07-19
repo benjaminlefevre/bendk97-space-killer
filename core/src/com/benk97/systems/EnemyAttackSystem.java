@@ -37,6 +37,6 @@ public class EnemyAttackSystem extends IteratingSystem {
         return (position.x >= 0
                 && position.x <= SCREEN_WIDTH - sprite.sprite.getWidth()
                 && position.y <= SCREEN_HEIGHT - sprite.sprite.getHeight()
-                && position.y >= 0);
+                && position.y >= 150f);
     }
 }

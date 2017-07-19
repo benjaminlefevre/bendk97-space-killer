@@ -11,6 +11,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
     public enum PowerLevel {
         NORMAL, DOUBLE, TRIPLE
     }
+
     private int score = 0;
     private int highscore = 0;
     public int lives = LIVES;
@@ -32,10 +33,19 @@ public class PlayerComponent implements Component, Pool.Poolable {
     }
 
 
-    public void updateScore(int points) {
+    public boolean updateScore(int points) {
+        int oldScore = score;
         score += points;
         if (score > highscore) {
             highscore = score;
+        }
+        if ((oldScore < 20000 && score >= 20000)
+                || (oldScore < 50000 && score >= 50000)
+                || (oldScore < 100000 && score >= 100000)) {
+            lives++;
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -45,12 +55,10 @@ public class PlayerComponent implements Component, Pool.Poolable {
     }
 
     public void powerUp() {
-        if(powerLevel.equals(NORMAL)){
+        if (powerLevel.equals(NORMAL)) {
             powerLevel = DOUBLE;
-        } else if(powerLevel.equals(DOUBLE)){
+        } else if (powerLevel.equals(DOUBLE)) {
             powerLevel = TRIPLE;
-        } else {
-            updateScore(1000);
         }
     }
 

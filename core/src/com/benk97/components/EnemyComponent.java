@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Pool;
 public class EnemyComponent implements Component, Pool.Poolable {
     public int points = 0;
     public boolean canAttack = false;
+    public float bulletVelocity = 0f;
     public Entity squadron = null;
 
     @Override
@@ -14,5 +15,6 @@ public class EnemyComponent implements Component, Pool.Poolable {
         points = 0;
         canAttack = false;
         squadron = null;
+        bulletVelocity = 0f;
     }
 }
