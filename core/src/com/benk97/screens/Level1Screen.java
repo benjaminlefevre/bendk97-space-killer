@@ -1,13 +1,12 @@
 package com.benk97.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 import static com.benk97.SpaceKillerGameConstants.*;
@@ -19,15 +18,27 @@ public class Level1Screen extends LevelScreen {
     private float time = 0f;
     private Random random = new Random(System.currentTimeMillis());
 
+
+    private LinkedList<ScriptItem> scriptItemsEasy;
+    private LinkedList<ScriptItem> scriptItemsMediumLeft;
+    private LinkedList<ScriptItem> scriptItemsMediumRight;
+    private LinkedList<ScriptItem> scriptItemsHardLeft;
+    private LinkedList<ScriptItem> scriptItemsHardRight;
+
     public Level1Screen(Assets assets, SpaceKillerGame game) {
         super(assets, game);
         assets.playMusic(MUSIC_LEVEL_1);
         entityFactory.createBackground(assets.get(GFX_BGD_LEVEL1), -BGD_VELOCITY);
         entityFactory.createBackground(assets.get(GFX_BGD_STARS), -BGD_PARALLAX_VELOCITY);
-        Collections.shuffle(scriptItemsEasy, random);
-        scriptItemsMedium1.addAll(scriptItemsMedium1);
-        Collections.shuffle(scriptItemsMedium1, random);
-        Collections.shuffle(scriptItemsMedium2, random);
+        initSpawns();
+    }
+
+    private void initSpawns() {
+        scriptItemsEasy = new LinkedList<ScriptItem>(randomEasySpawnEnemies(13));
+        scriptItemsMediumLeft = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromLeft(12));
+        scriptItemsMediumRight = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromRight(12));
+        scriptItemsHardLeft = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromLeft(12));
+        scriptItemsHardRight = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromRight(12));
     }
 
 
@@ -38,9 +49,9 @@ public class Level1Screen extends LevelScreen {
     }
 
     private void updateScript(float delta) {
-        int timeBefore = (int) Math.ceil(time);
+        int timeBefore = (int) Math.floor(time);
         time += delta;
-        int newTime = (int) Math.ceil(time);
+        int newTime = (int) Math.floor(time);
         if (newTime > timeBefore) {
             script(newTime);
         }
@@ -48,7 +59,7 @@ public class Level1Screen extends LevelScreen {
 
     private void script(int second) {
         if (second % 3 == 0 || second % 7 == 0) {
-            new ScriptItem(ASTEROID, LINEAR_Y,
+            new ScriptItem(getRandomAsteroidType(), LINEAR_Y,
                     40f + random.nextFloat() * 160f,
                     1, random.nextInt() % 4 == 0, false, 0, 0f,
                     random.nextFloat() * SCREEN_WIDTH,
@@ -60,146 +71,136 @@ public class Level1Screen extends LevelScreen {
             scriptItemsEasy.poll().execute();
             // 18 elements
         } else if (second <= 120 && (second % 5 == 0)) {
-            scriptItemsMedium1.poll().execute();
+            if(second==65){
+                assets.playSound(SOUND_GO);
+            }
+            boolean left = random.nextBoolean();
+            LinkedList<ScriptItem> medium = left ? scriptItemsMediumLeft : scriptItemsMediumRight;
+            LinkedList<ScriptItem> mediumOther = left ? scriptItemsMediumRight : scriptItemsMediumLeft;
+
+            medium.poll().execute();
             if (second % 10 == 0) {
-                scriptItemsMedium2.poll().execute();
+                mediumOther.poll().execute();
             }
-        } else if (second <= 180) {
-            switch (second) {
-                case 125:
-                case 126:
-                case 130:
-                case 131:
-                case 135:
-                case 140:
-                case 145:
-                case 150:
-                case 151:
-                case 155:
-                case 156:
-                    Gdx.app.log("execute", "" + second);
-                    scriptItemsHard.poll().execute();
-                    break;
+        } else if (second <= 180 && (second % 5 == 0)) {
+            if(second==125){
+                assets.playSound(SOUND_GO);
             }
+            boolean left = random.nextBoolean();
+            LinkedList<ScriptItem> hard = left ? scriptItemsHardLeft : scriptItemsHardRight;
+            LinkedList<ScriptItem> hardOther = left ? scriptItemsHardRight : scriptItemsHardLeft;
+
+            hard.poll().execute();
+            if (second % 10 == 0) {
+                hardOther.poll().execute();
+            }
+        } else if (second >= 185) {
+            time = 0f;
+            initSpawns();
         }
 
     }
 
+    private List<ScriptItem> randomEasySpawnEnemies(int nbSpawns) {
+        return randomSpawnEnemies(nbSpawns, ENEMY_VELOCITY_EASY, ENEMY_BULLET_EASY_VELOCITY, BONUS_SQUADRON_EASY, 5, 10, random.nextBoolean());
 
-    private LinkedList<ScriptItem> scriptItemsEasy = new LinkedList<ScriptItem>(Arrays.asList(
-            new ScriptItem(SOUCOUPE, BEZIER_SPLINE, 150f, 5, false, true, 500, ENEMY_BULLET_EASY_VELOCITY,
-                    new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT), new Vector2(0f, SCREEN_HEIGHT),
-                    new Vector2(0f, 0f), new Vector2(SCREEN_WIDTH, 0f)),
-            new ScriptItem(SHIP, BEZIER_SPLINE, 150f, 5, false, true, 500, ENEMY_BULLET_EASY_VELOCITY,
-                    new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT), new Vector2(0f, SCREEN_HEIGHT),
-                    new Vector2(0f, 0f), new Vector2(SCREEN_WIDTH, 0f)),
-            new ScriptItem(SOUCOUPE, BEZIER_SPLINE, 150f, 5, false, true, 500, ENEMY_BULLET_EASY_VELOCITY,
-                    new Vector2(0f, SCREEN_HEIGHT), new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT),
-                    new Vector2(SCREEN_WIDTH, 0f), new Vector2(0f, 0f)),
-            new ScriptItem(SHIP, BEZIER_SPLINE, 150f, 5, false, true, 500, ENEMY_BULLET_EASY_VELOCITY,
-                    new Vector2(0f, SCREEN_HEIGHT), new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT),
-                    new Vector2(SCREEN_WIDTH, 0f), new Vector2(0f, 0f)),
+    }
 
-            new ScriptItem(SOUCOUPE, LINEAR_Y, 150f, 10, false, true, 1000, ENEMY_BULLET_EASY_VELOCITY,
-                    (float) SCREEN_WIDTH - SOUCOUPE_WIDTH, (float) SCREEN_HEIGHT),
-            new ScriptItem(SHIP, LINEAR_Y, 150f, 10, false, true, 1000, ENEMY_BULLET_EASY_VELOCITY,
-                    (float) SCREEN_WIDTH - SHIP_WIDTH, (float) SCREEN_HEIGHT),
-            new ScriptItem(SOUCOUPE, LINEAR_Y, 150f, 5, false, true, 500, ENEMY_BULLET_EASY_VELOCITY,
-                    0f, (float) SCREEN_HEIGHT),
-            new ScriptItem(SHIP, LINEAR_Y, 150f, 5, false, true, 500, ENEMY_BULLET_EASY_VELOCITY,
-                    0f, (float) SCREEN_HEIGHT),
-            new ScriptItem(SOUCOUPE, LINEAR_X, 150f, 10, false, true, 1000, ENEMY_BULLET_EASY_VELOCITY,
-                    -SOUCOUPE_WIDTH, 2 * SCREEN_HEIGHT / 3f, 1f),
-            new ScriptItem(SHIP, LINEAR_X, 150f, 10, false, true, 1000, ENEMY_BULLET_EASY_VELOCITY,
-                    -SOUCOUPE_WIDTH, 2 * SCREEN_HEIGHT / 3f, 1f),
+    private List<ScriptItem> randomMediumSpawnEnemiesComingFromLeft(int nbSpawns) {
+        return randomSpawnEnemies(nbSpawns, ENEMY_VELOCITY_MEDIUM, ENEMY_BULLET_MEDIUM_VELOCITY, BONUS_SQUADRON_MEDIUM, 5, 12, true);
 
-            new ScriptItem(SOUCOUPE, BEZIER_SPLINE, 150f, 5, false, true, 500, ENEMY_BULLET_EASY_VELOCITY,
-                    new Vector2(-SOUCOUPE_WIDTH, SCREEN_HEIGHT / 2f), new Vector2(0f, SCREEN_HEIGHT),
-                    new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT), new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT / 2f)),
-            new ScriptItem(SHIP, BEZIER_SPLINE, 150f, 5, false, true, 500, ENEMY_BULLET_EASY_VELOCITY,
-                    new Vector2(-SHIP_WIDTH, SCREEN_HEIGHT / 2f), new Vector2(0f, SCREEN_HEIGHT),
-                    new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT), new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT / 2f)),
-            new ScriptItem(SHIP, LINEAR_X, 50f, 10, false, true, 1000, ENEMY_BULLET_EASY_VELOCITY, 0f, SCREEN_HEIGHT - SHIP_WIDTH, 1f)
+    }
 
-    )
-    );
+    private List<ScriptItem> randomMediumSpawnEnemiesComingFromRight(int nbSpawns) {
+        return randomSpawnEnemies(nbSpawns, ENEMY_VELOCITY_MEDIUM, ENEMY_BULLET_MEDIUM_VELOCITY, BONUS_SQUADRON_MEDIUM, 5, 12, false);
 
-    private LinkedList<ScriptItem> scriptItemsMedium1 = new LinkedList<ScriptItem>(Arrays.asList(
-            new ScriptItem(SHIP, CATMULL_ROM_SPLINE, 200f, 5, false, true, 750, ENEMY_BULLET_MEDIUM_VELOCITY,
-                    new Vector2(0f, SCREEN_HEIGHT), new Vector2(SCREEN_WIDTH * 0.8f, 3 * SCREEN_HEIGHT / 4f),
-                    new Vector2(SCREEN_WIDTH * 0.2f, 2 * SCREEN_HEIGHT / 4f), new Vector2(SCREEN_WIDTH * 0.8f, SCREEN_HEIGHT / 4f),
-                    new Vector2(SCREEN_WIDTH * 0.2f, -SCREEN_HEIGHT / 4f),
-                    new Vector2(SCREEN_WIDTH * 0.8f, -2 * SCREEN_HEIGHT / 4f)),
-            new ScriptItem(SOUCOUPE, CATMULL_ROM_SPLINE, 200f, 5, false, true, 750, ENEMY_BULLET_MEDIUM_VELOCITY,
-                    new Vector2(0f, SCREEN_HEIGHT), new Vector2(SCREEN_WIDTH * 0.8f, 3 * SCREEN_HEIGHT / 4f),
-                    new Vector2(SCREEN_WIDTH * 0.2f, 2 * SCREEN_HEIGHT / 4f), new Vector2(SCREEN_WIDTH * 0.8f, SCREEN_HEIGHT / 4f),
-                    new Vector2(SCREEN_WIDTH * 0.2f, -SCREEN_HEIGHT / 4f),
-                    new Vector2(SCREEN_WIDTH * 0.8f, -2 * SCREEN_HEIGHT / 4f)),
-            new ScriptItem(SOUCOUPE, BEZIER_SPLINE, 200f, 10, false, true, 1500, ENEMY_BULLET_MEDIUM_VELOCITY,
-                    new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT), new Vector2(0f, SCREEN_HEIGHT),
-                    new Vector2(0f, 0f), new Vector2(SCREEN_WIDTH, 0f)),
-            new ScriptItem(SOUCOUPE, BEZIER_SPLINE, 200f, 10, false, true, 1500, ENEMY_BULLET_MEDIUM_VELOCITY,
-                    new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT), new Vector2(0f, SCREEN_HEIGHT),
-                    new Vector2(0f, 0f), new Vector2(SCREEN_WIDTH, 0f)),
-            new ScriptItem(SHIP, BEZIER_SPLINE, 200f, 10, false, true, 1500, ENEMY_BULLET_MEDIUM_VELOCITY,
-                    new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT), new Vector2(0f, SCREEN_HEIGHT),
-                    new Vector2(0f, 0f), new Vector2(SCREEN_WIDTH, 0f)),
-            new ScriptItem(SHIP, LINEAR_Y, 200f, 10, false, true, 1500, ENEMY_BULLET_MEDIUM_VELOCITY,
-                    (float) SCREEN_WIDTH - SHIP_WIDTH, (float) SCREEN_HEIGHT)
-    )
-    );
+    }
 
-    private LinkedList<ScriptItem> scriptItemsMedium2 = new LinkedList<ScriptItem>(Arrays.asList(
-            new ScriptItem(SOUCOUPE, CATMULL_ROM_SPLINE, 200f, 10, false, true, 1500, ENEMY_BULLET_MEDIUM_VELOCITY,
-                    new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT), new Vector2(SCREEN_WIDTH * 0.2f, 3 * SCREEN_HEIGHT / 4f),
-                    new Vector2(SCREEN_WIDTH * 0.8f, 2 * SCREEN_HEIGHT / 4f), new Vector2(SCREEN_WIDTH * 0.2f, SCREEN_HEIGHT / 4f),
-                    new Vector2(SCREEN_WIDTH * 0.8f, -SCREEN_HEIGHT / 4f),
-                    new Vector2(SCREEN_WIDTH * 0.2f, -2 * SCREEN_HEIGHT / 4f)),
-            new ScriptItem(SOUCOUPE, BEZIER_SPLINE, 200f, 5, false, true, 750, ENEMY_BULLET_MEDIUM_VELOCITY,
-                    new Vector2(0f, SCREEN_HEIGHT), new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT),
-                    new Vector2(SCREEN_WIDTH, 0f), new Vector2(0f, 0f)),
-            new ScriptItem(SHIP, LINEAR_Y, 200f, 10, false, true, 1500, ENEMY_BULLET_MEDIUM_VELOCITY,
-                    (float) SCREEN_WIDTH - SHIP_WIDTH, (float) SCREEN_HEIGHT),
-            new ScriptItem(SOUCOUPE, LINEAR_Y, 200f, 5, false, true, 750, ENEMY_BULLET_MEDIUM_VELOCITY,
-                    SCREEN_WIDTH / 3f, (float) SCREEN_HEIGHT),
-            new ScriptItem(SHIP, LINEAR_X, 200f, 10, false, true, 1500, ENEMY_BULLET_MEDIUM_VELOCITY,
-                    -SOUCOUPE_WIDTH, 2 * SCREEN_HEIGHT / 3f, 1f),
-            new ScriptItem(SHIP, LINEAR_X, 200f, 10, false, true, 1500, ENEMY_BULLET_MEDIUM_VELOCITY,
-                    -SHIP_WIDTH, 2 * SCREEN_HEIGHT / 3f, 1f)
-    )
-    );
+    private List<ScriptItem> randomHardSpawnEnemiesComingFromLeft(int nbSpawns) {
+        return randomSpawnEnemies(nbSpawns, ENEMY_VELOCITY_HARD, ENEMY_BULLET_HARD_VELOCITY, BONUS_SQUADRON_HARD, 7, 15, true);
 
-    private LinkedList<ScriptItem> scriptItemsHard = new LinkedList<ScriptItem>(
-            Arrays.asList(
-                    new ScriptItem(SOUCOUPE, BEZIER_SPLINE, 250f, 5, false, true, 1000, ENEMY_BULLET__HARD_VELOCITY,
-                            new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT), new Vector2(0f, SCREEN_HEIGHT),
-                            new Vector2(0f, 0f), new Vector2(SCREEN_WIDTH, 0f)),
-                    new ScriptItem(SOUCOUPE, BEZIER_SPLINE, 250f, 5, false, true, 1000, ENEMY_BULLET__HARD_VELOCITY,
-                            new Vector2(0f, SCREEN_HEIGHT), new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH, 0f), new Vector2(0f, 0f)),
-                    new ScriptItem(SHIP, LINEAR_XY, 250f, 10, false, true, 1500, ENEMY_BULLET__HARD_VELOCITY,
-                            0f, (float) SCREEN_HEIGHT, (float) SCREEN_WIDTH, 0f),
-                    new ScriptItem(SHIP, LINEAR_XY, 250f, 10, false, true, 1500, ENEMY_BULLET__HARD_VELOCITY,
-                            (float) SCREEN_WIDTH, (float) SCREEN_HEIGHT, 0f, 0f),
-                    new ScriptItem(SOUCOUPE, SEMI_CIRCLE, 250f, 10, false, true, 1500, ENEMY_BULLET__HARD_VELOCITY,
-                            0f, (float) SCREEN_HEIGHT),
-                    new ScriptItem(SOUCOUPE, BEZIER_SPLINE, 250f, 20, false, true, 2000, ENEMY_BULLET__HARD_VELOCITY,
-                            new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT), new Vector2(0f, SCREEN_HEIGHT),
-                            new Vector2(0f, 0f), new Vector2(SCREEN_WIDTH, 0f)),
-                    new ScriptItem(SHIP, BEZIER_SPLINE, 250f, 5, false, true, 1000, ENEMY_BULLET__HARD_VELOCITY,
-                            new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT), new Vector2(0f, SCREEN_HEIGHT),
-                            new Vector2(0f, 0f), new Vector2(SCREEN_WIDTH, 0f)),
-                    new ScriptItem(SHIP, LINEAR_X, 250f, 10, false, true, 1500, ENEMY_BULLET__HARD_VELOCITY,
-                            -SHIP_WIDTH, 2 * SCREEN_HEIGHT / 3f, 1f),
-                    new ScriptItem(SOUCOUPE, LINEAR_X, 200f, 10, false, true, 1500, ENEMY_BULLET__HARD_VELOCITY,
-                            SCREEN_WIDTH + SOUCOUPE_WIDTH, 2 * SCREEN_HEIGHT / 3f - SOUCOUPE_WIDTH / 2f, -1f),
-                    new ScriptItem(SHIP, LINEAR_X, 250f, 10, false, true, 1500, ENEMY_BULLET__HARD_VELOCITY,
-                            SCREEN_WIDTH + SHIP_WIDTH, 2 * SCREEN_HEIGHT / 3f - 2 * SOUCOUPE_WIDTH, -1f),
-                    new ScriptItem(SOUCOUPE, LINEAR_X, 200f, 10, false, true, 1500, ENEMY_BULLET__HARD_VELOCITY,
-                            -SOUCOUPE_WIDTH, 2 * SCREEN_HEIGHT / 3f - 3 * SOUCOUPE_WIDTH / 2f, 1f)
+    }
 
-            )
-    );
+    private List<ScriptItem> randomHardSpawnEnemiesComingFromRight(int nbSpawns) {
+        return randomSpawnEnemies(nbSpawns, ENEMY_VELOCITY_HARD, ENEMY_BULLET_HARD_VELOCITY, BONUS_SQUADRON_HARD, 7, 15, false);
+
+    }
+
+    private List<ScriptItem> randomSpawnEnemies(int nbSpawns, float velocity, float bulletVelocity, int bonus, int minEnemies, int maxEnemies, boolean comingFromLeft) {
+        List<ScriptItem> list = new ArrayList<ScriptItem>(nbSpawns);
+        for (int i = 0; i < nbSpawns; ++i) {
+            int randomMoveType = getRandomMoveType();
+            int number = randomMoveType == ARROW_DOWN || randomMoveType == ARROW_UP ? 7 : minEnemies + random.nextInt(maxEnemies - minEnemies + 1);
+            list.add(
+                    new ScriptItem(
+                            getRandomShipType(),
+                            randomMoveType,
+                            velocity,
+                            number,
+                            false, true,
+                            number * bonus,
+                            bulletVelocity,
+                            getRandomMoveParams(randomMoveType, comingFromLeft)
+                    ));
+        }
+        return list;
+    }
+
+    private Object[] getRandomMoveParams(int randomMoveType, boolean comingFromLeft) {
+        float direction = comingFromLeft ? 1f : -1f;
+        int leftOrRight = comingFromLeft ? 0 : 1;
+        switch (randomMoveType) {
+            case ARROW_DOWN:
+            case ARROW_UP:
+                return null;
+            case LINEAR_X:
+                return new Object[]{-direction * SHIP_WIDTH + leftOrRight * SCREEN_WIDTH, 2f / 3f * SCREEN_HEIGHT + random.nextFloat() * SCREEN_HEIGHT / 12f, direction};
+            case LINEAR_Y:
+                return new Object[]{1f / 5f * SCREEN_WIDTH + random.nextFloat() * 3 * SCREEN_WIDTH / 5f, (float) SCREEN_HEIGHT};
+            case LINEAR_XY:
+                return new Object[]{0f + leftOrRight * SCREEN_WIDTH, (float) SCREEN_HEIGHT, (float) SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f};
+            case SEMI_CIRCLE:
+                return new Object[]{0f, (float) SCREEN_HEIGHT};
+            case BEZIER_SPLINE:
+                if (random.nextBoolean()) {
+                    return new Object[]{
+                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
+                            new Vector2((float) SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
+                            new Vector2((float) SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f),
+                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, 0f)};
+                } else {
+                    return new Object[]{
+                            new Vector2(-SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + SHIP_WIDTH), SCREEN_HEIGHT / 2f),
+                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
+                            new Vector2((float) SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
+                            new Vector2((float) SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT / 2f)};
+                }
+            case CATMULL_ROM_SPLINE:
+                return new Object[]{
+                        new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
+                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), 3 * SCREEN_HEIGHT / 4f),
+                        new Vector2(SCREEN_WIDTH * (0.2f + leftOrRight * 0.6f), 2 * SCREEN_HEIGHT / 4f),
+                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), SCREEN_HEIGHT / 4f),
+                        new Vector2(SCREEN_WIDTH * (0.2f + leftOrRight * 0.6f), -SCREEN_HEIGHT / 4f),
+                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), -2 * SCREEN_HEIGHT / 4f)
+                };
+
+
+        }
+        return null;
+    }
+
+    public int getRandomShipType() {
+        return random.nextInt(4);
+    }
+
+    public int getRandomAsteroidType() {
+        return 999 + random.nextInt(2);
+    }
+
+    public int getRandomMoveType() {
+        return random.nextInt(8);
+    }
 
     class ScriptItem {
         int typeShip;
@@ -227,6 +228,7 @@ public class Level1Screen extends LevelScreen {
         public void execute() {
             squadronFactory.createSquadron(typeShip, typeSquadron, velocity, number, powerUp, displayBonus, bonus, bulletVelocity, params);
         }
+
     }
 
     @Override

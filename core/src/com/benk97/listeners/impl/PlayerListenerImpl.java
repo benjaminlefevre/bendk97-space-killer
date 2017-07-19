@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.benk97.Settings;
 import com.benk97.assets.Assets;
 import com.benk97.components.GameOverComponent;
@@ -13,6 +14,7 @@ import com.benk97.components.Mappers;
 import com.benk97.components.PlayerComponent;
 import com.benk97.entities.EntityFactory;
 import com.benk97.listeners.PlayerListener;
+import com.benk97.screens.LevelScreen;
 
 import static com.benk97.SpaceKillerGameConstants.PLAYER_ORIGIN_X;
 import static com.benk97.SpaceKillerGameConstants.PLAYER_ORIGIN_Y;
@@ -25,12 +27,14 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     private Array<Entity> lives;
     private TweenManager tweenManager;
     private  Assets assets;
+    private LevelScreen screen;
 
-    public PlayerListenerImpl(Assets asset, EntityFactory entityFactory, Array<Entity> lives, TweenManager tweenManager) {
+    public PlayerListenerImpl(Assets asset, EntityFactory entityFactory, Array<Entity> lives, TweenManager tweenManager, LevelScreen screen) {
         this.entityFactory = entityFactory;
         this.lives = lives;
         this.tweenManager = tweenManager;
         this.assets = asset;
+        this.screen = screen;
     }
 
     @Override
@@ -42,6 +46,12 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
             player.add(((PooledEngine) getEngine()).createComponent(GameOverComponent.class));
             Settings.addScore(playerComponent.getScoreInt());
             Settings.save();
+            new Timer().scheduleTask(new Timer.Task() {
+                @Override
+                public void run() {
+                    screen.goToMenu();
+                }
+            }, 3);
         } else {
             assets.playSound(SOUND_LOSE_LIFE);
             if (playerComponent.lives > 0) {
@@ -73,7 +83,13 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
 
     @Override
     public void updateScore(Entity player, int score) {
-        boolean newLife = Mappers.player.get(player).updateScore(score);
+        PlayerComponent playerComponent =Mappers.player.get(player);
+        boolean notHighScoreOld = !playerComponent.isHighscore();
+        boolean newLife = playerComponent.updateScore(score);
+        boolean highscoreNew = playerComponent.isHighscore();
+        if(notHighScoreOld && highscoreNew){
+            assets.playSound(SOUND_NEW_HIGHSCORE);
+        }
         if(newLife){
             assets.playSound(SOUND_NEW_LIFE);
             for(Entity life: lives){

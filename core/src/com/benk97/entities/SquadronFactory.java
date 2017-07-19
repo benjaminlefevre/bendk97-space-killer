@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.benk97.components.EnemyComponent;
 import com.benk97.components.Mappers;
 import com.benk97.components.PositionComponent;
+import com.benk97.components.SpriteComponent;
 import com.benk97.tweens.PositionComponentAccessor;
 
 import java.util.Arrays;
@@ -17,17 +18,18 @@ import java.util.Random;
 
 import static com.benk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.benk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.benk97.entities.EntityFactory.*;
 
 public class SquadronFactory {
-    public final static int SOUCOUPE = 0;
-    public final static int SHIP = 1;
-    public final static int ASTEROID = 2;
+
     public final static int LINEAR_X = 0;
     public final static int LINEAR_Y = 1;
     public final static int SEMI_CIRCLE = 2;
     public final static int BEZIER_SPLINE = 3;
     public final static int CATMULL_ROM_SPLINE = 4;
     public final static int LINEAR_XY = 5;
+    public final static int ARROW_UP = 6;
+    public final static int ARROW_DOWN = 7;
 
 
     private TweenManager tweenManager;
@@ -53,11 +55,12 @@ public class SquadronFactory {
                 case SOUCOUPE:
                     ship = entityFactory.createEnemySoucoupe(squadron, random.nextBoolean(), bulletVelocity);
                     break;
-                case SHIP:
-                    ship = entityFactory.createEnemyShip(squadron, random.nextBoolean(), bulletVelocity);
+                case ASTEROID_1:
+                case ASTEROID_2:
+                    ship = entityFactory.createAsteroid(squadron, shipType);
                     break;
-                case ASTEROID:
-                    ship = entityFactory.createAsteroid(squadron);
+                default:
+                    ship = entityFactory.createEnemyShip(squadron, random.nextBoolean(), bulletVelocity, shipType);
             }
             entities[i] = ship;
         }
@@ -84,6 +87,82 @@ public class SquadronFactory {
                 break;
             case CATMULL_ROM_SPLINE:
                 createCatmullSplineSquadron(entities, velocity, Arrays.copyOf(params, params.length, Vector2[].class));
+                break;
+            case ARROW_DOWN:
+                createArrowDownSquadron(entities, velocity);
+                break;
+            case ARROW_UP:
+                createArrowUpSquadron(entities, velocity);
+                break;
+        }
+    }
+
+
+    private void createArrowUpSquadron(Entity[] entities, float velocity) {
+        if (entities.length != 7) {
+            throw new IllegalArgumentException("Works only with 5 entities");
+        }
+        SpriteComponent sprite = Mappers.sprite.get(entities[0]);
+        float width = sprite.sprite.getWidth();
+        float height = sprite.sprite.getHeight();
+        Mappers.position.get(entities[0]).setPosition(SCREEN_WIDTH / 2f - width / 2f - 3 * width * 1.1f, SCREEN_HEIGHT + 3 * height * 1.1f);
+        Mappers.position.get(entities[1]).setPosition(SCREEN_WIDTH / 2f - width / 2f - 2 * width * 1.1f, SCREEN_HEIGHT + 2 * height * 1.1f);
+        Mappers.position.get(entities[2]).setPosition(SCREEN_WIDTH / 2f - width / 2f - width * 1.1f, SCREEN_HEIGHT + height * 1.1f);
+        Mappers.position.get(entities[3]).setPosition(SCREEN_WIDTH / 2f - width / 2f, SCREEN_HEIGHT);
+        Mappers.position.get(entities[4]).setPosition(SCREEN_WIDTH / 2f - width / 2f + width * 1.1f, SCREEN_HEIGHT + height * 1.1f);
+        Mappers.position.get(entities[5]).setPosition(SCREEN_WIDTH / 2f - width / 2f + 2 * width * 1.1f, SCREEN_HEIGHT + 2 * height * 1.1f);
+        Mappers.position.get(entities[6]).setPosition(SCREEN_WIDTH / 2f - width / 2f + 3 * width * 1.1f, SCREEN_HEIGHT + 3 * height * 1.1f);
+
+
+        for (final Entity entity : entities) {
+            PositionComponent position = Mappers.position.get(entity);
+            Timeline.createSequence()
+                    .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, 3 * SCREEN_HEIGHT / velocity)
+                            .ease(Linear.INOUT)
+                            .targetRelative(-3f * SCREEN_HEIGHT))
+                    .setCallback(new TweenCallback() {
+                        @Override
+                        public void onEvent(int i, BaseTween<?> baseTween) {
+                            if (i == TweenCallback.COMPLETE) {
+                                removeEntitySquadron(entity);
+                            }
+                        }
+                    })
+                    .start(tweenManager);
+        }
+    }
+
+    private void createArrowDownSquadron(Entity[] entities, float velocity) {
+        if (entities.length != 7) {
+            throw new IllegalArgumentException("Works only with 5 entities");
+        }
+        SpriteComponent sprite = Mappers.sprite.get(entities[0]);
+        float width = sprite.sprite.getWidth();
+        float height = sprite.sprite.getHeight();
+        Mappers.position.get(entities[0]).setPosition(SCREEN_WIDTH / 2f - width / 2f - 3 * width * 1.1f, SCREEN_HEIGHT);
+        Mappers.position.get(entities[1]).setPosition(SCREEN_WIDTH / 2f - width / 2f - 2 * width * 1.1f, SCREEN_HEIGHT + height * 1.1f);
+        Mappers.position.get(entities[2]).setPosition(SCREEN_WIDTH / 2f - width / 2f - width * 1.1f, SCREEN_HEIGHT + 2 * height * 1.1f);
+        Mappers.position.get(entities[3]).setPosition(SCREEN_WIDTH / 2f - width / 2f, SCREEN_HEIGHT + 3 * height * 1.1f);
+        Mappers.position.get(entities[4]).setPosition(SCREEN_WIDTH / 2f - width / 2f + width * 1.1f, SCREEN_HEIGHT + 2 * height * 1.1f);
+        Mappers.position.get(entities[5]).setPosition(SCREEN_WIDTH / 2f - width / 2f + 2 * width * 1.1f, SCREEN_HEIGHT + height * 1.1f);
+        Mappers.position.get(entities[6]).setPosition(SCREEN_WIDTH / 2f - width / 2f + 3 * width * 1.1f, SCREEN_HEIGHT);
+
+
+        for (final Entity entity : entities) {
+            PositionComponent position = Mappers.position.get(entity);
+            Timeline.createSequence()
+                    .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, 3 * SCREEN_HEIGHT / velocity)
+                            .ease(Linear.INOUT)
+                            .targetRelative(-3f * SCREEN_HEIGHT))
+                    .setCallback(new TweenCallback() {
+                        @Override
+                        public void onEvent(int i, BaseTween<?> baseTween) {
+                            if (i == TweenCallback.COMPLETE) {
+                                removeEntitySquadron(entity);
+                            }
+                        }
+                    })
+                    .start(tweenManager);
         }
     }
 

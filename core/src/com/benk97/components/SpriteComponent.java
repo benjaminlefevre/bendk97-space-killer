@@ -20,10 +20,10 @@ public class SpriteComponent implements Component, Pool.Poolable {
 
     public void setTexture(Sprite sprite, float alpha, float rotation, float scale) {
         this.sprite = sprite;
-        this.sprite.setOriginCenter();
+        this.sprite.setOrigin(0f, 0f);
+        this.sprite.setScale(scale);
         this.alpha = alpha;
         this.sprite.rotate(rotation);
-        this.sprite.setScale(scale);
     }
 
 

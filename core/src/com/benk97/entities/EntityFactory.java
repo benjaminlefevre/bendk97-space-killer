@@ -172,58 +172,62 @@ public class EntityFactory {
     }
 
 
+    public Entity createEnemy(Entity squadron, boolean canAttack, float velocityBullet, String atlasName, int points, float frameDuration) {
+        Entity enemy = engine.createEntity();
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
+        enemyComponent.points = points;
+        enemyComponent.bulletVelocity = velocityBullet;
+        enemyComponent.canAttack = canAttack;
+        if (squadron != null) {
+            enemyComponent.squadron = squadron;
+        }
+        enemy.add(enemyComponent);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
+        enemy.add(position);
+        enemy.add(engine.createComponent(VelocityComponent.class));
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
+        Array<Sprite> sprites = atlas.createSprites(atlasName);
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(frameDuration, sprites, LOOP));
+        enemy.add(animationComponent);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.sprite = sprites.get(0);
+        enemy.add(component);
+        enemy.add(engine.createComponent(StateComponent.class));
+        engine.addEntity(enemy);
+        return enemy;
+    }
+
     public Entity createEnemySoucoupe(Entity squadron, boolean canAttack, float velocityBullet) {
-        Entity enemy = engine.createEntity();
-        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
-        enemyComponent.points = 100;
-        enemyComponent.bulletVelocity = velocityBullet;
-        enemyComponent.canAttack = canAttack;
-        if (squadron != null) {
-            enemyComponent.squadron = squadron;
-        }
-        enemy.add(enemyComponent);
-        PositionComponent position = engine.createComponent(PositionComponent.class);
-        enemy.add(position);
-        enemy.add(engine.createComponent(VelocityComponent.class));
-        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = atlas.createSprites("soucoupe");
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, LOOP));
-        enemy.add(animationComponent);
-        SpriteComponent component = engine.createComponent(SpriteComponent.class);
-        component.sprite = sprites.get(0);
-        enemy.add(component);
-        enemy.add(engine.createComponent(StateComponent.class));
-        engine.addEntity(enemy);
-        return enemy;
+        return createEnemy(squadron, canAttack, velocityBullet, "soucoupe", 100, FRAME_DURATION);
     }
 
 
-    public Entity createEnemyShip(Entity squadron, boolean canAttack, float velocityBullet) {
-        Entity enemy = engine.createEntity();
-        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
-        enemyComponent.points = 200;
-        enemyComponent.bulletVelocity = velocityBullet;
-        enemyComponent.canAttack = canAttack;
-        if (squadron != null) {
-            enemyComponent.squadron = squadron;
+    public Entity createEnemyShip(Entity squadron, boolean canAttack, float velocityBullet, int enemyTYpe) {
+        String atlasRegion = "enemy";
+        float frameDuration = FRAME_DURATION;
+        switch (enemyTYpe) {
+            case SHIP_1:
+                atlasRegion = "enemy";
+                break;
+            case SHIP_2:
+                atlasRegion = "enemy2";
+                break;
+            case SHIP_3:
+                atlasRegion = "enemy3";
+                frameDuration = FRAME_DURATION_ENEMY_3;
+                break;
         }
-        enemy.add(enemyComponent);
-        PositionComponent position = engine.createComponent(PositionComponent.class);
-        enemy.add(position);
-        enemy.add(engine.createComponent(VelocityComponent.class));
-        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = atlas.createSprites("enemy");
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, LOOP));
-        enemy.add(animationComponent);
-        SpriteComponent component = engine.createComponent(SpriteComponent.class);
-        component.sprite = sprites.get(0);
-        enemy.add(component);
-        enemy.add(engine.createComponent(StateComponent.class));
-        engine.addEntity(enemy);
-        return enemy;
+        return createEnemy(squadron, canAttack, velocityBullet, atlasRegion, 200, frameDuration);
     }
 
-    public Entity createAsteroid(Entity squadron) {
+    public final static int SOUCOUPE = 0;
+    public final static int SHIP_1 = 1;
+    public final static int SHIP_2 = 2;
+    public final static int SHIP_3 = 3;
+    public final static int ASTEROID_1 = 999;
+    public final static int ASTEROID_2 = 1000;
+
+    public Entity createAsteroid(Entity squadron, int asteroid) {
         Entity enemy = engine.createEntity();
         EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
@@ -235,7 +239,8 @@ public class EntityFactory {
         enemy.add(position);
         enemy.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = atlas.createSprites("asteroid");
+        String asteroidSprite = asteroid == ASTEROID_1 ? "asteroid" : "asteroid2";
+        Array<Sprite> sprites = atlas.createSprites(asteroidSprite);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, LOOP));
         enemy.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
@@ -245,6 +250,7 @@ public class EntityFactory {
         engine.addEntity(enemy);
         return enemy;
     }
+
 
     public Entity createEntityPlayer() {
         Entity player = engine.createEntity();
@@ -354,10 +360,10 @@ public class EntityFactory {
 
     }
 
-    public Entity createEntitiesPadController(float alpha, float posX, float posY) {
+    public Entity createEntitiesPadController(float alpha, float scale, float posX, float posY) {
         Entity pad = engine.createEntity();
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
-        component.setTexture(atlas.createSprite("pad"), 0.2f, 0f, 1f);
+        component.setTexture(atlas.createSprite("pad"), alpha, 0f, scale);
         component.setPosition(posX, posY);
         pad.add(component);
         engine.addEntity(pad);
