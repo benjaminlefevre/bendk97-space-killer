@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.Array;
 import com.benk97.Settings;
+import com.benk97.assets.Assets;
 import com.benk97.components.GameOverComponent;
 import com.benk97.components.InvulnerableComponent;
 import com.benk97.components.Mappers;
@@ -15,6 +16,7 @@ import com.benk97.listeners.PlayerListener;
 
 import static com.benk97.SpaceKillerGameConstants.PLAYER_ORIGIN_X;
 import static com.benk97.SpaceKillerGameConstants.PLAYER_ORIGIN_Y;
+import static com.benk97.assets.Assets.*;
 import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
 
 
@@ -22,11 +24,13 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     private EntityFactory entityFactory;
     private Array<Entity> lives;
     private TweenManager tweenManager;
+    private  Assets assets;
 
-    public PlayerListenerImpl(EntityFactory entityFactory, Array<Entity> lives, TweenManager tweenManager) {
+    public PlayerListenerImpl(Assets asset, EntityFactory entityFactory, Array<Entity> lives, TweenManager tweenManager) {
         this.entityFactory = entityFactory;
         this.lives = lives;
         this.tweenManager = tweenManager;
+        this.assets = asset;
     }
 
     @Override
@@ -34,10 +38,12 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
         PlayerComponent playerComponent = Mappers.player.get(player);
         playerComponent.loseLife();
         if (playerComponent.isGameOver()) {
+            assets.playSound(SOUND_GAME_OVER);
             player.add(((PooledEngine) getEngine()).createComponent(GameOverComponent.class));
             Settings.addScore(playerComponent.getScoreInt());
             Settings.save();
         } else {
+            assets.playSound(SOUND_LOSE_LIFE);
             if (playerComponent.lives > 0) {
                 getEngine().removeEntity(lives.removeIndex(playerComponent.lives - 1));
             }
@@ -62,7 +68,19 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
 
     @Override
     public void updateScore(Entity player, Entity ennemy) {
-        Mappers.player.get(player).updateScore(Mappers.ennemy.get(ennemy).points);
+        updateScore(player, Mappers.enemy.get(ennemy).points);
+    }
+
+    @Override
+    public void updateScore(Entity player, int score) {
+        boolean newLife = Mappers.player.get(player).updateScore(score);
+        if(newLife){
+            assets.playSound(SOUND_NEW_LIFE);
+            for(Entity life: lives){
+                getEngine().removeEntity(life);
+            }
+            this.lives = entityFactory.createEntityPlayerLives(player);
+        }
     }
 
 

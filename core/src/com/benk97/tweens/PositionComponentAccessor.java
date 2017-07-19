@@ -6,6 +6,7 @@ import com.benk97.components.PositionComponent;
 public class PositionComponentAccessor implements TweenAccessor<PositionComponent> {
     public final static int POSITION_X = 0;
     public final static int POSITION_Y = 1;
+    public final static int POSITION_XY = 2;
 
     @Override
     public int getValues(PositionComponent target, int type, float[] returnValues) {
@@ -16,6 +17,10 @@ public class PositionComponentAccessor implements TweenAccessor<PositionComponen
             case POSITION_Y:
                 returnValues[0] = target.y;
                 return 1;
+            case POSITION_XY:
+                returnValues[0] = target.x;
+                returnValues[1] = target.y;
+                return 2;
             default:
                 return -1;
         }
@@ -29,6 +34,10 @@ public class PositionComponentAccessor implements TweenAccessor<PositionComponen
                 break;
             case POSITION_Y:
                 target.y = newValues[0];
+                break;
+            case POSITION_XY:
+                target.x = newValues[0];
+                target.y = newValues[1];
                 break;
             default:
                 break;

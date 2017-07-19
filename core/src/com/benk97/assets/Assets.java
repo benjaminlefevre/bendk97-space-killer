@@ -9,6 +9,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
@@ -26,10 +27,10 @@ import java.util.Map;
 public class Assets {
 
     // SPLASH SCREEN
-    public static final AssetDescriptor<Texture> SPLASH_TXT_HUMAN =
-            new AssetDescriptor<Texture>("gfx/human_running.png", Texture.class);
+    public static final AssetDescriptor<TextureAtlas> SPASH_ATLAS =
+            new AssetDescriptor<TextureAtlas>("gfx/splashscreen.atlas", TextureAtlas.class);
     public static final AssetDescriptor<Texture> SPLASH_TXT_LOGO =
-            new AssetDescriptor<Texture>("gfx/bendk97.png", Texture.class);
+            new AssetDescriptor<Texture>("gfx/backgrounds/bendk97.png", Texture.class);
     public static final AssetDescriptor<Music> SPLASH_MUSIC =
             new AssetDescriptor<Music>("sounds/splash.ogg", Music.class);
 
@@ -40,14 +41,8 @@ public class Assets {
             new AssetDescriptor<Music>("sounds/intro.mid", Music.class);
     public static final AssetDescriptor<Sound> MENU_CLICK =
             new AssetDescriptor<Sound>("sounds/click_menu.ogg", Sound.class);
-    public static final AssetDescriptor<Texture> MENU_MUSIC_OFF =
-            new AssetDescriptor<Texture>("gfx/music-off.png", Texture.class);
-    public static final AssetDescriptor<Texture> MENU_MUSIC_ON =
-            new AssetDescriptor<Texture>("gfx/music-on.png", Texture.class);
-    public static final AssetDescriptor<Texture> MENU_SOUND_OFF =
-            new AssetDescriptor<Texture>("gfx/sound-off.png", Texture.class);
-    public static final AssetDescriptor<Texture> MENU_SOUND_ON =
-            new AssetDescriptor<Texture>("gfx/sound-on.png", Texture.class);
+    public static final AssetDescriptor<TextureAtlas> MENU_ATLAS =
+            new AssetDescriptor<TextureAtlas>("gfx/menu.atlas", TextureAtlas.class);
 
 
     // BACKGROUNDS
@@ -56,29 +51,30 @@ public class Assets {
     public static final AssetDescriptor<Texture> GFX_BGD_LEVEL1 =
             new AssetDescriptor<Texture>("gfx/backgrounds/level1.gif", Texture.class);
     // GFX
-    public static final AssetDescriptor<Texture> GFX_PAD_ARROW =
-            new AssetDescriptor<Texture>("gfx/pad.png", Texture.class);
-    public static final AssetDescriptor<Texture> GFX_PAD_BUTTON_FIRE =
-            new AssetDescriptor<Texture>("gfx/fire_button.png", Texture.class);
-    public static final AssetDescriptor<Texture> GFX_BULLET =
-            new AssetDescriptor<Texture>("gfx/bullet.png", Texture.class);
-    public static final AssetDescriptor<Texture> GFX_BULLET2 =
-            new AssetDescriptor<Texture>("gfx/bullet2.png", Texture.class);
-    public static final AssetDescriptor<Texture> GFX_BULLET3 =
-            new AssetDescriptor<Texture>("gfx/bullet3.png", Texture.class);
-    public static final AssetDescriptor<Texture> GFX_SHIP_PLAYER =
-            new AssetDescriptor<Texture>("gfx/player.png", Texture.class);
-    public static final AssetDescriptor<Texture> GFX_SOUCOUPE =
-            new AssetDescriptor<Texture>("gfx/soucoupe.png", Texture.class);
-    public static final AssetDescriptor<Texture> GFX_EXPLOSION =
-            new AssetDescriptor<Texture>("gfx/explosion2.png", Texture.class);
+    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS = new AssetDescriptor<TextureAtlas>("gfx/level1.atlas", TextureAtlas.class);
     // SOUNDS
+    public static final AssetDescriptor<Sound> SOUND_LOSE_LIFE =
+            new AssetDescriptor<Sound>("sounds/loseLife.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_NEW_LIFE =
+            new AssetDescriptor<Sound>("sounds/newLife.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_GAME_OVER =
+            new AssetDescriptor<Sound>("sounds/game_over.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_SHIELD_BULLET =
+            new AssetDescriptor<Sound>("sounds/shield.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_SHIELD_UP =
+            new AssetDescriptor<Sound>("sounds/shieldUp.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_EXPLOSION =
             new AssetDescriptor<Sound>("sounds/explosion.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_FIRE =
             new AssetDescriptor<Sound>("sounds/fire.ogg", Sound.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_1 =
             new AssetDescriptor<Music>("sounds/level1.mid", Music.class);
+    public static final AssetDescriptor<Sound> SOUND_POWER_UP =
+            new AssetDescriptor<Sound>("sounds/powerUp.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_POWER_UP_VOICE =
+            new AssetDescriptor<Sound>("sounds/powerUpVoice.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_FIRE_ENEMY =
+            new AssetDescriptor<Sound>("sounds/enemyFire.ogg", Sound.class);
     // FONTS
     public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER =
             new AssetDescriptor<BitmapFont>("font1.ttf", BitmapFont.class,
@@ -99,16 +95,17 @@ public class Assets {
 
     public static Map<Class<? extends Screen>, List<AssetDescriptor>> assetsNeededByScreen = new HashMap<Class<? extends Screen>, List<AssetDescriptor>>() {{
         put(Level1Screen.class, Arrays.<AssetDescriptor>asList(
-                SOUND_FIRE, SOUND_EXPLOSION, MUSIC_LEVEL_1,
-                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM,
-                GFX_SOUCOUPE, GFX_SHIP_PLAYER, GFX_BGD_LEVEL1, GFX_BGD_STARS, GFX_BULLET, GFX_PAD_ARROW,
-                GFX_BULLET2, GFX_BULLET3, GFX_PAD_BUTTON_FIRE, GFX_EXPLOSION));
+                SOUND_FIRE, SOUND_EXPLOSION, MUSIC_LEVEL_1, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
+                SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
+                SOUND_NEW_LIFE,
+                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE,
+                GFX_BGD_LEVEL1, GFX_BGD_STARS, GFX_LEVEL1_ATLAS));
         put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
-                SPLASH_MUSIC, SPLASH_TXT_HUMAN, SPLASH_TXT_LOGO
+                SPLASH_MUSIC, SPASH_ATLAS, SPLASH_TXT_LOGO
         ));
         put(MenuScreen.class, Arrays.<AssetDescriptor>asList(
                 MENU_BGD, FONT_SPACE_KILLER_LARGE, MENU_MUSIC, FONT_SPACE_KILLER_MEDIUM, MENU_CLICK,
-                MENU_MUSIC_OFF, MENU_MUSIC_ON, MENU_SOUND_OFF, MENU_SOUND_ON
+                MENU_ATLAS
         ));
     }};
 
@@ -148,13 +145,19 @@ public class Assets {
     }
 
     public void playSound(AssetDescriptor<Sound> sound, float volume) {
-        if(Settings.isSoundOn()) {
+        if (Settings.isSoundOn()) {
+            if (manager.isLoaded(SOUND_FIRE.fileName)) {
+                manager.get(SOUND_FIRE).stop();
+            }
+            if(sound.equals(SOUND_EXPLOSION) && manager.isLoaded(SOUND_EXPLOSION.fileName)){
+                manager.get(SOUND_EXPLOSION).stop();
+            }
             manager.get(sound).play(volume);
         }
     }
 
     public void playMusic(AssetDescriptor<Music> music) {
-        if(Settings.isMusicOn()) {
+        if (Settings.isMusicOn()) {
             manager.get(music).setLooping(true);
             manager.get(music).play();
         }

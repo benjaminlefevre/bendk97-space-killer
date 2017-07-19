@@ -8,4 +8,14 @@ public interface CollisionListener {
     void enemyShoot(Entity ennemy, Entity player, Entity bullet);
 
     void playerHitByEnnemyBody(Entity player, Entity ennemy);
+
+    void playerHitByEnnemyBullet(Entity player, Entity bullet);
+
+    void playerPowerUp(Entity player, Entity powerUp);
+
+    void bulletStoppedByShield(Entity bullet);
+
+    void enemyShootByShield(Entity enemy, Entity shield);
+
+    void playerShieldUp(Entity player, Entity shieldUp);
 }

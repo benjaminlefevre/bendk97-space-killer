@@ -6,4 +6,6 @@ public interface PlayerListener {
     void loseLive(Entity player);
 
     void updateScore(Entity player, Entity ennemy);
+
+    void updateScore(Entity player, int score);
 }
