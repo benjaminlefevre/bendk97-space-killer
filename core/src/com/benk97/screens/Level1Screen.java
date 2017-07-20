@@ -117,6 +117,8 @@ public class Level1Screen extends LevelScreen {
     public void restartLevel1() {
         time = 0f;
         initSpawns();
+        assets.playMusic(MUSIC_LEVEL_1);
+        assets.stopMusic(MUSIC_LEVEL_1_BOSS);
     }
 
     private List<ScriptItem> randomEasySpawnEnemies(int nbSpawns) {
