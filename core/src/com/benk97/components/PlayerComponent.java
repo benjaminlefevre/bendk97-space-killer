@@ -8,6 +8,7 @@ import static com.benk97.components.PlayerComponent.PowerLevel.*;
 
 
 public class PlayerComponent implements Component, Pool.Poolable {
+
     public enum PowerLevel {
         NORMAL, DOUBLE, TRIPLE
     }
@@ -41,7 +42,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
         if (score > highscore) {
             highscore = score;
         }
-        if (Math.floor(oldScore / 50000f) < Math.floor(score / 50000f)) {
+        if (Math.floor(oldScore / NEW_LIFE) < Math.floor(score / NEW_LIFE)) {
             lives++;
             return true;
         } else {

@@ -3,6 +3,7 @@ package com.benk97.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.RandomXS128;
 import com.benk97.components.*;
 import com.benk97.entities.EntityFactory;
 
@@ -14,11 +15,11 @@ import static com.benk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 public class EnemyAttackSystem extends IteratingSystem {
 
     private EntityFactory entityFactory;
-    private Random random = new Random(System.currentTimeMillis());
+    private Random random = new RandomXS128();
     private Family player = Family.one(PlayerComponent.class).get();
 
     public EnemyAttackSystem(int priority, EntityFactory entityFactory) {
-        super(Family.all(EnemyComponent.class).get(), priority);
+        super(Family.all(EnemyComponent.class).exclude(BossComponent.class).get(), priority);
         this.entityFactory = entityFactory;
     }
 

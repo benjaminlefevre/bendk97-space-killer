@@ -65,10 +65,16 @@ public class Assets {
             new AssetDescriptor<Sound>("sounds/shieldUp.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_EXPLOSION =
             new AssetDescriptor<Sound>("sounds/explosion.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_BOSS_FINISHED =
+            new AssetDescriptor<Sound>("sounds/bossKilled.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_FIRE =
             new AssetDescriptor<Sound>("sounds/fire.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_BOSS_ALERT =
+            new AssetDescriptor<Sound>("sounds/boss-alert.ogg", Sound.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_1 =
             new AssetDescriptor<Music>("sounds/level1.mid", Music.class);
+    public static final AssetDescriptor<Music> MUSIC_LEVEL_1_BOSS =
+            new AssetDescriptor<Music>("sounds/level1-boss.mid", Music.class);
     public static final AssetDescriptor<Sound> SOUND_POWER_UP =
             new AssetDescriptor<Sound>("sounds/powerUp.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_POWER_UP_VOICE =
@@ -101,7 +107,8 @@ public class Assets {
         put(Level1Screen.class, Arrays.<AssetDescriptor>asList(
                 SOUND_FIRE, SOUND_EXPLOSION, MUSIC_LEVEL_1, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
                 SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
-                SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO,
+                SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, MUSIC_LEVEL_1_BOSS, SOUND_BOSS_ALERT,
+                SOUND_BOSS_FINISHED,
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE,
                 GFX_BGD_LEVEL1, GFX_BGD_STARS, GFX_LEVEL1_ATLAS));
         put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
@@ -167,4 +174,7 @@ public class Assets {
         }
     }
 
+    public void stopMusic(AssetDescriptor<Music> music) {
+        manager.get(music).stop();
+    }
 }

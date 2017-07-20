@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Bezier;
 import com.badlogic.gdx.math.CatmullRomSpline;
+import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
 import com.benk97.components.EnemyComponent;
 import com.benk97.components.Mappers;
@@ -30,12 +31,13 @@ public class SquadronFactory {
     public final static int LINEAR_XY = 5;
     public final static int ARROW_UP = 6;
     public final static int ARROW_DOWN = 7;
+    public final static int BOSS_MOVE = 100;
 
 
     private TweenManager tweenManager;
     private EntityFactory entityFactory;
     private Engine engine;
-    private Random random = new Random(System.currentTimeMillis());
+    private Random random = new RandomXS128();
 
     public SquadronFactory(TweenManager tweenManager, EntityFactory entityFactory, Engine engine) {
         this.tweenManager = tweenManager;
@@ -52,6 +54,9 @@ public class SquadronFactory {
         for (int i = 0; i < number; ++i) {
             Entity ship = null;
             switch (shipType) {
+                case BOSS_LEVEL_1:
+                    ship = entityFactory.createBoss(squadron, bulletVelocity);
+                    break;
                 case SOUCOUPE:
                     ship = entityFactory.createEnemySoucoupe(squadron, random.nextBoolean(), bulletVelocity);
                     break;
@@ -70,6 +75,9 @@ public class SquadronFactory {
 
     private void formSquadron(Entity[] entities, int squadronType, float velocity, Object... params) {
         switch (squadronType) {
+            case BOSS_MOVE:
+                createBossMove(entities, velocity);
+                break;
             case LINEAR_Y:
                 createLinearYSquadron(entities, velocity, (Float) params[0], (Float) params[1]);
                 break;
@@ -95,6 +103,34 @@ public class SquadronFactory {
                 createArrowUpSquadron(entities, velocity);
                 break;
         }
+    }
+
+    private void createBossMove(Entity[] entities, float velocity) {
+        if (entities.length != 1) {
+            throw new IllegalArgumentException("Works only with 1 boss");
+        }
+        final Entity entity = entities[0];
+        SpriteComponent spriteComponent = Mappers.sprite.get(entity);
+        PositionComponent position = Mappers.position.get(entity);
+        position.setPosition(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f,
+                SCREEN_HEIGHT + 10f);
+
+        Timeline.createSequence()
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (spriteComponent.sprite.getHeight() + 30f) / velocity)
+                        .ease(Linear.INOUT)
+                        .target(SCREEN_HEIGHT - spriteComponent.sprite.getHeight() - 20f))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, ((SCREEN_WIDTH + spriteComponent.sprite.getWidth()) / 2f) / velocity)
+                        .ease(Linear.INOUT)
+                        .target(-spriteComponent.sprite.getWidth()).delay(2f))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH + spriteComponent.sprite.getWidth() / 2f) / velocity)
+                        .ease(Linear.INOUT)
+                        .target(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f).delay(2f))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH + spriteComponent.sprite.getWidth() / 2f) / velocity)
+                        .ease(Linear.INOUT)
+                        .target(SCREEN_WIDTH).delay(2f))
+
+                .repeatYoyo(Tween.INFINITY, 1f)
+                .start(tweenManager);
     }
 
 

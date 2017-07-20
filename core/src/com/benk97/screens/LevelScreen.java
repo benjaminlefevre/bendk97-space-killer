@@ -7,10 +7,12 @@ import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -44,17 +46,23 @@ public class LevelScreen extends ScreenAdapter {
     protected TweenManager tweenManager;
     public Assets assets;
     private SpriteBatch batcher;
+    private ShapeRenderer shapeRenderer;
     private SpaceKillerGame game;
 
 
     public LevelScreen(Assets assets, SpaceKillerGame game) {
         this.game = game;
-        this.batcher = new SpriteBatch();
-        this.assets = assets;
-        this.tweenManager = new TweenManager();
         this.camera = new OrthographicCamera();
         viewport = new ExtendViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
         camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
+        this.batcher = new SpriteBatch();
+        if (DEBUG) {
+            this.shapeRenderer = new ShapeRenderer();
+            this.shapeRenderer.setProjectionMatrix(this.camera.combined);
+            this.shapeRenderer.setColor(Color.GREEN);
+        }
+        this.assets = assets;
+        this.tweenManager = new TweenManager();
         engine = new PooledEngine();
         engine.addEntityListener(new EntityListener() {
             @Override
@@ -85,22 +93,24 @@ public class LevelScreen extends ScreenAdapter {
         engine.addSystem(createInputHandlerSystem(player));
         PlayerListenerImpl playerListener = new PlayerListenerImpl(assets, entityFactory, lives, tweenManager, this);
         engine.addSystem(playerListener);
-        CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, assets, entityFactory, playerListener);
+        CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, assets, entityFactory, playerListener, (Level1Screen) this);
         engine.addSystem(collisionListener);
         engine.addSystem(new AnimationSystem(0));
         engine.addSystem(new StateSystem(1));
         engine.addSystem(new MovementSystem(2));
         engine.addSystem(new BackgroundRenderingSystem(batcher, 3));
         engine.addSystem(new ShieldSystem(4, player));
-        engine.addSystem(new DynamicEntitiesRenderingSystem(batcher, 4));
+        engine.addSystem(new DynamicEntitiesRenderingSystem(batcher, shapeRenderer, 4));
         engine.addSystem(new StaticEntitiesRenderingSystem(batcher, 5));
         engine.addSystem(new ScoresRenderingSystem(batcher, assets, player, 6));
         engine.addSystem(new GameOverRenderingSystem(batcher, camera, assets, 7));
+        engine.addSystem(new LevelFinishedRenderingSystem(batcher, assets, 7));
         if (DEBUG) {
             engine.addSystem(new FPSDisplayRenderingSystem(batcher, 8));
         }
         engine.addSystem(new CollisionSystem(collisionListener, 9));
         engine.addSystem(new EnemyAttackSystem(10, entityFactory));
+        engine.addSystem(new BossAttackSystem(10, entityFactory));
         engine.addSystem(new SquadronSystem(11, entityFactory, player, playerListener));
         engine.addSystem(new ScoreSquadronSystem(12, assets, batcher));
         engine.addSystem(new RemovableSystem(13));
