@@ -1,5 +1,6 @@
 package com.benk97.screens;
 
+import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
@@ -11,12 +12,13 @@ import java.util.Random;
 
 import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
+import static com.benk97.entities.EntityFactory.BOSS_LEVEL_1;
 import static com.benk97.entities.SquadronFactory.*;
 
 public class Level1Screen extends LevelScreen {
 
     private float time = 0f;
-    private Random random = new Random(System.currentTimeMillis());
+    private Random random = new RandomXS128();
 
 
     private LinkedList<ScriptItem> scriptItemsEasy;
@@ -24,6 +26,7 @@ public class Level1Screen extends LevelScreen {
     private LinkedList<ScriptItem> scriptItemsMediumRight;
     private LinkedList<ScriptItem> scriptItemsHardLeft;
     private LinkedList<ScriptItem> scriptItemsHardRight;
+    private ScriptItem boss;
 
     public Level1Screen(Assets assets, SpaceKillerGame game) {
         super(assets, game);
@@ -39,6 +42,8 @@ public class Level1Screen extends LevelScreen {
         scriptItemsMediumRight = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromRight(12));
         scriptItemsHardLeft = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromLeft(12));
         scriptItemsHardRight = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromRight(12));
+        boss = new ScriptItem(BOSS_LEVEL_1, BOSS_MOVE, 75f, 1, false, true, 10000,
+                ENEMY_BULLET_EASY_VELOCITY);
     }
 
 
@@ -71,7 +76,7 @@ public class Level1Screen extends LevelScreen {
             scriptItemsEasy.poll().execute();
             // 18 elements
         } else if (second <= 120 && (second % 5 == 0)) {
-            if(second==65){
+            if (second == 65) {
                 assets.playSound(SOUND_GO);
             }
             boolean left = random.nextBoolean();
@@ -83,7 +88,7 @@ public class Level1Screen extends LevelScreen {
                 mediumOther.poll().execute();
             }
         } else if (second <= 180 && (second % 5 == 0)) {
-            if(second==125){
+            if (second == 125) {
                 assets.playSound(SOUND_GO);
             }
             boolean left = random.nextBoolean();
@@ -95,10 +100,23 @@ public class Level1Screen extends LevelScreen {
                 hardOther.poll().execute();
             }
         } else if (second >= 185) {
-            time = 0f;
-            initSpawns();
+            switch (second) {
+                case 185:
+                    assets.playSound(SOUND_BOSS_ALERT);
+                    break;
+                case 189:
+                    assets.stopMusic(MUSIC_LEVEL_1);
+                    assets.playMusic(MUSIC_LEVEL_1_BOSS);
+                    boss.execute();
+                    break;
+            }
         }
 
+    }
+
+    public void restartLevel1() {
+        time = 0f;
+        initSpawns();
     }
 
     private List<ScriptItem> randomEasySpawnEnemies(int nbSpawns) {
@@ -173,7 +191,7 @@ public class Level1Screen extends LevelScreen {
                             new Vector2(-SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + SHIP_WIDTH), SCREEN_HEIGHT / 2f),
                             new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
                             new Vector2((float) SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2((float) SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT / 2f)};
+                            new Vector2((float) SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + SHIP_WIDTH), SCREEN_HEIGHT / 2f)};
                 }
             case CATMULL_ROM_SPLINE:
                 return new Object[]{

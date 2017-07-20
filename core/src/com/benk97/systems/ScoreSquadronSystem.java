@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.RandomXS128;
 import com.benk97.assets.Assets;
 import com.benk97.components.Mappers;
 import com.benk97.components.PositionComponent;
@@ -26,7 +27,7 @@ public class ScoreSquadronSystem extends IteratingSystem {
         this.batcher = batcher;
     }
 
-    private Random random = new Random(System.currentTimeMillis());
+    private Random random = new RandomXS128();
 
     @Override
     public void processEntity(final Entity entity, float deltaTime) {

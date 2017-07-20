@@ -17,12 +17,15 @@ public class RemovableSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        RemovableComponent removableComponent = Mappers.removable.get(entity);
         PositionComponent position = Mappers.position.get(entity);
         SpriteComponent sprite = Mappers.sprite.get(entity);
-        if (position.x + sprite.sprite.getWidth() < 0
-                || position.x > SCREEN_WIDTH
-                || position.y > SCREEN_HEIGHT
-                || position.y + sprite.sprite.getHeight() < 0) {
+        removableComponent.elapseTime += deltaTime;
+        if (removableComponent.elapseTime >= 1.0f &&
+                (position.x + sprite.sprite.getWidth() < 0
+                        || position.x > SCREEN_WIDTH
+                        || position.y > SCREEN_HEIGHT
+                        || position.y + sprite.sprite.getHeight() < 0)) {
             getEngine().removeEntity(entity);
         }
     }

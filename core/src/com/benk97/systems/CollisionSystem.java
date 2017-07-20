@@ -29,14 +29,19 @@ public class CollisionSystem extends EntitySystem {
     @Override
     public void update(float delta) {
         addedToEngine(getEngine());
-        for(Entity shield : getEngine().getEntitiesFor(shield)){
-            for(Entity bullet : getEngine().getEntitiesFor(enemyBullet)){
+        boolean thereIsAShield = false;
+        for (Entity shield : getEngine().getEntitiesFor(shield)) {
+            thereIsAShield = true;
+            for (Entity bullet : getEngine().getEntitiesFor(enemyBullet)) {
                 SpriteComponent enemyBullet = Mappers.sprite.get(bullet);
                 if (Intersector.overlaps(enemyBullet.sprite.getBoundingRectangle(), Mappers.sprite.get(shield).sprite.getBoundingRectangle())) {
                     collisionListener.bulletStoppedByShield(bullet);
                 }
             }
             for (Entity enemy : getEngine().getEntitiesFor(ennemies)) {
+                if(Mappers.boss.get(enemy)!= null){
+                    break;
+                }
                 SpriteComponent enemySprite = Mappers.sprite.get(enemy);
                 if (Intersector.overlaps(enemySprite.sprite.getBoundingRectangle(), Mappers.sprite.get(shield).sprite.getBoundingRectangle())) {
                     collisionListener.enemyShootByShield(enemy, shield);
@@ -44,13 +49,22 @@ public class CollisionSystem extends EntitySystem {
             }
         }
         for (Entity player : getEngine().getEntitiesFor(playerVulnerable)) {
-            for (Entity ennemy : getEngine().getEntitiesFor(ennemies)) {
-                SpriteComponent ennemySprite = Mappers.sprite.get(ennemy);
-                if (Intersector.overlaps(ennemySprite.sprite.getBoundingRectangle(), Mappers.sprite.get(player).sprite.getBoundingRectangle())) {
-                    collisionListener.playerHitByEnnemyBody(player, ennemy);
+            for (Entity enemy : getEngine().getEntitiesFor(ennemies)) {
+                if(thereIsAShield && Mappers.boss.get(enemy)!=null){
+                    break;
+                }
+                SpriteComponent enemySprite = Mappers.sprite.get(enemy);
+                SpriteComponent playerSprite = Mappers.sprite.get(player);
+                for (int i = 0; i < enemySprite.getPolygonBounds().size; ++i) {
+                    for (int j = 0; j < playerSprite.getPolygonBounds().size; ++j) {
+                        if (Intersector.overlapConvexPolygons(enemySprite.getPolygonBounds().get(i), playerSprite.getPolygonBounds().get(j),
+                                new Intersector.MinimumTranslationVector())) {
+                            collisionListener.playerHitByEnnemyBody(player, enemy);
+                        }
+                    }
                 }
             }
-            for(Entity bullet : getEngine().getEntitiesFor(enemyBullet)){
+            for (Entity bullet : getEngine().getEntitiesFor(enemyBullet)) {
                 SpriteComponent enemyBullet = Mappers.sprite.get(bullet);
                 if (Intersector.overlaps(enemyBullet.sprite.getBoundingRectangle(), Mappers.sprite.get(player).sprite.getBoundingRectangle())) {
                     collisionListener.playerHitByEnnemyBullet(player, bullet);
@@ -59,20 +73,29 @@ public class CollisionSystem extends EntitySystem {
         }
         for (Entity player : getEngine().getEntitiesFor(player)) {
             for (Entity bullet : getEngine().getEntitiesFor(playerBullet)) {
-                for (Entity ennemy : getEngine().getEntitiesFor(ennemies)) {
-                    SpriteComponent ennemySprite = Mappers.sprite.get(ennemy);
-                    if (Intersector.overlaps(ennemySprite.sprite.getBoundingRectangle(), Mappers.sprite.get(bullet).sprite.getBoundingRectangle())) {
-                        collisionListener.enemyShoot(ennemy, player, bullet);
+                for (Entity enemy : getEngine().getEntitiesFor(ennemies)) {
+                    if (!Mappers.enemy.get(enemy).isDead()) {
+                        SpriteComponent enemySprite = Mappers.sprite.get(enemy);
+                        SpriteComponent bulletSprite = Mappers.sprite.get(bullet);
+                        for (int i = 0; i < enemySprite.getPolygonBounds().size; ++i) {
+                            for (int j = 0; j < bulletSprite.getPolygonBounds().size; ++j) {
+                                if (Intersector.overlapConvexPolygons(enemySprite.getPolygonBounds().get(i),
+                                        bulletSprite.getPolygonBounds().get(j),
+                                        new Intersector.MinimumTranslationVector())) {
+                                    collisionListener.enemyShoot(enemy, player, bullet);
+                                }
+                            }
+                        }
                     }
                 }
             }
-            for(Entity powerUp: getEngine().getEntitiesFor(powerUp)){
-                if(Intersector.overlaps(Mappers.sprite.get(player).sprite.getBoundingRectangle(), Mappers.sprite.get(powerUp).sprite.getBoundingRectangle())){
+            for (Entity powerUp : getEngine().getEntitiesFor(powerUp)) {
+                if (Intersector.overlaps(Mappers.sprite.get(player).sprite.getBoundingRectangle(), Mappers.sprite.get(powerUp).sprite.getBoundingRectangle())) {
                     collisionListener.playerPowerUp(player, powerUp);
                 }
             }
-            for(Entity shieldUp: getEngine().getEntitiesFor(shieldUp)){
-                if(Intersector.overlaps(Mappers.sprite.get(player).sprite.getBoundingRectangle(), Mappers.sprite.get(shieldUp).sprite.getBoundingRectangle())){
+            for (Entity shieldUp : getEngine().getEntitiesFor(shieldUp)) {
+                if (Intersector.overlaps(Mappers.sprite.get(player).sprite.getBoundingRectangle(), Mappers.sprite.get(shieldUp).sprite.getBoundingRectangle())) {
                     collisionListener.playerShieldUp(player, shieldUp);
                 }
             }

@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.benk97.Settings;
 import com.benk97.assets.Assets;
 import com.benk97.components.*;
@@ -18,8 +20,7 @@ import java.util.Random;
 
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
 import static com.benk97.SpaceKillerGameConstants.*;
-import static com.benk97.assets.Assets.GFX_LEVEL1_ATLAS;
-import static com.benk97.assets.Assets.SOUND_FIRE_ENEMY;
+import static com.benk97.assets.Assets.*;
 import static com.benk97.components.Mappers.position;
 import static com.benk97.components.Mappers.sprite;
 import static com.benk97.components.PlayerComponent.PowerLevel.DOUBLE;
@@ -33,7 +34,7 @@ public class EntityFactory {
     private Assets assets;
     private TweenManager tweenManager;
     private TextureAtlas atlas;
-    private Random random = new Random(System.currentTimeMillis());
+    private Random random = new RandomXS128();
 
     public EntityFactory(PooledEngine engine, Assets assets, TweenManager tweenManager) {
         this.engine = engine;
@@ -93,13 +94,70 @@ public class EntityFactory {
         PositionComponent enemyPosition = position.get(enemy);
         positionComponent.x = enemyPosition.x + Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
         positionComponent.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight();
-        Vector2 directionBullet = new Vector2(playerPosition.x - enemyPosition.x, playerPosition.y - enemyPosition.y);
+
+        Vector2 directionBullet = new Vector2(playerPosition.x - positionComponent.x, playerPosition.y - positionComponent.y);
         directionBullet.nor();
         directionBullet.rotate(-10 + random.nextFloat() * 20f);
         directionBullet.scl(Mappers.enemy.get(enemy).bulletVelocity);
         velocityComponent.x = directionBullet.x;
         velocityComponent.y = directionBullet.y;
         return bullet;
+    }
+
+    public void createBossFire(final Entity boss, final Entity player) {
+        int type = random.nextInt(3);
+        if (type == 0) {
+            for (int i = 0; i < 10; ++i) {
+                new Timer().scheduleTask(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        createEnemyFire(boss, player);
+                    }
+                }, 0f + 0.2f * i);
+            }
+        } else {
+            createBossFireCircle(boss);
+        }
+    }
+
+    public Array<Entity> createBossFireCircle(Entity boss) {
+        Array<Entity> bullets = new Array<Entity>(10);
+        assets.playSound(SOUND_FIRE_ENEMY);
+        for (int i = 0; i < 10; ++i) {
+            Entity bullet = engine.createEntity();
+
+            bullet.add(engine.createComponent(EnemyBulletComponent.class));
+
+            PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
+            bullet.add(positionComponent);
+
+            VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
+            bullet.add(velocityComponent);
+
+            SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+            spriteComponent.sprite = new Sprite(atlas.findRegion("bulletEnnemy"));
+            bullet.add(spriteComponent);
+
+            bullet.add(engine.createComponent(RemovableComponent.class));
+
+            PositionComponent enemyPosition = position.get(boss);
+            positionComponent.x = enemyPosition.x + Mappers.sprite.get(boss).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
+            positionComponent.y = enemyPosition.y;
+
+            bullets.add(bullet);
+            engine.addEntity(bullet);
+        }
+        float rotation = -35f;
+        for (int i = 0; i < bullets.size; ++i) {
+            Vector2 directionBullet = new Vector2(1f, 0f);
+            directionBullet.setAngle(rotation);
+            rotation -= 12f;
+            directionBullet.scl(Mappers.enemy.get(boss).bulletVelocity);
+            VelocityComponent velocityComponent = Mappers.velocity.get(bullets.get(i));
+            velocityComponent.x = directionBullet.x;
+            velocityComponent.y = directionBullet.y;
+        }
+        return bullets;
     }
 
 
@@ -224,8 +282,61 @@ public class EntityFactory {
     public final static int SHIP_1 = 1;
     public final static int SHIP_2 = 2;
     public final static int SHIP_3 = 3;
+    public final static int BOSS_LEVEL_1 = 100;
     public final static int ASTEROID_1 = 999;
     public final static int ASTEROID_2 = 1000;
+
+
+    public Entity createBoss(Entity squadron, float velocityBullet) {
+        final Entity enemy = engine.createEntity();
+        enemy.add(engine.createComponent(BossComponent.class));
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
+        enemyComponent.points = 50;
+        enemyComponent.isBoss = true;
+        enemyComponent.lifeGauge = BOSS_LEVEL1_GAUGE;
+        enemyComponent.bulletVelocity = velocityBullet;
+        enemyComponent.canAttack = true;
+        if (squadron != null) {
+            enemyComponent.squadron = squadron;
+        }
+        enemy.add(enemyComponent);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
+        enemy.add(position);
+        enemy.add(engine.createComponent(VelocityComponent.class));
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.sprite = atlas.createSprite("boss-level1");
+        component.setPolygonFromWorldOrigin(
+                new Array<float[]>(new float[][]{
+                        new float[]{
+                                18f, 81f,
+                                6f, 192f,
+                                130f, 192f,
+                                130f, 6f,
+                                92f, 0f},
+                        new float[]{
+                                130f, 192f,
+                                222f, 192f,
+                                222f, 57f,
+                                130f, 57f
+                        },
+                        new float[]{
+                                222f, 192f,
+                                338f, 189f,
+                                318f, 71f,
+                                262f, 2f,
+                                222f, 17f
+                        }
+                }));
+        enemy.add(component);
+        engine.addEntity(enemy);
+        new Timer().scheduleTask(new Timer.Task() {
+            @Override
+            public void run() {
+                Mappers.boss.get(enemy).pleaseFire = true;
+            }
+        }, 5f);
+        return enemy;
+    }
 
     public Entity createAsteroid(Entity squadron, int asteroid) {
         Entity enemy = engine.createEntity();
@@ -245,6 +356,7 @@ public class EntityFactory {
         enemy.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
+        component.zIndex = -99;
         enemy.add(component);
         enemy.add(engine.createComponent(StateComponent.class));
         engine.addEntity(enemy);
@@ -277,6 +389,7 @@ public class EntityFactory {
         player.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = spritesMAIN.get(0);
+        component.zIndex = 99;
         component.stayInBoundaries = true;
         player.add(component);
         player.add(engine.createComponent(StateComponent.class));
@@ -290,6 +403,7 @@ public class EntityFactory {
         PositionComponent playerPosition = Mappers.position.get(player);
         SpriteComponent playerSprite = Mappers.sprite.get(player);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        spriteComponent.zIndex = 99;
         spriteComponent.sprite = atlas.createSprite("shield");
         PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         positionComponent.setPosition(playerPosition.x - (spriteComponent.sprite.getWidth() - playerSprite.sprite.getWidth()) / 2f,
@@ -349,6 +463,21 @@ public class EntityFactory {
         return explosion;
     }
 
+    public void createBossExploding(final Entity enemy) {
+        final SpriteComponent sprite = Mappers.sprite.get(enemy);
+        for (int i = 0; i < 25; ++i) {
+            assets.playSound(SOUND_EXPLOSION);
+            new Timer().scheduleTask(new Timer.Task() {
+                @Override
+                public void run() {
+                    PositionComponent position = Mappers.position.get(enemy);
+                    createEntityExploding(position.x + random.nextFloat() * sprite.sprite.getWidth(),
+                            position.y + random.nextFloat() * sprite.sprite.getHeight());
+                }
+            }, 0.05f + i * 0.2f);
+        }
+    }
+
     public Entity createEntityFireButton(float alpha, float posX, float posY) {
         Entity entity = engine.createEntity();
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
@@ -389,6 +518,12 @@ public class EntityFactory {
         score.score = squadronComponent.scoreBonus + "";
         position.x = squadronComponent.lastKilledPosition.x;
         position.y = squadronComponent.lastKilledPosition.y;
+        if (position.x < SCREEN_WIDTH || position.x >= SCREEN_WIDTH - 20f) {
+            position.x = SCREEN_WIDTH / 2f;
+        }
+        if (position.y > SCREEN_HEIGHT) {
+            position.y = SCREEN_HEIGHT * 0.8f;
+        }
         scoreSquadron.add(position);
         scoreSquadron.add(score);
         engine.addEntity(scoreSquadron);

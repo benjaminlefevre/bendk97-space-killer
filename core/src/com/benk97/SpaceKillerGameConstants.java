@@ -4,11 +4,13 @@ public class SpaceKillerGameConstants {
     // general settings
     public final static int SCREEN_WIDTH = 400;
     public final static int SCREEN_HEIGHT = 700;
-    public final static boolean DEBUG = true;
-    public final static boolean SKIP_SPLASH = true;
-    public final static boolean AD_TEST = true;
+    public final static boolean DEBUG = false;
+    public final static boolean DEBUG_SHAPE = false;
+    public final static boolean SKIP_SPLASH = false;
+    public final static boolean AD_TEST = false;
     // player
-    public final static int LIVES = 5;
+    public final static int LIVES = 3;
+    public static final float NEW_LIFE = 50000f;
     public final static float PLAYER_ORIGIN_X = SCREEN_WIDTH / 2 - 16f;
     public final static float PLAYER_ORIGIN_Y = 0f;
     public final static long FIRE_DELAY = 150;
@@ -18,8 +20,8 @@ public class SpaceKillerGameConstants {
     public final static float PLAYER_BULLET_VELOCITY = 400.0f;
 
     // enemies
-    public final static float SOUCOUPE_WIDTH = 40f;
-    public final static float SHIP_WIDTH = 50f;
+    public final static int BOSS_LEVEL1_GAUGE = 300;
+    public final static float SHIP_WIDTH = 5f;
     public final static float ENEMY_VELOCITY_EASY = 200f;
     public final static float ENEMY_VELOCITY_MEDIUM = 250f;
     public final static float ENEMY_VELOCITY_HARD = 300f;
