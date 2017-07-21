@@ -62,11 +62,6 @@ public class InputListenerImpl extends EntitySystem implements InputListener {
     }
 
     @Override
-    public void goToMenu() {
-        screen.goToMenu();
-    }
-
-    @Override
     public void goLeft() {
         velocity.get(player).x = -PLAYER_VELOCITY;
         Mappers.state.get(player).set(GO_LEFT);
