@@ -20,6 +20,4 @@ public interface InputListener {
     void stop();
 
     void fire();
-
-    void goToMenu();
 }

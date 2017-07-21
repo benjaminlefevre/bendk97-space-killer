@@ -18,14 +18,8 @@ public class SpaceKillerGame extends Game {
         this.adsController = adsController;
     }
 
-    public void showAd(final Screen screen) {
-        adsController.showInterstitialAd(new Runnable() {
-            @Override
-            public void run() {
-                screen.dispose();
-                goToScreen(MenuScreen.class);
-            }
-        });
+    public void showAd() {
+        adsController.showInterstitialAd();
     }
 
     @Override

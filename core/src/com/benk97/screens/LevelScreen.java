@@ -167,7 +167,9 @@ public class LevelScreen extends ScreenAdapter {
     }
 
     public void goToMenu() {
-        game.showAd(this);
+        game.showAd();
+        this.dispose();
+        game.goToScreen(MenuScreen.class);
     }
 
     @Override
