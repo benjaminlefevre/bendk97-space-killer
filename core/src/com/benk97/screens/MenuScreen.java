@@ -1,6 +1,7 @@
 package com.benk97.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.benk97.Settings;
 import com.benk97.SpaceKillerGame;
+import com.benk97.SpaceKillerGameConstants;
 import com.benk97.assets.Assets;
 
 import static com.benk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
@@ -36,6 +38,7 @@ public class MenuScreen extends HDScreen {
     ImageButton musicOn;
     Table table;
     BitmapFont font;
+    BitmapFont fontVersion;
     Stage stage;
     TextButton displayScores;
 
@@ -161,6 +164,9 @@ public class MenuScreen extends HDScreen {
 
         assets.playMusic(MENU_MUSIC);
         font = assets.get(FONT_SPACE_KILLER_LARGE);
+        fontVersion = new BitmapFont();
+        fontVersion.setColor(Color.WHITE);
+        fontVersion.getData().setScale(0.5f);
     }
 
     @Override
@@ -176,6 +182,7 @@ public class MenuScreen extends HDScreen {
         batcher.begin();
         font.draw(batcher, "SPACE", SCREEN_WIDTH / 5f - 15f, SCREEN_HEIGHT * 3 / 4 + 50f);
         font.draw(batcher, "KILLER", SCREEN_WIDTH / 5f - 40f, SCREEN_HEIGHT * 3 / 4);
+        fontVersion.draw(batcher, SpaceKillerGameConstants.GAME_VERSION, 10f,20f);
         batcher.end();
     }
 
