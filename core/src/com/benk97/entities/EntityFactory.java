@@ -518,8 +518,11 @@ public class EntityFactory {
         score.score = squadronComponent.scoreBonus + "";
         position.x = squadronComponent.lastKilledPosition.x;
         position.y = squadronComponent.lastKilledPosition.y;
-        if (position.x < SCREEN_WIDTH || position.x >= SCREEN_WIDTH - 20f) {
+        if (position.x < SCREEN_WIDTH) {
             position.x = SCREEN_WIDTH / 2f;
+        }
+        if(position.x >= SCREEN_WIDTH - 20f){
+            position.x -= 50f;
         }
         if (position.y > SCREEN_HEIGHT) {
             position.y = SCREEN_HEIGHT * 0.8f;

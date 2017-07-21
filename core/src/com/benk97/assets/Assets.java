@@ -95,6 +95,9 @@ public class Assets {
     public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER_MEDIUM =
             new AssetDescriptor<BitmapFont>("font3.ttf", BitmapFont.class,
                     getFontParameters("fonts/regular.ttf", 35));
+    public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER_SMALL =
+            new AssetDescriptor<BitmapFont>("font4.ttf", BitmapFont.class,
+                    getFontParameters("fonts/regular.ttf", 25));
 
     public static FreeTypeFontLoaderParameter getFontParameters(String filename, int size) {
         FreeTypeFontLoaderParameter parameter = new FreeTypeFontLoaderParameter();
@@ -116,7 +119,7 @@ public class Assets {
         ));
         put(MenuScreen.class, Arrays.<AssetDescriptor>asList(
                 MENU_BGD, FONT_SPACE_KILLER_LARGE, MENU_MUSIC, FONT_SPACE_KILLER_MEDIUM, MENU_CLICK,
-                MENU_ATLAS
+                MENU_ATLAS, FONT_SPACE_KILLER_SMALL
         ));
     }};
 

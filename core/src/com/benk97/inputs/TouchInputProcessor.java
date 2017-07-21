@@ -7,17 +7,15 @@ import com.badlogic.gdx.math.Vector3;
 import com.benk97.listeners.InputListener;
 
 
-public class TouchInputProcessor implements InputProcessor {
-    private InputListener listener;
-    private Rectangle[] squareTouches;
-    private Rectangle fireButton;
-    private Camera camera;
+public abstract class TouchInputProcessor implements InputProcessor {
+    protected InputListener listener;
 
-    public TouchInputProcessor(InputListener inputListener, Camera camera, Rectangle[] squareTouches, Rectangle fireButton) {
+    protected Camera camera;
+    protected Rectangle[] squareTouches;
+
+    public TouchInputProcessor(InputListener inputListener, Camera camera) {
         this.listener = inputListener;
         this.camera = camera;
-        this.squareTouches = squareTouches;
-        this.fireButton = fireButton;
     }
 
     @Override
@@ -36,27 +34,16 @@ public class TouchInputProcessor implements InputProcessor {
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
-        touchDragged(screenX, screenY, pointer);
-        if (fireButton.contains(worldTouch.x, worldTouch.y)) {
-            listener.fire();
-        }
-        return true;
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
     }
 
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
-        if (!fireButton.contains(worldTouch.x, worldTouch.y)) {
-            listener.stop();
-        }
-        return true;
+    public boolean scrolled(int amount) {
+        return false;
     }
 
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
+    protected void moveShip(Vector3 worldTouch) {
         if (squareTouches[0].contains(worldTouch.x, worldTouch.y)) {
             listener.goLeftTop();
         } else if (squareTouches[1].contains(worldTouch.x, worldTouch.y)) {
@@ -74,16 +61,5 @@ public class TouchInputProcessor implements InputProcessor {
         } else if (squareTouches[7].contains(worldTouch.x, worldTouch.y)) {
             listener.goRightBottom();
         }
-        return true;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
     }
 }
