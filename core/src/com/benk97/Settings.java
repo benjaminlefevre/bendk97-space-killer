@@ -7,6 +7,7 @@ public class Settings {
     private static final String MUSIC_ON = "music-on";
     private static final String SOUND_ON = "sound-on";
     private static final String HIGHSCORES = "highscores";
+    private static final String CONTROLLER = "controller";
 
     private Preferences preferences;
     private int[] highscores;
@@ -17,6 +18,19 @@ public class Settings {
         preferences = Gdx.app.getPreferences("space-killer");
     }
 
+    public static boolean isVirtualPad(){
+        return settings.preferences.getString(CONTROLLER).equals("virtual");
+    }
+
+    public static void setRetroPad(){
+        settings.preferences.putString(CONTROLLER, "retro");
+        save();
+    }
+
+    public static void setVirtualPad(){
+        settings.preferences.putString(CONTROLLER, "virtual");
+        save();
+    }
 
     public static void setMusicOn() {
         settings.preferences.putBoolean(MUSIC_ON, true);

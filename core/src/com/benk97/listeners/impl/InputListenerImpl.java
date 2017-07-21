@@ -23,15 +23,32 @@ public class InputListenerImpl extends EntitySystem implements InputListener {
     private EntityFactory entityFactory;
     private Assets assets;
     private LevelScreen screen;
+    private boolean autoFire = true;
 
-    public InputListenerImpl(Entity player, EntityFactory entityFactory, Assets assets, LevelScreen screen) {
+    public InputListenerImpl(Entity player, EntityFactory entityFactory, Assets assets, LevelScreen screen, boolean autoFire) {
         this.player = player;
         this.assets = assets;
         this.entityFactory = entityFactory;
         this.screen = screen;
+        this.autoFire = autoFire;
     }
 
     private long lastShoot = 0;
+
+    private float autofireTrigger = 0;
+    private final float autofireDelay = 1 / 10f;
+
+    @Override
+    public void update(float deltaTime) {
+        if (autoFire) {
+            if (autofireTrigger > autofireDelay) {
+                fire();
+                autofireTrigger = 0f;
+            } else {
+                autofireTrigger += deltaTime;
+            }
+        }
+    }
 
     @Override
     public void fire() {

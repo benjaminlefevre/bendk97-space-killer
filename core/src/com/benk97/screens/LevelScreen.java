@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.benk97.Settings;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
 import com.benk97.components.Mappers;
@@ -25,7 +26,9 @@ import com.benk97.components.SpriteComponent;
 import com.benk97.components.VelocityComponent;
 import com.benk97.entities.EntityFactory;
 import com.benk97.entities.SquadronFactory;
+import com.benk97.inputs.RetroPadController;
 import com.benk97.inputs.TouchInputProcessor;
+import com.benk97.inputs.VirtualPadController;
 import com.benk97.listeners.impl.CollisionListenerImpl;
 import com.benk97.listeners.impl.InputListenerImpl;
 import com.benk97.listeners.impl.PlayerListenerImpl;
@@ -48,7 +51,6 @@ public class LevelScreen extends ScreenAdapter {
     private SpriteBatch batcher;
     private ShapeRenderer shapeRenderer;
     private SpaceKillerGame game;
-
 
     public LevelScreen(Assets assets, SpaceKillerGame game) {
         this.game = game;
@@ -118,24 +120,32 @@ public class LevelScreen extends ScreenAdapter {
 
 
     private InputListenerImpl createInputHandlerSystem(Entity player) {
-        Entity fireButton = entityFactory.createEntityFireButton(0.2f, FIRE_X, FIRE_Y);
-        Entity padController = entityFactory.createEntitiesPadController(0.2f, 1.4f, PAD_X, PAD_Y);
-        // define touch area as rectangles
-        Sprite padSprite = Mappers.sprite.get(padController).sprite;
-        float heightTouch = padSprite.getHeight() * 1.2f / 3f, widthTouch = padSprite.getWidth() * 1.2f / 3f;
-        Rectangle[] squareTouchesDirection = new Rectangle[8];
-        squareTouchesDirection[0] = new Rectangle(PAD_X, PAD_Y + 2 * heightTouch, widthTouch, heightTouch);
-        squareTouchesDirection[1] = new Rectangle(PAD_X + widthTouch, PAD_Y + 2 * heightTouch, widthTouch, heightTouch);
-        squareTouchesDirection[2] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y + 2 * heightTouch, widthTouch, heightTouch);
-        squareTouchesDirection[3] = new Rectangle(PAD_X, PAD_Y + heightTouch, widthTouch, heightTouch);
-        squareTouchesDirection[4] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y + heightTouch, widthTouch, heightTouch);
-        squareTouchesDirection[5] = new Rectangle(PAD_X, PAD_Y, widthTouch, heightTouch);
-        squareTouchesDirection[6] = new Rectangle(PAD_X + widthTouch, PAD_Y, widthTouch, heightTouch);
-        squareTouchesDirection[7] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y, widthTouch, heightTouch);
         // input
-        InputListenerImpl inputListener = new InputListenerImpl(player, entityFactory, assets, this);
-        TouchInputProcessor touchInputProcessor = new TouchInputProcessor(inputListener, camera, squareTouchesDirection, Mappers.sprite.get(fireButton).getBounds());
-        Gdx.input.setInputProcessor(touchInputProcessor);
+        TouchInputProcessor inputProcessor = null;
+        InputListenerImpl inputListener = new InputListenerImpl(player, entityFactory, assets, this, Settings.isVirtualPad());
+        if (!Settings.isVirtualPad()) {
+            Entity fireButton = entityFactory.createEntityFireButton(0.2f, FIRE_X, FIRE_Y);
+            Entity padController = entityFactory.createEntitiesPadController(0.2f, 1.4f, PAD_X, PAD_Y);
+            // define touch area as rectangles
+            Sprite padSprite = Mappers.sprite.get(padController).sprite;
+            float heightTouch = padSprite.getHeight() * 1.2f / 3f, widthTouch = padSprite.getWidth() * 1.2f / 3f;
+            Rectangle[] squareTouchesDirection = new Rectangle[8];
+            squareTouchesDirection[0] = new Rectangle(PAD_X, PAD_Y + 2 * heightTouch, widthTouch, heightTouch);
+            squareTouchesDirection[1] = new Rectangle(PAD_X + widthTouch, PAD_Y + 2 * heightTouch, widthTouch, heightTouch);
+            squareTouchesDirection[2] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y + 2 * heightTouch, widthTouch, heightTouch);
+            squareTouchesDirection[3] = new Rectangle(PAD_X, PAD_Y + heightTouch, widthTouch, heightTouch);
+            squareTouchesDirection[4] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y + heightTouch, widthTouch, heightTouch);
+            squareTouchesDirection[5] = new Rectangle(PAD_X, PAD_Y, widthTouch, heightTouch);
+            squareTouchesDirection[6] = new Rectangle(PAD_X + widthTouch, PAD_Y, widthTouch, heightTouch);
+            squareTouchesDirection[7] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y, widthTouch, heightTouch);
+
+            inputProcessor = new RetroPadController(inputListener, camera, squareTouchesDirection, Mappers.sprite.get(fireButton).getBounds());
+
+        } else {
+            inputProcessor = new VirtualPadController(inputListener, camera, player);
+
+        }
+        Gdx.input.setInputProcessor(inputProcessor);
         return inputListener;
     }
 

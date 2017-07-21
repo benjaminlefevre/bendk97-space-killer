@@ -32,6 +32,7 @@ public class MenuScreen extends HDScreen {
     TextButton playButton;
     TextButtonStyle buttonStyle;
     TextButton highscoresButton;
+    TextButton controllerButton;
     ImageButton soundOff;
     ImageButton soundOn;
     ImageButton musicOff;
@@ -41,6 +42,9 @@ public class MenuScreen extends HDScreen {
     BitmapFont fontVersion;
     Stage stage;
     TextButton displayScores;
+    TextButton retroPad;
+    TextButton virtualPad;
+    TextButton back;
 
     public MenuScreen(final Assets assets, final SpaceKillerGame game) {
         super(game, assets);
@@ -54,12 +58,35 @@ public class MenuScreen extends HDScreen {
         playButton = new TextButton("play", buttonStyle);
         playButton.setSize(200f, 75f);
         highscoresButton = new TextButton("scores", buttonStyle);
-        highscoresButton.setSize(300f, 75f);
+        highscoresButton.setSize(200f, 75f);
+        controllerButton = new TextButton("control\n\n   settings", buttonStyle);
+        controllerButton.setSize(200f, 75f);
+
+        final TextButtonStyle styleRetro = new TextButtonStyle();
+        styleRetro.font = assets.get(FONT_SPACE_KILLER_SMALL);
+        styleRetro.fontColor = !Settings.isVirtualPad() ? Color.YELLOW : Color.WHITE;
+        retroPad = new TextButton("retro pad", styleRetro);
+
+        TextButtonStyle styleVirtual = new TextButtonStyle();
+        styleVirtual.font = assets.get(FONT_SPACE_KILLER_SMALL);
+        styleVirtual.fontColor = Settings.isVirtualPad() ? Color.YELLOW : Color.WHITE;
+        virtualPad = new TextButton("virtual pad\n\n   / autofire", styleVirtual);
+
+        back = new TextButton("back", buttonStyle);
+        retroPad.setSize(200f, 75f);
+        virtualPad.setSize(200f, 75f);
+        back.setSize(200f, 75f);
+        retroPad.setPosition(100f, 400f);
+        virtualPad.setPosition(100f, 250f);
+        back.setPosition(100f, 100f);
+
 
         stage.addActor(playButton);
         stage.addActor(highscoresButton);
-        playButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f);
-        highscoresButton.setPosition(SCREEN_WIDTH / 6f, SCREEN_HEIGHT / 2f - 100f);
+        stage.addActor(controllerButton);
+        playButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f + 75f);
+        highscoresButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f - 25f);
+        controllerButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f - 150f);
         Gdx.input.setInputProcessor(stage);
         playButton.addListener(new InputListener() {
             @Override
@@ -77,6 +104,7 @@ public class MenuScreen extends HDScreen {
                 assets.playSound(MENU_CLICK);
                 playButton.remove();
                 highscoresButton.remove();
+                controllerButton.remove();
                 displayScores = new TextButton(Settings.getHighscoreString(), buttonStyle);
                 displayScores.setSize(300f, 375f);
                 displayScores.setPosition(SCREEN_WIDTH / 7f, 75f);
@@ -87,6 +115,7 @@ public class MenuScreen extends HDScreen {
                         displayScores.remove();
                         stage.addActor(playButton);
                         stage.addActor(highscoresButton);
+                        stage.addActor(controllerButton);
                         return true;
                     }
                 });
@@ -95,78 +124,177 @@ public class MenuScreen extends HDScreen {
             }
         });
 
+        retroPad.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (Settings.isVirtualPad()) {
+                    assets.playSound(MENU_CLICK);
+                    Settings.setRetroPad();
+                    retroPad.getStyle().fontColor = Color.YELLOW;
+                    virtualPad.getStyle().fontColor = Color.WHITE;
+                }
+                return true;
+            }
+        });
+
+        virtualPad.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (!Settings.isVirtualPad()) {
+                    assets.playSound(MENU_CLICK);
+                    Settings.setVirtualPad();
+                    virtualPad.getStyle().fontColor = Color.YELLOW;
+                    retroPad.getStyle().fontColor = Color.WHITE;
+
+                }
+                return true;
+            }
+        });
+
+        back.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                stage.addActor(playButton);
+                stage.addActor(highscoresButton);
+                stage.addActor(controllerButton);
+                retroPad.remove();
+                virtualPad.remove();
+                back.remove();
+                return true;
+            }
+        });
+
+
+        controllerButton.addListener(new
+
+                                             InputListener() {
+                                                 @Override
+                                                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                                     assets.playSound(MENU_CLICK);
+                                                     playButton.remove();
+                                                     highscoresButton.remove();
+                                                     controllerButton.remove();
+
+                                                     stage.addActor(virtualPad);
+                                                     stage.addActor(retroPad);
+                                                     stage.addActor(back);
+                                                     return true;
+                                                 }
+                                             });
+
 
         TextureAtlas atlas = assets.get(MENU_ATLAS);
-        table = new Table();
+        table = new
+
+                Table();
+
         TextureRegionDrawable drawable = new TextureRegionDrawable(atlas.findRegion("sound-off"));
-        soundOff = new ImageButton(drawable);
-        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("sound-on")));
-        soundOn = new ImageButton(drawable);
-        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-off")));
-        musicOff = new ImageButton(drawable);
-        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-on")));
-        musicOn = new ImageButton(drawable);
-        if (Settings.isSoundOn()) {
+        soundOff = new
+
+                ImageButton(drawable);
+
+        drawable = new
+
+                TextureRegionDrawable(new TextureRegion(atlas.findRegion("sound-on")));
+        soundOn = new
+
+                ImageButton(drawable);
+
+        drawable = new
+
+                TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-off")));
+        musicOff = new
+
+                ImageButton(drawable);
+
+        drawable = new
+
+                TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-on")));
+        musicOn = new
+
+                ImageButton(drawable);
+        if (Settings.isSoundOn())
+
+        {
             table.add(soundOn).size(30f, 30f);
-        } else {
+        } else
+
+        {
             table.add(soundOff).size(30f, 30f);
         }
-        if (Settings.isMusicOn()) {
+        if (Settings.isMusicOn())
+
+        {
             table.add(musicOn).size(30f, 30f);
-        } else {
+        } else
+
+        {
             table.add(musicOff).size(30f, 30f);
         }
         table.setPosition(SCREEN_WIDTH - 50f, 30f);
         stage.addActor(table);
-        soundOn.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(MENU_CLICK);
-                Settings.setSoundOff();
-                table.getCells().get(0).clearActor();
-                table.getCells().get(0).setActor(soundOff);
-                return true;
-            }
-        });
-        soundOff.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(MENU_CLICK);
-                Settings.setSoundOn();
-                table.getCells().get(0).clearActor();
-                table.getCells().get(0).setActor(soundOn);
-                return true;
-            }
-        });
-        musicOn.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(MENU_CLICK);
-                Settings.setMusicOff();
-                assets.get(MENU_MUSIC).pause();
-                table.getCells().get(1).clearActor();
-                table.getCells().get(1).setActor(musicOff);
-                return true;
-            }
-        });
-        musicOff.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(MENU_CLICK);
-                Settings.setMusicOn();
-                assets.playMusic(MENU_MUSIC);
-                table.getCells().get(1).clearActor();
-                table.getCells().get(1).setActor(musicOn);
-                return true;
-            }
-        });
+        soundOn.addListener(new
+
+                                    InputListener() {
+                                        @Override
+                                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                            assets.playSound(MENU_CLICK);
+                                            Settings.setSoundOff();
+                                            table.getCells().get(0).clearActor();
+                                            table.getCells().get(0).setActor(soundOff);
+                                            return true;
+                                        }
+                                    });
+        soundOff.addListener(new
+
+                                     InputListener() {
+                                         @Override
+                                         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                             assets.playSound(MENU_CLICK);
+                                             Settings.setSoundOn();
+                                             table.getCells().get(0).clearActor();
+                                             table.getCells().get(0).setActor(soundOn);
+                                             return true;
+                                         }
+                                     });
+        musicOn.addListener(new
+
+                                    InputListener() {
+                                        @Override
+                                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                            assets.playSound(MENU_CLICK);
+                                            Settings.setMusicOff();
+                                            assets.get(MENU_MUSIC).pause();
+                                            table.getCells().get(1).clearActor();
+                                            table.getCells().get(1).setActor(musicOff);
+                                            return true;
+                                        }
+                                    });
+        musicOff.addListener(new
+
+                                     InputListener() {
+                                         @Override
+                                         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                             assets.playSound(MENU_CLICK);
+                                             Settings.setMusicOn();
+                                             assets.playMusic(MENU_MUSIC);
+                                             table.getCells().get(1).clearActor();
+                                             table.getCells().get(1).setActor(musicOn);
+                                             return true;
+                                         }
+                                     });
 
 
         assets.playMusic(MENU_MUSIC);
         font = assets.get(FONT_SPACE_KILLER_LARGE);
-        fontVersion = new BitmapFont();
+        fontVersion = new
+
+                BitmapFont();
         fontVersion.setColor(Color.WHITE);
-        fontVersion.getData().setScale(0.5f);
+        fontVersion.getData().
+
+                setScale(0.5f);
+
     }
 
     @Override
@@ -180,9 +308,9 @@ public class MenuScreen extends HDScreen {
         batcher.setProjectionMatrix(viewport.getCamera().combined);
         stage.draw();
         batcher.begin();
-        font.draw(batcher, "SPACE", SCREEN_WIDTH / 5f - 15f, SCREEN_HEIGHT * 3 / 4 + 50f);
-        font.draw(batcher, "KILLER", SCREEN_WIDTH / 5f - 40f, SCREEN_HEIGHT * 3 / 4);
-        fontVersion.draw(batcher, SpaceKillerGameConstants.GAME_VERSION, 10f,20f);
+        font.draw(batcher, "SPACE", SCREEN_WIDTH / 5f - 15f, SCREEN_HEIGHT * 3 / 4 + 100f);
+        font.draw(batcher, "KILLER", SCREEN_WIDTH / 5f - 40f, SCREEN_HEIGHT * 3 / 4 + 50f);
+        fontVersion.draw(batcher, SpaceKillerGameConstants.GAME_VERSION, 10f, 20f);
         batcher.end();
     }
 

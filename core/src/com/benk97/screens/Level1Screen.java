@@ -192,8 +192,8 @@ public class Level1Screen extends LevelScreen {
                     return new Object[]{
                             new Vector2(-SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + SHIP_WIDTH), SCREEN_HEIGHT / 2f),
                             new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2((float) SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2((float) SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + SHIP_WIDTH), SCREEN_HEIGHT / 2f)};
+                            new Vector2((float) SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 2*SHIP_WIDTH), SCREEN_HEIGHT),
+                            new Vector2((float) SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 6*SHIP_WIDTH), SCREEN_HEIGHT / 2f)};
                 }
             case CATMULL_ROM_SPLINE:
                 return new Object[]{
