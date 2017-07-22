@@ -68,6 +68,13 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
         if (UnityAds.isReady()) {
             UnityAds.show(this);
         }
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                game.currentScreen.dispose();
+                game.goToScreen(MenuScreen.class);
+            }
+        });
     }
 
 
@@ -83,13 +90,6 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
 
     @Override
     public void onUnityAdsFinish(String s, UnityAds.FinishState finishState) {
-        Gdx.app.postRunnable(new Runnable() {
-            @Override
-            public void run() {
-                game.currentScreen.dispose();
-                game.goToScreen(MenuScreen.class);
-            }
-        });
     }
 
     @Override
