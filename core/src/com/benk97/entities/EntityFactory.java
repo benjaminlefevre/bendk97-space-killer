@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.RandomXS128;
@@ -19,6 +20,7 @@ import com.benk97.components.*;
 import java.util.Random;
 
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
+import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP_PINGPONG;
 import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
 import static com.benk97.components.Mappers.position;
@@ -230,10 +232,12 @@ public class EntityFactory {
     }
 
 
-    public Entity createEnemy(Entity squadron, boolean canAttack, float velocityBullet, String atlasName, int points, float frameDuration) {
+    public Entity createEnemy(Entity squadron, boolean canAttack, float velocityBullet, String atlasName, int points,
+                              int strength, float frameDuration, PlayMode animationType) {
         Entity enemy = engine.createEntity();
         EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = points;
+        enemyComponent.lifeGauge = strength;
         enemyComponent.bulletVelocity = velocityBullet;
         enemyComponent.canAttack = canAttack;
         if (squadron != null) {
@@ -245,7 +249,7 @@ public class EntityFactory {
         enemy.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlas.createSprites(atlasName);
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(frameDuration, sprites, LOOP));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(frameDuration, sprites, animationType));
         enemy.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
@@ -256,12 +260,15 @@ public class EntityFactory {
     }
 
     public Entity createEnemySoucoupe(Entity squadron, boolean canAttack, float velocityBullet) {
-        return createEnemy(squadron, canAttack, velocityBullet, "soucoupe", 100, FRAME_DURATION);
+        return createEnemy(squadron, canAttack, velocityBullet, "soucoupe", 100, 1, FRAME_DURATION, LOOP);
     }
 
 
     public Entity createEnemyShip(Entity squadron, boolean canAttack, float velocityBullet, int enemyTYpe) {
         String atlasRegion = "enemy";
+        int points = 200;
+        int strength = 1;
+        PlayMode playMode = LOOP;
         float frameDuration = FRAME_DURATION;
         switch (enemyTYpe) {
             case SHIP_1:
@@ -274,14 +281,24 @@ public class EntityFactory {
                 atlasRegion = "enemy3";
                 frameDuration = FRAME_DURATION_ENEMY_3;
                 break;
+            case SHIP_4:
+                atlasRegion = "enemy4";
+                break;
+            case SHIP_5:
+                atlasRegion = "enemy5";
+                playMode = LOOP_PINGPONG;
+                break;
+
         }
-        return createEnemy(squadron, canAttack, velocityBullet, atlasRegion, 200, frameDuration);
+        return createEnemy(squadron, canAttack, velocityBullet, atlasRegion, points, strength, frameDuration, playMode);
     }
 
     public final static int SOUCOUPE = 0;
     public final static int SHIP_1 = 1;
     public final static int SHIP_2 = 2;
     public final static int SHIP_3 = 3;
+    public final static int SHIP_4 = 4;
+    public final static int SHIP_5 = 5;
     public final static int BOSS_LEVEL_1 = 100;
     public final static int ASTEROID_1 = 999;
     public final static int ASTEROID_2 = 1000;
@@ -453,8 +470,8 @@ public class EntityFactory {
         explosion.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlas.createSprites("explosion");
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_EXPLOSION, sprites, Animation.PlayMode.NORMAL));
-        animationComponent.playMode = Animation.PlayMode.NORMAL;
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_EXPLOSION, sprites, PlayMode.NORMAL));
+        animationComponent.playMode = PlayMode.NORMAL;
         explosion.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         explosion.add(component);

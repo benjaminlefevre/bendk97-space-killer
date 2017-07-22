@@ -233,7 +233,7 @@ public class Level1Screen extends LevelScreen {
     }
 
     public int getRandomShipType() {
-        return random.nextInt(4);
+        return random.nextInt(6);
     }
 
     public int getRandomAsteroidType() {
