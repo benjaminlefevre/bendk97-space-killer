@@ -14,6 +14,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
     }
 
     public long fireDelay = FIRE_DELAY;
+    public int enemiesKilled = 0;
     private int score = 0;
     private int highscore = 0;
     public int lives = LIVES;
@@ -22,6 +23,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
     @Override
     public void reset() {
         score = 0;
+        enemiesKilled = 0;
         lives = LIVES;
         powerLevel = NORMAL;
         fireDelay = FIRE_DELAY;

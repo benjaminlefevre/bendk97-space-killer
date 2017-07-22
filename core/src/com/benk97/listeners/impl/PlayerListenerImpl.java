@@ -46,6 +46,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
             player.add(((PooledEngine) getEngine()).createComponent(GameOverComponent.class));
             Settings.addScore(playerComponent.getScoreInt());
             Settings.save();
+            screen.submitScore(playerComponent.getScoreInt());
             new Timer().scheduleTask(new Timer.Task() {
                 @Override
                 public void run() {

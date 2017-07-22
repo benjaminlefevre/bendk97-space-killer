@@ -14,6 +14,7 @@ import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
 import static com.benk97.entities.EntityFactory.BOSS_LEVEL_1;
 import static com.benk97.entities.SquadronFactory.*;
+import static com.benk97.google.Achievement.KILL_BOSS;
 
 public class Level1Screen extends LevelScreen {
 
@@ -115,6 +116,7 @@ public class Level1Screen extends LevelScreen {
     }
 
     public void restartLevel1() {
+        game.playServices.unlockAchievement(KILL_BOSS);
         time = 0f;
         initSpawns();
         assets.playMusic(MUSIC_LEVEL_1);
@@ -192,8 +194,8 @@ public class Level1Screen extends LevelScreen {
                     return new Object[]{
                             new Vector2(-SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + SHIP_WIDTH), SCREEN_HEIGHT / 2f),
                             new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2((float) SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 2*SHIP_WIDTH), SCREEN_HEIGHT),
-                            new Vector2((float) SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 6*SHIP_WIDTH), SCREEN_HEIGHT / 2f)};
+                            new Vector2((float) SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 2 * SHIP_WIDTH), SCREEN_HEIGHT),
+                            new Vector2((float) SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 6 * SHIP_WIDTH), SCREEN_HEIGHT / 2f)};
                 }
             case CATMULL_ROM_SPLINE:
                 return new Object[]{

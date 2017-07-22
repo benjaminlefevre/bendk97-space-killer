@@ -46,8 +46,13 @@ public class MenuScreen extends HDScreen {
     TextButton virtualPad;
     TextButton back;
 
+    ImageButton leaderboard;
+    ImageButton achievements;
+    ImageButton gplay;
+
     public MenuScreen(final Assets assets, final SpaceKillerGame game) {
         super(game, assets);
+        game.playServices.startGooglePlay();
         batcher = new SpriteBatch();
         stage = new Stage(viewport, batcher);
         image = new Image(assets.get(MENU_BGD));
@@ -165,70 +170,80 @@ public class MenuScreen extends HDScreen {
         });
 
 
-        controllerButton.addListener(new
+        controllerButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                assets.playSound(MENU_CLICK);
+                playButton.remove();
+                highscoresButton.remove();
+                controllerButton.remove();
 
-                                             InputListener() {
-                                                 @Override
-                                                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                                                     assets.playSound(MENU_CLICK);
-                                                     playButton.remove();
-                                                     highscoresButton.remove();
-                                                     controllerButton.remove();
-
-                                                     stage.addActor(virtualPad);
-                                                     stage.addActor(retroPad);
-                                                     stage.addActor(back);
-                                                     return true;
-                                                 }
-                                             });
+                stage.addActor(virtualPad);
+                stage.addActor(retroPad);
+                stage.addActor(back);
+                return true;
+            }
+        });
 
 
         TextureAtlas atlas = assets.get(MENU_ATLAS);
-        table = new
 
-                Table();
+        gplay = new ImageButton(new TextureRegionDrawable(atlas.findRegion("gplay")));
+        achievements = new ImageButton(new TextureRegionDrawable(atlas.findRegion("achievements")));
+        leaderboard = new ImageButton((new TextureRegionDrawable(atlas.findRegion("leaderboard"))));
+        achievements.setPosition(150f, 10f);
+        leaderboard.setPosition(200f, 10f);
+        gplay.setPosition(90f, 0f);
+        gplay.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                assets.playSound(MENU_CLICK);
+                game.playServices.signIn();
+                return true;
+            }
+
+        });
+        achievements.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                assets.playSound(MENU_CLICK);
+                game.playServices.showAchievement();
+                return true;
+            }
+
+        });
+        leaderboard.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                assets.playSound(MENU_CLICK);
+                game.playServices.showScore();
+                return true;
+            }
+
+        });
+        stage.addActor(gplay);
+        stage.addActor(achievements);
+        stage.addActor(leaderboard);
+
+        table = new Table();
 
         TextureRegionDrawable drawable = new TextureRegionDrawable(atlas.findRegion("sound-off"));
-        soundOff = new
+        soundOff = new ImageButton(drawable);
+        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("sound-on")));
+        soundOn = new ImageButton(drawable);
+        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-off")));
+        musicOff = new ImageButton(drawable);
 
-                ImageButton(drawable);
-
-        drawable = new
-
-                TextureRegionDrawable(new TextureRegion(atlas.findRegion("sound-on")));
-        soundOn = new
-
-                ImageButton(drawable);
-
-        drawable = new
-
-                TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-off")));
-        musicOff = new
-
-                ImageButton(drawable);
-
-        drawable = new
-
-                TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-on")));
-        musicOn = new
-
-                ImageButton(drawable);
-        if (Settings.isSoundOn())
-
-        {
+        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-on")));
+        musicOn = new ImageButton(drawable);
+        if (Settings.isSoundOn()) {
             table.add(soundOn).size(30f, 30f);
-        } else
-
-        {
+        } else {
             table.add(soundOff).size(30f, 30f);
         }
-        if (Settings.isMusicOn())
-
-        {
+        if (Settings.isMusicOn()) {
             table.add(musicOn).size(30f, 30f);
-        } else
-
-        {
+        } else {
             table.add(musicOff).size(30f, 30f);
         }
         table.setPosition(SCREEN_WIDTH - 50f, 30f);
