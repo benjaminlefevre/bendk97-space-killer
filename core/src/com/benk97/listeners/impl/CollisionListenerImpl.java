@@ -49,6 +49,8 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         // check health of ennemy
         enemyComponent.hit();
         if (enemyComponent.isDead()) {
+            Mappers.player.get(player).enemiesKilled++;
+            screen.checkAchievements(player);
             tweenManager.killTarget(Mappers.position.get(enemy));
             Mappers.squadron.get(Mappers.enemy.get(enemy).squadron).removeEntity(enemy);
             SpriteComponent spriteComponent = Mappers.sprite.get(enemy);

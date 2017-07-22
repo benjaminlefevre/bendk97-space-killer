@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.benk97.ads.AdsController;
 import com.benk97.assets.Assets;
+import com.benk97.google.PlayServices;
 import com.benk97.screens.MenuScreen;
 import com.benk97.screens.SplashScreen;
 
@@ -13,14 +14,17 @@ import static com.benk97.SpaceKillerGameConstants.SKIP_SPLASH;
 public class SpaceKillerGame extends Game {
     private Assets assets = new Assets();
     private AdsController adsController;
+    public PlayServices playServices;
 
-    public SpaceKillerGame(AdsController adsController) {
+    public SpaceKillerGame(AdsController adsController, PlayServices playServices) {
         this.adsController = adsController;
+        this.playServices = playServices;
     }
 
     public void showAd() {
         adsController.showInterstitialAd();
     }
+
 
     @Override
     public void create() {

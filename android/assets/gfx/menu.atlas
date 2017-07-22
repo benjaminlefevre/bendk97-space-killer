@@ -4,30 +4,51 @@ size: 256,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-music-off
+achievements
+  rotate: false
+  xy: 134, 200
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+gplay
+  rotate: false
+  xy: 68, 116
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+leaderboard
   rotate: false
   xy: 2, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+music-off
+  rotate: false
+  xy: 2, 168
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 music-on
   rotate: false
-  xy: 2, 134
+  xy: 2, 102
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sound-off
   rotate: false
-  xy: 2, 68
+  xy: 68, 168
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sound-on
   rotate: false
-  xy: 68, 134
+  xy: 2, 36
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

@@ -20,10 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.benk97.Settings;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
-import com.benk97.components.Mappers;
-import com.benk97.components.PositionComponent;
-import com.benk97.components.SpriteComponent;
-import com.benk97.components.VelocityComponent;
+import com.benk97.components.*;
 import com.benk97.entities.EntityFactory;
 import com.benk97.entities.SquadronFactory;
 import com.benk97.inputs.RetroPadController;
@@ -38,6 +35,7 @@ import com.benk97.tweens.SpriteComponentAccessor;
 import com.benk97.tweens.VelocityComponentAccessor;
 
 import static com.benk97.SpaceKillerGameConstants.*;
+import static com.benk97.google.Achievement.*;
 
 public class LevelScreen extends ScreenAdapter {
 
@@ -50,7 +48,7 @@ public class LevelScreen extends ScreenAdapter {
     public Assets assets;
     private SpriteBatch batcher;
     private ShapeRenderer shapeRenderer;
-    private SpaceKillerGame game;
+    protected SpaceKillerGame game;
 
     public LevelScreen(Assets assets, SpaceKillerGame game) {
         this.game = game;
@@ -175,5 +173,20 @@ public class LevelScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         batcher.dispose();
+    }
+
+    public void submitScore(int scoreInt) {
+        game.playServices.submitScore(scoreInt);
+    }
+
+    public void checkAchievements(Entity player) {
+        PlayerComponent playerComponent = Mappers.player.get(player);
+        if (playerComponent.enemiesKilled == 50) {
+            game.playServices.unlockAchievement(KILL_50_ENEMIES);
+        } else if (playerComponent.enemiesKilled == 100) {
+            game.playServices.unlockAchievement(KILL_100_ENEMIES);
+        } else if (playerComponent.enemiesKilled == 500) {
+            game.playServices.unlockAchievement(KILL_500_ENEMIES);
+        }
     }
 }
