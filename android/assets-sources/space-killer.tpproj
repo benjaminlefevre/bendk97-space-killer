@@ -69,7 +69,7 @@ limitMemory=true
 useIndexes=true
 
 scaleFactors=[{suffix:"",factor:1}]
-inputFiles=[{path:menu/music-off.png,type:Input,regionName:null},{path:menu/music-on.png,type:Input,regionName:null},{path:menu/sound-off.png,type:Input,regionName:null},{path:menu/sound-on.png,type:Input,regionName:null},{path:menu/leaderboard.png,type:Input,regionName:null},{path:menu/achievements.png,type:Input,regionName:null},{path:menu/gplay.png,type:Input,regionName:null}]
+inputFiles=[{path:menu/music-off.png,type:Input,regionName:null},{path:menu/music-on.png,type:Input,regionName:null},{path:menu/sound-off.png,type:Input,regionName:null},{path:menu/sound-on.png,type:Input,regionName:null},{path:menu/leaderboard.png,type:Input,regionName:null},{path:menu/achievements.png,type:Input,regionName:null},{path:menu/gplay.png,type:Input,regionName:null},{path:menu/gplay_off.png,type:Input,regionName:null},{path:menu/achievements_off.png,type:Input,regionName:null},{path:menu/leaderboard_off.png,type:Input,regionName:null}]
 
 
 ---

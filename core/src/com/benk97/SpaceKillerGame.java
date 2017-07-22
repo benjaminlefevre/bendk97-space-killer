@@ -15,6 +15,7 @@ public class SpaceKillerGame extends Game {
     private Assets assets = new Assets();
     private AdsController adsController;
     public PlayServices playServices;
+    public Screen currentScreen;
 
     public SpaceKillerGame(AdsController adsController, PlayServices playServices) {
         this.adsController = adsController;
@@ -38,7 +39,8 @@ public class SpaceKillerGame extends Game {
     public void goToScreen(Class screen) {
         try {
             assets.loadResources(screen);
-            this.setScreen((Screen) screen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this));
+            currentScreen = (Screen) screen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this);
+            this.setScreen(currentScreen);
         } catch (Exception e) {
             Gdx.app.log("Guru Meditation", "error: " + e.getMessage());
             Gdx.app.exit();
@@ -53,5 +55,21 @@ public class SpaceKillerGame extends Game {
 
     @Override
     public void dispose() {
+    }
+
+    public void signInSucceeded() {
+        if (currentScreen instanceof MenuScreen) {
+            signInFailed = false;
+            ((MenuScreen) currentScreen).signInSucceeded();
+        }
+    }
+
+    public boolean signInFailed = false;
+
+    public void signInFailed() {
+        if (currentScreen instanceof MenuScreen) {
+            signInFailed = true;
+            ((MenuScreen) currentScreen).signInFailed();
+        }
     }
 }

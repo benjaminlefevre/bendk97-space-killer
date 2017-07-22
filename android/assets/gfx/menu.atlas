@@ -6,12 +6,26 @@ filter: Nearest,Nearest
 repeat: none
 achievements
   rotate: false
-  xy: 134, 200
+  xy: 186, 200
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+achievements_off
+  rotate: false
+  xy: 2, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 gplay
+  rotate: false
+  xy: 134, 182
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+gplay_off
   rotate: false
   xy: 68, 116
   size: 50, 50
@@ -20,7 +34,14 @@ gplay
   index: -1
 leaderboard
   rotate: false
-  xy: 2, 2
+  xy: 68, 48
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+leaderboard_off
+  rotate: false
+  xy: 68, 82
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

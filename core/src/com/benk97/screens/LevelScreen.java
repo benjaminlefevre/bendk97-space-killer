@@ -49,6 +49,7 @@ public class LevelScreen extends ScreenAdapter {
     private SpriteBatch batcher;
     private ShapeRenderer shapeRenderer;
     protected SpaceKillerGame game;
+    protected Entity player;
 
     public LevelScreen(Assets assets, SpaceKillerGame game) {
         this.game = game;
@@ -77,7 +78,7 @@ public class LevelScreen extends ScreenAdapter {
         });
         entityFactory = new EntityFactory(engine, assets, tweenManager);
         squadronFactory = new SquadronFactory(tweenManager, entityFactory, engine);
-        Entity player = entityFactory.createEntityPlayer();
+        player = entityFactory.createEntityPlayer();
         Array<Entity> lives = entityFactory.createEntityPlayerLives(player);
         createSystems(player, lives, batcher);
         registerTweensAccessor();
@@ -166,8 +167,6 @@ public class LevelScreen extends ScreenAdapter {
 
     public void goToMenu() {
         game.showAd();
-        this.dispose();
-        game.goToScreen(MenuScreen.class);
     }
 
     @Override

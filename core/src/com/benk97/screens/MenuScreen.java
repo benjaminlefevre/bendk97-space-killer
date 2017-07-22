@@ -48,11 +48,16 @@ public class MenuScreen extends HDScreen {
 
     ImageButton leaderboard;
     ImageButton achievements;
+    ImageButton leaderboard_off;
+    ImageButton achievements_off;
     ImageButton gplay;
+    ImageButton gplayOff;
 
     public MenuScreen(final Assets assets, final SpaceKillerGame game) {
         super(game, assets);
-        game.playServices.startGooglePlay();
+        if(!game.signInFailed && !game.playServices.isSignedIn()){
+            game.playServices.signIn();
+        }
         batcher = new SpriteBatch();
         stage = new Stage(viewport, batcher);
         image = new Image(assets.get(MENU_BGD));
@@ -189,12 +194,33 @@ public class MenuScreen extends HDScreen {
         TextureAtlas atlas = assets.get(MENU_ATLAS);
 
         gplay = new ImageButton(new TextureRegionDrawable(atlas.findRegion("gplay")));
+        gplayOff = new ImageButton(new TextureRegionDrawable(atlas.findRegion("gplay_off")));
         achievements = new ImageButton(new TextureRegionDrawable(atlas.findRegion("achievements")));
+        achievements_off = new ImageButton(new TextureRegionDrawable(atlas.findRegion("achievements_off")));
         leaderboard = new ImageButton((new TextureRegionDrawable(atlas.findRegion("leaderboard"))));
+        leaderboard_off = new ImageButton((new TextureRegionDrawable(atlas.findRegion("leaderboard_off"))));
         achievements.setPosition(150f, 10f);
         leaderboard.setPosition(200f, 10f);
+        achievements_off.setPosition(150f, 10f);
+        leaderboard_off.setPosition(200f, 10f);
         gplay.setPosition(90f, 0f);
-        gplay.addListener(new InputListener() {
+        gplayOff.setPosition(90f, 0f);
+//        gplay.addListener(new InputListener() {
+//            @Override
+//            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+//                assets.playSound(MENU_CLICK);
+//                game.playServices.signOut();
+//                gplay.remove();
+//                stage.addActor(gplayOff);
+//                leaderboard.remove();
+//                achievements.remove();
+//                stage.addActor(leaderboard_off);
+//                stage.addActor(achievements_off);
+//                return true;
+//            }
+//
+//        });
+        gplayOff.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 assets.playSound(MENU_CLICK);
@@ -221,9 +247,15 @@ public class MenuScreen extends HDScreen {
             }
 
         });
-        stage.addActor(gplay);
-        stage.addActor(achievements);
-        stage.addActor(leaderboard);
+        if (game.playServices.isSignedIn()) {
+            stage.addActor(gplay);
+            stage.addActor(achievements);
+            stage.addActor(leaderboard);
+        } else {
+            stage.addActor(gplayOff);
+            stage.addActor(achievements_off);
+            stage.addActor(leaderboard_off);
+        }
 
         table = new Table();
 
@@ -326,6 +358,9 @@ public class MenuScreen extends HDScreen {
         font.draw(batcher, "SPACE", SCREEN_WIDTH / 5f - 15f, SCREEN_HEIGHT * 3 / 4 + 100f);
         font.draw(batcher, "KILLER", SCREEN_WIDTH / 5f - 40f, SCREEN_HEIGHT * 3 / 4 + 50f);
         fontVersion.draw(batcher, SpaceKillerGameConstants.GAME_VERSION, 10f, 20f);
+        if (!game.playServices.isSignedIn()) {
+            fontVersion.draw(batcher, " Google Play\nPlease sign in", 90f, 60f);
+        }
         batcher.end();
     }
 
@@ -336,4 +371,25 @@ public class MenuScreen extends HDScreen {
         assets.unloadResources(this.getClass());
         stage.dispose();
     }
+
+    public void signInSucceeded() {
+        stage.addActor(gplay);
+        stage.addActor(leaderboard);
+        stage.addActor(achievements);
+        gplayOff.remove();
+        achievements_off.remove();
+        leaderboard_off.remove();
+
+    }
+
+    public void signInFailed() {
+        stage.addActor(gplayOff);
+        stage.addActor(leaderboard_off);
+        stage.addActor(achievements_off);
+        achievements.remove();
+        leaderboard.remove();
+        gplay.remove();
+    }
+
+
 }

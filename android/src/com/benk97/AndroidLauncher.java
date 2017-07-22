@@ -9,6 +9,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.benk97.ads.AdsController;
 import com.benk97.google.Achievement;
 import com.benk97.google.PlayServices;
+import com.benk97.screens.MenuScreen;
 import com.benk97.space.killer.R;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.GameHelper;
@@ -21,6 +22,7 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
     private final String UNITY_ADS_GAME_ID = "1487325";
     private GameHelper gameHelper;
     private final static int requestCode = 1;
+    private SpaceKillerGame game = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +32,8 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useImmersiveMode = true;
         config.numSamples = 2;
-        initialize(new SpaceKillerGame(this, this), config);
+        game = new SpaceKillerGame(this, this);
+        initialize(game, config);
     }
 
     private void setupAds() {
@@ -40,13 +43,20 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
     private void setupGooglePlay() {
         gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
         gameHelper.enableDebugLog(false);
+        gameHelper.setMaxAutoSignInAttempts(0);
         GameHelper.GameHelperListener gameHelperListener = new GameHelper.GameHelperListener() {
             @Override
             public void onSignInFailed() {
+                if (game != null) {
+                    game.signInFailed();
+                }
             }
 
             @Override
             public void onSignInSucceeded() {
+                if (game != null) {
+                    game.signInSucceeded();
+                }
             }
         };
         gameHelper.setup(gameHelperListener);
@@ -73,7 +83,13 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
 
     @Override
     public void onUnityAdsFinish(String s, UnityAds.FinishState finishState) {
-
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                game.currentScreen.dispose();
+                game.goToScreen(MenuScreen.class);
+            }
+        });
     }
 
     @Override
@@ -84,6 +100,7 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
     @Override
     protected void onStart() {
         super.onStart();
+        gameHelper.onStart(this);
     }
 
     @Override
@@ -139,6 +156,9 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
 
     @Override
     public void unlockAchievement(Achievement achievement) {
+        if (!isSignedIn()) {
+            return;
+        }
         String r = "";
         switch (achievement) {
             case KILL_50_ENEMIES:
@@ -153,6 +173,9 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
             case KILL_500_ENEMIES:
                 r = getString(R.string.achievement_kill_500_enemies);
                 break;
+            case KILL_BOSS_WITHOUT_HAVING_LOSING_LIFE:
+                r = getString(R.string.achievement_kill_the_boss_without_losing_life);
+                break;
         }
 
         Games.Achievements.unlock(gameHelper.getApiClient(), r);
@@ -160,7 +183,7 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
 
     @Override
     public void submitScore(int highScore) {
-        if (isSignedIn() == true) {
+        if (isSignedIn()) {
             Games.Leaderboards.submitScore(gameHelper.getApiClient(),
                     getString(R.string.leaderboard_highscore), highScore);
         }
@@ -168,7 +191,7 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
 
     @Override
     public void showAchievement() {
-        if (isSignedIn() == true) {
+        if (isSignedIn()) {
             startActivityForResult(Games.Achievements.getAchievementsIntent(gameHelper.getApiClient()), requestCode);
         } else {
             signIn();
@@ -177,7 +200,7 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
 
     @Override
     public void showScore() {
-        if (isSignedIn() == true) {
+        if (isSignedIn()) {
             startActivityForResult(Games.Leaderboards.getLeaderboardIntent(gameHelper.getApiClient(),
                     getString(R.string.leaderboard_highscore)), requestCode);
         } else {
