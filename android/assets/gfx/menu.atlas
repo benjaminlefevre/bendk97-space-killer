@@ -6,28 +6,28 @@ filter: Nearest,Nearest
 repeat: none
 achievements
   rotate: false
-  xy: 68, 102
+  xy: 2, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 achievements_off
   rotate: false
-  xy: 2, 36
+  xy: 68, 102
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 gplay
   rotate: false
-  xy: 460, 460
+  xy: 460, 408
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 gplay_off
   rotate: false
-  xy: 460, 408
+  xy: 460, 460
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
@@ -41,42 +41,42 @@ help
   index: -1
 leaderboard
   rotate: false
-  xy: 134, 168
+  xy: 2, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 leaderboard_off
   rotate: false
-  xy: 2, 2
+  xy: 134, 168
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 music-off
   rotate: false
-  xy: 68, 136
+  xy: 2, 136
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 music-on
   rotate: false
-  xy: 2, 136
+  xy: 394, 446
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sound-off
   rotate: false
-  xy: 394, 446
+  xy: 2, 70
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sound-on
   rotate: false
-  xy: 2, 70
+  xy: 68, 136
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

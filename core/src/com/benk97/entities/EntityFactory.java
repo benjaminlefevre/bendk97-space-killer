@@ -144,7 +144,7 @@ public class EntityFactory implements Disposable {
         PositionComponent bombPosition = position.get(bomb);
         positionComponent.x = bombPosition.x - spriteComponent.sprite.getWidth() / 2f;
         positionComponent.y = bombPosition.y - spriteComponent.sprite.getHeight() / 2f;
-        Tween.to(positionComponent, POSITION_Y, 0.6f).ease(Linear.INOUT)
+        Tween.to(positionComponent, POSITION_Y, 0.7f).ease(Linear.INOUT)
                 .target(bombPosition.y - spriteComponent.sprite.getHeight() / 2f)
                 .setCallback(new TweenCallback() {
                     @Override
