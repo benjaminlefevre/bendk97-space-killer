@@ -22,13 +22,13 @@ public class EnemyComponent implements Component, Pool.Poolable {
         bulletVelocity = 0f;
     }
 
-    public void hit() {
+    public void hit(int nbHits) {
         if (lifeGauge > 0) {
-            lifeGauge--;
+            lifeGauge -= nbHits;
         }
     }
 
     public boolean isDead() {
-        return lifeGauge == 0;
+        return lifeGauge <= 0;
     }
 }

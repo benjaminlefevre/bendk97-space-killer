@@ -18,4 +18,8 @@ public interface CollisionListener {
     void enemyShootByShield(Entity enemy, Entity shield);
 
     void playerShieldUp(Entity player, Entity shieldUp);
+
+    void playerBombUp(Entity player, Entity bombUp);
+
+    void enemyShootByExplosion(Entity enemy, Entity player);
 }

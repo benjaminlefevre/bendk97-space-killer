@@ -33,6 +33,7 @@ public class MenuScreen extends HDScreen {
     TextButtonStyle buttonStyle;
     TextButton highscoresButton;
     TextButton controllerButton;
+    TextButton helpButton;
     ImageButton soundOff;
     ImageButton soundOn;
     ImageButton musicOff;
@@ -52,10 +53,11 @@ public class MenuScreen extends HDScreen {
     ImageButton achievements_off;
     ImageButton gplay;
     ImageButton gplayOff;
+    ImageButton helpScreen;
 
     public MenuScreen(final Assets assets, final SpaceKillerGame game) {
         super(game, assets);
-        if(!game.signInFailed && !game.playServices.isSignedIn()){
+        if (!game.signInFailed && !game.playServices.isSignedIn()) {
             game.playServices.signIn();
         }
         batcher = new SpriteBatch();
@@ -71,6 +73,9 @@ public class MenuScreen extends HDScreen {
         highscoresButton.setSize(200f, 75f);
         controllerButton = new TextButton("control\n\n   settings", buttonStyle);
         controllerButton.setSize(200f, 75f);
+        helpButton = new TextButton("help", buttonStyle);
+        helpButton.setSize(200f, 75f);
+
 
         final TextButtonStyle styleRetro = new TextButtonStyle();
         styleRetro.font = assets.get(FONT_SPACE_KILLER_SMALL);
@@ -94,9 +99,11 @@ public class MenuScreen extends HDScreen {
         stage.addActor(playButton);
         stage.addActor(highscoresButton);
         stage.addActor(controllerButton);
+        stage.addActor(helpButton);
         playButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f + 75f);
         highscoresButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f - 25f);
         controllerButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f - 150f);
+        helpButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f - 250f);
         Gdx.input.setInputProcessor(stage);
         playButton.addListener(new InputListener() {
             @Override
@@ -115,6 +122,7 @@ public class MenuScreen extends HDScreen {
                 playButton.remove();
                 highscoresButton.remove();
                 controllerButton.remove();
+                helpButton.remove();
                 displayScores = new TextButton(Settings.getHighscoreString(), buttonStyle);
                 displayScores.setSize(300f, 375f);
                 displayScores.setPosition(SCREEN_WIDTH / 7f, 75f);
@@ -126,6 +134,7 @@ public class MenuScreen extends HDScreen {
                         stage.addActor(playButton);
                         stage.addActor(highscoresButton);
                         stage.addActor(controllerButton);
+                        stage.addActor(helpButton);
                         return true;
                     }
                 });
@@ -167,6 +176,7 @@ public class MenuScreen extends HDScreen {
                 stage.addActor(playButton);
                 stage.addActor(highscoresButton);
                 stage.addActor(controllerButton);
+                stage.addActor(helpButton);
                 retroPad.remove();
                 virtualPad.remove();
                 back.remove();
@@ -182,6 +192,7 @@ public class MenuScreen extends HDScreen {
                 playButton.remove();
                 highscoresButton.remove();
                 controllerButton.remove();
+                helpButton.remove();
 
                 stage.addActor(virtualPad);
                 stage.addActor(retroPad);
@@ -190,6 +201,19 @@ public class MenuScreen extends HDScreen {
             }
         });
 
+        helpButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                assets.playSound(MENU_CLICK);
+                playButton.remove();
+                highscoresButton.remove();
+                controllerButton.remove();
+                helpButton.remove();
+
+                stage.addActor(helpScreen);
+                return true;
+            }
+        });
 
         TextureAtlas atlas = assets.get(MENU_ATLAS);
 
@@ -205,21 +229,6 @@ public class MenuScreen extends HDScreen {
         leaderboard_off.setPosition(200f, 10f);
         gplay.setPosition(90f, 0f);
         gplayOff.setPosition(90f, 0f);
-//        gplay.addListener(new InputListener() {
-//            @Override
-//            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-//                assets.playSound(MENU_CLICK);
-//                game.playServices.signOut();
-//                gplay.remove();
-//                stage.addActor(gplayOff);
-//                leaderboard.remove();
-//                achievements.remove();
-//                stage.addActor(leaderboard_off);
-//                stage.addActor(achievements_off);
-//                return true;
-//            }
-//
-//        });
         gplayOff.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -258,6 +267,23 @@ public class MenuScreen extends HDScreen {
         }
 
         table = new Table();
+
+        helpScreen = new ImageButton(new TextureRegionDrawable(atlas.findRegion("help")));
+        helpScreen.setColor(new Color(1f, 1f, 1f, 0.6f));
+        helpScreen.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                assets.playSound(MENU_CLICK);
+                helpScreen.remove();
+                stage.addActor(playButton);
+                stage.addActor(highscoresButton);
+                stage.addActor(helpButton);
+                stage.addActor(controllerButton);
+                return true;
+            }
+        });
+
+        helpScreen.setPosition(5f, 150f);
 
         TextureRegionDrawable drawable = new TextureRegionDrawable(atlas.findRegion("sound-off"));
         soundOff = new ImageButton(drawable);

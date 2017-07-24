@@ -11,9 +11,11 @@ import com.benk97.components.Mappers;
 import com.benk97.components.PlayerComponent;
 import com.benk97.entities.EntityFactory;
 import com.benk97.listeners.InputListener;
+import com.benk97.listeners.PlayerListener;
 import com.benk97.screens.LevelScreen;
 
 import static com.benk97.SpaceKillerGameConstants.*;
+import static com.benk97.assets.Assets.SOUND_BOMB_DROP;
 import static com.benk97.assets.Assets.SOUND_FIRE;
 import static com.benk97.components.Mappers.velocity;
 
@@ -24,9 +26,12 @@ public class InputListenerImpl extends EntitySystem implements InputListener {
     private Assets assets;
     private LevelScreen screen;
     private boolean autoFire = true;
+    private PlayerListener playerListener;
 
-    public InputListenerImpl(Entity player, EntityFactory entityFactory, Assets assets, LevelScreen screen, boolean autoFire) {
+    public InputListenerImpl(Entity player, PlayerListener playerListener, EntityFactory entityFactory, Assets assets,
+                             LevelScreen screen, boolean autoFire) {
         this.player = player;
+        this.playerListener = playerListener;
         this.assets = assets;
         this.entityFactory = entityFactory;
         this.screen = screen;
@@ -58,6 +63,17 @@ public class InputListenerImpl extends EntitySystem implements InputListener {
                 entityFactory.createPlayerFire(player);
                 lastShoot = TimeUtils.millis();
             }
+        }
+    }
+
+    @Override
+    public void dropBomb() {
+        PlayerComponent playerComponent = Mappers.player.get(player);
+        if (playerFamily.matches(player) && playerComponent.hasBombs()) {
+            assets.playSound(SOUND_BOMB_DROP);
+            playerComponent.useBomb();
+            entityFactory.createPlayerBomb(player);
+            playerListener.dropBomb();
         }
     }
 

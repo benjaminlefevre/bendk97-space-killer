@@ -9,8 +9,9 @@ public class RetroPadController extends TouchInputProcessor {
 
     private Rectangle fireButton;
 
-    public RetroPadController(InputListener inputListener, Camera camera, Rectangle[] squareTouches, Rectangle fireButton) {
-        super(inputListener, camera);
+    public RetroPadController(InputListener inputListener, Camera camera, Rectangle[] squareTouches, Rectangle fireButton,
+                              Rectangle bombButton) {
+        super(inputListener, camera, bombButton);
         this.squareTouches = squareTouches;
         this.fireButton = fireButton;
     }
@@ -21,6 +22,8 @@ public class RetroPadController extends TouchInputProcessor {
         touchDragged(screenX, screenY, pointer);
         if (fireButton.contains(worldTouch.x, worldTouch.y)) {
             listener.fire();
+        }else if(bombButton.contains(worldTouch.x, worldTouch.y)){
+            listener.dropBomb();
         }
         return true;
     }

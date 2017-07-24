@@ -51,7 +51,8 @@ public class Assets {
     public static final AssetDescriptor<Texture> GFX_BGD_LEVEL1 =
             new AssetDescriptor<Texture>("gfx/backgrounds/level1.gif", Texture.class);
     // GFX
-    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS = new AssetDescriptor<TextureAtlas>("gfx/level1.atlas", TextureAtlas.class);
+    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_NOMASK = new AssetDescriptor<TextureAtlas>("gfx/level1-nomask.atlas", TextureAtlas.class);
+    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level1-mask.atlas", TextureAtlas.class);
     // SOUNDS
     public static final AssetDescriptor<Sound> SOUND_LOSE_LIFE =
             new AssetDescriptor<Sound>("sounds/loseLife.ogg", Sound.class);
@@ -63,6 +64,10 @@ public class Assets {
             new AssetDescriptor<Sound>("sounds/shield.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_SHIELD_UP =
             new AssetDescriptor<Sound>("sounds/shieldUp.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_BOMB_DROP =
+            new AssetDescriptor<Sound>("sounds/bombDrop.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_BOMB_EXPLOSION =
+            new AssetDescriptor<Sound>("sounds/bombExplosion.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_EXPLOSION =
             new AssetDescriptor<Sound>("sounds/explosion.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_BOSS_FINISHED =
@@ -111,9 +116,9 @@ public class Assets {
                 SOUND_FIRE, SOUND_EXPLOSION, MUSIC_LEVEL_1, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
                 SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
                 SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, MUSIC_LEVEL_1_BOSS, SOUND_BOSS_ALERT,
-                SOUND_BOSS_FINISHED,
+                SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION,
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE,
-                GFX_BGD_LEVEL1, GFX_BGD_STARS, GFX_LEVEL1_ATLAS));
+                GFX_BGD_LEVEL1, GFX_BGD_STARS, GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL1_ATLAS_NOMASK));
         put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
                 SPLASH_MUSIC, SPASH_ATLAS, SPLASH_TXT_LOGO
         ));

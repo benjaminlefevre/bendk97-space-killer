@@ -39,6 +39,7 @@ public class Level1Screen extends LevelScreen {
 
     public Level1Screen(Assets assets, SpaceKillerGame game) {
         super(assets, game);
+        spriteMaskFactory.getMask(assets.get(GFX_LEVEL1_ATLAS_MASK).getTextures().first());
         assets.playMusic(MUSIC_LEVEL_1);
         background = entityFactory.createBackground(assets.get(GFX_BGD_LEVEL1), -BGD_VELOCITY);
         background2 = entityFactory.createBackground(assets.get(GFX_BGD_STARS), -BGD_PARALLAX_VELOCITY);
@@ -75,9 +76,9 @@ public class Level1Screen extends LevelScreen {
         if (second % 3 == 0 || second % 7 == 0) {
             new ScriptItem(getRandomAsteroidType(), LINEAR_Y,
                     40f + random.nextFloat() * 160f,
-                    1, random.nextInt() % 4 == 0, false, 0, 0f,
-                    random.nextFloat() * SCREEN_WIDTH,
-                    SCREEN_HEIGHT - 10f).execute();
+                    1, random.nextInt() % 6 == 0, false, 0, 0f,
+                    random.nextFloat() * (SCREEN_WIDTH - 36f),
+                    (float) SCREEN_HEIGHT).execute();
         }
 
         // 13 elements
@@ -130,7 +131,7 @@ public class Level1Screen extends LevelScreen {
 
     public void restartLevel1() {
         game.playServices.unlockAchievement(KILL_BOSS);
-        if(Mappers.player.get(player).howManyLifesLosed == 0) {
+        if (Mappers.player.get(player).howManyLifesLosed == 0) {
             game.playServices.unlockAchievement(KILL_BOSS_WITHOUT_HAVING_LOSING_LIFE);
         }
         time = 0f;

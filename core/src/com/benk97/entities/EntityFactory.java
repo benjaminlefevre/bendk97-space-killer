@@ -27,6 +27,7 @@ import static com.benk97.components.Mappers.position;
 import static com.benk97.components.Mappers.sprite;
 import static com.benk97.components.PlayerComponent.PowerLevel.DOUBLE;
 import static com.benk97.components.PlayerComponent.PowerLevel.NORMAL;
+import static com.benk97.tweens.PositionComponentAccessor.POSITION_XY;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_Y;
 import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
 
@@ -35,14 +36,16 @@ public class EntityFactory {
     private PooledEngine engine;
     private Assets assets;
     private TweenManager tweenManager;
-    private TextureAtlas atlas;
+    private TextureAtlas atlasNoMask;
+    private TextureAtlas atlasMask;
     private Random random = new RandomXS128();
 
     public EntityFactory(PooledEngine engine, Assets assets, TweenManager tweenManager) {
         this.engine = engine;
         this.assets = assets;
         this.tweenManager = tweenManager;
-        this.atlas = assets.get(GFX_LEVEL1_ATLAS);
+        this.atlasNoMask = assets.get(GFX_LEVEL1_ATLAS_NOMASK);
+        this.atlasMask = assets.get(GFX_LEVEL1_ATLAS_MASK);
     }
 
 
@@ -67,8 +70,8 @@ public class EntityFactory {
         bullet.add(velocityComponent);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         PlayerComponent playerComponent = Mappers.player.get(player);
-        spriteComponent.sprite = new Sprite(playerComponent.powerLevel.equals(NORMAL) ? atlas.findRegion("bullet")
-                : playerComponent.powerLevel.equals(DOUBLE) ? atlas.findRegion("bullet2") : atlas.findRegion("bullet3"));
+        spriteComponent.sprite = new Sprite(playerComponent.powerLevel.equals(NORMAL) ? atlasMask.findRegion("bullet")
+                : playerComponent.powerLevel.equals(DOUBLE) ? atlasMask.findRegion("bullet2") : atlasMask.findRegion("bullet3"));
         bullet.add(spriteComponent);
         bullet.add(engine.createComponent(RemovableComponent.class));
         engine.addEntity(bullet);
@@ -77,6 +80,68 @@ public class EntityFactory {
         positionComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
         velocityComponent.y = PLAYER_BULLET_VELOCITY;
         return bullet;
+    }
+
+    public Entity createPlayerBomb(Entity player) {
+        final Entity bomb = engine.createEntity();
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
+        bomb.add(positionComponent);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, atlasNoMask.createSprites("bomb"), LOOP));
+        spriteComponent.sprite = animationComponent.animations.get(ANIMATION_MAIN).getKeyFrame(0);
+        bomb.add(spriteComponent);
+        bomb.add(animationComponent);
+        bomb.add(engine.createComponent(StateComponent.class));
+        engine.addEntity(bomb);
+        PositionComponent playerPosition = position.get(player);
+        positionComponent.x = playerPosition.x + Mappers.sprite.get(player).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
+        positionComponent.y = playerPosition.y + Mappers.sprite.get(player).sprite.getHeight() >= SCREEN_HEIGHT * 3f / 4f ?
+                playerPosition.y : playerPosition.y + sprite.get(player).sprite.getHeight();
+        Tween.to(positionComponent, POSITION_XY, 0.6f).ease(Linear.INOUT)
+                .target(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f, SCREEN_HEIGHT * 3f / 4f)
+                .setCallback(new TweenCallback() {
+                    @Override
+                    public void onEvent(int event, BaseTween<?> baseTween) {
+                        if (event == COMPLETE) {
+                            createBombExplosion(bomb);
+                            engine.removeEntity(bomb);
+                        }
+                    }
+                })
+                .start(tweenManager);
+        return bomb;
+    }
+
+    public Entity createBombExplosion(Entity bomb) {
+        final Entity bombExplosion = engine.createEntity();
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
+        bombExplosion.add(positionComponent);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_BOMB_EXPLOSION, atlasNoMask.createSprites("bomb_explosion"), PlayMode.LOOP_PINGPONG));
+        spriteComponent.sprite = animationComponent.animations.get(ANIMATION_MAIN).getKeyFrame(0);
+        spriteComponent.zIndex = 100;
+        bombExplosion.add(spriteComponent);
+        bombExplosion.add(animationComponent);
+        bombExplosion.add(engine.createComponent(StateComponent.class));
+        engine.addEntity(bombExplosion);
+        assets.playSound(SOUND_BOMB_EXPLOSION);
+        PositionComponent bombPosition = position.get(bomb);
+        positionComponent.x = bombPosition.x - spriteComponent.sprite.getWidth() / 2f;
+        positionComponent.y = bombPosition.y - spriteComponent.sprite.getHeight() / 2f;
+        Tween.to(positionComponent, POSITION_Y, 0.6f).ease(Linear.INOUT)
+                .target(bombPosition.y - spriteComponent.sprite.getHeight() / 2f)
+                .setCallback(new TweenCallback() {
+                    @Override
+                    public void onEvent(int event, BaseTween<?> baseTween) {
+                        if (event == COMPLETE) {
+                            bombExplosion.add(engine.createComponent(BombExplosionComponent.class));
+                        }
+                    }
+                })
+                .start(tweenManager);
+        return bomb;
     }
 
     public Entity createEnemyFire(Entity enemy, Entity player) {
@@ -88,7 +153,7 @@ public class EntityFactory {
         VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
         bullet.add(velocityComponent);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
-        spriteComponent.sprite = new Sprite(atlas.findRegion("bulletEnnemy"));
+        spriteComponent.sprite = new Sprite(atlasMask.findRegion("bulletEnnemy"));
         bullet.add(spriteComponent);
         bullet.add(engine.createComponent(RemovableComponent.class));
         engine.addEntity(bullet);
@@ -125,7 +190,7 @@ public class EntityFactory {
     public Array<Entity> createBossFireCircle(Entity boss) {
         Array<Entity> bullets = new Array<Entity>(10);
         assets.playSound(SOUND_FIRE_ENEMY);
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 12; ++i) {
             Entity bullet = engine.createEntity();
 
             bullet.add(engine.createComponent(EnemyBulletComponent.class));
@@ -137,7 +202,7 @@ public class EntityFactory {
             bullet.add(velocityComponent);
 
             SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
-            spriteComponent.sprite = new Sprite(atlas.findRegion("bulletEnnemy"));
+            spriteComponent.sprite = new Sprite(atlasMask.findRegion("bulletEnnemy"));
             bullet.add(spriteComponent);
 
             bullet.add(engine.createComponent(RemovableComponent.class));
@@ -153,7 +218,7 @@ public class EntityFactory {
         for (int i = 0; i < bullets.size; ++i) {
             Vector2 directionBullet = new Vector2(1f, 0f);
             directionBullet.setAngle(rotation);
-            rotation -= 12f;
+            rotation -= 10f;
             directionBullet.scl(Mappers.enemy.get(boss).bulletVelocity);
             VelocityComponent velocityComponent = Mappers.velocity.get(bullets.get(i));
             velocityComponent.x = directionBullet.x;
@@ -170,7 +235,7 @@ public class EntityFactory {
         powerUp.add(position);
         powerUp.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = atlas.createSprites("power-up");
+        Array<Sprite> sprites = atlasMask.createSprites("power-up");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_POWERUP, sprites, LOOP));
         powerUp.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
@@ -204,7 +269,7 @@ public class EntityFactory {
         shieldUp.add(position);
         shieldUp.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = atlas.createSprites("shieldup");
+        Array<Sprite> sprites = atlasMask.createSprites("shieldup");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_POWERUP, sprites, LOOP));
         shieldUp.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
@@ -231,6 +296,35 @@ public class EntityFactory {
         return shieldUp;
     }
 
+    public Entity createBombUp(Entity squadron) {
+        final Entity bombUp = engine.createEntity();
+        bombUp.add(engine.createComponent(BombUpComponent.class));
+        PositionComponent position = engine.createComponent(PositionComponent.class);
+        bombUp.add(position);
+        bombUp.add(engine.createComponent(VelocityComponent.class));
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.sprite = new Sprite(atlasMask.findRegion("bombUp"));
+        bombUp.add(component);
+        position.x = Mappers.squadron.get(squadron).lastKilledPosition.x;
+        position.y = Mappers.squadron.get(squadron).lastKilledPosition.y;
+        Timeline.createSequence()
+                .beginParallel()
+                .push(Tween.to(position, POSITION_Y, 8f).ease(Linear.INOUT).target(50f))
+                .push(Tween.to(component, ALPHA, 0.5f).delay(4f).ease(Linear.INOUT).target(0f).repeat(8, 0f))
+                .end()
+                .setCallback(new TweenCallback() {
+                    @Override
+                    public void onEvent(int i, BaseTween<?> baseTween) {
+                        if (i == TweenCallback.COMPLETE) {
+                            engine.removeEntity(bombUp);
+                        }
+                    }
+                })
+                .start(tweenManager);
+        engine.addEntity(bombUp);
+        return bombUp;
+    }
+
 
     public Entity createEnemy(Entity squadron, boolean canAttack, float velocityBullet, String atlasName, int points,
                               int strength, float frameDuration, PlayMode animationType) {
@@ -248,7 +342,7 @@ public class EntityFactory {
         enemy.add(position);
         enemy.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = atlas.createSprites(atlasName);
+        Array<Sprite> sprites = atlasMask.createSprites(atlasName);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(frameDuration, sprites, animationType));
         enemy.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
@@ -321,29 +415,7 @@ public class EntityFactory {
         enemy.add(position);
         enemy.add(engine.createComponent(VelocityComponent.class));
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
-        component.sprite = atlas.createSprite("boss-level1");
-        component.setPolygonFromWorldOrigin(
-                new Array<float[]>(new float[][]{
-                        new float[]{
-                                18f, 81f,
-                                6f, 192f,
-                                130f, 192f,
-                                130f, 6f,
-                                92f, 0f},
-                        new float[]{
-                                130f, 192f,
-                                222f, 192f,
-                                222f, 57f,
-                                130f, 57f
-                        },
-                        new float[]{
-                                222f, 192f,
-                                338f, 189f,
-                                318f, 71f,
-                                262f, 2f,
-                                222f, 17f
-                        }
-                }));
+        component.sprite = atlasMask.createSprite("boss-level1");
         enemy.add(component);
         engine.addEntity(enemy);
         new Timer().scheduleTask(new Timer.Task() {
@@ -368,7 +440,7 @@ public class EntityFactory {
         enemy.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         String asteroidSprite = asteroid == ASTEROID_1 ? "asteroid" : "asteroid2";
-        Array<Sprite> sprites = atlas.createSprites(asteroidSprite);
+        Array<Sprite> sprites = atlasMask.createSprites(asteroidSprite);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, LOOP));
         enemy.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
@@ -390,14 +462,14 @@ public class EntityFactory {
         player.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> spritesMAIN = new Array<Sprite>(2);
-        spritesMAIN.add(atlas.createSprite("player", 1));
-        spritesMAIN.add(atlas.createSprite("player", 2));
+        spritesMAIN.add(atlasMask.createSprite("player", 1));
+        spritesMAIN.add(atlasMask.createSprite("player", 2));
         Array<Sprite> spritesLEFT = new Array<Sprite>(2);
-        spritesLEFT.add(atlas.createSprite("player", 0));
-        spritesLEFT.add(atlas.createSprite("player", 3));
+        spritesLEFT.add(atlasMask.createSprite("player", 0));
+        spritesLEFT.add(atlasMask.createSprite("player", 3));
         Array<Sprite> spritesRIGHT = new Array<Sprite>(2);
-        spritesRIGHT.add(atlas.createSprite("player", 0));
-        spritesRIGHT.add(atlas.createSprite("player", 3));
+        spritesRIGHT.add(atlasMask.createSprite("player", 0));
+        spritesRIGHT.add(atlasMask.createSprite("player", 3));
         spritesRIGHT.get(0).flip(true, false);
         spritesRIGHT.get(1).flip(true, false);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, spritesMAIN, LOOP));
@@ -421,7 +493,7 @@ public class EntityFactory {
         SpriteComponent playerSprite = Mappers.sprite.get(player);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         spriteComponent.zIndex = 99;
-        spriteComponent.sprite = atlas.createSprite("shield");
+        spriteComponent.sprite = atlasMask.createSprite("shield");
         PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         positionComponent.setPosition(playerPosition.x - (spriteComponent.sprite.getWidth() - playerSprite.sprite.getWidth()) / 2f,
                 playerPosition.y - (spriteComponent.sprite.getHeight() - playerSprite.sprite.getHeight()) / 2f);
@@ -452,9 +524,25 @@ public class EntityFactory {
         for (int i = 0; i < playerComponent.lives - 1; ++i) {
             Entity life = engine.createEntity();
             SpriteComponent component = engine.createComponent(SpriteComponent.class);
-            Sprite sprite = atlas.createSprite("player", 1);
+            Sprite sprite = atlasMask.createSprite("player", 1);
             component.setTexture(sprite, 1f, 0f, 0.5f);
             component.setPosition(LIVES_X + 20f * i, LIVES_Y - sprite.getHeight());
+            life.add(component);
+            engine.addEntity(life);
+            entities.add(life);
+        }
+        return entities;
+    }
+
+    public Array<Entity> createEntityPlayerBombs(Entity player) {
+        PlayerComponent playerComponent = Mappers.player.get(player);
+        Array<Entity> entities = new Array<Entity>(playerComponent.lives);
+        for (int i = 0; i < playerComponent.bombs; ++i) {
+            Entity life = engine.createEntity();
+            SpriteComponent component = engine.createComponent(SpriteComponent.class);
+            Sprite sprite = atlasNoMask.createSprite("bomb", 1);
+            component.setTexture(sprite, 1f, 0f, 1f);
+            component.setPosition(BOMB_STOCK_X - 22f * i, BOMB_STOCK_Y);
             life.add(component);
             engine.addEntity(life);
             entities.add(life);
@@ -469,11 +557,13 @@ public class EntityFactory {
         position.setPosition(x, y);
         explosion.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = atlas.createSprites("explosion");
+        Array<Sprite> sprites = atlasNoMask.createSprites("explosion");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_EXPLOSION, sprites, PlayMode.NORMAL));
         animationComponent.playMode = PlayMode.NORMAL;
         explosion.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.sprite = animationComponent.animations.get(ANIMATION_MAIN).getKeyFrame(0);
+        component.zIndex = 100;
         explosion.add(component);
         explosion.add(engine.createComponent(StateComponent.class));
         engine.addEntity(explosion);
@@ -498,7 +588,17 @@ public class EntityFactory {
     public Entity createEntityFireButton(float alpha, float posX, float posY) {
         Entity entity = engine.createEntity();
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
-        component.setTexture(atlas.createSprite("fire_button"), alpha, 0, 1f);
+        component.setTexture(atlasNoMask.createSprite("fire_button"), alpha, 0, 1f);
+        component.setPosition(posX, posY);
+        entity.add(component);
+        engine.addEntity(entity);
+        return entity;
+    }
+
+    public Entity createEntityBombButton(float alpha, float posX, float posY) {
+        Entity entity = engine.createEntity();
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.setTexture(atlasNoMask.createSprite("bomb_button"), alpha, 0, 1f);
         component.setPosition(posX, posY);
         entity.add(component);
         engine.addEntity(entity);
@@ -509,7 +609,7 @@ public class EntityFactory {
     public Entity createEntitiesPadController(float alpha, float scale, float posX, float posY) {
         Entity pad = engine.createEntity();
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
-        component.setTexture(atlas.createSprite("pad"), alpha, 0f, scale);
+        component.setTexture(atlasNoMask.createSprite("pad"), alpha, 0f, scale);
         component.setPosition(posX, posY);
         pad.add(component);
         engine.addEntity(pad);
@@ -538,7 +638,7 @@ public class EntityFactory {
         if (position.x < SCREEN_WIDTH) {
             position.x = SCREEN_WIDTH / 2f;
         }
-        if(position.x >= SCREEN_WIDTH - 20f){
+        if (position.x >= SCREEN_WIDTH - 20f) {
             position.x -= 50f;
         }
         if (position.y > SCREEN_HEIGHT) {

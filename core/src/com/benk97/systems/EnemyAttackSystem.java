@@ -26,7 +26,7 @@ public class EnemyAttackSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        if (Mappers.enemy.get(entity).canAttack && isVisible(entity) && random.nextInt() % 200 == 0) {
+        if (Mappers.enemy.get(entity).canAttack && isVisible(entity) && random.nextInt() % 150 == 0) {
             entityFactory.createEnemyFire(entity, getEngine().getEntitiesFor(player).first());
             Mappers.enemy.get(entity).canAttack = false;
         }
