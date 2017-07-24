@@ -16,8 +16,8 @@ public class VirtualPadController extends TouchInputProcessor {
     private Entity player;
 
 
-    public VirtualPadController(InputListener inputListener, Camera camera, Entity player) {
-        super(inputListener, camera);
+    public VirtualPadController(InputListener inputListener, Camera camera, Entity player, Rectangle bombButton) {
+        super(inputListener, camera, bombButton);
         this.player = player;
         this.squareTouches = new Rectangle[8];
     }
@@ -26,6 +26,10 @@ public class VirtualPadController extends TouchInputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
         touchDragged(screenX, screenY, pointer);
+        if (bombButton.contains(worldTouch.x, worldTouch.y)) {
+            listener.dropBomb();
+            return true;
+        }
         return true;
     }
 

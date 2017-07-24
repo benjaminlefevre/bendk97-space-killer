@@ -8,4 +8,8 @@ public interface PlayerListener {
     void updateScore(Entity player, Entity ennemy);
 
     void updateScore(Entity player, int score);
+
+    void newBombObtained(Entity player);
+
+    void dropBomb();
 }

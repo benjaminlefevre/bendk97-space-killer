@@ -34,10 +34,13 @@ public class SquadronSystem extends IteratingSystem {
             getEngine().removeEntity(entity);
             if (squadron.toShoot == 0) {
                 if (squadron.powerUpAfterDestruction) {
-                    if (random.nextBoolean()) {
+                    int type = random.nextInt(22);
+                    if (type < 17) {
                         entityFactory.createPowerUp(entity);
-                    } else {
+                    } else if (type < 21) {
                         entityFactory.createShieldUp(entity);
+                    } else {
+                        entityFactory.createBombUp(entity);
                     }
                 }
                 if (squadron.displayBonusSquadron) {
