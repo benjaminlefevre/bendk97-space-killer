@@ -6,7 +6,8 @@ import com.badlogic.gdx.utils.Pool;
 
 public class EnemyComponent implements Component, Pool.Poolable {
     public int points = 0;
-    public int lifeGauge = 1;
+    private int lifeGauge = 1;
+    private int lifeMax = 1;
     public boolean canAttack = false;
     public boolean isBoss = false;
     public float bulletVelocity = 0f;
@@ -17,6 +18,7 @@ public class EnemyComponent implements Component, Pool.Poolable {
         points = 0;
         isBoss = false;
         lifeGauge = 1;
+        lifeMax = 1;
         canAttack = false;
         squadron = null;
         bulletVelocity = 0f;
@@ -26,6 +28,19 @@ public class EnemyComponent implements Component, Pool.Poolable {
         if (lifeGauge > 0) {
             lifeGauge -= nbHits;
         }
+    }
+
+    public void initLifeGauge(int lifePoints) {
+        this.lifeMax = lifePoints;
+        this.lifeGauge = lifePoints;
+    }
+
+    public int getLifeGauge() {
+        return lifeGauge;
+    }
+
+    public float getRemainingLifeInPercent() {
+        return lifeGauge / ((float) lifeMax);
     }
 
     public boolean isDead() {

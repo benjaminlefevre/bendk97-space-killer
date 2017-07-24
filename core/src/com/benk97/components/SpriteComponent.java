@@ -29,6 +29,10 @@ public class SpriteComponent implements Component, Pool.Poolable {
         this.sprite.rotate(rotation);
     }
 
+    public void tintRed(float red){
+        this.sprite.setColor(red, 0f, 0f, 1f);
+    }
+
 
     public void setPosition(float x, float y) {
         sprite.setPosition(x, y);

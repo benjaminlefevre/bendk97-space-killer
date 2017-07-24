@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.Timer;
-import com.benk97.SpaceKillerGameConstants;
 import com.benk97.assets.Assets;
 import com.benk97.components.*;
 import com.benk97.entities.EntityFactory;
@@ -14,8 +13,7 @@ import com.benk97.listeners.CollisionListener;
 import com.benk97.listeners.PlayerListener;
 import com.benk97.screens.Level1Screen;
 
-import static com.benk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
-import static com.benk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_XY;
 import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
@@ -67,9 +65,16 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
             getEngine().removeEntity(bullet);
         }
         // update score
-        playerListener.updateScore(player, enemy);
+        int nbHits = bullet != null ? 1 : HIT_EXPLOSION;
+        playerListener.updateScore(player, enemy, nbHits);
         // check health of ennemy
-        enemyComponent.hit(bullet!= null ? 1 : SpaceKillerGameConstants.HIT_EXPLOSION);
+        float percentLifeBefore = enemyComponent.getRemainingLifeInPercent();
+        enemyComponent.hit(bullet != null ? 1 : HIT_EXPLOSION);
+        float percentLifeAfter = enemyComponent.getRemainingLifeInPercent();
+        if (percentLifeBefore >= 0.25 && percentLifeAfter < 0.25) {
+            Mappers.sprite.get(enemy).tintRed(0.99f);
+        }
+
         if (enemyComponent.isDead()) {
             Mappers.player.get(player).enemiesKilled++;
             screen.checkAchievements(player);

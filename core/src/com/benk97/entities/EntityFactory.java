@@ -331,7 +331,7 @@ public class EntityFactory {
         Entity enemy = engine.createEntity();
         EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = points;
-        enemyComponent.lifeGauge = strength;
+        enemyComponent.initLifeGauge(strength);
         enemyComponent.bulletVelocity = velocityBullet;
         enemyComponent.canAttack = canAttack;
         if (squadron != null) {
@@ -404,7 +404,7 @@ public class EntityFactory {
         EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
         enemyComponent.isBoss = true;
-        enemyComponent.lifeGauge = BOSS_LEVEL1_GAUGE;
+        enemyComponent.initLifeGauge(BOSS_LEVEL1_GAUGE);
         enemyComponent.bulletVelocity = velocityBullet;
         enemyComponent.canAttack = true;
         if (squadron != null) {
