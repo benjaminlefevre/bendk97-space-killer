@@ -17,6 +17,7 @@ public class BackgroundComponent implements Component, Pool.Poolable {
 
     @Override
     public void reset() {
+        texture = null;
 
     }
 }

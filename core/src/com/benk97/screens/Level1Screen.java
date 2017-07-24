@@ -36,6 +36,7 @@ public class Level1Screen extends LevelScreen {
     private ScriptItem boss;
     private Entity background;
     private Entity background2;
+    private Entity background3;
 
     public Level1Screen(Assets assets, SpaceKillerGame game) {
         super(assets, game);
