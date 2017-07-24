@@ -43,6 +43,10 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     @Override
     public void enemyShoot(final Entity enemy, final Entity player, Entity bullet) {
         EnemyComponent enemyComponent = Mappers.enemy.get(enemy);
+        // special case: enemy can be already dead
+        if(enemyComponent.isDead()){
+            return;
+        }
         // create explosion
         assets.playSound(SOUND_EXPLOSION);
         PositionComponent explosePosition;
