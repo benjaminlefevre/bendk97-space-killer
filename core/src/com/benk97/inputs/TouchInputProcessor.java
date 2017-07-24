@@ -12,10 +12,12 @@ public abstract class TouchInputProcessor implements InputProcessor {
 
     protected Camera camera;
     protected Rectangle[] squareTouches;
+    protected Rectangle bombButton;
 
-    public TouchInputProcessor(InputListener inputListener, Camera camera) {
+    public TouchInputProcessor(InputListener inputListener, Camera camera, Rectangle bombButton) {
         this.listener = inputListener;
         this.camera = camera;
+        this.bombButton = bombButton;
     }
 
     @Override

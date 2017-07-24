@@ -19,6 +19,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
     private int score = 0;
     private int highscore = 0;
     public int lives = LIVES;
+    public int bombs = BOMBS;
     public PowerLevel powerLevel = NORMAL;
 
     @Override
@@ -27,6 +28,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
         score = 0;
         enemiesKilled = 0;
         lives = LIVES;
+        bombs = BOMBS;
         powerLevel = NORMAL;
         fireDelay = FIRE_DELAY;
     }
@@ -58,6 +60,17 @@ public class PlayerComponent implements Component, Pool.Poolable {
         lives--;
         howManyLifesLosed++;
         powerLevel = NORMAL;
+    }
+
+    public boolean hasBombs() {
+        return bombs > 0;
+    }
+
+    public void useBomb() {
+        if (bombs == 0) {
+            return;
+        }
+        bombs--;
     }
 
     public void powerUp() {

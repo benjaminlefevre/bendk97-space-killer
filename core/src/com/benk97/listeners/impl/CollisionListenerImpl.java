@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.Timer;
+import com.benk97.SpaceKillerGameConstants;
 import com.benk97.assets.Assets;
 import com.benk97.components.*;
 import com.benk97.entities.EntityFactory;
@@ -37,17 +38,38 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     }
 
     @Override
+    public void enemyShootByExplosion(final Entity enemy, Entity player) {
+        enemyShoot(enemy, player, null);
+    }
+
+    @Override
     public void enemyShoot(final Entity enemy, final Entity player, Entity bullet) {
         EnemyComponent enemyComponent = Mappers.enemy.get(enemy);
         // create explosion
         assets.playSound(SOUND_EXPLOSION);
-        PositionComponent explosePosition = enemyComponent.isBoss ? Mappers.position.get(bullet) : Mappers.position.get(enemy);
-        entityFactory.createEntityExploding(explosePosition.x, explosePosition.y);
-        getEngine().removeEntity(bullet);
+        PositionComponent explosePosition;
+        if (enemyComponent.isBoss && bullet != null) {
+            explosePosition = Mappers.position.get(bullet);
+
+        } else {
+            explosePosition = Mappers.position.get(enemy);
+        }
+        Entity explosion = entityFactory.createEntityExploding(explosePosition.x, explosePosition.y);
+        if (enemyComponent.isBoss) {
+            if (bullet != null) {
+                Mappers.position.get(explosion).x -= Mappers.sprite.get(explosion).sprite.getWidth() / 2f;
+            } else {
+                Mappers.position.get(explosion).x += Mappers.sprite.get(enemy).sprite.getWidth() / 2f;
+                Mappers.position.get(explosion).y += Mappers.sprite.get(enemy).sprite.getHeight() / 2f;
+            }
+        }
+        if (bullet != null) {
+            getEngine().removeEntity(bullet);
+        }
         // update score
         playerListener.updateScore(player, enemy);
         // check health of ennemy
-        enemyComponent.hit();
+        enemyComponent.hit(bullet!= null ? 1 : SpaceKillerGameConstants.HIT_EXPLOSION);
         if (enemyComponent.isDead()) {
             Mappers.player.get(player).enemiesKilled++;
             screen.checkAchievements(player);
@@ -131,6 +153,16 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         tweenManager.killTarget(Mappers.sprite.get(shieldUp));
         getEngine().removeEntity(shieldUp);
     }
+
+    @Override
+    public void playerBombUp(Entity player, Entity bombUp) {
+        assets.playSound(SOUND_SHIELD_UP);
+        playerListener.newBombObtained(player);
+        tweenManager.killTarget(Mappers.position.get(bombUp));
+        tweenManager.killTarget(Mappers.sprite.get(bombUp));
+        getEngine().removeEntity(bombUp);
+    }
+
 
     @Override
     public void bulletStoppedByShield(Entity bullet) {

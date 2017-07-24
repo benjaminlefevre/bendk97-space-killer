@@ -25,16 +25,33 @@ import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
 public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     private EntityFactory entityFactory;
     private Array<Entity> lives;
+    private Array<Entity> bombs;
     private TweenManager tweenManager;
-    private  Assets assets;
+    private Assets assets;
     private LevelScreen screen;
 
-    public PlayerListenerImpl(Assets asset, EntityFactory entityFactory, Array<Entity> lives, TweenManager tweenManager, LevelScreen screen) {
+    public PlayerListenerImpl(Assets asset, EntityFactory entityFactory, Array<Entity> lives, Array<Entity> bombs, TweenManager tweenManager, LevelScreen screen) {
         this.entityFactory = entityFactory;
         this.lives = lives;
+        this.bombs = bombs;
         this.tweenManager = tweenManager;
         this.assets = asset;
         this.screen = screen;
+    }
+
+    @Override
+    public void dropBomb() {
+        getEngine().removeEntity(bombs.removeIndex(bombs.size - 1));
+    }
+
+    @Override
+    public void newBombObtained(Entity player) {
+        Mappers.player.get(player).bombs++;
+        for (Entity bomb : bombs) {
+            getEngine().removeEntity(bomb);
+        }
+        this.bombs = entityFactory.createEntityPlayerBombs(player);
+
     }
 
     @Override
@@ -84,16 +101,16 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
 
     @Override
     public void updateScore(Entity player, int score) {
-        PlayerComponent playerComponent =Mappers.player.get(player);
+        PlayerComponent playerComponent = Mappers.player.get(player);
         boolean notHighScoreOld = !playerComponent.isHighscore();
         boolean newLife = playerComponent.updateScore(score);
         boolean highscoreNew = playerComponent.isHighscore();
-        if(notHighScoreOld && highscoreNew){
+        if (notHighScoreOld && highscoreNew) {
             assets.playSound(SOUND_NEW_HIGHSCORE);
         }
-        if(newLife){
+        if (newLife) {
             assets.playSound(SOUND_NEW_LIFE);
-            for(Entity life: lives){
+            for (Entity life : lives) {
                 getEngine().removeEntity(life);
             }
             this.lives = entityFactory.createEntityPlayerLives(player);

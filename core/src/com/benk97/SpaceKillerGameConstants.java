@@ -2,15 +2,16 @@ package com.benk97;
 
 public class SpaceKillerGameConstants {
     // general settings
-    public final static String GAME_VERSION = "v0.4.1";
+    public final static String GAME_VERSION = "v0.5";
     public final static int SCREEN_WIDTH = 400;
     public final static int SCREEN_HEIGHT = 700;
     public final static boolean DEBUG = false;
-    public final static boolean DEBUG_SHAPE = false;
     public final static boolean SKIP_SPLASH = false;
     public final static boolean AD_TEST = false;
     // player
     public final static int LIVES = 3;
+    public final static int BOMBS = 2;
+    public final static int HIT_EXPLOSION = 50;
     public static final float NEW_LIFE = 50000f;
     public final static float PLAYER_ORIGIN_X = SCREEN_WIDTH / 2 - 16f;
     public final static float PLAYER_ORIGIN_Y = 0f;
@@ -42,6 +43,7 @@ public class SpaceKillerGameConstants {
     public static final float FRAME_DURATION = 0.05f;
     public static final float FRAME_DURATION_ENEMY_3 = 0.07f;
     public static final float FRAME_DURATION_EXPLOSION = 0.01f;
+    public static final float FRAME_DURATION_BOMB_EXPLOSION = 0.1f;
     public static final float FRAME_DURATION_POWERUP = 0.5f;
     public static final int GO_LEFT = 1;
     public static final int GO_RIGHT = 2;
@@ -52,6 +54,10 @@ public class SpaceKillerGameConstants {
     public static final float PAD_Y = 40f;
     public static final float FIRE_X = 275f;
     public static final float FIRE_Y = 90f;
+    public static final float BOMB_X = 330f;
+    public static final float BOMB_Y = 180f;
+    public static final float BOMB_Y_VIRTUAL = 30f;
+
 
     // SCORE LIVES HIGH
     public static final float SCORE_X = 20f;
@@ -60,6 +66,7 @@ public class SpaceKillerGameConstants {
     public static final float LIVES_Y = SCREEN_HEIGHT - 10f;
     public static final float HIGH_X = SCREEN_WIDTH - 100f;
     public static final float HIGH_Y = SCREEN_HEIGHT - 10f;
-
+    public static final float BOMB_STOCK_X = SCREEN_WIDTH - 22f;
+    public static final float BOMB_STOCK_Y = 10f;
 
 }
