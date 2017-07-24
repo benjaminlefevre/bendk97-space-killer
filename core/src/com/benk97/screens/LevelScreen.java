@@ -48,7 +48,7 @@ public class LevelScreen extends ScreenAdapter {
     public Assets assets;
     private SpriteBatch batcher;
     protected SpaceKillerGame game;
-    protected Entity player;;
+    protected Entity player;
     protected SpriteMaskFactory spriteMaskFactory;
 
     public LevelScreen(Assets assets, SpaceKillerGame game) {
@@ -64,12 +64,16 @@ public class LevelScreen extends ScreenAdapter {
         engine.addEntityListener(new EntityListener() {
             @Override
             public void entityAdded(Entity entity) {
-                Gdx.app.log("entity added", "size: " + engine.getEntities().size());
+                if (DEBUG) {
+                    Gdx.app.log("entity added", "size: " + engine.getEntities().size());
+                }
             }
 
             @Override
             public void entityRemoved(Entity entity) {
-                Gdx.app.log("entity removed", "size " + engine.getEntities().size());
+                if (DEBUG) {
+                    Gdx.app.log("entity removed", "size " + engine.getEntities().size());
+                }
             }
         });
         entityFactory = new EntityFactory(engine, assets, tweenManager);

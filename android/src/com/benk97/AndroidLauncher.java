@@ -16,6 +16,8 @@ import com.google.example.games.basegameutils.GameHelper;
 import com.unity3d.ads.IUnityAdsListener;
 import com.unity3d.ads.UnityAds;
 
+import static com.benk97.SpaceKillerGameConstants.DEBUG;
+
 
 public class AndroidLauncher extends AndroidApplication implements AdsController, IUnityAdsListener, PlayServices {
 
@@ -130,7 +132,9 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
                 }
             });
         } catch (Exception e) {
-            Gdx.app.log("MainActivity", "Log in failed: " + e.getMessage() + ".");
+            if (DEBUG) {
+                Gdx.app.log("MainActivity", "Log in failed: " + e.getMessage() + ".");
+            }
         }
     }
 
@@ -144,7 +148,9 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
                 }
             });
         } catch (Exception e) {
-            Gdx.app.log("MainActivity", "Log out failed: " + e.getMessage() + ".");
+            if (DEBUG) {
+                Gdx.app.log("MainActivity", "Log out failed: " + e.getMessage() + ".");
+            }
         }
     }
 

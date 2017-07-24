@@ -8,10 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.benk97.Settings;
 import com.benk97.assets.Assets;
-import com.benk97.components.GameOverComponent;
-import com.benk97.components.InvulnerableComponent;
-import com.benk97.components.Mappers;
-import com.benk97.components.PlayerComponent;
+import com.benk97.components.*;
 import com.benk97.entities.EntityFactory;
 import com.benk97.listeners.PlayerListener;
 import com.benk97.screens.LevelScreen;
@@ -95,8 +92,11 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     }
 
     @Override
-    public void updateScore(Entity player, Entity ennemy) {
-        updateScore(player, Mappers.enemy.get(ennemy).points);
+    public void updateScore(Entity player, Entity ennemy, int nbHits) {
+        EnemyComponent enemyComponent = Mappers.enemy.get(ennemy);
+        int gauge = enemyComponent.getLifeGauge();
+        int nbPoints = Math.min(nbHits, gauge) * Mappers.enemy.get(ennemy).points;
+        updateScore(player, nbPoints);
     }
 
     @Override

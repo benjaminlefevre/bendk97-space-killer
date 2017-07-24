@@ -3,7 +3,6 @@ package com.benk97.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.Timer;
 import com.benk97.components.BossComponent;
@@ -31,9 +30,6 @@ public class BossAttackSystem extends IteratingSystem {
             if (Mappers.enemy.get(entity).isDead()) {
                 return;
             }
-            Gdx.app.log("dead", ""+Mappers.enemy.get(entity).isDead());
-            Gdx.app.log("gauge", ""+Mappers.enemy.get(entity).lifeGauge);
-
             entityFactory.createBossFire(entity, getEngine().getEntitiesFor(player).first());
             Mappers.boss.get(entity).pleaseFire = false;
             new Timer().scheduleTask(new Timer.Task() {

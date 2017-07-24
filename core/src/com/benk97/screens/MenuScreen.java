@@ -66,7 +66,7 @@ public class MenuScreen extends HDScreen {
         image.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         stage.addActor(image);
         buttonStyle = new TextButtonStyle();
-        buttonStyle.font = assets.get(FONT_SPACE_KILLER_MEDIUM);
+        buttonStyle.font = assets.get(FONT_SPACE_KILLER_SMALL);
         playButton = new TextButton("play", buttonStyle);
         playButton.setSize(200f, 75f);
         highscoresButton = new TextButton("scores", buttonStyle);
