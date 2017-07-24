@@ -2,6 +2,7 @@ package com.benk97.screens;
 
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
+import box2dLight.RayHandler;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.PooledEngine;
@@ -12,6 +13,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -51,6 +54,9 @@ public class LevelScreen extends ScreenAdapter {
     protected Entity player;
     protected SpriteMaskFactory spriteMaskFactory;
 
+    private World world;
+    private RayHandler rayHandler;
+
     public LevelScreen(Assets assets, SpaceKillerGame game) {
         this.game = game;
         this.spriteMaskFactory = new SpriteMaskFactory();
@@ -76,7 +82,13 @@ public class LevelScreen extends ScreenAdapter {
                 }
             }
         });
-        entityFactory = new EntityFactory(engine, assets, tweenManager);
+        if (FX) {
+            world = new World(new Vector2(0, 0), false);
+            rayHandler = new RayHandler(world);
+            rayHandler.setShadows(false);
+            rayHandler.setCombinedMatrix(camera);
+        }
+        entityFactory = new EntityFactory(engine, assets, tweenManager, rayHandler);
         squadronFactory = new SquadronFactory(tweenManager, entityFactory, engine);
         player = entityFactory.createEntityPlayer();
         Array<Entity> lives = entityFactory.createEntityPlayerLives(player);
@@ -104,7 +116,7 @@ public class LevelScreen extends ScreenAdapter {
         engine.addSystem(new BackgroundRenderingSystem(batcher, 3));
         engine.addSystem(new ShieldSystem(4, player));
         engine.addSystem(new DynamicEntitiesRenderingSystem(batcher, 4));
-        engine.addSystem(new StaticEntitiesRenderingSystem(batcher, 5));
+        engine.addSystem(new StaticEntitiesRenderingSystem(batcher, 6));
         engine.addSystem(new ScoresRenderingSystem(batcher, assets, player, 6));
         engine.addSystem(new GameOverRenderingSystem(batcher, camera, assets, 7));
         engine.addSystem(new LevelFinishedRenderingSystem(batcher, assets, 7));
@@ -160,9 +172,11 @@ public class LevelScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batcher.begin();
         batcher.setProjectionMatrix(camera.combined);
-
         engine.update(delta);
         batcher.end();
+        if (FX) {
+            rayHandler.updateAndRender();
+        }
     }
 
     @Override
@@ -177,7 +191,12 @@ public class LevelScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         batcher.dispose();
+        entityFactory.dispose();
         spriteMaskFactory.clear();
+        if (FX) {
+            rayHandler.dispose();
+            world.dispose();
+        }
     }
 
     public void submitScore(int scoreInt) {

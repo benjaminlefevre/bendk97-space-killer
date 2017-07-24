@@ -2,8 +2,11 @@ package com.benk97.entities;
 
 import aurelienribon.tweenengine.*;
 import aurelienribon.tweenengine.equations.Linear;
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
@@ -12,6 +15,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Timer;
 import com.benk97.Settings;
 import com.benk97.assets.Assets;
@@ -31,17 +36,25 @@ import static com.benk97.tweens.PositionComponentAccessor.POSITION_XY;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_Y;
 import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
 
-public class EntityFactory {
+public class EntityFactory implements Disposable {
 
     private PooledEngine engine;
     private Assets assets;
     private TweenManager tweenManager;
     private TextureAtlas atlasNoMask;
     private TextureAtlas atlasMask;
+    private RayHandler rayHandler;
+    private final Pool<PointLight> lightPool = new Pool<PointLight>() {
+        @Override
+        protected PointLight newObject() {
+            return new PointLight(rayHandler, 1000);
+        }
+    };
     private Random random = new RandomXS128();
 
-    public EntityFactory(PooledEngine engine, Assets assets, TweenManager tweenManager) {
+    public EntityFactory(PooledEngine engine, Assets assets, TweenManager tweenManager, RayHandler rayHandler) {
         this.engine = engine;
+        this.rayHandler = rayHandler;
         this.assets = assets;
         this.tweenManager = tweenManager;
         this.atlasNoMask = assets.get(GFX_LEVEL1_ATLAS_NOMASK);
@@ -119,8 +132,9 @@ public class EntityFactory {
         bombExplosion.add(positionComponent);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_BOMB_EXPLOSION, atlasNoMask.createSprites("bomb_explosion"), PlayMode.LOOP_PINGPONG));
-        spriteComponent.sprite = animationComponent.animations.get(ANIMATION_MAIN).getKeyFrame(0);
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_BOMB_EXPLOSION,
+                atlasNoMask.createSprites("bomb_explosion"), LOOP_PINGPONG));
+        spriteComponent.sprite = atlasNoMask.createSprite("bomb_explosion", 6);
         spriteComponent.zIndex = 100;
         bombExplosion.add(spriteComponent);
         bombExplosion.add(animationComponent);
@@ -141,7 +155,29 @@ public class EntityFactory {
                     }
                 })
                 .start(tweenManager);
+        if (FX) {
+            createLight(bombExplosion);
+        }
         return bomb;
+    }
+
+    private void createLight(Entity entity) {
+        createLight(entity, new Color(0.5f, 0f, 0f, 0.3f));
+    }
+
+    private void createLight(Entity entity, Color color) {
+        SpriteComponent sprite = Mappers.sprite.get(entity);
+        PositionComponent position = Mappers.position.get(entity);
+        LightComponent lightComponent = engine.createComponent(LightComponent.class);
+        PointLight light = lightPool.obtain();
+        light.setActive(true);
+        light.setColor(color);
+        light.setDistance(sprite.sprite.getHeight() * 10f);
+        light.setPosition(position.x + sprite.sprite.getWidth() / 2f,
+                position.y + sprite.sprite.getHeight() / 2f);
+        lightComponent.light = light;
+        lightComponent.lights = lightPool;
+        entity.add(lightComponent);
     }
 
     public Entity createEnemyFire(Entity enemy, Entity player) {
@@ -567,6 +603,10 @@ public class EntityFactory {
         explosion.add(component);
         explosion.add(engine.createComponent(StateComponent.class));
         engine.addEntity(explosion);
+        //
+        if (FX) {
+            createLight(explosion);
+        }
         return explosion;
     }
 
@@ -582,6 +622,9 @@ public class EntityFactory {
                             position.y + random.nextFloat() * sprite.sprite.getHeight());
                 }
             }, 0.05f + i * 0.2f);
+        }
+        if (FX) {
+            createLight(enemy, new Color(0.7f, 0f, 0f, 0.4f));
         }
     }
 
@@ -648,5 +691,10 @@ public class EntityFactory {
         scoreSquadron.add(score);
         engine.addEntity(scoreSquadron);
         return scoreSquadron;
+    }
+
+    @Override
+    public void dispose() {
+        lightPool.clear();
     }
 }
