@@ -24,7 +24,7 @@ import static com.benk97.tweens.VelocityComponentAccessor.VELOCITY_Y;
 
 public class Level1Screen extends LevelScreen {
 
-    private float time = 0f;
+    private float time = -1000f;
     private Random random = new RandomXS128();
 
 
@@ -36,15 +36,20 @@ public class Level1Screen extends LevelScreen {
     private ScriptItem boss;
     private Entity background;
     private Entity background2;
-    private Entity background3;
 
-    public Level1Screen(Assets assets, SpaceKillerGame game) {
+    public Level1Screen(final Assets assets, SpaceKillerGame game) {
         super(assets, game);
-        spriteMaskFactory.getMask(assets.get(GFX_LEVEL1_ATLAS_MASK).getTextures().first());
-        assets.playMusic(MUSIC_LEVEL_1);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                spriteMaskFactory.addMask(assets.get(GFX_LEVEL1_ATLAS_MASK).getTextures().first());
+                assets.playMusic(MUSIC_LEVEL_1);
+            }
+        }).start();
+
         background = entityFactory.createBackground(assets.get(GFX_BGD_LEVEL1), -BGD_VELOCITY);
         background2 = entityFactory.createBackground(assets.get(GFX_BGD_STARS), -BGD_PARALLAX_VELOCITY);
-        initSpawns();
+        startLevel(-3);
     }
 
     private void initSpawns() {
@@ -82,8 +87,11 @@ public class Level1Screen extends LevelScreen {
                     (float) SCREEN_HEIGHT).execute();
         }
 
+        if (second < 0) {
+            return;
+        }
         // 13 elements
-        if (second <= 60 && (second == 2 || second % 5 == 0)) {
+        if (second <= 60 && second % 5 == 0) {
             scriptItemsEasy.poll().execute();
             // 18 elements
         } else if (second <= 120 && (second % 5 == 0)) {
@@ -130,19 +138,23 @@ public class Level1Screen extends LevelScreen {
 
     }
 
+    private void startLevel(float time) {
+        this.time = time;
+        initSpawns();
+    }
+
     public void restartLevel1() {
         game.playServices.unlockAchievement(KILL_BOSS);
         if (Mappers.player.get(player).howManyLifesLosed == 0) {
             game.playServices.unlockAchievement(KILL_BOSS_WITHOUT_HAVING_LOSING_LIFE);
         }
-        time = 0f;
         Tween.to(Mappers.velocity.get(background), VELOCITY_Y, 4).ease(Quad.OUT)
                 .target(-BGD_VELOCITY).start(tweenManager);
         Tween.to(Mappers.velocity.get(background2), VELOCITY_Y, 4).ease(Quad.OUT)
                 .target(-BGD_PARALLAX_VELOCITY).start(tweenManager);
-        initSpawns();
         assets.playMusic(MUSIC_LEVEL_1);
         assets.stopMusic(MUSIC_LEVEL_1_BOSS);
+        startLevel(0);
     }
 
     private List<ScriptItem> randomEasySpawnEnemies(int nbSpawns) {

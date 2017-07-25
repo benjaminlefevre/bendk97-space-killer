@@ -106,6 +106,9 @@ public class CollisionSystem extends EntitySystem {
         if (Intersector.intersectRectangles(sprite1.getBoundingRectangle(), sprite2.getBoundingRectangle(), collision)) {
             Array<Array<Boolean>> mask1 = spriteMaskFactory.getMask(sprite1.getTexture());
             Array<Array<Boolean>> mask2 = spriteMaskFactory.getMask(sprite1.getTexture());
+            if (mask1 == null || mask2 == null) {
+                return true;
+            }
             for (int i = (int) collision.x; i < Math.floor(collision.x + collision.width); ++i) {
                 for (int j = (int) collision.y; j < Math.floor(collision.y + collision.height); ++j) {
 //                    Gdx.app.log("debug",

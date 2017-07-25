@@ -11,10 +11,10 @@ public class SpriteMaskFactory {
 
     public Map<Texture, Array<Array<Boolean>>> masks = new HashMap<Texture, Array<Array<Boolean>>>();
 
+    public void addMask(Texture texture){
+        computeMask(texture);
+    }
     public Array<Array<Boolean>> getMask(Texture texture) {
-        if (!masks.containsKey(texture)) {
-            computeMask(texture);
-        }
         return masks.get(texture);
     }
 
