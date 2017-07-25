@@ -29,7 +29,8 @@ public class FPSDisplayRenderingSystem extends EntitySystem {
         if (Math.floor(currentTime) > Math.floor(oldTime)) {
             currentFps = (int) (1 / Gdx.graphics.getRawDeltaTime());
         }
+        bitmapFont.draw(batcher, Gdx.graphics.getFramesPerSecond() + " fps/avg", SCREEN_WIDTH - 80f, 10f);
         bitmapFont.draw(batcher, currentFps + " fps", SCREEN_WIDTH - 30f, 10f);
-        bitmapFont.draw(batcher, Math.floor(currentTime) + " s", SCREEN_WIDTH - 100f, 10f);
+        bitmapFont.draw(batcher, Math.floor(currentTime) + " s", SCREEN_WIDTH - 150f, 10f);
     }
 }

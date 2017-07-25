@@ -47,7 +47,7 @@ public class EntityFactory implements Disposable {
     private final Pool<PointLight> lightPool = new Pool<PointLight>() {
         @Override
         protected PointLight newObject() {
-            return new PointLight(rayHandler, 1000);
+            return new PointLight(rayHandler, 10);
         }
     };
     private Random random = new RandomXS128();
@@ -73,6 +73,22 @@ public class EntityFactory implements Disposable {
         engine.addEntity(background);
         return background;
     }
+
+    public Entity createForeground(Texture texture, float velocity) {
+        Entity foreground = engine.createEntity();
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.setTexture(new Sprite(texture), 1.0f, 0, 1.0f);
+        component.zIndex = 100;
+        foreground.add(component);
+        foreground.add(engine.createComponent(PositionComponent.class));
+        foreground.add(engine.createComponent(VelocityComponent.class));
+        foreground.add(engine.createComponent(RemovableComponent.class));
+        foreground.getComponent(PositionComponent.class).setPosition(0f, SCREEN_HEIGHT + 20f);
+        foreground.getComponent(VelocityComponent.class).y = -velocity;
+        engine.addEntity(foreground);
+        return foreground;
+    }
+
 
     public Entity createPlayerFire(Entity player) {
         Entity bullet = engine.createEntity();
@@ -155,9 +171,14 @@ public class EntityFactory implements Disposable {
                     }
                 })
                 .start(tweenManager);
-        if (FX) {
-            createLight(bombExplosion);
-        }
+        new Timer().scheduleTask(new Timer.Task() {
+            @Override
+            public void run() {
+                if (FX) {
+                    createLight(bombExplosion, new Color(1f, 1f, 1f, 0.8f));
+                }
+            }
+        }, 0.6f);
         return bomb;
     }
 
@@ -577,6 +598,7 @@ public class EntityFactory implements Disposable {
             Entity life = engine.createEntity();
             SpriteComponent component = engine.createComponent(SpriteComponent.class);
             Sprite sprite = atlasNoMask.createSprite("bomb", 1);
+            component.zIndex = 100;
             component.setTexture(sprite, 1f, 0f, 1f);
             component.setPosition(BOMB_STOCK_X - 22f * i, BOMB_STOCK_Y);
             life.add(component);
@@ -632,6 +654,7 @@ public class EntityFactory implements Disposable {
         Entity entity = engine.createEntity();
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.setTexture(atlasNoMask.createSprite("fire_button"), alpha, 0, 1f);
+        component.zIndex = 100;
         component.setPosition(posX, posY);
         entity.add(component);
         engine.addEntity(entity);
@@ -641,6 +664,7 @@ public class EntityFactory implements Disposable {
     public Entity createEntityBombButton(float alpha, float posX, float posY) {
         Entity entity = engine.createEntity();
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.zIndex = 100;
         component.setTexture(atlasNoMask.createSprite("bomb_button"), alpha, 0, 1f);
         component.setPosition(posX, posY);
         entity.add(component);
@@ -652,6 +676,7 @@ public class EntityFactory implements Disposable {
     public Entity createEntitiesPadController(float alpha, float scale, float posX, float posY) {
         Entity pad = engine.createEntity();
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.zIndex = 100;
         component.setTexture(atlasNoMask.createSprite("pad"), alpha, 0f, scale);
         component.setPosition(posX, posY);
         pad.add(component);

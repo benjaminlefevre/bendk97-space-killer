@@ -38,35 +38,35 @@ bomb_explosion
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
-  index: 7
+  index: 0
 bomb_explosion
   rotate: false
   xy: 2, 218
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
-  index: 0
+  index: 4
 bomb_explosion
   rotate: false
   xy: 404, 620
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
-  index: 1
+  index: 6
 bomb_explosion
   rotate: false
   xy: 404, 218
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
-  index: 3
+  index: 7
 explosion
   rotate: false
   xy: 2, 44
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 8
+  index: 30
 explosion
   rotate: false
   xy: 124, 166
@@ -87,175 +87,175 @@ explosion
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 24
+  index: 41
 explosion
   rotate: false
   xy: 54, 44
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 20
+  index: 66
 explosion
   rotate: false
   xy: 124, 114
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 55
+  index: 60
 explosion
   rotate: false
   xy: 176, 166
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 60
+  index: 61
 explosion
   rotate: false
   xy: 806, 836
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 61
+  index: 34
 explosion
   rotate: false
   xy: 940, 970
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 34
+  index: 63
 explosion
   rotate: false
   xy: 176, 114
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 63
+  index: 20
 explosion
   rotate: false
   xy: 228, 166
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 64
+  index: 21
 explosion
   rotate: false
   xy: 806, 784
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 21
+  index: 22
 explosion
   rotate: false
   xy: 228, 114
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 22
+  index: 23
 explosion
   rotate: false
   xy: 280, 166
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 23
+  index: 24
 explosion
   rotate: false
   xy: 806, 732
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 40
+  index: 25
 explosion
   rotate: false
   xy: 280, 114
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 25
+  index: 26
 explosion
   rotate: false
   xy: 332, 166
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 26
+  index: 27
 explosion
   rotate: false
   xy: 806, 680
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 27
+  index: 35
 explosion
   rotate: false
   xy: 332, 114
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 35
+  index: 11
 explosion
   rotate: false
   xy: 384, 166
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 29
+  index: 5
 explosion
   rotate: false
   xy: 806, 628
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 47
+  index: 64
 explosion
   rotate: false
   xy: 384, 114
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 66
+  index: 1
 explosion
   rotate: false
   xy: 436, 166
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 1
+  index: 67
 explosion
   rotate: false
   xy: 806, 576
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 67
+  index: 6
 explosion
   rotate: false
   xy: 436, 114
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 31
+  index: 70
 explosion
   rotate: false
   xy: 488, 166
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 70
+  index: 10
 explosion
   rotate: false
   xy: 806, 524
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 10
+  index: 53
 explosion
   rotate: false
   xy: 488, 114
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 30
+  index: 31
 explosion
   rotate: false
   xy: 540, 166
@@ -269,7 +269,7 @@ explosion
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 33
+  index: 0
 explosion
   rotate: false
   xy: 540, 114
@@ -290,7 +290,7 @@ explosion
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 3
+  index: 36
 explosion
   rotate: false
   xy: 592, 114
@@ -304,7 +304,7 @@ explosion
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 6
+  index: 39
 explosion
   rotate: false
   xy: 806, 368
@@ -318,133 +318,133 @@ explosion
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 5
+  index: 9
 explosion
   rotate: false
   xy: 696, 166
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 0
+  index: 33
 explosion
   rotate: false
   xy: 806, 316
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 39
+  index: 68
 explosion
   rotate: false
   xy: 696, 114
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 59
+  index: 28
 explosion
   rotate: false
   xy: 748, 166
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 42
+  index: 8
 explosion
   rotate: false
   xy: 806, 264
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 43
+  index: 29
 explosion
   rotate: false
   xy: 748, 114
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 44
+  index: 40
 explosion
   rotate: false
   xy: 806, 212
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 45
+  index: 13
 explosion
   rotate: false
   xy: 800, 160
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 46
+  index: 42
 explosion
   rotate: false
   xy: 800, 108
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 69
+  index: 43
 explosion
   rotate: false
   xy: 858, 888
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 48
+  index: 44
 explosion
   rotate: false
   xy: 858, 836
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 49
+  index: 45
 explosion
   rotate: false
   xy: 858, 784
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 62
+  index: 46
 explosion
   rotate: false
   xy: 858, 732
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 38
+  index: 47
 explosion
   rotate: false
   xy: 858, 680
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 9
+  index: 48
 explosion
   rotate: false
   xy: 858, 628
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 28
+  index: 49
 explosion
   rotate: false
   xy: 858, 576
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 41
+  index: 62
 explosion
   rotate: false
   xy: 858, 524
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 57
+  index: 38
 explosion
   rotate: false
   xy: 858, 472
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 68
+  index: 15
 explosion
   rotate: false
   xy: 858, 420
@@ -472,7 +472,7 @@ explosion
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 53
+  index: 3
 explosion
   rotate: false
   xy: 858, 212
@@ -486,7 +486,7 @@ explosion
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 11
+  index: 55
 explosion
   rotate: false
   xy: 852, 108
@@ -500,7 +500,7 @@ explosion
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 13
+  index: 57
 explosion
   rotate: false
   xy: 910, 866
@@ -514,7 +514,7 @@ explosion
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 15
+  index: 59
 explosion
   rotate: false
   xy: 910, 762
@@ -556,7 +556,7 @@ explosion
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 36
+  index: 69
 fire_button
   rotate: false
   xy: 806, 940
@@ -583,25 +583,25 @@ bomb_explosion
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
-  index: 4
+  index: 1
 bomb_explosion
   rotate: false
   xy: 2, 2
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
-  index: 5
+  index: 2
 bomb_explosion
   rotate: false
   xy: 404, 404
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
-  index: 6
+  index: 3
 bomb_explosion
   rotate: false
   xy: 404, 2
   size: 400, 400
   orig: 400, 400
   offset: 0, 0
-  index: 2
+  index: 5
