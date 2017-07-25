@@ -12,6 +12,9 @@ import com.benk97.components.SpriteComponent;
 
 import java.util.Comparator;
 
+import static com.benk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
+import static com.benk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+
 public class DynamicEntitiesRenderingSystem extends SortedIteratingSystem {
     private SpriteBatch batcher;
 
@@ -33,6 +36,12 @@ public class DynamicEntitiesRenderingSystem extends SortedIteratingSystem {
         SpriteComponent spriteComponent = Mappers.sprite.get(entity);
         Sprite sprite = spriteComponent.sprite;
         sprite.setPosition(position.x, position.y);
+        if((sprite.getX()+sprite.getWidth()<0)
+                || sprite.getX() > SCREEN_WIDTH
+                || sprite.getY() > SCREEN_HEIGHT
+                || sprite.getY() + sprite.getHeight() < 0){
+            return;
+        }
         sprite.draw(batcher, spriteComponent.alpha);
     }
 }

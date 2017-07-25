@@ -80,7 +80,7 @@ public class SplashScreen extends HDScreen {
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 
         spriteBatch.begin();
-        spriteBatch.draw(currentFrame, ((viewport.getWorldWidth() / 3) * stateTime), 0, 200, 200);
+        spriteBatch.draw(currentFrame, ((viewport.getWorldWidth() / 3) * stateTime), 0, 150, 150);
         spriteBatch.end();
         logoBatcher.setProjectionMatrix(viewport.getCamera().combined);
         logoBatcher.setColor(fader.getColor());

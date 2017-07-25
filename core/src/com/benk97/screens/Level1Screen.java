@@ -3,6 +3,7 @@ package com.benk97.screens;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.equations.Quad;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
 import com.benk97.SpaceKillerGame;
@@ -84,7 +85,10 @@ public class Level1Screen extends LevelScreen {
                     40f + random.nextFloat() * 160f,
                     1, random.nextInt() % 6 == 0, false, 0, 0f,
                     random.nextFloat() * (SCREEN_WIDTH - 36f),
-                    (float) SCREEN_HEIGHT).execute();
+                    SCREEN_HEIGHT).execute();
+        }
+        if (second % 30 == 0) {
+            entityFactory.createForeground(getRandomMist(), BGD_VELOCITY_FORE);
         }
 
         if (second < 0) {
@@ -136,6 +140,27 @@ public class Level1Screen extends LevelScreen {
             }
         }
 
+    }
+
+    private Texture getRandomMist() {
+        int randomMist = random.nextInt(7);
+        switch (randomMist) {
+            case 0:
+                return assets.get(GFX_BGD_MIST7);
+            case 1:
+                return assets.get(GFX_BGD_MIST1);
+            case 2:
+                return assets.get(GFX_BGD_MIST2);
+            case 3:
+                return assets.get(GFX_BGD_MIST3);
+            case 4:
+                return assets.get(GFX_BGD_MIST4);
+            case 5:
+                return assets.get(GFX_BGD_MIST5);
+            case 6:
+                return assets.get(GFX_BGD_MIST6);
+        }
+        return null;
     }
 
     private void startLevel(float time) {
@@ -212,24 +237,24 @@ public class Level1Screen extends LevelScreen {
             case LINEAR_X:
                 return new Object[]{-direction * SHIP_WIDTH + leftOrRight * SCREEN_WIDTH, 2f / 3f * SCREEN_HEIGHT + random.nextFloat() * SCREEN_HEIGHT / 12f, direction};
             case LINEAR_Y:
-                return new Object[]{1f / 5f * SCREEN_WIDTH + random.nextFloat() * 3 * SCREEN_WIDTH / 5f, (float) SCREEN_HEIGHT};
+                return new Object[]{1f / 5f * SCREEN_WIDTH + random.nextFloat() * 3 * SCREEN_WIDTH / 5f, SCREEN_HEIGHT};
             case LINEAR_XY:
-                return new Object[]{0f + leftOrRight * SCREEN_WIDTH, (float) SCREEN_HEIGHT, (float) SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f};
+                return new Object[]{0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f};
             case SEMI_CIRCLE:
-                return new Object[]{0f, (float) SCREEN_HEIGHT};
+                return new Object[]{0f, SCREEN_HEIGHT};
             case BEZIER_SPLINE:
                 if (random.nextBoolean()) {
                     return new Object[]{
                             new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2((float) SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2((float) SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f),
+                            new Vector2(SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
+                            new Vector2(SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f),
                             new Vector2(0f + leftOrRight * SCREEN_WIDTH, 0f)};
                 } else {
                     return new Object[]{
                             new Vector2(-SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + SHIP_WIDTH), SCREEN_HEIGHT / 2f),
                             new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2((float) SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 2 * SHIP_WIDTH), SCREEN_HEIGHT),
-                            new Vector2((float) SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 6 * SHIP_WIDTH), SCREEN_HEIGHT / 2f)};
+                            new Vector2(SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 2 * SHIP_WIDTH), SCREEN_HEIGHT),
+                            new Vector2(SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 6 * SHIP_WIDTH), SCREEN_HEIGHT / 2f)};
                 }
             case CATMULL_ROM_SPLINE:
                 return new Object[]{

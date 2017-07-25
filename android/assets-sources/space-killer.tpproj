@@ -152,5 +152,5 @@ inputFiles=[{path:level1/bomb_0.png,type:Input,regionName:null},{path:level1/bom
 
 version=4.5.0
 fileTypeType=png
-fileTypeData={encoding:RGBA8888,compType:PNGTASTIC,compData:"{level:9,removeGamma:false}"}
+fileTypeData={encoding:RGBA8888,compType:TINY_PNG,compData:""}
 previewBackgroundColor=ffffffff

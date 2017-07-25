@@ -50,6 +50,20 @@ public class Assets {
             new AssetDescriptor<Texture>("gfx/backgrounds/starfield.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_LEVEL1 =
             new AssetDescriptor<Texture>("gfx/backgrounds/level1.gif", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_BGD_MIST1 =
+            new AssetDescriptor<Texture>("gfx/backgrounds/mist.png", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_BGD_MIST2 =
+            new AssetDescriptor<Texture>("gfx/backgrounds/mist2.png", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_BGD_MIST3 =
+            new AssetDescriptor<Texture>("gfx/backgrounds/mist3.png", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_BGD_MIST4 =
+            new AssetDescriptor<Texture>("gfx/backgrounds/mist4.png", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_BGD_MIST5 =
+            new AssetDescriptor<Texture>("gfx/backgrounds/mist5.png", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_BGD_MIST6 =
+            new AssetDescriptor<Texture>("gfx/backgrounds/mist6.png", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_BGD_MIST7 =
+            new AssetDescriptor<Texture>("gfx/backgrounds/mist7.png", Texture.class);
     // GFX
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_NOMASK = new AssetDescriptor<TextureAtlas>("gfx/level1-nomask.atlas", TextureAtlas.class);
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level1-mask.atlas", TextureAtlas.class);
@@ -116,7 +130,8 @@ public class Assets {
                 SOUND_FIRE, SOUND_EXPLOSION, MUSIC_LEVEL_1, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
                 SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
                 SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, MUSIC_LEVEL_1_BOSS, SOUND_BOSS_ALERT,
-                SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION,
+                SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION, GFX_BGD_MIST1,
+                GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7,
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE,
                 GFX_BGD_LEVEL1, GFX_BGD_STARS, GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL1_ATLAS_NOMASK));
         put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
@@ -168,7 +183,7 @@ public class Assets {
             if (manager.isLoaded(SOUND_FIRE.fileName)) {
                 manager.get(SOUND_FIRE).stop();
             }
-            if(sound.equals(SOUND_EXPLOSION) && manager.isLoaded(SOUND_EXPLOSION.fileName)){
+            if (sound.equals(SOUND_EXPLOSION) && manager.isLoaded(SOUND_EXPLOSION.fileName)) {
                 manager.get(SOUND_EXPLOSION).stop();
             }
             manager.get(sound).play(volume);

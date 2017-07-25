@@ -21,8 +21,7 @@ import com.benk97.SpaceKillerGame;
 import com.benk97.SpaceKillerGameConstants;
 import com.benk97.assets.Assets;
 
-import static com.benk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
-import static com.benk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
 
 public class MenuScreen extends HDScreen {
@@ -57,7 +56,7 @@ public class MenuScreen extends HDScreen {
 
     public MenuScreen(final Assets assets, final SpaceKillerGame game) {
         super(game, assets);
-        if (!game.signInFailed && !game.playServices.isSignedIn()) {
+        if (!DEBUG && !game.signInFailed && !game.playServices.isSignedIn()) {
             game.playServices.signIn();
         }
         batcher = new SpriteBatch();

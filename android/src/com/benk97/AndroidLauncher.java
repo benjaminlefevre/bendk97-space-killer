@@ -34,6 +34,9 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useImmersiveMode = true;
         config.numSamples = 2;
+        config.useAccelerometer = false;
+        config.useCompass = false;
+        config.useWakelock = true;
         game = new SpaceKillerGame(this, this);
         initialize(game, config);
     }

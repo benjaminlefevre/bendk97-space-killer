@@ -165,7 +165,6 @@ public class LevelScreen extends ScreenAdapter {
         return inputListener;
     }
 
-
     @Override
     public void render(float delta) {
         tweenManager.update(delta);
