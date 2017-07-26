@@ -15,6 +15,8 @@ import static com.benk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.benk97.assets.Assets.FONT_SPACE_KILLER_MEDIUM;
 
 public class LevelFinishedRenderingSystem extends IteratingSystem {
+    public static final String LEVEL_1_FINISHED = "level 1\n\nfinished";
+    public static final String START_AGAIN = "start\n\nagain";
     private SpriteBatch batcher;
     private BitmapFont mediumFont;
 
@@ -32,7 +34,7 @@ public class LevelFinishedRenderingSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        mediumFont.draw(batcher, "level 1\n\nfinished", 5f, 4 * SCREEN_HEIGHT / 5f);
-        mediumFont.draw(batcher, "start\n\nagain", 5f, 4 * SCREEN_HEIGHT / 5f - 200f);
+        mediumFont.draw(batcher, LEVEL_1_FINISHED, 5f, 4 * SCREEN_HEIGHT / 5f);
+        mediumFont.draw(batcher, START_AGAIN, 5f, 4 * SCREEN_HEIGHT / 5f - 200f);
     }
 }

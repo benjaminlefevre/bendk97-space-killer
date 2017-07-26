@@ -21,7 +21,7 @@ public class RemovableSystem extends IteratingSystem {
         PositionComponent position = Mappers.position.get(entity);
         SpriteComponent sprite = Mappers.sprite.get(entity);
         removableComponent.elapseTime += deltaTime;
-        if (removableComponent.elapseTime >= 1.0f &&
+        if (removableComponent.elapseTime >= 2.0f &&
                 (position.x + sprite.sprite.getWidth() < 0
                         || position.x > SCREEN_WIDTH
                         || position.y > SCREEN_HEIGHT

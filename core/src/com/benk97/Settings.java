@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
 public class Settings {
+    private static final String LIGHT_FX = "lightFX";
     private static final String MUSIC_ON = "music-on";
     private static final String SOUND_ON = "sound-on";
     private static final String HIGHSCORES = "highscores";
@@ -71,6 +72,10 @@ public class Settings {
         return sb.toString();
     }
 
+    public static boolean isLightFXEnabled() {
+        return settings.preferences.getBoolean(LIGHT_FX, true);
+    }
+
     public void loadHighScores() {
         String scorestr = settings.preferences.getString(HIGHSCORES, "0;0;0;0;0");
         String[] scores = scorestr.split(";");
@@ -112,4 +117,8 @@ public class Settings {
         settings.preferences.flush();
     }
 
+    public static void changeLightFXEnabled() {
+        settings.preferences.putBoolean(LIGHT_FX, !isLightFXEnabled());
+        save();
+    }
 }

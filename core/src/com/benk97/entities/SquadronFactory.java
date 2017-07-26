@@ -255,7 +255,7 @@ public class SquadronFactory {
         EnemyComponent enemyComponent = Mappers.enemy.get(entity);
         if (enemyComponent != null && enemyComponent.squadron != null) {
             Mappers.squadron.get(enemyComponent.squadron).powerUpAfterDestruction = false;
-            Mappers.squadron.get(enemyComponent.squadron).ships.remove(entity);
+            Mappers.squadron.get(enemyComponent.squadron).ships.removeValue(entity, true);
         }
         engine.removeEntity(entity);
     }

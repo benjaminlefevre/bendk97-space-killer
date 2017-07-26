@@ -12,6 +12,9 @@ import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.FONT_SPACE_KILLER;
 
 public class ScoresRenderingSystem extends EntitySystem {
+    public static final String SCORE = "SCORE";
+    public static final String LIVES = "LIVES";
+    public static final String HIGH = "HIGH";
     private SpriteBatch batcher;
     private BitmapFont bitmapFont;
     private Assets assets;
@@ -28,10 +31,10 @@ public class ScoresRenderingSystem extends EntitySystem {
     @Override
     public void update(float deltaTime) {
         bitmapFont.setColor(Color.WHITE);
-        bitmapFont.draw(batcher, "SCORE", SCORE_X, SCORE_Y);
+        bitmapFont.draw(batcher, SCORE, SCORE_X, SCORE_Y);
         bitmapFont.draw(batcher, Mappers.player.get(player).getScore(), SCORE_X - 10f, SCORE_Y - 20f);
-        bitmapFont.draw(batcher, "LIVES", LIVES_X, LIVES_Y);
-        bitmapFont.draw(batcher, "HIGH", HIGH_X, HIGH_Y);
+        bitmapFont.draw(batcher, LIVES, LIVES_X, LIVES_Y);
+        bitmapFont.draw(batcher, HIGH, HIGH_X, HIGH_Y);
         bitmapFont.draw(batcher, Mappers.player.get(player).getHighccore(), HIGH_X - 10f, HIGH_Y - 20f);
     }
 }

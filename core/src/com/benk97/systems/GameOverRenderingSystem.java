@@ -21,6 +21,9 @@ import static com.benk97.assets.Assets.FONT_SPACE_KILLER_LARGE;
 import static com.benk97.assets.Assets.FONT_SPACE_KILLER_MEDIUM;
 
 public class GameOverRenderingSystem extends IteratingSystem {
+    public static final String GAME_OVER = "GAME\nOVER";
+    public static final String SCORE = "score\n\n";
+    public static final String HIGHSCORE = "highscore\n\n";
     private SpriteBatch batcher;
     private BitmapFont largeFont;
     private BitmapFont mediumFont;
@@ -52,9 +55,9 @@ public class GameOverRenderingSystem extends IteratingSystem {
         shapeRenderer.rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);batcher.begin();
-        largeFont.draw(batcher, "GAME\nOVER", SCREEN_WIDTH / 4f-10f, SCREEN_HEIGHT - 150f);
-        mediumFont.draw(batcher, "score\n\n" + Mappers.player.get(entity).getScore(), 20f, SCREEN_HEIGHT / 2f - 40f);
-        mediumFont.draw(batcher, "highscore\n\n" + Mappers.player.get(entity).getHighccore(), 10f, SCREEN_HEIGHT / 2f - 200f);
+        largeFont.draw(batcher, GAME_OVER, SCREEN_WIDTH / 4f-10f, SCREEN_HEIGHT - 150f);
+        mediumFont.draw(batcher, SCORE + Mappers.player.get(entity).getScore(), 20f, SCREEN_HEIGHT / 2f - 40f);
+        mediumFont.draw(batcher, HIGHSCORE + Mappers.player.get(entity).getHighccore(), 10f, SCREEN_HEIGHT / 2f - 200f);
 
     }
 }

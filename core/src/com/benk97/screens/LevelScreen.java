@@ -56,9 +56,11 @@ public class LevelScreen extends ScreenAdapter {
 
     private World world;
     private RayHandler rayHandler;
+    private boolean fxLightEnabled = false;
 
     public LevelScreen(Assets assets, SpaceKillerGame game) {
         this.game = game;
+        this.fxLightEnabled = Settings.isLightFXEnabled();
         this.spriteMaskFactory = new SpriteMaskFactory();
         this.camera = new OrthographicCamera();
         viewport = new ExtendViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
@@ -82,7 +84,7 @@ public class LevelScreen extends ScreenAdapter {
                 }
             }
         });
-        if (FX) {
+        if (fxLightEnabled) {
             world = new World(new Vector2(0, 0), false);
             rayHandler = new RayHandler(world);
             rayHandler.setShadows(false);
@@ -173,7 +175,7 @@ public class LevelScreen extends ScreenAdapter {
         batcher.setProjectionMatrix(camera.combined);
         engine.update(delta);
         batcher.end();
-        if (FX) {
+        if (fxLightEnabled) {
             rayHandler.updateAndRender();
         }
     }
@@ -192,7 +194,7 @@ public class LevelScreen extends ScreenAdapter {
         batcher.dispose();
         entityFactory.dispose();
         spriteMaskFactory.clear();
-        if (FX) {
+        if (fxLightEnabled) {
             rayHandler.dispose();
             world.dispose();
         }

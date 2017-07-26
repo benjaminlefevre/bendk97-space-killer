@@ -30,7 +30,7 @@ public class SquadronSystem extends IteratingSystem {
     @Override
     public void processEntity(final Entity entity, float deltaTime) {
         SquadronComponent squadron = Mappers.squadron.get(entity);
-        if (squadron.ships.isEmpty()) {
+        if (squadron.ships.size == 0) {
             getEngine().removeEntity(entity);
             if (squadron.toShoot == 0) {
                 if (squadron.powerUpAfterDestruction) {

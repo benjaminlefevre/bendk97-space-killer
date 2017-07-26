@@ -174,7 +174,7 @@ public class EntityFactory implements Disposable {
         new Timer().scheduleTask(new Timer.Task() {
             @Override
             public void run() {
-                if (FX) {
+                if (rayHandler != null) {
                     createLight(bombExplosion, new Color(1f, 1f, 1f, 0.8f));
                 }
             }
@@ -544,9 +544,10 @@ public class EntityFactory implements Disposable {
         return player;
     }
 
-    public Entity createShield(Entity player) {
+    public Entity createShield(final Entity player) {
         final Entity shield = engine.createEntity();
         PositionComponent playerPosition = Mappers.position.get(player);
+        player.add(engine.createComponent(InvulnerableComponent.class));
         SpriteComponent playerSprite = Mappers.sprite.get(player);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         spriteComponent.zIndex = 99;
@@ -568,6 +569,7 @@ public class EntityFactory implements Disposable {
                     public void onEvent(int i, BaseTween<?> baseTween) {
                         if (i == TweenCallback.COMPLETE) {
                             engine.removeEntity(shield);
+                            player.remove(InvulnerableComponent.class);
                         }
                     }
                 })
@@ -626,7 +628,7 @@ public class EntityFactory implements Disposable {
         explosion.add(engine.createComponent(StateComponent.class));
         engine.addEntity(explosion);
         //
-        if (FX) {
+        if (rayHandler != null) {
             createLight(explosion);
         }
         return explosion;
@@ -645,7 +647,7 @@ public class EntityFactory implements Disposable {
                 }
             }, 0.05f + i * 0.2f);
         }
-        if (FX) {
+        if (rayHandler != null) {
             createLight(enemy, new Color(0.7f, 0f, 0f, 0.4f));
         }
     }

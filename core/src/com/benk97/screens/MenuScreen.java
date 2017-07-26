@@ -44,6 +44,7 @@ public class MenuScreen extends HDScreen {
     TextButton displayScores;
     TextButton retroPad;
     TextButton virtualPad;
+    TextButton lightFx;
     TextButton back;
 
     ImageButton leaderboard;
@@ -70,7 +71,7 @@ public class MenuScreen extends HDScreen {
         playButton.setSize(200f, 75f);
         highscoresButton = new TextButton("scores", buttonStyle);
         highscoresButton.setSize(200f, 75f);
-        controllerButton = new TextButton("control\n\n   settings", buttonStyle);
+        controllerButton = new TextButton("settings", buttonStyle);
         controllerButton.setSize(200f, 75f);
         helpButton = new TextButton("help", buttonStyle);
         helpButton.setSize(200f, 75f);
@@ -86,12 +87,20 @@ public class MenuScreen extends HDScreen {
         styleVirtual.fontColor = Settings.isVirtualPad() ? Color.YELLOW : Color.WHITE;
         virtualPad = new TextButton("virtual pad\n\n   / autofire", styleVirtual);
 
+        TextButtonStyle styleFX = new TextButtonStyle();
+        styleFX.font = assets.get(FONT_SPACE_KILLER_SMALL);
+        styleFX.fontColor = Settings.isLightFXEnabled() ? Color.YELLOW : Color.WHITE;
+        lightFx = new TextButton("light fx", styleFX);
+
+
         back = new TextButton("back", buttonStyle);
         retroPad.setSize(200f, 75f);
         virtualPad.setSize(200f, 75f);
         back.setSize(200f, 75f);
+        lightFx.setSize(200f, 75f);
         retroPad.setPosition(100f, 400f);
-        virtualPad.setPosition(100f, 250f);
+        virtualPad.setPosition(100f, 275f);
+        lightFx.setPosition(100f, 175f);
         back.setPosition(100f, 100f);
 
 
@@ -169,6 +178,16 @@ public class MenuScreen extends HDScreen {
             }
         });
 
+        lightFx.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                assets.playSound(MENU_CLICK);
+                Settings.changeLightFXEnabled();
+                lightFx.getStyle().fontColor = Settings.isLightFXEnabled() ? Color.YELLOW : Color.WHITE;
+                return true;
+            }
+        });
+
         back.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -178,6 +197,7 @@ public class MenuScreen extends HDScreen {
                 stage.addActor(helpButton);
                 retroPad.remove();
                 virtualPad.remove();
+                lightFx.remove();
                 back.remove();
                 return true;
             }
@@ -196,6 +216,7 @@ public class MenuScreen extends HDScreen {
                 stage.addActor(virtualPad);
                 stage.addActor(retroPad);
                 stage.addActor(back);
+                stage.addActor(lightFx);
                 return true;
             }
         });
@@ -228,79 +249,121 @@ public class MenuScreen extends HDScreen {
         leaderboard_off.setPosition(200f, 10f);
         gplay.setPosition(90f, 0f);
         gplayOff.setPosition(90f, 0f);
-        gplayOff.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(MENU_CLICK);
-                game.playServices.signIn();
-                return true;
-            }
+        gplayOff.addListener(new
 
-        });
-        achievements.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(MENU_CLICK);
-                game.playServices.showAchievement();
-                return true;
-            }
+                                     InputListener() {
+                                         @Override
+                                         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                             assets.playSound(MENU_CLICK);
+                                             game.playServices.signIn();
+                                             return true;
+                                         }
 
-        });
-        leaderboard.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(MENU_CLICK);
-                game.playServices.showScore();
-                return true;
-            }
+                                     });
+        achievements.addListener(new
 
-        });
-        if (game.playServices.isSignedIn()) {
+                                         InputListener() {
+                                             @Override
+                                             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                                 assets.playSound(MENU_CLICK);
+                                                 game.playServices.showAchievement();
+                                                 return true;
+                                             }
+
+                                         });
+        leaderboard.addListener(new
+
+                                        InputListener() {
+                                            @Override
+                                            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                                assets.playSound(MENU_CLICK);
+                                                game.playServices.showScore();
+                                                return true;
+                                            }
+
+                                        });
+        if (game.playServices.isSignedIn())
+
+        {
             stage.addActor(gplay);
             stage.addActor(achievements);
             stage.addActor(leaderboard);
-        } else {
+        } else
+
+        {
             stage.addActor(gplayOff);
             stage.addActor(achievements_off);
             stage.addActor(leaderboard_off);
         }
 
-        table = new Table();
+        table = new
 
-        helpScreen = new ImageButton(new TextureRegionDrawable(atlas.findRegion("help")));
-        helpScreen.setColor(new Color(1f, 1f, 1f, 0.6f));
-        helpScreen.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(MENU_CLICK);
-                helpScreen.remove();
-                stage.addActor(playButton);
-                stage.addActor(highscoresButton);
-                stage.addActor(helpButton);
-                stage.addActor(controllerButton);
-                return true;
-            }
-        });
+                Table();
+
+        helpScreen = new
+
+                ImageButton(new TextureRegionDrawable(atlas.findRegion("help")));
+        helpScreen.setColor(new
+
+                Color(1f, 1f, 1f, 0.6f));
+        helpScreen.addListener(new
+
+                                       InputListener() {
+                                           @Override
+                                           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                               assets.playSound(MENU_CLICK);
+                                               helpScreen.remove();
+                                               stage.addActor(playButton);
+                                               stage.addActor(highscoresButton);
+                                               stage.addActor(helpButton);
+                                               stage.addActor(controllerButton);
+                                               return true;
+                                           }
+                                       });
 
         helpScreen.setPosition(5f, 150f);
 
         TextureRegionDrawable drawable = new TextureRegionDrawable(atlas.findRegion("sound-off"));
-        soundOff = new ImageButton(drawable);
-        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("sound-on")));
-        soundOn = new ImageButton(drawable);
-        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-off")));
-        musicOff = new ImageButton(drawable);
+        soundOff = new
 
-        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-on")));
-        musicOn = new ImageButton(drawable);
-        if (Settings.isSoundOn()) {
+                ImageButton(drawable);
+
+        drawable = new
+
+                TextureRegionDrawable(new TextureRegion(atlas.findRegion("sound-on")));
+        soundOn = new
+
+                ImageButton(drawable);
+
+        drawable = new
+
+                TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-off")));
+        musicOff = new
+
+                ImageButton(drawable);
+
+        drawable = new
+
+                TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-on")));
+        musicOn = new
+
+                ImageButton(drawable);
+        if (Settings.isSoundOn())
+
+        {
             table.add(soundOn).size(30f, 30f);
-        } else {
+        } else
+
+        {
             table.add(soundOff).size(30f, 30f);
         }
-        if (Settings.isMusicOn()) {
+        if (Settings.isMusicOn())
+
+        {
             table.add(musicOn).size(30f, 30f);
-        } else {
+        } else
+
+        {
             table.add(musicOff).size(30f, 30f);
         }
         table.setPosition(SCREEN_WIDTH - 50f, 30f);
