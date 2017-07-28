@@ -324,46 +324,24 @@ public class MenuScreen extends HDScreen {
         helpScreen.setPosition(5f, 150f);
 
         TextureRegionDrawable drawable = new TextureRegionDrawable(atlas.findRegion("sound-off"));
-        soundOff = new
+        soundOff = new ImageButton(drawable);
 
-                ImageButton(drawable);
+        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("sound-on")));
+        soundOn = new ImageButton(drawable);
 
-        drawable = new
+        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-off")));
+        musicOff = new ImageButton(drawable);
 
-                TextureRegionDrawable(new TextureRegion(atlas.findRegion("sound-on")));
-        soundOn = new
-
-                ImageButton(drawable);
-
-        drawable = new
-
-                TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-off")));
-        musicOff = new
-
-                ImageButton(drawable);
-
-        drawable = new
-
-                TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-on")));
-        musicOn = new
-
-                ImageButton(drawable);
-        if (Settings.isSoundOn())
-
-        {
+        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-on")));
+        musicOn = new ImageButton(drawable);
+        if (Settings.isSoundOn()) {
             table.add(soundOn).size(30f, 30f);
-        } else
-
-        {
+        } else {
             table.add(soundOff).size(30f, 30f);
         }
-        if (Settings.isMusicOn())
-
-        {
+        if (Settings.isMusicOn()) {
             table.add(musicOn).size(30f, 30f);
-        } else
-
-        {
+        } else {
             table.add(musicOff).size(30f, 30f);
         }
         table.setPosition(SCREEN_WIDTH - 50f, 30f);
@@ -422,13 +400,9 @@ public class MenuScreen extends HDScreen {
 
         assets.playMusic(MENU_MUSIC);
         font = assets.get(FONT_SPACE_KILLER_LARGE);
-        fontVersion = new
-
-                BitmapFont();
+        fontVersion = new BitmapFont();
         fontVersion.setColor(Color.WHITE);
-        fontVersion.getData().
-
-                setScale(0.5f);
+        fontVersion.getData().setScale(0.5f);
 
     }
 

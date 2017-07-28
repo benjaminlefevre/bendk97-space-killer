@@ -15,14 +15,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.benk97.Settings;
-import com.benk97.screens.Level1Screen;
-import com.benk97.screens.MenuScreen;
-import com.benk97.screens.SplashScreen;
+import com.benk97.screens.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Assets {
 
@@ -64,9 +59,25 @@ public class Assets {
             new AssetDescriptor<Texture>("gfx/backgrounds/mist6.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_MIST7 =
             new AssetDescriptor<Texture>("gfx/backgrounds/mist7.png", Texture.class);
+
+    public static final AssetDescriptor<Texture> GFX_BGD_LEVEL2 =
+            new AssetDescriptor<Texture>("gfx/backgrounds/level2.png", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_BGD_BIG_PLANET =
+            new AssetDescriptor<Texture>("gfx/backgrounds/big-planet.png", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_BGD_FAR_PLANETS =
+            new AssetDescriptor<Texture>("gfx/backgrounds/far-planets.png", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_BGD_RISING_PLANETS =
+            new AssetDescriptor<Texture>("gfx/backgrounds/rising-planets.png", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_BGD_STARS_LEVEL2 =
+            new AssetDescriptor<Texture>("gfx/backgrounds/stars.png", Texture.class);
+    public static final AssetDescriptor<Texture> GFX_BGD_CLOUDS =
+            new AssetDescriptor<Texture>("gfx/backgrounds/clouds.png", Texture.class);
+
     // GFX
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_NOMASK = new AssetDescriptor<TextureAtlas>("gfx/level1-nomask.atlas", TextureAtlas.class);
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level1-mask.atlas", TextureAtlas.class);
+    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL2_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level2-mask.atlas", TextureAtlas.class);
+
     // SOUNDS
     public static final AssetDescriptor<Sound> SOUND_LOSE_LIFE =
             new AssetDescriptor<Sound>("sounds/loseLife.ogg", Sound.class);
@@ -92,8 +103,12 @@ public class Assets {
             new AssetDescriptor<Sound>("sounds/boss-alert.ogg", Sound.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_1 =
             new AssetDescriptor<Music>("sounds/level1.mid", Music.class);
+    public static final AssetDescriptor<Music> MUSIC_LEVEL_2 =
+            new AssetDescriptor<Music>("sounds/level2.mid", Music.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_1_BOSS =
             new AssetDescriptor<Music>("sounds/level1-boss.mid", Music.class);
+    public static final AssetDescriptor<Music> MUSIC_LEVEL_2_BOSS =
+            new AssetDescriptor<Music>("sounds/level2-boss.mid", Music.class);
     public static final AssetDescriptor<Sound> SOUND_POWER_UP =
             new AssetDescriptor<Sound>("sounds/powerUp.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_POWER_UP_VOICE =
@@ -141,6 +156,19 @@ public class Assets {
                 MENU_BGD, FONT_SPACE_KILLER_LARGE, MENU_MUSIC, FONT_SPACE_KILLER_MEDIUM, MENU_CLICK,
                 MENU_ATLAS, FONT_SPACE_KILLER_SMALL
         ));
+        put(Level2Screen.class, Arrays.<AssetDescriptor>asList(
+                MUSIC_LEVEL_2, MUSIC_LEVEL_2_BOSS,
+                SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
+                SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
+                SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, SOUND_BOSS_ALERT,
+                SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION, GFX_BGD_MIST1,
+                GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7,
+                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE,
+                GFX_LEVEL1_ATLAS_NOMASK, GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL2_ATLAS_MASK,
+                GFX_BGD_LEVEL2, GFX_BGD_BIG_PLANET, GFX_BGD_FAR_PLANETS, GFX_BGD_RISING_PLANETS, GFX_BGD_STARS_LEVEL2,
+                GFX_BGD_CLOUDS));
+
+        put(TransitionScreen.class, Collections.EMPTY_LIST);
     }};
 
     private AssetManager manager;
@@ -200,4 +228,5 @@ public class Assets {
     public void stopMusic(AssetDescriptor<Music> music) {
         manager.get(music).stop();
     }
+
 }

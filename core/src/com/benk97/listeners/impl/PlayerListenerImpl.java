@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.benk97.Settings;
+import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
 import com.benk97.components.*;
 import com.benk97.entities.EntityFactory;
@@ -26,9 +27,11 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     private TweenManager tweenManager;
     private Assets assets;
     private LevelScreen screen;
+    private SpaceKillerGame game;
 
-    public PlayerListenerImpl(Assets asset, EntityFactory entityFactory, Array<Entity> lives, Array<Entity> bombs, TweenManager tweenManager, LevelScreen screen) {
+    public PlayerListenerImpl(SpaceKillerGame game, Assets asset, EntityFactory entityFactory, Array<Entity> lives, Array<Entity> bombs, TweenManager tweenManager, LevelScreen screen) {
         this.entityFactory = entityFactory;
+        this.game = game;
         this.lives = lives;
         this.bombs = bombs;
         this.tweenManager = tweenManager;
@@ -57,6 +60,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
         playerComponent.loseLife();
         if (playerComponent.isGameOver()) {
             assets.playSound(SOUND_GAME_OVER);
+            game.playerData = null;
             player.add(((PooledEngine) getEngine()).createComponent(GameOverComponent.class));
             Settings.addScore(playerComponent.getScoreInt());
             Settings.save();

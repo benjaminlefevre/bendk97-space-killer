@@ -19,8 +19,10 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Timer;
 import com.benk97.Settings;
+import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
 import com.benk97.components.*;
+import com.benk97.screens.LevelScreen.Level;
 
 import java.util.Random;
 
@@ -32,40 +34,52 @@ import static com.benk97.components.Mappers.position;
 import static com.benk97.components.Mappers.sprite;
 import static com.benk97.components.PlayerComponent.PowerLevel.DOUBLE;
 import static com.benk97.components.PlayerComponent.PowerLevel.NORMAL;
+import static com.benk97.screens.LevelScreen.Level.Level2;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_XY;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_Y;
 import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
 
 public class EntityFactory implements Disposable {
 
-    private PooledEngine engine;
-    private Assets assets;
-    private TweenManager tweenManager;
-    private TextureAtlas atlasNoMask;
-    private TextureAtlas atlasMask;
-    private RayHandler rayHandler;
-    private final Pool<PointLight> lightPool = new Pool<PointLight>() {
+    protected PooledEngine engine;
+    protected Assets assets;
+    protected TweenManager tweenManager;
+    protected TextureAtlas atlasNoMask;
+    protected TextureAtlas atlasMask;
+    protected TextureAtlas atlasMaskLevel2;
+    protected RayHandler rayHandler;
+    protected final Pool<PointLight> lightPool = new Pool<PointLight>() {
         @Override
         protected PointLight newObject() {
             return new PointLight(rayHandler, 10);
         }
     };
-    private Random random = new RandomXS128();
+    protected Random random = new RandomXS128();
+    private SpaceKillerGame game;
 
-    public EntityFactory(PooledEngine engine, Assets assets, TweenManager tweenManager, RayHandler rayHandler) {
+    public EntityFactory(SpaceKillerGame game, PooledEngine engine, Assets assets, TweenManager tweenManager, RayHandler rayHandler, Level level) {
         this.engine = engine;
+        this.game = game;
         this.rayHandler = rayHandler;
         this.assets = assets;
         this.tweenManager = tweenManager;
         this.atlasNoMask = assets.get(GFX_LEVEL1_ATLAS_NOMASK);
         this.atlasMask = assets.get(GFX_LEVEL1_ATLAS_MASK);
+        if (level.equals(Level2)) {
+            this.atlasMaskLevel2 = assets.get(GFX_LEVEL2_ATLAS_MASK);
+        }
     }
 
 
     public Entity createBackground(Texture texture, float velocity) {
+        return createBackground(texture, 0, velocity);
+    }
+
+    public Entity createBackground(Texture texture, int zIndex, float velocity) {
         Entity background = engine.createEntity();
         BackgroundComponent component = engine.createComponent(BackgroundComponent.class);
         component.setTexture(texture);
+        component.zIndex = zIndex;
         background.add(component);
         background.add(engine.createComponent(PositionComponent.class));
         background.add(engine.createComponent(VelocityComponent.class));
@@ -201,7 +215,49 @@ public class EntityFactory implements Disposable {
         entity.add(lightComponent);
     }
 
+    public final static int ENEMY_FIRE_CIRCLE = 1;
+    public final static int ENEMY_FIRE_CONE = 2;
+
     public Entity createEnemyFire(Entity enemy, Entity player) {
+        switch (Mappers.enemy.get(enemy).attackType) {
+            case ENEMY_FIRE_CIRCLE:
+                return createEnemyFireCircle(enemy, player);
+            case ENEMY_FIRE_CONE:
+                return createEnemyFireCone(enemy);
+        }
+        return null;
+    }
+
+    private Entity createEnemyFireCone(Entity enemy) {
+        PositionComponent position = Mappers.position.get(enemy);
+        Sprite sprite = Mappers.sprite.get(enemy).sprite;
+        return createEnemyFireCone(enemy, position.x + sprite.getWidth() / 2f, position.y, Mappers.enemy.get(enemy).bulletVelocity);
+    }
+
+    private Entity createEnemyFireCone(Entity enemy, float posX, float posY, float velocity) {
+        assets.playSound(SOUND_FIRE_ENEMY);
+        Entity bullet = engine.createEntity();
+        bullet.add(engine.createComponent(EnemyBulletComponent.class));
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
+        bullet.add(positionComponent);
+        VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
+        bullet.add(velocityComponent);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        spriteComponent.sprite = new Sprite(atlasMaskLevel2.findRegion("bullet2"));
+        bullet.add(spriteComponent);
+        bullet.add(engine.createComponent(RemovableComponent.class));
+        engine.addEntity(bullet);
+        positionComponent.x = posX - spriteComponent.sprite.getWidth() / 2f;
+        positionComponent.y = posY - spriteComponent.sprite.getHeight() / 2f;
+
+        Vector2 directionBullet = new Vector2(0f, -1);
+        directionBullet.scl(velocity);
+        velocityComponent.x = 0;
+        velocityComponent.y = directionBullet.y;
+        return bullet;
+    }
+
+    public Entity createEnemyFireCircle(Entity enemy, Entity player) {
         assets.playSound(SOUND_FIRE_ENEMY);
         Entity bullet = engine.createEntity();
         bullet.add(engine.createComponent(EnemyBulletComponent.class));
@@ -242,6 +298,13 @@ public class EntityFactory implements Disposable {
         } else {
             createBossFireCircle(boss);
         }
+    }
+
+    public void createBossFire2(Entity boss) {
+        PositionComponent position = Mappers.position.get(boss);
+        BossComponent bossComponent = Mappers.boss.get(boss);
+        createEnemyFireCone(boss, position.x + 12f, position.y + 186f, bossComponent.velocityFire2);
+        createEnemyFireCone(boss, position.x + 342f, position.y + 186f, bossComponent.velocityFire2);
     }
 
     public Array<Entity> createBossFireCircle(Entity boss) {
@@ -382,15 +445,47 @@ public class EntityFactory implements Disposable {
         return bombUp;
     }
 
+    public Entity createStaticEnemy(int type, Float velocity, float bulletVelocity, int rateShoot, int gaugelife, int points, boolean fromLeft) {
+        Entity enemy = engine.createEntity();
+        engine.addEntity(enemy);
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
+        enemy.add(positionComponent);
+        if (velocity != null) {
+            VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
+            velocityComponent.x = velocity;
+            enemy.add(velocityComponent);
+            FollowPlayerComponent followPlayerComponent = engine.createComponent(FollowPlayerComponent.class);
+            enemy.add(followPlayerComponent);
+            followPlayerComponent.velocity = velocity;
 
-    public Entity createEnemy(Entity squadron, boolean canAttack, float velocityBullet, String atlasName, int points,
+        }
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        enemy.add(spriteComponent);
+        spriteComponent.sprite = atlasMaskLevel2.createSprite("staticEnemy" + type);
+        spriteComponent.zIndex = 20;
+        positionComponent.x = fromLeft ? -spriteComponent.sprite.getWidth() : SCREEN_WIDTH;
+        positionComponent.y = SCREEN_HEIGHT - spriteComponent.sprite.getHeight();
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
+        enemyComponent.initLifeGauge(gaugelife);
+        enemyComponent.points = points;
+        enemyComponent.bulletVelocity = bulletVelocity;
+        enemyComponent.attackCapacity = Integer.MAX_VALUE;
+        enemyComponent.probabilityAttack = rateShoot;
+        enemyComponent.attackType = ENEMY_FIRE_CONE;
+        enemyComponent.isLaserShip = true;
+        enemy.add(enemyComponent);
+        return enemy;
+    }
+
+    public Entity createEnemy(Entity squadron, boolean canAttack, int rateShoot, float velocityBullet, String atlasName, int points,
                               int strength, float frameDuration, PlayMode animationType) {
         Entity enemy = engine.createEntity();
         EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = points;
         enemyComponent.initLifeGauge(strength);
+        enemyComponent.probabilityAttack = rateShoot;
         enemyComponent.bulletVelocity = velocityBullet;
-        enemyComponent.canAttack = canAttack;
+        enemyComponent.attackCapacity = canAttack ? 1 : 0;
         if (squadron != null) {
             enemyComponent.squadron = squadron;
         }
@@ -411,11 +506,11 @@ public class EntityFactory implements Disposable {
     }
 
     public Entity createEnemySoucoupe(Entity squadron, boolean canAttack, float velocityBullet) {
-        return createEnemy(squadron, canAttack, velocityBullet, "soucoupe", 100, 1, FRAME_DURATION, LOOP);
+        return createEnemy(squadron, canAttack, STANDARD_RATE_SHOOT, velocityBullet, "soucoupe", 100, 1, FRAME_DURATION, LOOP);
     }
 
 
-    public Entity createEnemyShip(Entity squadron, boolean canAttack, float velocityBullet, int enemyTYpe) {
+    public Entity createEnemyShip(Entity squadron, boolean canAttack, float velocityBullet, int rateShoot, int enemyTYpe) {
         String atlasRegion = "enemy";
         int points = 200;
         int strength = 1;
@@ -441,7 +536,7 @@ public class EntityFactory implements Disposable {
                 break;
 
         }
-        return createEnemy(squadron, canAttack, velocityBullet, atlasRegion, points, strength, frameDuration, playMode);
+        return createEnemy(squadron, canAttack, rateShoot, velocityBullet, atlasRegion, points, strength, frameDuration, playMode);
     }
 
     public final static int SOUCOUPE = 0;
@@ -451,6 +546,7 @@ public class EntityFactory implements Disposable {
     public final static int SHIP_4 = 4;
     public final static int SHIP_5 = 5;
     public final static int BOSS_LEVEL_1 = 100;
+    public final static int BOSS_LEVEL_2 = 101;
     public final static int ASTEROID_1 = 999;
     public final static int ASTEROID_2 = 1000;
 
@@ -463,14 +559,13 @@ public class EntityFactory implements Disposable {
         enemyComponent.isBoss = true;
         enemyComponent.initLifeGauge(BOSS_LEVEL1_GAUGE);
         enemyComponent.bulletVelocity = velocityBullet;
-        enemyComponent.canAttack = true;
+        enemyComponent.attackCapacity = Integer.MAX_VALUE;
         if (squadron != null) {
             enemyComponent.squadron = squadron;
         }
         enemy.add(enemyComponent);
         PositionComponent position = engine.createComponent(PositionComponent.class);
         enemy.add(position);
-        enemy.add(engine.createComponent(VelocityComponent.class));
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = atlasMask.createSprite("boss-level1");
         enemy.add(component);
@@ -478,11 +573,51 @@ public class EntityFactory implements Disposable {
         new Timer().scheduleTask(new Timer.Task() {
             @Override
             public void run() {
-                Mappers.boss.get(enemy).pleaseFire = true;
+                Mappers.boss.get(enemy).pleaseFire1 = true;
             }
         }, 5f);
         return enemy;
     }
+
+    public Entity createBoss2(Entity squadron, float velocityBullet, float velocityBullet2) {
+        final Entity enemy = engine.createEntity();
+        BossComponent boss = engine.createComponent(BossComponent.class);
+        enemy.add(boss);
+        boss.minTriggerFire1 = 4;
+        boss.minTriggerFire2 = 7;
+        boss.velocityFire2 = velocityBullet2;
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
+        enemyComponent.points = 50;
+        enemyComponent.isBoss = true;
+        enemyComponent.initLifeGauge(BOSS_LEVEL2_GAUGE);
+        enemyComponent.bulletVelocity = velocityBullet;
+        enemyComponent.attackCapacity = Integer.MAX_VALUE;
+        if (squadron != null) {
+            enemyComponent.squadron = squadron;
+        }
+        enemy.add(enemyComponent);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
+        enemy.add(position);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.sprite = atlasMaskLevel2.createSprite("boss");
+        enemy.add(component);
+        engine.addEntity(enemy);
+        new Timer().scheduleTask(new Timer.Task() {
+            @Override
+            public void run() {
+                Mappers.boss.get(enemy).pleaseFire1 = true;
+            }
+        }, 5f);
+        new Timer().scheduleTask(new Timer.Task() {
+            @Override
+            public void run() {
+                Mappers.boss.get(enemy).pleaseFire2 = true;
+            }
+        }, 2f);
+
+        return enemy;
+    }
+
 
     public Entity createAsteroid(Entity squadron, int asteroid) {
         Entity enemy = engine.createEntity();
@@ -514,6 +649,16 @@ public class EntityFactory implements Disposable {
         Entity player = engine.createEntity();
         PlayerComponent playerComponent = engine.createComponent(PlayerComponent.class);
         playerComponent.setHighScore(Settings.getHighscore());
+        if(game.playerData!=null){
+            playerComponent.bombs = game.playerData.bombs;
+            playerComponent.howManyLifesLosed = game.playerData.howManyLifesLosed;
+            playerComponent.enemiesKilled = game.playerData.enemiesKilled;
+            playerComponent.laserShipKilled = game.playerData.laserShipKilled;
+            playerComponent.fireDelay = game.playerData.fireDelay;
+            playerComponent.updateScore(game.playerData.score);
+            playerComponent.lives = game.playerData.lives;
+            playerComponent.powerLevel = game.playerData.powerLevel;
+        }
         player.add(playerComponent);
         player.add(engine.createComponent(PositionComponent.class));
         player.add(engine.createComponent(VelocityComponent.class));
@@ -724,4 +869,5 @@ public class EntityFactory implements Disposable {
     public void dispose() {
         lightPool.clear();
     }
+
 }

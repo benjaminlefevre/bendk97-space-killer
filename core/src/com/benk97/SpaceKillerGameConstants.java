@@ -2,7 +2,7 @@ package com.benk97;
 
 public class SpaceKillerGameConstants {
     // general settings
-    public final static String GAME_VERSION = "v0.6.11";
+    public final static String GAME_VERSION = "v0.7.1";
     public final static float SCREEN_WIDTH = 400;
     public final static float SCREEN_HEIGHT = 700;
     public final static boolean DEBUG = false;
@@ -21,7 +21,7 @@ public class SpaceKillerGameConstants {
     public final static float PLAYER_VELOCITY = 300.0f;
     public final static float PLAYER_BULLET_VELOCITY = 400.0f;
 
-    // enemies
+    // enemies level 1
     public final static int BOSS_LEVEL1_GAUGE = 300;
     public final static float SHIP_WIDTH = 5f;
     public final static float ENEMY_VELOCITY_EASY = 200f;
@@ -34,6 +34,24 @@ public class SpaceKillerGameConstants {
     public final static float ENEMY_BULLET_EASY_VELOCITY = 250.0f;
     public final static float ENEMY_BULLET_MEDIUM_VELOCITY = 300.0f;
     public final static float ENEMY_BULLET_HARD_VELOCITY = 450.0f;
+
+    public final static int STANDARD_RATE_SHOOT = 150;
+    // enemies level 2
+    public final static int BOSS_LEVEL2_GAUGE = 400;
+    public final static float ENEMY_LEVEL2_VELOCITY_EASY = 225f;
+    public final static float ENEMY_LEVEL2_VELOCITY_MEDIUM = 275f;
+    public final static float ENEMY_LEVEL2_VELOCITY_HARD = 300f;
+    public final static int BONUS_LEVEL2_SQUADRON_EASY = 150;
+    public final static int BONUS_LEVEL2_SQUADRON_MEDIUM = 2000;
+    public final static int BONUS_LEVEL2_SQUADRON_HARD = 250;
+    public final static float STATIC_ENEMY_VELOCITY = 200f;
+    public final static float STATIC_ENEMY_BULLET_VELOCITY = 300f;
+    public final static int STATIC_ENEMY_RATE_SHOOT = 100;
+    public final static int STATIC_ENEMY_RATE_SHOOT_WHEN_TWICE = 150;
+
+    public final static float ENEMY_LEVEL2_BULLET_EASY_VELOCITY = 300.0f;
+    public final static float ENEMY_LEVEL2_BULLET_MEDIUM_VELOCITY = 350.0f;
+    public final static float ENEMY_LEVEL2_BULLET_HARD_VELOCITY = 450.0f;
 
     // backgrounds
     public final static float BGD_PARALLAX_VELOCITY = 100.0f;

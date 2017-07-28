@@ -26,20 +26,36 @@ public class BossAttackSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(final Entity entity, float deltaTime) {
-        if (Mappers.boss.get(entity).pleaseFire) {
+        final BossComponent boss = Mappers.boss.get(entity);
+        if (boss.pleaseFire1) {
             if (Mappers.enemy.get(entity).isDead()) {
                 return;
             }
             entityFactory.createBossFire(entity, getEngine().getEntitiesFor(player).first());
-            Mappers.boss.get(entity).pleaseFire = false;
+            boss.pleaseFire1 = false;
             new Timer().scheduleTask(new Timer.Task() {
                 @Override
                 public void run() {
-                    if (Mappers.boss.get(entity) != null && !Mappers.enemy.get(entity).isDead()) {
-                        Mappers.boss.get(entity).pleaseFire = true;
+                    if (!Mappers.enemy.get(entity).isDead()) {
+                        boss.pleaseFire1 = true;
                     }
                 }
-            }, 5f + random.nextFloat() * 2f);
+            }, boss.minTriggerFire1 + random.nextFloat() * 2f);
+        }
+        if (Mappers.boss.get(entity).pleaseFire2) {
+            if (Mappers.enemy.get(entity).isDead()) {
+                return;
+            }
+            entityFactory.createBossFire2(entity);
+            boss.pleaseFire2 = false;
+            new Timer().scheduleTask(new Timer.Task() {
+                @Override
+                public void run() {
+                    if (!Mappers.enemy.get(entity).isDead()) {
+                        boss.pleaseFire2 = true;
+                    }
+                }
+            }, boss.minTriggerFire2 + random.nextFloat() * 2f);
         }
     }
 }

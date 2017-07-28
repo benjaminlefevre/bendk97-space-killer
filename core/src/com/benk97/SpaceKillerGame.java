@@ -3,11 +3,14 @@ package com.benk97;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.benk97.ads.AdsController;
 import com.benk97.assets.Assets;
 import com.benk97.google.PlayServices;
+import com.benk97.player.PlayerData;
 import com.benk97.screens.MenuScreen;
 import com.benk97.screens.SplashScreen;
+import com.benk97.screens.TransitionScreen;
 
 import static com.benk97.SpaceKillerGameConstants.SKIP_SPLASH;
 
@@ -16,6 +19,7 @@ public class SpaceKillerGame extends Game {
     private AdsController adsController;
     public PlayServices playServices;
     public Screen currentScreen;
+    public PlayerData playerData;
 
     public SpaceKillerGame(AdsController adsController, PlayServices playServices) {
         this.adsController = adsController;
@@ -37,10 +41,21 @@ public class SpaceKillerGame extends Game {
     }
 
     public void goToScreen(Class screen) {
+        goToScreen(screen, null, null);
+    }
+
+    public void goToScreen(Class screen, PlayerData playerData, FrameBuffer screenshot) {
         try {
             assets.loadResources(screen);
+            if (playerData != null) {
+                this.playerData = playerData;
+            }
             currentScreen = (Screen) screen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this);
-            this.setScreen(currentScreen);
+            if (screenshot != null) {
+                this.setScreen(new TransitionScreen(screenshot, currentScreen, this));
+            } else {
+                this.setScreen(currentScreen);
+            }
         } catch (Exception e) {
             Gdx.app.log("Guru Meditation", "error: " + e.getMessage());
             Gdx.app.exit();

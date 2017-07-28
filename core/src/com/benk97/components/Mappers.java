@@ -2,7 +2,7 @@ package com.benk97.components;
 
 import com.badlogic.ashley.core.ComponentMapper;
 
-public class Mappers{
+public class Mappers {
     public static ComponentMapper<BackgroundComponent> background = ComponentMapper.getFor(BackgroundComponent.class);
     public static ComponentMapper<AnimationComponent> animation = ComponentMapper.getFor(AnimationComponent.class);
     public static ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);
@@ -16,5 +16,5 @@ public class Mappers{
     public static ComponentMapper<ScoreSquadronComponent> scoreSquadron = ComponentMapper.getFor(ScoreSquadronComponent.class);
     public static ComponentMapper<GameOverComponent> gameover = ComponentMapper.getFor(GameOverComponent.class);
     public static ComponentMapper<BossComponent> boss = ComponentMapper.getFor(BossComponent.class);
-
+    public static ComponentMapper<FollowPlayerComponent> follow = ComponentMapper.getFor(FollowPlayerComponent.class);
 }

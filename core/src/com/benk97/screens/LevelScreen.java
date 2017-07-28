@@ -10,8 +10,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -24,6 +28,7 @@ import com.benk97.assets.Assets;
 import com.benk97.components.*;
 import com.benk97.entities.EntityFactory;
 import com.benk97.entities.SquadronFactory;
+import com.benk97.google.Achievement;
 import com.benk97.inputs.RetroPadController;
 import com.benk97.inputs.TouchInputProcessor;
 import com.benk97.inputs.VirtualPadController;
@@ -32,15 +37,44 @@ import com.benk97.listeners.impl.CollisionListenerImpl;
 import com.benk97.listeners.impl.InputListenerImpl;
 import com.benk97.listeners.impl.PlayerListenerImpl;
 import com.benk97.mask.SpriteMaskFactory;
+import com.benk97.player.PlayerData;
 import com.benk97.systems.*;
 import com.benk97.tweens.PositionComponentAccessor;
 import com.benk97.tweens.SpriteComponentAccessor;
 import com.benk97.tweens.VelocityComponentAccessor;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import static com.benk97.SpaceKillerGameConstants.*;
+import static com.benk97.assets.Assets.*;
+import static com.benk97.entities.SquadronFactory.*;
 import static com.benk97.google.Achievement.*;
 
-public class LevelScreen extends ScreenAdapter {
+public abstract class LevelScreen extends ScreenAdapter {
+
+    protected float time = -1000f;
+    protected Random random = new RandomXS128();
+
+    public void nextLevel() {
+        PlayerData playerData = Mappers.player.get(player).copyPlayerData();
+        FrameBuffer screenshot = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+        screenshot.begin();
+        this.render(Gdx.graphics.getDeltaTime());
+        screenshot.end();
+        this.dispose();
+        if(level.equals(Level.Level1)){
+            game.playServices.unlockAchievement(Achievement.KILL_BOSS);
+            game.goToScreen(Level2Screen.class, playerData, screenshot);
+        } else {
+            game.playServices.unlockAchievement(Achievement.KILL_BOSS_2);
+            game.goToScreen(Level1Screen.class, playerData, screenshot);
+        }
+    }
+
+    public enum Level {Level1, Level2};
+
 
     protected Viewport viewport;
     protected OrthographicCamera camera;
@@ -58,7 +92,10 @@ public class LevelScreen extends ScreenAdapter {
     private RayHandler rayHandler;
     private boolean fxLightEnabled = false;
 
-    public LevelScreen(Assets assets, SpaceKillerGame game) {
+    private Level level;
+
+    public LevelScreen(Assets assets, SpaceKillerGame game, Level level) {
+        this.level = level;
         this.game = game;
         this.fxLightEnabled = Settings.isLightFXEnabled();
         this.spriteMaskFactory = new SpriteMaskFactory();
@@ -90,7 +127,7 @@ public class LevelScreen extends ScreenAdapter {
             rayHandler.setShadows(false);
             rayHandler.setCombinedMatrix(camera);
         }
-        entityFactory = new EntityFactory(engine, assets, tweenManager, rayHandler);
+        entityFactory = new EntityFactory(game, engine, assets, tweenManager, rayHandler, level);
         squadronFactory = new SquadronFactory(tweenManager, entityFactory, engine);
         player = entityFactory.createEntityPlayer();
         Array<Entity> lives = entityFactory.createEntityPlayerLives(player);
@@ -105,11 +142,11 @@ public class LevelScreen extends ScreenAdapter {
         Tween.registerAccessor(VelocityComponent.class, new VelocityComponentAccessor());
     }
 
-    private void createSystems(Entity player, Array<Entity> lives, Array<Entity> bombs, SpriteBatch batcher) {
-        PlayerListenerImpl playerListener = new PlayerListenerImpl(assets, entityFactory, lives, bombs, tweenManager, this);
+    protected void createSystems(Entity player, Array<Entity> lives, Array<Entity> bombs, SpriteBatch batcher) {
+        PlayerListenerImpl playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, tweenManager, this);
         engine.addSystem(playerListener);
         engine.addSystem(createInputHandlerSystem(player, bombs, playerListener));
-        CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, assets, entityFactory, playerListener, (Level1Screen) this);
+        CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, assets, entityFactory, playerListener, this);
         engine.addSystem(collisionListener);
         engine.addSystem(new AnimationSystem(0));
         engine.addSystem(new BombExplosionSystem(0, collisionListener, player));
@@ -119,9 +156,9 @@ public class LevelScreen extends ScreenAdapter {
         engine.addSystem(new ShieldSystem(4, player));
         engine.addSystem(new DynamicEntitiesRenderingSystem(batcher, 4));
         engine.addSystem(new StaticEntitiesRenderingSystem(batcher, 6));
-        engine.addSystem(new ScoresRenderingSystem(batcher, assets, player, 6));
+        engine.addSystem(new ScoresRenderingSystem(batcher, assets, 6));
         engine.addSystem(new GameOverRenderingSystem(batcher, camera, assets, 7));
-        engine.addSystem(new LevelFinishedRenderingSystem(batcher, assets, 7));
+        engine.addSystem(new LevelFinishedRenderingSystem(batcher, assets, level, 7));
         if (DEBUG) {
             engine.addSystem(new FPSDisplayRenderingSystem(batcher, 8));
         }
@@ -169,6 +206,7 @@ public class LevelScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        updateScriptLevel(delta);
         tweenManager.update(delta);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batcher.begin();
@@ -179,6 +217,18 @@ public class LevelScreen extends ScreenAdapter {
             rayHandler.updateAndRender();
         }
     }
+
+    private void updateScriptLevel(float delta) {
+        int timeBefore = (int) Math.floor(time);
+        time += delta;
+        int newTime = (int) Math.floor(time);
+        if (newTime > timeBefore) {
+            script(newTime);
+        }
+    }
+
+    protected abstract void script(int second);
+
 
     @Override
     public void resize(int width, int height) {
@@ -198,6 +248,9 @@ public class LevelScreen extends ScreenAdapter {
             rayHandler.dispose();
             world.dispose();
         }
+        assets.unloadResources(this.getClass());
+        engine.clearPools();
+        engine.removeAllEntities();
     }
 
     public void submitScore(int scoreInt) {
@@ -213,5 +266,148 @@ public class LevelScreen extends ScreenAdapter {
         } else if (playerComponent.enemiesKilled == 500) {
             game.playServices.unlockAchievement(KILL_500_ENEMIES);
         }
+        if(playerComponent.laserShipKilled == 1){
+            game.playServices.unlockAchievement(KILL_LASER_SHIP);
+        }else if(playerComponent.laserShipKilled == 5){
+            game.playServices.unlockAchievement(KILL_5_LASER_SHIPS);
+        }
     }
+
+    protected Texture getRandomMist() {
+        int randomMist = random.nextInt(7);
+        return getMist(randomMist);
+    }
+
+    protected Texture getMist(int mistType) {
+        switch (mistType) {
+            case 0:
+                return assets.get(GFX_BGD_MIST7);
+            case 1:
+                return assets.get(GFX_BGD_MIST1);
+            case 2:
+                return assets.get(GFX_BGD_MIST2);
+            case 3:
+                return assets.get(GFX_BGD_MIST3);
+            case 4:
+                return assets.get(GFX_BGD_MIST4);
+            case 5:
+                return assets.get(GFX_BGD_MIST5);
+            case 6:
+                return assets.get(GFX_BGD_MIST6);
+        }
+        return null;
+    }
+
+    public int getRandomAsteroidType() {
+        return 999 + random.nextInt(2);
+    }
+
+    class ScriptItem {
+        int typeShip;
+        int typeSquadron;
+        float velocity;
+        int number;
+        Object[] params;
+        boolean powerUp;
+        boolean displayBonus;
+        int bonus;
+        int rateShoot;
+        float bulletVelocity;
+
+        public ScriptItem(int typeShip, int typeSquadron, float velocity, int number, boolean powerUp, boolean displayBonus, int bonus, float velocityBullet, Object... params) {
+            this.typeShip = typeShip;
+            this.rateShoot = STANDARD_RATE_SHOOT;
+            this.typeSquadron = typeSquadron;
+            this.velocity = velocity;
+            this.number = number;
+            this.params = params;
+            this.powerUp = powerUp;
+            this.bonus = bonus;
+            this.displayBonus = displayBonus;
+            this.bulletVelocity = velocityBullet;
+        }
+
+        public void execute() {
+            squadronFactory.createSquadron(typeShip, typeSquadron, velocity, number, powerUp, displayBonus, bonus, bulletVelocity, rateShoot, params);
+        }
+
+    }
+
+    protected List<ScriptItem> randomSpawnEnemies(int nbSpawns, float velocity, float bulletVelocity, int bonus, int minEnemies, int maxEnemies, boolean comingFromLeft) {
+        List<ScriptItem> list = new ArrayList<ScriptItem>(nbSpawns);
+        for (int i = 0; i < nbSpawns; ++i) {
+            int randomMoveType = getRandomMoveType();
+            int number = randomMoveType == ARROW_DOWN || randomMoveType == ARROW_UP ? 7 : minEnemies + random.nextInt(maxEnemies - minEnemies + 1);
+            list.add(
+                    new ScriptItem(
+                            getRandomShipType(),
+                            randomMoveType,
+                            velocity,
+                            number,
+                            false, true,
+                            number * bonus,
+                            bulletVelocity,
+                            getRandomMoveParams(randomMoveType, comingFromLeft)
+                    ));
+        }
+        return list;
+    }
+
+    private Object[] getRandomMoveParams(int randomMoveType, boolean comingFromLeft) {
+        float direction = comingFromLeft ? 1f : -1f;
+        int leftOrRight = comingFromLeft ? 0 : 1;
+        switch (randomMoveType) {
+            case INFINITE_CIRCLE:
+                return null;
+            case ARROW_DOWN:
+            case ARROW_UP:
+                return null;
+            case LINEAR_X:
+                return new Object[]{-direction * SHIP_WIDTH + leftOrRight * SCREEN_WIDTH, 2f / 3f * SCREEN_HEIGHT + random.nextFloat() * SCREEN_HEIGHT / 12f, direction};
+            case LINEAR_Y:
+                return new Object[]{1f / 5f * SCREEN_WIDTH + random.nextFloat() * 3 * SCREEN_WIDTH / 5f, SCREEN_HEIGHT};
+            case LINEAR_XY:
+                return new Object[]{0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f};
+            case SEMI_CIRCLE:
+                return new Object[]{0f, SCREEN_HEIGHT};
+            case BEZIER_SPLINE:
+                if (random.nextBoolean()) {
+                    return new Object[]{
+                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
+                            new Vector2(SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
+                            new Vector2(SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f),
+                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, 0f)};
+                } else {
+                    return new Object[]{
+                            new Vector2(-SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + SHIP_WIDTH), SCREEN_HEIGHT / 2f),
+                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
+                            new Vector2(SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 2 * SHIP_WIDTH), SCREEN_HEIGHT),
+                            new Vector2(SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 6 * SHIP_WIDTH), SCREEN_HEIGHT / 2f)};
+                }
+            case CATMULL_ROM_SPLINE:
+                return new Object[]{
+                        new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
+                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), 3 * SCREEN_HEIGHT / 4f),
+                        new Vector2(SCREEN_WIDTH * (0.2f + leftOrRight * 0.6f), 2 * SCREEN_HEIGHT / 4f),
+                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), SCREEN_HEIGHT / 4f),
+                        new Vector2(SCREEN_WIDTH * (0.2f + leftOrRight * 0.6f), -SCREEN_HEIGHT / 4f),
+                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), -2 * SCREEN_HEIGHT / 4f)
+                };
+
+
+        }
+        return null;
+    }
+
+    public int getRandomShipType() {
+        return random.nextInt(6);
+    }
+
+    protected int getRandomMoveType() {
+        return random.nextInt(8);
+    }
+
+    protected abstract void initSpawns();
+
+
 }

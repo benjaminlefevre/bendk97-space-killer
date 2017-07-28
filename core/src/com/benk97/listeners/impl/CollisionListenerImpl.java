@@ -11,7 +11,7 @@ import com.benk97.components.*;
 import com.benk97.entities.EntityFactory;
 import com.benk97.listeners.CollisionListener;
 import com.benk97.listeners.PlayerListener;
-import com.benk97.screens.Level1Screen;
+import com.benk97.screens.LevelScreen;
 
 import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
@@ -24,10 +24,10 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     private EntityFactory entityFactory;
     private PlayerListener playerListener;
     private TweenManager tweenManager;
-    private Level1Screen screen;
+    private LevelScreen screen;
 
     public CollisionListenerImpl(TweenManager tweenManager, Assets assets, EntityFactory entityFactory, PlayerListener playerListener,
-                                 Level1Screen screen) {
+                                 LevelScreen screen) {
         this.playerListener = playerListener;
         this.assets = assets;
         this.entityFactory = entityFactory;
@@ -75,19 +75,30 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         float percentLifeBefore = enemyComponent.getRemainingLifeInPercent();
         enemyComponent.hit(bullet != null ? 1 : HIT_EXPLOSION);
         float percentLifeAfter = enemyComponent.getRemainingLifeInPercent();
-        if (percentLifeBefore >= 0.25 && percentLifeAfter < 0.25) {
+        if (enemyComponent.isBoss && percentLifeBefore >= 0.25 && percentLifeAfter < 0.25) {
             Mappers.sprite.get(enemy).tintRed(0.99f);
         }
 
         if (enemyComponent.isDead()) {
             Mappers.player.get(player).enemiesKilled++;
+            if(enemyComponent.isLaserShip){
+                Mappers.player.get(player).laserShipKilled++;
+            }
             screen.checkAchievements(player);
             tweenManager.killTarget(Mappers.position.get(enemy));
-            Mappers.squadron.get(Mappers.enemy.get(enemy).squadron).removeEntity(enemy);
+            if(enemyComponent.belongsToSquadron()) {
+                Mappers.squadron.get(enemyComponent.squadron).removeEntity(enemy);
+            }
             SpriteComponent spriteComponent = Mappers.sprite.get(enemy);
             if (Mappers.boss.get(enemy) != null) {
                 assets.playSound(SOUND_BOSS_FINISHED);
                 entityFactory.createBossExploding(enemy);
+                player.add(((PooledEngine)getEngine()).createComponent(InvulnerableComponent.class));
+                Timeline.createSequence()
+                        .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
+                        .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(1f))
+                        .repeat(Tween.INFINITY, 0f)
+                        .start(tweenManager);
                 Timeline.createSequence()
                         .beginParallel()
                         .push(Tween.to(Mappers.position.get(enemy), POSITION_XY, 5f).ease(Linear.INOUT)
@@ -111,7 +122,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
                                             @Override
                                             public void run() {
                                                 player.remove(LeveLFinishedComponent.class);
-                                                screen.restartLevel1();
+                                                screen.nextLevel();
                                             }
                                         }, 5f);
                                     }

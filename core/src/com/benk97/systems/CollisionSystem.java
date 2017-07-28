@@ -105,7 +105,7 @@ public class CollisionSystem extends EntitySystem {
         Rectangle collision = new Rectangle();
         if (Intersector.intersectRectangles(sprite1.getBoundingRectangle(), sprite2.getBoundingRectangle(), collision)) {
             Array<Array<Boolean>> mask1 = spriteMaskFactory.getMask(sprite1.getTexture());
-            Array<Array<Boolean>> mask2 = spriteMaskFactory.getMask(sprite1.getTexture());
+            Array<Array<Boolean>> mask2 = spriteMaskFactory.getMask(sprite2.getTexture());
             if (mask1 == null || mask2 == null) {
                 return true;
             }

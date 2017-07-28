@@ -185,6 +185,15 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
             case KILL_BOSS_WITHOUT_HAVING_LOSING_LIFE:
                 r = getString(R.string.achievement_kill_the_boss_without_losing_life);
                 break;
+            case KILL_BOSS_2:
+                r = getString(R.string.achievement_kill_the_boss_of_the_level_2);
+                break;
+            case KILL_LASER_SHIP:
+                r = getString(R.string.achievement_kill_a_laser_ship);
+                break;
+            case KILL_5_LASER_SHIPS:
+                r = getString(R.string.achievement_kill_5_laser_ships);
+                break;
         }
 
         Games.Achievements.unlock(gameHelper.getApiClient(), r);
