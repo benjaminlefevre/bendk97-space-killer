@@ -1,0 +1,48 @@
+
+level2-mask.png
+size: 512,512
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+boss
+  rotate: false
+  xy: 2, 166
+  size: 354, 271
+  orig: 354, 271
+  offset: 0, 0
+  index: -1
+bullet2
+  rotate: false
+  xy: 59, 124
+  size: 9, 40
+  orig: 9, 40
+  offset: 0, 0
+  index: -1
+staticEnemy1
+  rotate: false
+  xy: 2, 84
+  size: 55, 80
+  orig: 55, 80
+  offset: 0, 0
+  index: -1
+staticEnemy2
+  rotate: false
+  xy: 2, 2
+  size: 44, 80
+  orig: 44, 80
+  offset: 0, 0
+  index: -1
+staticEnemy3
+  rotate: false
+  xy: 358, 357
+  size: 49, 80
+  orig: 49, 80
+  offset: 0, 0
+  index: -1
+staticEnemy4
+  rotate: false
+  xy: 358, 265
+  size: 33, 90
+  orig: 33, 90
+  offset: 0, 0
+  index: -1

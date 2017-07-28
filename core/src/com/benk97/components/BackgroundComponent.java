@@ -9,6 +9,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureWrap.Repeat;
 public class BackgroundComponent implements Component, Pool.Poolable {
 
     public Texture texture;
+    public int zIndex = 0;
 
     public void setTexture(Texture texture) {
         texture.setWrap(Repeat, Repeat);
@@ -18,6 +19,7 @@ public class BackgroundComponent implements Component, Pool.Poolable {
     @Override
     public void reset() {
         texture = null;
+        zIndex = 0;
 
     }
 }

@@ -3,32 +3,22 @@ package com.benk97.screens;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.equations.Quad;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.RandomXS128;
-import com.badlogic.gdx.math.Vector2;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
 import com.benk97.components.Mappers;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
 import static com.benk97.entities.EntityFactory.BOSS_LEVEL_1;
-import static com.benk97.entities.SquadronFactory.*;
-import static com.benk97.google.Achievement.KILL_BOSS;
-import static com.benk97.google.Achievement.KILL_BOSS_WITHOUT_HAVING_LOSING_LIFE;
+import static com.benk97.entities.SquadronFactory.BOSS_MOVE;
+import static com.benk97.entities.SquadronFactory.LINEAR_Y;
+import static com.benk97.screens.LevelScreen.Level.Level1;
 import static com.benk97.tweens.VelocityComponentAccessor.VELOCITY_Y;
 
 public class Level1Screen extends LevelScreen {
-
-    private float time = -1000f;
-    private Random random = new RandomXS128();
-
-
     private LinkedList<ScriptItem> scriptItemsEasy;
     private LinkedList<ScriptItem> scriptItemsMediumLeft;
     private LinkedList<ScriptItem> scriptItemsMediumRight;
@@ -39,21 +29,26 @@ public class Level1Screen extends LevelScreen {
     private Entity background2;
 
     public Level1Screen(final Assets assets, SpaceKillerGame game) {
-        super(assets, game);
+        super(assets, game, Level1);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 spriteMaskFactory.addMask(assets.get(GFX_LEVEL1_ATLAS_MASK).getTextures().first());
-                assets.playMusic(MUSIC_LEVEL_1);
             }
         }).start();
-
+        assets.playMusic(MUSIC_LEVEL_1);
         background = entityFactory.createBackground(assets.get(GFX_BGD_LEVEL1), -BGD_VELOCITY);
         background2 = entityFactory.createBackground(assets.get(GFX_BGD_STARS), -BGD_PARALLAX_VELOCITY);
-        startLevel(-3);
+        startLevel(-3f);
     }
 
-    private void initSpawns() {
+    private void startLevel(float time) {
+        this.time = time;
+        initSpawns();
+    }
+
+    @Override
+    protected void initSpawns() {
         scriptItemsEasy = new LinkedList<ScriptItem>(randomEasySpawnEnemies(13));
         scriptItemsMediumLeft = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromLeft(12));
         scriptItemsMediumRight = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromRight(12));
@@ -65,21 +60,7 @@ public class Level1Screen extends LevelScreen {
 
 
     @Override
-    public void render(float delta) {
-        updateScript(delta);
-        super.render(delta);
-    }
-
-    private void updateScript(float delta) {
-        int timeBefore = (int) Math.floor(time);
-        time += delta;
-        int newTime = (int) Math.floor(time);
-        if (newTime > timeBefore) {
-            script(newTime);
-        }
-    }
-
-    private void script(int second) {
+    protected void script(int second) {
         if (second % 3 == 0 || second % 7 == 0) {
             new ScriptItem(getRandomAsteroidType(), LINEAR_Y,
                     40f + random.nextFloat() * 160f,
@@ -91,7 +72,7 @@ public class Level1Screen extends LevelScreen {
             entityFactory.createForeground(getRandomMist(), BGD_VELOCITY_FORE);
         }
 
-        if (second < 0) {
+              if (second < 0) {
             return;
         }
         // 13 elements
@@ -142,46 +123,6 @@ public class Level1Screen extends LevelScreen {
 
     }
 
-    private Texture getRandomMist() {
-        int randomMist = random.nextInt(7);
-        switch (randomMist) {
-            case 0:
-                return assets.get(GFX_BGD_MIST7);
-            case 1:
-                return assets.get(GFX_BGD_MIST1);
-            case 2:
-                return assets.get(GFX_BGD_MIST2);
-            case 3:
-                return assets.get(GFX_BGD_MIST3);
-            case 4:
-                return assets.get(GFX_BGD_MIST4);
-            case 5:
-                return assets.get(GFX_BGD_MIST5);
-            case 6:
-                return assets.get(GFX_BGD_MIST6);
-        }
-        return null;
-    }
-
-    private void startLevel(float time) {
-        this.time = time;
-        initSpawns();
-    }
-
-    public void restartLevel1() {
-        game.playServices.unlockAchievement(KILL_BOSS);
-        if (Mappers.player.get(player).howManyLifesLosed == 0) {
-            game.playServices.unlockAchievement(KILL_BOSS_WITHOUT_HAVING_LOSING_LIFE);
-        }
-        Tween.to(Mappers.velocity.get(background), VELOCITY_Y, 4).ease(Quad.OUT)
-                .target(-BGD_VELOCITY).start(tweenManager);
-        Tween.to(Mappers.velocity.get(background2), VELOCITY_Y, 4).ease(Quad.OUT)
-                .target(-BGD_PARALLAX_VELOCITY).start(tweenManager);
-        assets.playMusic(MUSIC_LEVEL_1);
-        assets.stopMusic(MUSIC_LEVEL_1_BOSS);
-        startLevel(0);
-    }
-
     private List<ScriptItem> randomEasySpawnEnemies(int nbSpawns) {
         return randomSpawnEnemies(nbSpawns, ENEMY_VELOCITY_EASY, ENEMY_BULLET_EASY_VELOCITY, BONUS_SQUADRON_EASY, 5, 10, random.nextBoolean());
 
@@ -205,116 +146,5 @@ public class Level1Screen extends LevelScreen {
     private List<ScriptItem> randomHardSpawnEnemiesComingFromRight(int nbSpawns) {
         return randomSpawnEnemies(nbSpawns, ENEMY_VELOCITY_HARD, ENEMY_BULLET_HARD_VELOCITY, BONUS_SQUADRON_HARD, 7, 15, false);
 
-    }
-
-    private List<ScriptItem> randomSpawnEnemies(int nbSpawns, float velocity, float bulletVelocity, int bonus, int minEnemies, int maxEnemies, boolean comingFromLeft) {
-        List<ScriptItem> list = new ArrayList<ScriptItem>(nbSpawns);
-        for (int i = 0; i < nbSpawns; ++i) {
-            int randomMoveType = getRandomMoveType();
-            int number = randomMoveType == ARROW_DOWN || randomMoveType == ARROW_UP ? 7 : minEnemies + random.nextInt(maxEnemies - minEnemies + 1);
-            list.add(
-                    new ScriptItem(
-                            getRandomShipType(),
-                            randomMoveType,
-                            velocity,
-                            number,
-                            false, true,
-                            number * bonus,
-                            bulletVelocity,
-                            getRandomMoveParams(randomMoveType, comingFromLeft)
-                    ));
-        }
-        return list;
-    }
-
-    private Object[] getRandomMoveParams(int randomMoveType, boolean comingFromLeft) {
-        float direction = comingFromLeft ? 1f : -1f;
-        int leftOrRight = comingFromLeft ? 0 : 1;
-        switch (randomMoveType) {
-            case ARROW_DOWN:
-            case ARROW_UP:
-                return null;
-            case LINEAR_X:
-                return new Object[]{-direction * SHIP_WIDTH + leftOrRight * SCREEN_WIDTH, 2f / 3f * SCREEN_HEIGHT + random.nextFloat() * SCREEN_HEIGHT / 12f, direction};
-            case LINEAR_Y:
-                return new Object[]{1f / 5f * SCREEN_WIDTH + random.nextFloat() * 3 * SCREEN_WIDTH / 5f, SCREEN_HEIGHT};
-            case LINEAR_XY:
-                return new Object[]{0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f};
-            case SEMI_CIRCLE:
-                return new Object[]{0f, SCREEN_HEIGHT};
-            case BEZIER_SPLINE:
-                if (random.nextBoolean()) {
-                    return new Object[]{
-                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f),
-                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, 0f)};
-                } else {
-                    return new Object[]{
-                            new Vector2(-SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + SHIP_WIDTH), SCREEN_HEIGHT / 2f),
-                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 2 * SHIP_WIDTH), SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 6 * SHIP_WIDTH), SCREEN_HEIGHT / 2f)};
-                }
-            case CATMULL_ROM_SPLINE:
-                return new Object[]{
-                        new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), 3 * SCREEN_HEIGHT / 4f),
-                        new Vector2(SCREEN_WIDTH * (0.2f + leftOrRight * 0.6f), 2 * SCREEN_HEIGHT / 4f),
-                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), SCREEN_HEIGHT / 4f),
-                        new Vector2(SCREEN_WIDTH * (0.2f + leftOrRight * 0.6f), -SCREEN_HEIGHT / 4f),
-                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), -2 * SCREEN_HEIGHT / 4f)
-                };
-
-
-        }
-        return null;
-    }
-
-    public int getRandomShipType() {
-        return random.nextInt(6);
-    }
-
-    public int getRandomAsteroidType() {
-        return 999 + random.nextInt(2);
-    }
-
-    public int getRandomMoveType() {
-        return random.nextInt(8);
-    }
-
-    class ScriptItem {
-        int typeShip;
-        int typeSquadron;
-        float velocity;
-        int number;
-        Object[] params;
-        boolean powerUp;
-        boolean displayBonus;
-        int bonus;
-        float bulletVelocity;
-
-        public ScriptItem(int typeShip, int typeSquadron, float velocity, int number, boolean powerUp, boolean displayBonus, int bonus, float velocityBullet, Object... params) {
-            this.typeShip = typeShip;
-            this.typeSquadron = typeSquadron;
-            this.velocity = velocity;
-            this.number = number;
-            this.params = params;
-            this.powerUp = powerUp;
-            this.bonus = bonus;
-            this.displayBonus = displayBonus;
-            this.bulletVelocity = velocityBullet;
-        }
-
-        public void execute() {
-            squadronFactory.createSquadron(typeShip, typeSquadron, velocity, number, powerUp, displayBonus, bonus, bulletVelocity, params);
-        }
-
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        assets.unloadResources(this.getClass());
     }
 }

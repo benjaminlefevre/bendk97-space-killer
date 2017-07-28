@@ -10,4 +10,8 @@
     <string name="achievement_kill_100_enemies">CgkIyND_7cACEAIQBA</string>
     <string name="achievement_kill_500_enemies">CgkIyND_7cACEAIQBQ</string>
     <string name="achievement_kill_the_boss_without_losing_life">CgkIyND_7cACEAIQBg</string>
+
+    <string name="achievement_kill_the_boss_of_the_level_2">CgkIyND_7cACEAIQCA</string>
+    <string name="achievement_kill_a_laser_ship">CgkIyND_7cACEAIQCQ</string>
+    <string name="achievement_kill_5_laser_ships">CgkIyND_7cACEAIQCg</string>
 </resources>
