@@ -236,7 +236,6 @@ public class MenuScreen extends HDScreen {
         });
 
         TextureAtlas atlas = assets.get(MENU_ATLAS);
-
         gplay = new ImageButton(new TextureRegionDrawable(atlas.findRegion("gplay")));
         gplayOff = new ImageButton(new TextureRegionDrawable(atlas.findRegion("gplay_off")));
         achievements = new ImageButton(new TextureRegionDrawable(atlas.findRegion("achievements")));

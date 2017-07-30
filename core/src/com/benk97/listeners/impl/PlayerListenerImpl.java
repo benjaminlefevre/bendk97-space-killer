@@ -4,6 +4,7 @@ import aurelienribon.tweenengine.*;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.benk97.Settings;
@@ -68,7 +69,13 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
             new Timer().scheduleTask(new Timer.Task() {
                 @Override
                 public void run() {
-                    screen.goToMenu();
+                    Gdx.input.setInputProcessor(screen.getGameOverInputProcessor());
+                }
+            }, 1);
+            new Timer().scheduleTask(new Timer.Task() {
+                @Override
+                public void run() {
+                    screen.showAd();
                 }
             }, 3);
         } else {
