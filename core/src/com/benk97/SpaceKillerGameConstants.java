@@ -2,7 +2,7 @@ package com.benk97;
 
 public class SpaceKillerGameConstants {
     // general settings
-    public final static String GAME_VERSION = "v0.7.1";
+    public final static String GAME_VERSION = "v0.7.5";
     public final static float SCREEN_WIDTH = 400;
     public final static float SCREEN_HEIGHT = 700;
     public final static boolean DEBUG = false;
@@ -42,7 +42,7 @@ public class SpaceKillerGameConstants {
     public final static float ENEMY_LEVEL2_VELOCITY_MEDIUM = 275f;
     public final static float ENEMY_LEVEL2_VELOCITY_HARD = 300f;
     public final static int BONUS_LEVEL2_SQUADRON_EASY = 150;
-    public final static int BONUS_LEVEL2_SQUADRON_MEDIUM = 2000;
+    public final static int BONUS_LEVEL2_SQUADRON_MEDIUM = 200;
     public final static int BONUS_LEVEL2_SQUADRON_HARD = 250;
     public final static float STATIC_ENEMY_VELOCITY = 200f;
     public final static float STATIC_ENEMY_BULLET_VELOCITY = 300f;
@@ -75,6 +75,15 @@ public class SpaceKillerGameConstants {
     public static final float BOMB_X = 330f;
     public static final float BOMB_Y = 180f;
     public static final float BOMB_Y_VIRTUAL = 30f;
+
+    // icon game over
+    public static final float ICON_SIZE = 64f;
+    public static final float PLAY_X = 100f;
+    public static final float PLAY_Y = 40f;
+    public static final float HOME_X = 175f;
+    public static final float HOME_Y = 40f;
+    public static final float SHARE_X = 250f;
+    public static final float SHARE_Y = 40f;
 
 
     // SCORE LIVES HIGH

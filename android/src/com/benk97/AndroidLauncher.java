@@ -1,15 +1,18 @@
 package com.benk97;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.benk97.ads.AdsController;
 import com.benk97.google.Achievement;
 import com.benk97.google.PlayServices;
-import com.benk97.screens.MenuScreen;
+import com.benk97.share.IntentShare;
 import com.benk97.space.killer.R;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.GameHelper;
@@ -19,12 +22,18 @@ import com.unity3d.ads.UnityAds;
 import static com.benk97.SpaceKillerGameConstants.DEBUG;
 
 
-public class AndroidLauncher extends AndroidApplication implements AdsController, IUnityAdsListener, PlayServices {
+public class AndroidLauncher extends AndroidApplication implements AdsController, IUnityAdsListener, PlayServices, IntentShare {
 
     private final String UNITY_ADS_GAME_ID = "1487325";
     private GameHelper gameHelper;
     private final static int requestCode = 1;
     private SpaceKillerGame game = null;
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +46,11 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
         config.useAccelerometer = false;
         config.useCompass = false;
         config.useWakelock = true;
-        game = new SpaceKillerGame(this, this);
+        game = new SpaceKillerGame(this, this, this);
         initialize(game, config);
     }
+
+
 
     private void setupAds() {
         UnityAds.initialize(this, UNITY_ADS_GAME_ID, this, SpaceKillerGameConstants.AD_TEST);
@@ -73,13 +84,6 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
         if (UnityAds.isReady()) {
             UnityAds.show(this);
         }
-        Gdx.app.postRunnable(new Runnable() {
-            @Override
-            public void run() {
-                game.currentScreen.dispose();
-                game.goToScreen(MenuScreen.class);
-            }
-        });
     }
 
 
@@ -231,4 +235,35 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
     public boolean isSignedIn() {
         return gameHelper.isSignedIn();
     }
+
+    public static final int INTENT_ACTIVITY = 666;
+
+    @Override
+    public void shareScore(final String filePath) {
+        Uri pictureUri = Uri.fromFile(Gdx.files.external(filePath).file());
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey look at my Space Killer score!\nAvailable on Google Play Store: https://play.google.com/store/apps/details?id=com.benk97.space.killer");
+        sendIntent.setType("image/*");
+        sendIntent.putExtra(Intent.EXTRA_STREAM, pictureUri);
+        sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivityForResult(Intent.createChooser(sendIntent, "Space Killer - Share"), INTENT_ACTIVITY);
+    }
+
+
+    @Override
+    public void verifyStoragePermissions() {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    this,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
 }

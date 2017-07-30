@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -29,6 +30,7 @@ import com.benk97.components.*;
 import com.benk97.entities.EntityFactory;
 import com.benk97.entities.SquadronFactory;
 import com.benk97.google.Achievement;
+import com.benk97.inputs.GameOverTouchInputProcessor;
 import com.benk97.inputs.RetroPadController;
 import com.benk97.inputs.TouchInputProcessor;
 import com.benk97.inputs.VirtualPadController;
@@ -64,7 +66,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         this.render(Gdx.graphics.getDeltaTime());
         screenshot.end();
         this.dispose();
-        if(level.equals(Level.Level1)){
+        if (level.equals(Level.Level1)) {
             game.playServices.unlockAchievement(Achievement.KILL_BOSS);
             game.goToScreen(Level2Screen.class, playerData, screenshot);
         } else {
@@ -73,7 +75,13 @@ public abstract class LevelScreen extends ScreenAdapter {
         }
     }
 
-    public enum Level {Level1, Level2};
+    public InputProcessor getGameOverInputProcessor() {
+        return new GameOverTouchInputProcessor(camera, game, assets, player);
+    }
+
+    public enum Level {Level1, Level2}
+
+    ;
 
 
     protected Viewport viewport;
@@ -235,8 +243,10 @@ public abstract class LevelScreen extends ScreenAdapter {
         viewport.update(width, height, true);
     }
 
-    public void goToMenu() {
-        game.showAd();
+    public void showAd() {
+        if (!DEBUG) {
+            game.showAd();
+        }
     }
 
     @Override
@@ -266,9 +276,9 @@ public abstract class LevelScreen extends ScreenAdapter {
         } else if (playerComponent.enemiesKilled == 500) {
             game.playServices.unlockAchievement(KILL_500_ENEMIES);
         }
-        if(playerComponent.laserShipKilled == 1){
+        if (playerComponent.laserShipKilled == 1) {
             game.playServices.unlockAchievement(KILL_LASER_SHIP);
-        }else if(playerComponent.laserShipKilled == 5){
+        } else if (playerComponent.laserShipKilled == 5) {
             game.playServices.unlockAchievement(KILL_5_LASER_SHIPS);
         }
     }

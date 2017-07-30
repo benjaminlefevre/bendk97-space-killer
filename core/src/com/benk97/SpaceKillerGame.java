@@ -9,8 +9,12 @@ import com.benk97.assets.Assets;
 import com.benk97.google.PlayServices;
 import com.benk97.player.PlayerData;
 import com.benk97.screens.MenuScreen;
+import com.benk97.screens.SocialScoreScreen;
 import com.benk97.screens.SplashScreen;
 import com.benk97.screens.TransitionScreen;
+import com.benk97.share.IntentShare;
+
+import java.io.File;
 
 import static com.benk97.SpaceKillerGameConstants.SKIP_SPLASH;
 
@@ -20,19 +24,39 @@ public class SpaceKillerGame extends Game {
     public PlayServices playServices;
     public Screen currentScreen;
     public PlayerData playerData;
+    public IntentShare intentShare;
 
-    public SpaceKillerGame(AdsController adsController, PlayServices playServices) {
+    public SpaceKillerGame(AdsController adsController, PlayServices playServices, IntentShare intentShare) {
         this.adsController = adsController;
         this.playServices = playServices;
+        this.intentShare = intentShare;
     }
 
     public void showAd() {
         adsController.showInterstitialAd();
     }
 
+    private void cleanTempDirectory() {
+        if (Gdx.files.isExternalStorageAvailable()) {
+            final File directory = Gdx.files.external(SocialScoreScreen.TEMP_DIRECTORY).file();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        for (File file : directory.listFiles()) {
+
+                            file.delete();
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            }).start();
+        }
+    }
 
     @Override
     public void create() {
+        cleanTempDirectory();
         if (SKIP_SPLASH) {
             goToScreen(MenuScreen.class);
         } else {
@@ -87,4 +111,5 @@ public class SpaceKillerGame extends Game {
             ((MenuScreen) currentScreen).signInFailed();
         }
     }
+
 }

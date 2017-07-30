@@ -28,6 +28,10 @@ public class Assets {
             new AssetDescriptor<Texture>("gfx/backgrounds/bendk97.png", Texture.class);
     public static final AssetDescriptor<Music> SPLASH_MUSIC =
             new AssetDescriptor<Music>("sounds/splash.ogg", Music.class);
+    public static final AssetDescriptor<Texture> ICON_GAME =
+            new AssetDescriptor<Texture>("gfx/space_killer.png", Texture.class);
+    public static final AssetDescriptor<Texture> ICON_GOOGLE =
+            new AssetDescriptor<Texture>("gfx/google.png", Texture.class);
 
     // MENU SCREEN
     public static final AssetDescriptor<Texture> MENU_BGD =
@@ -147,7 +151,8 @@ public class Assets {
                 SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, MUSIC_LEVEL_1_BOSS, SOUND_BOSS_ALERT,
                 SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION, GFX_BGD_MIST1,
                 GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7,
-                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE,
+                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_SMALL,
+                FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE, ICON_GAME, ICON_GOOGLE,
                 GFX_BGD_LEVEL1, GFX_BGD_STARS, GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL1_ATLAS_NOMASK));
         put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
                 SPLASH_MUSIC, SPASH_ATLAS, SPLASH_TXT_LOGO
@@ -164,11 +169,14 @@ public class Assets {
                 SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION, GFX_BGD_MIST1,
                 GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7,
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE,
-                GFX_LEVEL1_ATLAS_NOMASK, GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL2_ATLAS_MASK,
+                GFX_LEVEL1_ATLAS_NOMASK, GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL2_ATLAS_MASK, FONT_SPACE_KILLER_SMALL,
+                ICON_GAME, ICON_GOOGLE,
                 GFX_BGD_LEVEL2, GFX_BGD_BIG_PLANET, GFX_BGD_FAR_PLANETS, GFX_BGD_RISING_PLANETS, GFX_BGD_STARS_LEVEL2,
                 GFX_BGD_CLOUDS));
 
         put(TransitionScreen.class, Collections.EMPTY_LIST);
+        put(SocialScoreScreen.class, Collections.EMPTY_LIST);
+
     }};
 
     private AssetManager manager;
