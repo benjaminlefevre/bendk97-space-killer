@@ -8,10 +8,7 @@ import com.benk97.ads.AdsController;
 import com.benk97.assets.Assets;
 import com.benk97.google.PlayServices;
 import com.benk97.player.PlayerData;
-import com.benk97.screens.MenuScreen;
-import com.benk97.screens.SocialScoreScreen;
-import com.benk97.screens.SplashScreen;
-import com.benk97.screens.TransitionScreen;
+import com.benk97.screens.*;
 import com.benk97.share.IntentShare;
 
 import java.io.File;
@@ -32,7 +29,7 @@ public class SpaceKillerGame extends Game {
         this.intentShare = intentShare;
     }
 
-    public void showAd() {
+    public void askExtraLifeRewardWithAd() {
         adsController.showInterstitialAd();
     }
 
@@ -112,4 +109,9 @@ public class SpaceKillerGame extends Game {
         }
     }
 
+    public void continueWithExtraLife() {
+        if(currentScreen instanceof LevelScreen){
+            ((LevelScreen)currentScreen).continueWithExtraLife();
+        }
+    }
 }

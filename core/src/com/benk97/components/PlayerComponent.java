@@ -3,6 +3,7 @@ package com.benk97.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Pool;
 import com.benk97.player.PlayerData;
+import com.benk97.screens.LevelScreen;
 
 import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.components.PlayerComponent.PowerLevel.*;
@@ -23,13 +24,19 @@ public class PlayerComponent implements Component, Pool.Poolable {
     public int lives = LIVES;
     public int bombs = BOMBS;
     public PowerLevel powerLevel = NORMAL;
+    public int rewardAds = EXTRA_LIVES_ADS;
+    public LevelScreen.Level level = LevelScreen.Level.Level1;
+    public float secondScript = -3;
 
     public PlayerData copyPlayerData(){
-        return new PlayerData(fireDelay, enemiesKilled, laserShipKilled, howManyLifesLosed, score, highscore, lives, bombs, powerLevel);
+        return new PlayerData(level, secondScript, rewardAds, fireDelay, enemiesKilled, laserShipKilled, howManyLifesLosed, score, highscore, lives, bombs, powerLevel);
     }
 
     @Override
     public void reset() {
+        secondScript = -3;
+        level = LevelScreen.Level.Level1;
+        rewardAds = EXTRA_LIVES_ADS;
         howManyLifesLosed = 0;
         score = 0;
         enemiesKilled = 0;

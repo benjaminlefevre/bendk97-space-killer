@@ -259,6 +259,17 @@ public class MenuScreen extends HDScreen {
                                          }
 
                                      });
+        gplay.addListener(new
+
+                                  InputListener() {
+                                      @Override
+                                      public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                          assets.playSound(MENU_CLICK);
+                                          game.playServices.rateGame();
+                                          return true;
+                                      }
+
+                                  });
         achievements.addListener(new
 
                                          InputListener() {
@@ -281,15 +292,11 @@ public class MenuScreen extends HDScreen {
                                             }
 
                                         });
-        if (game.playServices.isSignedIn())
-
-        {
+        if (game.playServices.isSignedIn()) {
             stage.addActor(gplay);
             stage.addActor(achievements);
             stage.addActor(leaderboard);
-        } else
-
-        {
+        } else {
             stage.addActor(gplayOff);
             stage.addActor(achievements_off);
             stage.addActor(leaderboard_off);

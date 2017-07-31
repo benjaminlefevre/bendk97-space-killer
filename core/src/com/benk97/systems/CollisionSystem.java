@@ -46,7 +46,7 @@ public class CollisionSystem extends EntitySystem {
                 }
             }
             for (Entity enemy : getEngine().getEntitiesFor(enemies)) {
-                if (Mappers.boss.get(enemy) != null) {
+                if (Mappers.boss.get(enemy) != null || Mappers.enemy.get(enemy).isLaserShip) {
                     break;
                 }
                 SpriteComponent enemySprite = Mappers.sprite.get(enemy);

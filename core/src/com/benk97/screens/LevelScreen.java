@@ -1,7 +1,6 @@
 package com.benk97.screens;
 
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.*;
 import box2dLight.RayHandler;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
@@ -53,14 +52,19 @@ import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
 import static com.benk97.entities.SquadronFactory.*;
 import static com.benk97.google.Achievement.*;
+import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
 
 public abstract class LevelScreen extends ScreenAdapter {
 
     protected float time = -1000f;
     protected Random random = new RandomXS128();
+    TouchInputProcessor inputProcessor = null;
+
 
     public void nextLevel() {
-        PlayerData playerData = Mappers.player.get(player).copyPlayerData();
+        PlayerComponent playerComponent = Mappers.player.get(player);
+        playerComponent.level = Level.Level2;
+        PlayerData playerData = playerComponent.copyPlayerData();
         FrameBuffer screenshot = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
         screenshot.begin();
         this.render(Gdx.graphics.getDeltaTime());
@@ -79,10 +83,36 @@ public abstract class LevelScreen extends ScreenAdapter {
         return new GameOverTouchInputProcessor(camera, game, assets, player);
     }
 
+    public void continueWithExtraLife() {
+        PlayerComponent playerComponent = Mappers.player.get(player);
+        player.remove(GameOverComponent.class);
+        ((LevelScreen) game.currentScreen).startLevel(playerComponent.secondScript);
+        playerComponent.lives++;
+        playerComponent.rewardAds--;
+        Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+        Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+        player.add(engine.createComponent(InvulnerableComponent.class));
+        Gdx.input.setInputProcessor(inputProcessor);
+        Timeline.createSequence()
+                .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
+                .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(1f))
+                .repeat(10, 0f)
+                .setCallback(new TweenCallback() {
+                    @Override
+                    public void onEvent(int i, BaseTween<?> baseTween) {
+                        if (i == TweenCallback.COMPLETE) {
+                            player.remove(InvulnerableComponent.class);
+                        }
+                    }
+                })
+                .start(tweenManager);
+    }
+
+    public float getCurrentTimeScript() {
+        return time;
+    }
+
     public enum Level {Level1, Level2}
-
-    ;
-
 
     protected Viewport viewport;
     protected OrthographicCamera camera;
@@ -168,7 +198,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         engine.addSystem(new GameOverRenderingSystem(batcher, camera, assets, 7));
         engine.addSystem(new LevelFinishedRenderingSystem(batcher, assets, level, 7));
         if (DEBUG) {
-            engine.addSystem(new FPSDisplayRenderingSystem(batcher, 8));
+            engine.addSystem(new FPSDisplayRenderingSystem(this, batcher, 8));
         }
         engine.addSystem(new CollisionSystem(collisionListener, spriteMaskFactory, 9));
         engine.addSystem(new EnemyAttackSystem(10, entityFactory));
@@ -181,7 +211,6 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     private InputListenerImpl createInputHandlerSystem(Entity player, Array<Entity> bombs, PlayerListener playerListener) {
         // input
-        TouchInputProcessor inputProcessor = null;
         InputListenerImpl inputListener = new InputListenerImpl(player, playerListener, entityFactory, assets, this, Settings.isVirtualPad());
         Entity bombButton = entityFactory.createEntityBombButton(0.2f, BOMB_X, BOMB_Y);
         if (!Settings.isVirtualPad()) {
@@ -245,7 +274,7 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     public void showAd() {
         if (!DEBUG) {
-            game.showAd();
+            game.askExtraLifeRewardWithAd();
         }
     }
 
@@ -416,6 +445,8 @@ public abstract class LevelScreen extends ScreenAdapter {
     protected int getRandomMoveType() {
         return random.nextInt(8);
     }
+
+    protected abstract void startLevel(float time);
 
     protected abstract void initSpawns();
 

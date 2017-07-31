@@ -61,6 +61,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
         playerComponent.loseLife();
         if (playerComponent.isGameOver()) {
             assets.playSound(SOUND_GAME_OVER);
+            Mappers.player.get(player).secondScript = ((LevelScreen)game.currentScreen).getCurrentTimeScript();
             game.playerData = null;
             player.add(((PooledEngine) getEngine()).createComponent(GameOverComponent.class));
             Settings.addScore(playerComponent.getScoreInt());
@@ -72,12 +73,6 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
                     Gdx.input.setInputProcessor(screen.getGameOverInputProcessor());
                 }
             }, 1);
-            new Timer().scheduleTask(new Timer.Task() {
-                @Override
-                public void run() {
-                    screen.showAd();
-                }
-            }, 3);
         } else {
             assets.playSound(SOUND_LOSE_LIFE);
             if (playerComponent.lives > 0) {

@@ -31,7 +31,7 @@ public class GameOverRenderingSystem extends IteratingSystem {
     private ShapeRenderer shapeRenderer;
     private Camera camera;
 
-    private Sprite playAgain, home, share;
+    private Sprite extraLife, playAgain, home, share;
 
     public GameOverRenderingSystem(SpriteBatch batcher, Camera camera, Assets assets, int priority) {
         super(Family.all(PlayerComponent.class, GameOverComponent.class).get(), priority);
@@ -46,9 +46,11 @@ public class GameOverRenderingSystem extends IteratingSystem {
         this.playAgain = assets.get(GFX_LEVEL1_ATLAS_NOMASK).createSprite("icon-playagain");
         this.home = assets.get(GFX_LEVEL1_ATLAS_NOMASK).createSprite("icon-home");
         this.share = assets.get(GFX_LEVEL1_ATLAS_NOMASK).createSprite("icon-share");
+        this.extraLife = assets.get(GFX_LEVEL1_ATLAS_NOMASK).createSprite("icon-extralife");
         this.playAgain.setPosition(PLAY_X, PLAY_Y);
         this.home.setPosition(HOME_X, HOME_Y);
         this.share.setPosition(SHARE_X, SHARE_Y);
+        this.extraLife.setPosition(EXTRA_X, EXTRA_Y);
     }
 
     @Override
@@ -64,8 +66,11 @@ public class GameOverRenderingSystem extends IteratingSystem {
         Gdx.gl.glDisable(GL20.GL_BLEND);
         batcher.begin();
         largeFont.draw(batcher, GAME_OVER, SCREEN_WIDTH / 4f - 10f, SCREEN_HEIGHT - 100f);
-        mediumFont.draw(batcher, SCORE + Mappers.player.get(entity).getScore(), 20f, SCREEN_HEIGHT / 2f +30f);
+        mediumFont.draw(batcher, SCORE + Mappers.player.get(entity).getScore(), 20f, SCREEN_HEIGHT / 2f + 30f);
         mediumFont.draw(batcher, HIGHSCORE + Mappers.player.get(entity).getHighccore(), 10f, SCREEN_HEIGHT / 2f - 130f);
+        if (Mappers.player.get(entity).rewardAds > 0) {
+            extraLife.draw(batcher);
+        }
         playAgain.draw(batcher);
         home.draw(batcher);
         share.draw(batcher);

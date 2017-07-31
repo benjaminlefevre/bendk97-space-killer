@@ -1,4 +1,4 @@
-package com.benk97.entities;
+    package com.benk97.entities;
 
 import aurelienribon.tweenengine.*;
 import aurelienribon.tweenengine.equations.Linear;
@@ -658,6 +658,8 @@ public class EntityFactory implements Disposable {
             playerComponent.updateScore(game.playerData.score);
             playerComponent.lives = game.playerData.lives;
             playerComponent.powerLevel = game.playerData.powerLevel;
+            playerComponent.rewardAds = game.playerData.rewardAds;
+            playerComponent.level = game.playerData.level;
         }
         player.add(playerComponent);
         player.add(engine.createComponent(PositionComponent.class));

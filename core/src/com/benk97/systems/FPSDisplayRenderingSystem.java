@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.benk97.screens.LevelScreen;
 
 import static com.benk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
@@ -11,9 +12,11 @@ public class FPSDisplayRenderingSystem extends EntitySystem {
 
     private SpriteBatch batcher;
     private BitmapFont bitmapFont;
+    private LevelScreen screen;
 
-    public FPSDisplayRenderingSystem(SpriteBatch batcher, int priority) {
+    public FPSDisplayRenderingSystem(LevelScreen screen, SpriteBatch batcher, int priority) {
         super(priority);
+        this.screen = screen;
         this.batcher = batcher;
         this.bitmapFont = new BitmapFont();
         this.bitmapFont.getData().setScale(0.5f);
@@ -31,6 +34,6 @@ public class FPSDisplayRenderingSystem extends EntitySystem {
         }
         bitmapFont.draw(batcher, Gdx.graphics.getFramesPerSecond() + " fps/avg", SCREEN_WIDTH - 80f, 10f);
         bitmapFont.draw(batcher, currentFps + " fps", SCREEN_WIDTH - 30f, 10f);
-        bitmapFont.draw(batcher, Math.floor(currentTime) + " s", SCREEN_WIDTH - 150f, 10f);
+        bitmapFont.draw(batcher, Math.floor(screen.getCurrentTimeScript()) + " s", SCREEN_WIDTH - 150f, 10f);
     }
 }
