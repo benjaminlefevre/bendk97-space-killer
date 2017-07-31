@@ -99,6 +99,9 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
 
     @Override
     public void onUnityAdsFinish(String s, UnityAds.FinishState finishState) {
+        if(finishState.equals(UnityAds.FinishState.COMPLETED)){
+            game.continueWithExtraLife();
+        }
     }
 
     @Override

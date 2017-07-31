@@ -42,7 +42,8 @@ public class Level1Screen extends LevelScreen {
         startLevel(-3f);
     }
 
-    private void startLevel(float time) {
+    @Override
+    protected void startLevel(float time) {
         this.time = time;
         initSpawns();
     }

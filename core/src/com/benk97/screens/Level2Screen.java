@@ -63,8 +63,8 @@ public class Level2Screen extends LevelScreen {
         engine.addSystem(new FollowPlayerSystem(2));
     }
 
-
-    private void startLevel(float time) {
+    @Override
+    protected void startLevel(float time) {
         this.time = time;
         initSpawns();
     }

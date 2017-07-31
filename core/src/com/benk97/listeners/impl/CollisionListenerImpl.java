@@ -44,7 +44,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     public void enemyShoot(final Entity enemy, final Entity player, Entity bullet) {
         EnemyComponent enemyComponent = Mappers.enemy.get(enemy);
         // special case: enemy can be already dead
-        if(enemyComponent.isDead()){
+        if (enemyComponent.isDead()) {
             return;
         }
         // create explosion
@@ -81,19 +81,19 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
 
         if (enemyComponent.isDead()) {
             Mappers.player.get(player).enemiesKilled++;
-            if(enemyComponent.isLaserShip){
+            if (enemyComponent.isLaserShip) {
                 Mappers.player.get(player).laserShipKilled++;
             }
             screen.checkAchievements(player);
             tweenManager.killTarget(Mappers.position.get(enemy));
-            if(enemyComponent.belongsToSquadron()) {
+            if (enemyComponent.belongsToSquadron()) {
                 Mappers.squadron.get(enemyComponent.squadron).removeEntity(enemy);
             }
             SpriteComponent spriteComponent = Mappers.sprite.get(enemy);
             if (Mappers.boss.get(enemy) != null) {
                 assets.playSound(SOUND_BOSS_FINISHED);
                 entityFactory.createBossExploding(enemy);
-                player.add(((PooledEngine)getEngine()).createComponent(InvulnerableComponent.class));
+                player.add(((PooledEngine) getEngine()).createComponent(InvulnerableComponent.class));
                 Timeline.createSequence()
                         .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
                         .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(1f))
@@ -196,7 +196,9 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         PositionComponent ennemyPosition = Mappers.position.get(enemy);
         entityFactory.createEntityExploding(ennemyPosition.x, ennemyPosition.y);
         tweenManager.killTarget(Mappers.position.get(enemy));
-        Mappers.squadron.get(Mappers.enemy.get(enemy).squadron).removeEntity(enemy);
+        if (Mappers.enemy.get(enemy).squadron != null) {
+            Mappers.squadron.get(Mappers.enemy.get(enemy).squadron).removeEntity(enemy);
+        }
         getEngine().removeEntity(enemy);
     }
 

@@ -22,6 +22,7 @@ public class GameOverTouchInputProcessor implements InputProcessor {
     protected Rectangle playAgain;
     protected Rectangle home;
     protected Rectangle share;
+    protected Rectangle extraLife;
     protected Assets assets;
     protected Entity player;
 
@@ -33,6 +34,7 @@ public class GameOverTouchInputProcessor implements InputProcessor {
         this.playAgain = new Rectangle(PLAY_X, PLAY_Y, ICON_SIZE, ICON_SIZE);
         this.home = new Rectangle(HOME_X, HOME_Y, ICON_SIZE, ICON_SIZE);
         this.share = new Rectangle(SHARE_X, SHARE_Y, ICON_SIZE, ICON_SIZE);
+        this.extraLife = new Rectangle(EXTRA_X, EXTRA_Y, ICON_SIZE, ICON_SIZE);
     }
 
     @Override
@@ -55,9 +57,11 @@ public class GameOverTouchInputProcessor implements InputProcessor {
         Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
         if (playAgain.contains(worldTouch.x, worldTouch.y)) {
             game.currentScreen.dispose();
+            game.playerData = null;
             game.goToScreen(Level1Screen.class);
         } else if (home.contains(worldTouch.x, worldTouch.y)) {
             game.currentScreen.dispose();
+            game.playerData = null;
             game.goToScreen(MenuScreen.class);
         } else if (share.contains(worldTouch.x, worldTouch.y)) {
             SocialScoreScreen socialScoreScreen = new SocialScoreScreen(assets, game, Mappers.player.get(player).getScoreInt());
@@ -65,6 +69,8 @@ public class GameOverTouchInputProcessor implements InputProcessor {
             if (filePath != null) {
                 game.intentShare.shareScore(filePath);
             }
+        } else if (extraLife.contains(worldTouch.x, worldTouch.y)) {
+            game.askExtraLifeRewardWithAd();
         }
         return true;
     }

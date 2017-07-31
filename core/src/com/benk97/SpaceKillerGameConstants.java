@@ -2,7 +2,7 @@ package com.benk97;
 
 public class SpaceKillerGameConstants {
     // general settings
-    public final static String GAME_VERSION = "v0.7.5";
+    public final static String GAME_VERSION = "v0.8.3";
     public final static float SCREEN_WIDTH = 400;
     public final static float SCREEN_HEIGHT = 700;
     public final static boolean DEBUG = false;
@@ -10,6 +10,7 @@ public class SpaceKillerGameConstants {
     public final static boolean AD_TEST = false;
     // player
     public final static int LIVES = 3;
+    public final static int EXTRA_LIVES_ADS = 2;
     public final static int BOMBS = 2;
     public final static int HIT_EXPLOSION = 50;
     public static final float NEW_LIFE = 100000f;
@@ -78,6 +79,8 @@ public class SpaceKillerGameConstants {
 
     // icon game over
     public static final float ICON_SIZE = 64f;
+    public static final float EXTRA_X = 25f;
+    public static final float EXTRA_Y = 40f;
     public static final float PLAY_X = 100f;
     public static final float PLAY_Y = 40f;
     public static final float HOME_X = 175f;
