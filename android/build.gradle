@@ -21,12 +21,12 @@ android {
     }
     defaultConfig {
         applicationId "com.benk97.space.killer"
-//        applicationId "com.benk97.space.killer.te st"
+//        applicationId "com.benk97.space.killer.test"
 
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 44
-        versionName "0.8.3"
+        versionCode 45
+        versionName "0.8.4"
     }
     buildTypes {
         release {

@@ -93,7 +93,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
             if (Mappers.boss.get(enemy) != null) {
                 assets.playSound(SOUND_BOSS_FINISHED);
                 entityFactory.createBossExploding(enemy);
-                player.add(((PooledEngine) getEngine()).createComponent(InvulnerableComponent.class));
+                entityFactory.addInvulnerableComponent(player);
                 Timeline.createSequence()
                         .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
                         .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(1f))

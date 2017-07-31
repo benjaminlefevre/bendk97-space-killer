@@ -694,7 +694,7 @@ public class EntityFactory implements Disposable {
     public Entity createShield(final Entity player) {
         final Entity shield = engine.createEntity();
         PositionComponent playerPosition = Mappers.position.get(player);
-        player.add(engine.createComponent(InvulnerableComponent.class));
+        addInvulnerableComponent(player);
         SpriteComponent playerSprite = Mappers.sprite.get(player);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         spriteComponent.zIndex = 99;
@@ -716,7 +716,7 @@ public class EntityFactory implements Disposable {
                     public void onEvent(int i, BaseTween<?> baseTween) {
                         if (i == TweenCallback.COMPLETE) {
                             engine.removeEntity(shield);
-                            player.remove(InvulnerableComponent.class);
+                            removeInvulnerableComponent(player);
                         }
                     }
                 })
@@ -872,4 +872,20 @@ public class EntityFactory implements Disposable {
         lightPool.clear();
     }
 
+    public void addInvulnerableComponent(Entity player) {
+        InvulnerableComponent invulnerableComponent = Mappers.invulnerable.get(player);
+        if (invulnerableComponent != null) {
+            invulnerableComponent.nbItems++;
+        } else {
+            player.add(engine.createComponent(InvulnerableComponent.class));
+        }
+    }
+
+    public void removeInvulnerableComponent(Entity player) {
+        InvulnerableComponent invulnerableComponent = Mappers.invulnerable.get(player);
+        invulnerableComponent.nbItems--;
+        if (invulnerableComponent.nbItems == 0) {
+            player.remove(InvulnerableComponent.class);
+        }
+    }
 }

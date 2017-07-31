@@ -84,14 +84,14 @@ public abstract class LevelScreen extends ScreenAdapter {
     }
 
     public void continueWithExtraLife() {
-        PlayerComponent playerComponent = Mappers.player.get(player);
+        final PlayerComponent playerComponent = Mappers.player.get(player);
         player.remove(GameOverComponent.class);
         ((LevelScreen) game.currentScreen).startLevel(playerComponent.secondScript);
         playerComponent.lives++;
         playerComponent.rewardAds--;
         Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
-        player.add(engine.createComponent(InvulnerableComponent.class));
+        entityFactory.addInvulnerableComponent(player);
         Gdx.input.setInputProcessor(inputProcessor);
         Timeline.createSequence()
                 .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
@@ -101,7 +101,7 @@ public abstract class LevelScreen extends ScreenAdapter {
                     @Override
                     public void onEvent(int i, BaseTween<?> baseTween) {
                         if (i == TweenCallback.COMPLETE) {
-                            player.remove(InvulnerableComponent.class);
+                            entityFactory.removeInvulnerableComponent(player);
                         }
                     }
                 })

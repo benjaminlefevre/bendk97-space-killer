@@ -10,7 +10,10 @@ import com.badlogic.gdx.utils.Timer;
 import com.benk97.Settings;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
-import com.benk97.components.*;
+import com.benk97.components.EnemyComponent;
+import com.benk97.components.GameOverComponent;
+import com.benk97.components.Mappers;
+import com.benk97.components.PlayerComponent;
 import com.benk97.entities.EntityFactory;
 import com.benk97.listeners.PlayerListener;
 import com.benk97.screens.LevelScreen;
@@ -80,7 +83,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
             }
             Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
             Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
-            player.add(((PooledEngine) getEngine()).createComponent(InvulnerableComponent.class));
+            entityFactory.addInvulnerableComponent(player);
             Timeline.createSequence()
                     .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
                     .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(1f))
@@ -89,7 +92,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
                         @Override
                         public void onEvent(int i, BaseTween<?> baseTween) {
                             if (i == TweenCallback.COMPLETE) {
-                                player.remove(InvulnerableComponent.class);
+                                entityFactory.removeInvulnerableComponent(player);
                             }
                         }
                     })
