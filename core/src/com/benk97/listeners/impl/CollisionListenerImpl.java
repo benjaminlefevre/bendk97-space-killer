@@ -114,11 +114,11 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
                                 if (i == TweenCallback.COMPLETE) {
                                     getEngine().removeEntity(enemy);
                                 }
-                                new Timer().scheduleTask(new Timer.Task() {
+                                Timer.schedule(new Timer.Task() {
                                     @Override
                                     public void run() {
                                         player.add(((PooledEngine) getEngine()).createComponent(LeveLFinishedComponent.class));
-                                        new Timer().scheduleTask(new Timer.Task() {
+                                        Timer.schedule(new Timer.Task() {
                                             @Override
                                             public void run() {
                                                 player.remove(LeveLFinishedComponent.class);

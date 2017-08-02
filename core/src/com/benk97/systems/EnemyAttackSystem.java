@@ -3,6 +3,7 @@ package com.benk97.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.RandomXS128;
 import com.benk97.components.*;
 import com.benk97.entities.EntityFactory;
@@ -16,7 +17,7 @@ public class EnemyAttackSystem extends IteratingSystem {
 
     private EntityFactory entityFactory;
     private Random random = new RandomXS128();
-    private Family player = Family.one(PlayerComponent.class).get();
+    private Family player = Family.one(PlayerComponent.class).exclude(PauseComponent.class).get();
 
     public EnemyAttackSystem(int priority, EntityFactory entityFactory) {
         super(Family.all(EnemyComponent.class).exclude(BossComponent.class).get(), priority);
@@ -26,9 +27,13 @@ public class EnemyAttackSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        ImmutableArray<Entity> playerEntity = getEngine().getEntitiesFor(player);
+        if (playerEntity.size() == 0) {
+            return;
+        }
         EnemyComponent enemy = Mappers.enemy.get(entity);
         if (enemy.canAttack() && isVisible(entity) && random.nextInt() % enemy.probabilityAttack == 0) {
-            entityFactory.createEnemyFire(entity, getEngine().getEntitiesFor(player).first());
+            entityFactory.createEnemyFire(entity, playerEntity.first());
             enemy.attackCapacity--;
         }
     }

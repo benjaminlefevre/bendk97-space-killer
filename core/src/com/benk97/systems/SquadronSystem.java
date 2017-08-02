@@ -46,7 +46,7 @@ public class SquadronSystem extends IteratingSystem {
                 if (squadron.displayBonusSquadron) {
                     playerListener.updateScore(player, squadron.scoreBonus);
                     final Entity score = entityFactory.createScoreSquadron(entity);
-                    new Timer().scheduleTask(new Timer.Task() {
+                    Timer.schedule(new Timer.Task() {
                         @Override
                         public void run() {
                             getEngine().removeEntity(score);

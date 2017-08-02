@@ -4,14 +4,15 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.benk97.listeners.InputListener;
+import com.benk97.screens.LevelScreen;
 
 public class RetroPadController extends TouchInputProcessor {
 
     private Rectangle fireButton;
 
-    public RetroPadController(InputListener inputListener, Camera camera, Rectangle[] squareTouches, Rectangle fireButton,
+    public RetroPadController(LevelScreen screen, InputListener inputListener, Camera camera, Rectangle[] squareTouches, Rectangle fireButton,
                               Rectangle bombButton) {
-        super(inputListener, camera, bombButton);
+        super(screen, inputListener, camera, bombButton);
         this.squareTouches = squareTouches;
         this.fireButton = fireButton;
     }

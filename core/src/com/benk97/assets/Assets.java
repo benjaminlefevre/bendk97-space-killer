@@ -226,11 +226,14 @@ public class Assets {
         }
     }
 
-    public void playMusic(AssetDescriptor<Music> music) {
+    public Music playMusic(AssetDescriptor<Music> musicDescriptor) {
         if (Settings.isMusicOn()) {
-            manager.get(music).setLooping(true);
-            manager.get(music).play();
+            Music music = manager.get(musicDescriptor);
+            music.setLooping(true);
+            music.play();
+            return music;
         }
+        return null;
     }
 
     public void stopMusic(AssetDescriptor<Music> music) {

@@ -302,16 +302,10 @@ public class MenuScreen extends HDScreen {
             stage.addActor(leaderboard_off);
         }
 
-        table = new
+        table = new Table();
 
-                Table();
-
-        helpScreen = new
-
-                ImageButton(new TextureRegionDrawable(atlas.findRegion("help")));
-        helpScreen.setColor(new
-
-                Color(1f, 1f, 1f, 0.6f));
+        helpScreen = new ImageButton(new TextureRegionDrawable(atlas.findRegion("help")));
+        helpScreen.setColor(new Color(1f, 1f, 1f, 0.6f));
         helpScreen.addListener(new
 
                                        InputListener() {
@@ -327,7 +321,7 @@ public class MenuScreen extends HDScreen {
                                            }
                                        });
 
-        helpScreen.setPosition(5f, 150f);
+        helpScreen.setPosition(5f, 100f);
 
         TextureRegionDrawable drawable = new TextureRegionDrawable(atlas.findRegion("sound-off"));
         soundOff = new ImageButton(drawable);

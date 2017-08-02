@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.benk97.assets.Assets;
 import com.benk97.components.LeveLFinishedComponent;
+import com.benk97.components.PauseComponent;
 import com.benk97.components.PlayerComponent;
 import com.benk97.screens.LevelScreen;
 
@@ -28,7 +29,7 @@ public class LevelFinishedRenderingSystem extends IteratingSystem {
     private ShapeRenderer shapeRenderer;
 
     public LevelFinishedRenderingSystem(SpriteBatch batcher, Assets assets, LevelScreen.Level level, int priority) {
-        super(Family.all(PlayerComponent.class, LeveLFinishedComponent.class).get(), priority);
+        super(Family.all(PlayerComponent.class, LeveLFinishedComponent.class).exclude(PauseComponent.class).get(), priority);
         this.level = level;
         this.assets = assets;
         this.batcher = batcher;

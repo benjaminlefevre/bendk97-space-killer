@@ -1,6 +1,7 @@
 package com.benk97.inputs;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
@@ -39,9 +40,11 @@ public class GameOverTouchInputProcessor implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+        if(keycode == Input.Keys.BACK){
+            return true;
+        }
         return false;
     }
-
     @Override
     public boolean keyUp(int keycode) {
         return false;

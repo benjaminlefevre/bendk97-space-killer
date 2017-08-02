@@ -53,6 +53,7 @@ public class SpaceKillerGame extends Game {
 
     @Override
     public void create() {
+        Gdx.input.setCatchBackKey(true);
         cleanTempDirectory();
         if (SKIP_SPLASH) {
             goToScreen(MenuScreen.class);
