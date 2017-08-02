@@ -53,7 +53,7 @@ public class Level2Screen extends LevelScreen {
                 spriteMaskFactory.addMask(assets.get(GFX_LEVEL2_ATLAS_MASK).getTextures().first());
             }
         }).start();
-        assets.playMusic(MUSIC_LEVEL_2);
+        playMusic(MUSIC_LEVEL_2);
         startLevel(-3f);
     }
 
@@ -86,22 +86,22 @@ public class Level2Screen extends LevelScreen {
     }
 
     private List<ScriptItem> randomMediumSpawnEnemiesComingFromLeft(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_MEDIUM, ENEMY_LEVEL2_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL2_SQUADRON_MEDIUM, 4, 7, true);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_MEDIUM, ENEMY_LEVEL2_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL2_SQUADRON_MEDIUM, 5, 7, true);
 
     }
 
     private List<ScriptItem> randomMediumSpawnEnemiesComingFromRight(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_MEDIUM, ENEMY_LEVEL2_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL2_SQUADRON_MEDIUM, 4, 8, false);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_MEDIUM, ENEMY_LEVEL2_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL2_SQUADRON_MEDIUM, 5, 8, false);
 
     }
 
     private List<ScriptItem> randomHardSpawnEnemiesComingFromLeft(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_HARD, ENEMY_LEVEL2_BULLET_HARD_VELOCITY, BONUS_LEVEL2_SQUADRON_HARD, 7, 12, true);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_HARD, ENEMY_LEVEL2_BULLET_HARD_VELOCITY, BONUS_LEVEL2_SQUADRON_HARD, 6, 12, true);
 
     }
 
     private List<ScriptItem> randomHardSpawnEnemiesComingFromRight(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_HARD, ENEMY_LEVEL2_BULLET_HARD_VELOCITY, BONUS_LEVEL2_SQUADRON_HARD, 7, 12, false);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_HARD, ENEMY_LEVEL2_BULLET_HARD_VELOCITY, BONUS_LEVEL2_SQUADRON_HARD, 6, 12, false);
 
     }
 
@@ -126,7 +126,7 @@ public class Level2Screen extends LevelScreen {
         if (second % 2 == 0 || second % 9 == 0 || second % 7 == 0) {
             new Level1Screen.ScriptItem(getRandomAsteroidType(), LINEAR_Y,
                     40f + random.nextFloat() * 260f,
-                    1, random.nextInt() % 9 == 0, false, 0, 0f,
+                    1, random.nextInt() % 8 == 0, false, 0, 0f,
                     random.nextFloat() * (SCREEN_WIDTH - 36f),
                     SCREEN_HEIGHT).execute();
         }
@@ -140,6 +140,10 @@ public class Level2Screen extends LevelScreen {
         if (second == 1) {
             soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 100);
         }
+        if(second == 5){
+            soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 100);
+        }
+
 
         // 13 elements
         if (second >= 20 && second <= 90 && second % 5 == 0) {
@@ -165,11 +169,14 @@ public class Level2Screen extends LevelScreen {
                 soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 100);
             }
 
-        } else if (second > 160 && second <= 220 && (second % 5 == 0)) {
+        } else if (second > 160 && second <= 250 && (second % 5 == 0)) {
             if (second == 165) {
                 assets.playSound(SOUND_GO);
             }
-            if (second == 200) {
+            if (second == 190) {
+                soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT_WHEN_TWICE, 10, 200, false);
+            }
+            if (second == 220) {
                 soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT_WHEN_TWICE, 10, 200, false);
                 soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT_WHEN_TWICE, 10, 200, true);
             }
@@ -182,7 +189,7 @@ public class Level2Screen extends LevelScreen {
             if (second % 10 == 0) {
                 hardOther.poll().execute();
             }
-        } else if (second >= 225) {
+        } else if (second >= 255) {
             switch (second) {
                 case 225:
                     assets.playSound(SOUND_BOSS_ALERT);
@@ -191,9 +198,9 @@ public class Level2Screen extends LevelScreen {
                                 .target(-Mappers.velocity.get(background).y / 10f).start(tweenManager);
                     }
                     break;
-                case 229:
+                case 259:
                     assets.stopMusic(MUSIC_LEVEL_2);
-                    assets.playMusic(MUSIC_LEVEL_2_BOSS);
+                    playMusic(MUSIC_LEVEL_2_BOSS);
                     boss.execute();
                     break;
             }

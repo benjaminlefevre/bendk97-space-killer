@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.benk97.components.Mappers;
 import com.benk97.components.PositionComponent;
 import com.benk97.listeners.InputListener;
+import com.benk97.screens.LevelScreen;
 
 import static com.benk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.benk97.SpaceKillerGameConstants.SCREEN_WIDTH;
@@ -16,8 +17,8 @@ public class VirtualPadController extends TouchInputProcessor {
     private Entity player;
 
 
-    public VirtualPadController(InputListener inputListener, Camera camera, Entity player, Rectangle bombButton) {
-        super(inputListener, camera, bombButton);
+    public VirtualPadController(LevelScreen screen, InputListener inputListener, Camera camera, Entity player, Rectangle bombButton) {
+        super(screen, inputListener, camera, bombButton);
         this.player = player;
         this.squareTouches = new Rectangle[8];
     }

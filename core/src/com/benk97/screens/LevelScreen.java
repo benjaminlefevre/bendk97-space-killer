@@ -6,8 +6,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -15,11 +18,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.benk97.Settings;
@@ -29,10 +35,7 @@ import com.benk97.components.*;
 import com.benk97.entities.EntityFactory;
 import com.benk97.entities.SquadronFactory;
 import com.benk97.google.Achievement;
-import com.benk97.inputs.GameOverTouchInputProcessor;
-import com.benk97.inputs.RetroPadController;
-import com.benk97.inputs.TouchInputProcessor;
-import com.benk97.inputs.VirtualPadController;
+import com.benk97.inputs.*;
 import com.benk97.listeners.PlayerListener;
 import com.benk97.listeners.impl.CollisionListenerImpl;
 import com.benk97.listeners.impl.InputListenerImpl;
@@ -58,7 +61,8 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     protected float time = -1000f;
     protected Random random = new RandomXS128();
-    TouchInputProcessor inputProcessor = null;
+    InputMultiplexer inputProcessor = null;
+    protected Music music = null;
 
 
     public void nextLevel() {
@@ -83,9 +87,14 @@ public abstract class LevelScreen extends ScreenAdapter {
         return new GameOverTouchInputProcessor(camera, game, assets, player);
     }
 
+    public InputProcessor getPauseInputProcessor() {
+        return new PauseInputProcessor(camera, this);
+    }
+
     public void continueWithExtraLife() {
         final PlayerComponent playerComponent = Mappers.player.get(player);
         player.remove(GameOverComponent.class);
+        resumeGame();
         ((LevelScreen) game.currentScreen).startLevel(playerComponent.secondScript);
         playerComponent.lives++;
         playerComponent.rewardAds--;
@@ -196,6 +205,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         engine.addSystem(new StaticEntitiesRenderingSystem(batcher, 6));
         engine.addSystem(new ScoresRenderingSystem(batcher, assets, 6));
         engine.addSystem(new GameOverRenderingSystem(batcher, camera, assets, 7));
+        engine.addSystem(new PauseRenderingSystem(batcher, camera, assets, 7));
         engine.addSystem(new LevelFinishedRenderingSystem(batcher, assets, level, 7));
         if (DEBUG) {
             engine.addSystem(new FPSDisplayRenderingSystem(this, batcher, 8));
@@ -211,6 +221,9 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     private InputListenerImpl createInputHandlerSystem(Entity player, Array<Entity> bombs, PlayerListener playerListener) {
         // input
+        inputProcessor = new InputMultiplexer();
+        inputProcessor.addProcessor(new GestureDetector(new GestureHandler(this, camera)));
+
         InputListenerImpl inputListener = new InputListenerImpl(player, playerListener, entityFactory, assets, this, Settings.isVirtualPad());
         Entity bombButton = entityFactory.createEntityBombButton(0.2f, BOMB_X, BOMB_Y);
         if (!Settings.isVirtualPad()) {
@@ -229,12 +242,12 @@ public abstract class LevelScreen extends ScreenAdapter {
             squareTouchesDirection[6] = new Rectangle(PAD_X + widthTouch, PAD_Y, widthTouch, heightTouch);
             squareTouchesDirection[7] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y, widthTouch, heightTouch);
 
-            inputProcessor = new RetroPadController(inputListener, camera, squareTouchesDirection, Mappers.sprite.get(fireButton).getBounds(),
-                    Mappers.sprite.get(bombButton).getBounds());
+            inputProcessor.addProcessor(new RetroPadController(this, inputListener, camera, squareTouchesDirection, Mappers.sprite.get(fireButton).getBounds(),
+                    Mappers.sprite.get(bombButton).getBounds()));
 
         } else {
             Mappers.sprite.get(bombButton).sprite.setY(BOMB_Y_VIRTUAL);
-            inputProcessor = new VirtualPadController(inputListener, camera, player, Mappers.sprite.get(bombButton).getBounds());
+            inputProcessor.addProcessor(new VirtualPadController(this, inputListener, camera, player, Mappers.sprite.get(bombButton).getBounds()));
 
         }
         Gdx.input.setInputProcessor(inputProcessor);
@@ -243,12 +256,13 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        updateScriptLevel(delta);
-        tweenManager.update(delta);
+        float deltaState = state.equals(State.RUNNING) ? delta : 0f;
+        updateScriptLevel(deltaState);
+        tweenManager.update(deltaState);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batcher.begin();
         batcher.setProjectionMatrix(camera.combined);
-        engine.update(delta);
+        engine.update(deltaState);
         batcher.end();
         if (fxLightEnabled) {
             rayHandler.updateAndRender();
@@ -272,10 +286,51 @@ public abstract class LevelScreen extends ScreenAdapter {
         viewport.update(width, height, true);
     }
 
-    public void showAd() {
-        if (!DEBUG) {
-            game.askExtraLifeRewardWithAd();
+    public enum State {
+        PAUSED, RUNNING
+    }
+
+    protected State state = State.RUNNING;
+
+    protected void playMusic(AssetDescriptor<Music> musicDesc) {
+        music = assets.playMusic(musicDesc);
+    }
+
+    public void pauseGame() {
+        pause();
+    }
+
+    @Override
+    public void pause() {
+        if (player.getComponent(GameOverComponent.class) == null
+                && player.getComponent(PauseComponent.class) == null) {
+            state = State.PAUSED;
+            Gdx.input.setInputProcessor(this.getPauseInputProcessor());
+            if (music != null) {
+                music.pause();
+            }
+            timerDelay = TimeUtils.nanosToMillis(TimeUtils.nanoTime());
+            Timer.instance().stop();
+            player.add(engine.createComponent(PauseComponent.class));
         }
+    }
+
+    private long timerDelay;
+
+    public void resumeGame() {
+        state = State.RUNNING;
+        Gdx.input.setInputProcessor(inputProcessor);
+        if (music != null) {
+            music.play();
+        }
+        Timer.instance().delay(TimeUtils.nanosToMillis(TimeUtils.nanoTime()) - timerDelay);
+        Timer.instance().start();
+        player.remove(PauseComponent.class);
+    }
+
+    public void quitGame() {
+        this.dispose();
+        game.goToScreen(MenuScreen.class);
     }
 
     @Override

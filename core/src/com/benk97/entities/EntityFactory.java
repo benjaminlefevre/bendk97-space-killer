@@ -185,7 +185,7 @@ public class EntityFactory implements Disposable {
                     }
                 })
                 .start(tweenManager);
-        new Timer().scheduleTask(new Timer.Task() {
+        Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 if (rayHandler != null) {
@@ -288,7 +288,7 @@ public class EntityFactory implements Disposable {
         int type = random.nextInt(3);
         if (type == 0) {
             for (int i = 0; i < 10; ++i) {
-                new Timer().scheduleTask(new Timer.Task() {
+                Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
                         createEnemyFire(boss, player);
@@ -570,7 +570,7 @@ public class EntityFactory implements Disposable {
         component.sprite = atlasMask.createSprite("boss-level1");
         enemy.add(component);
         engine.addEntity(enemy);
-        new Timer().scheduleTask(new Timer.Task() {
+        Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 Mappers.boss.get(enemy).pleaseFire1 = true;
@@ -602,13 +602,13 @@ public class EntityFactory implements Disposable {
         component.sprite = atlasMaskLevel2.createSprite("boss");
         enemy.add(component);
         engine.addEntity(enemy);
-        new Timer().scheduleTask(new Timer.Task() {
+        Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 Mappers.boss.get(enemy).pleaseFire1 = true;
             }
         }, 5f);
-        new Timer().scheduleTask(new Timer.Task() {
+        Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 Mappers.boss.get(enemy).pleaseFire2 = true;
@@ -785,7 +785,7 @@ public class EntityFactory implements Disposable {
         final SpriteComponent sprite = Mappers.sprite.get(enemy);
         for (int i = 0; i < 25; ++i) {
             assets.playSound(SOUND_EXPLOSION);
-            new Timer().scheduleTask(new Timer.Task() {
+            Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
                     PositionComponent position = Mappers.position.get(enemy);

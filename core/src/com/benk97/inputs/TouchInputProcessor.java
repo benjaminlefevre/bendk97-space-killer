@@ -1,47 +1,35 @@
-package com.benk97.inputs;
+    package com.benk97.inputs;
 
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
-import com.benk97.listeners.InputListener;
+    import com.badlogic.gdx.Input;
+    import com.badlogic.gdx.InputAdapter;
+    import com.badlogic.gdx.graphics.Camera;
+    import com.badlogic.gdx.math.Rectangle;
+    import com.badlogic.gdx.math.Vector3;
+    import com.benk97.listeners.InputListener;
+    import com.benk97.screens.LevelScreen;
 
 
-public abstract class TouchInputProcessor implements InputProcessor {
+public abstract class TouchInputProcessor extends InputAdapter {
     protected InputListener listener;
 
     protected Camera camera;
     protected Rectangle[] squareTouches;
     protected Rectangle bombButton;
+    protected LevelScreen screen;
 
-    public TouchInputProcessor(InputListener inputListener, Camera camera, Rectangle bombButton) {
+    public TouchInputProcessor(LevelScreen screen, InputListener inputListener, Camera camera, Rectangle bombButton) {
         this.listener = inputListener;
+        this.screen = screen;
         this.camera = camera;
         this.bombButton = bombButton;
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
+        if(keycode == Input.Keys.BACK){
+            screen.pauseGame();
+            return true;
+        }
         return false;
     }
 

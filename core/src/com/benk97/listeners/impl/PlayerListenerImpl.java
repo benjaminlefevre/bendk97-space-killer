@@ -70,7 +70,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
             Settings.addScore(playerComponent.getScoreInt());
             Settings.save();
             screen.submitScore(playerComponent.getScoreInt());
-            new Timer().scheduleTask(new Timer.Task() {
+            Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
                     Gdx.input.setInputProcessor(screen.getGameOverInputProcessor());
