@@ -9,6 +9,7 @@ public class Settings {
     private static final String SOUND_ON = "sound-on";
     private static final String HIGHSCORES = "highscores";
     private static final String CONTROLLER = "controller";
+    private static final String VIBRATION = "vibration";
 
     private Preferences preferences;
     private int[] highscores;
@@ -19,16 +20,16 @@ public class Settings {
         preferences = Gdx.app.getPreferences("space-killer");
     }
 
-    public static boolean isVirtualPad(){
+    public static boolean isVirtualPad() {
         return settings.preferences.getString(CONTROLLER).equals("virtual");
     }
 
-    public static void setRetroPad(){
+    public static void setRetroPad() {
         settings.preferences.putString(CONTROLLER, "retro");
         save();
     }
 
-    public static void setVirtualPad(){
+    public static void setVirtualPad() {
         settings.preferences.putString(CONTROLLER, "virtual");
         save();
     }
@@ -76,6 +77,10 @@ public class Settings {
         return settings.preferences.getBoolean(LIGHT_FX, true);
     }
 
+    public static boolean isVibrationEnabled() {
+        return settings.preferences.getBoolean(VIBRATION, true);
+    }
+
     public void loadHighScores() {
         String scorestr = settings.preferences.getString(HIGHSCORES, "0;0;0;0;0");
         String[] scores = scorestr.split(";");
@@ -119,6 +124,12 @@ public class Settings {
 
     public static void changeLightFXEnabled() {
         settings.preferences.putBoolean(LIGHT_FX, !isLightFXEnabled());
+        save();
+    }
+
+
+    public static void changeVibrationEnabled() {
+        settings.preferences.putBoolean(VIBRATION, !isVibrationEnabled());
         save();
     }
 }

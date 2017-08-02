@@ -45,6 +45,7 @@ public class MenuScreen extends HDScreen {
     TextButton retroPad;
     TextButton virtualPad;
     TextButton lightFx;
+    TextButton vibration;
     TextButton back;
 
     ImageButton leaderboard;
@@ -92,16 +93,23 @@ public class MenuScreen extends HDScreen {
         styleFX.fontColor = Settings.isLightFXEnabled() ? Color.YELLOW : Color.WHITE;
         lightFx = new TextButton("light fx", styleFX);
 
+        TextButtonStyle styleVibration = new TextButtonStyle();
+        styleVibration.font = assets.get(FONT_SPACE_KILLER_SMALL);
+        styleVibration.fontColor = Settings.isVibrationEnabled() ? Color.YELLOW : Color.WHITE;
+        vibration = new TextButton("vibration", styleVibration);
+
 
         back = new TextButton("back", buttonStyle);
         retroPad.setSize(200f, 75f);
-        virtualPad.setSize(200f, 75f);
+        virtualPad.setSize(200f, 150f);
         back.setSize(200f, 75f);
         lightFx.setSize(200f, 75f);
-        retroPad.setPosition(100f, 400f);
-        virtualPad.setPosition(100f, 275f);
-        lightFx.setPosition(100f, 175f);
-        back.setPosition(100f, 100f);
+        vibration.setSize(200f, 75f);
+        retroPad.setPosition(100f, 450f);
+        virtualPad.setPosition(100f, 300f);
+        lightFx.setPosition(100f, 225f);
+        vibration.setPosition(100f, 150f);
+        back.setPosition(100f, 75f);
 
 
         stage.addActor(playButton);
@@ -188,6 +196,16 @@ public class MenuScreen extends HDScreen {
             }
         });
 
+        vibration.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                assets.playSound(MENU_CLICK);
+                Settings.changeVibrationEnabled();
+                vibration.getStyle().fontColor = Settings.isVibrationEnabled() ? Color.YELLOW : Color.WHITE;
+                return true;
+            }
+        });
+
         back.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -198,6 +216,7 @@ public class MenuScreen extends HDScreen {
                 retroPad.remove();
                 virtualPad.remove();
                 lightFx.remove();
+                vibration.remove();
                 back.remove();
                 return true;
             }
@@ -217,6 +236,7 @@ public class MenuScreen extends HDScreen {
                 stage.addActor(retroPad);
                 stage.addActor(back);
                 stage.addActor(lightFx);
+                stage.addActor(vibration);
                 return true;
             }
         });
