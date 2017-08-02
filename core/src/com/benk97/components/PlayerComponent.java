@@ -12,13 +12,22 @@ import static com.benk97.components.PlayerComponent.PowerLevel.*;
 public class PlayerComponent implements Component, Pool.Poolable {
 
     public enum PowerLevel {
-        NORMAL("bullet"), DOUBLE("bullet2"), TRIPLE("bullet3"), TRIPLE_FAST("bullet4"), TRIPLE_VERY_FAST("bullet5");
+        NORMAL("bullet"), DOUBLE("bullet2"), TRIPLE("bullet3"), TRIPLE_SIDE("bullet3", "bulletLeft1", "bulletRight1"),
+        TRIPLE_FAST("bullet4", "bulletLeft2", "bulletRight2"), TRIPLE_VERY_FAST("bullet5", "bulletLeft3", "bulletRight3");
 
         public String regionName;
+        public String leftRegionName;
+        public String rightRegionName;
 
         PowerLevel(String regionName) {
             this.regionName = regionName;
         }
+        PowerLevel(String regionName, String left, String right) {
+            this.regionName = regionName;
+            this.leftRegionName = left;
+            this.rightRegionName = right;
+        }
+
     }
 
     public long fireDelay = FIRE_DELAY;
@@ -102,6 +111,9 @@ public class PlayerComponent implements Component, Pool.Poolable {
                 powerLevel = TRIPLE;
                 break;
             case TRIPLE:
+                powerLevel = TRIPLE_SIDE;
+                break;
+            case TRIPLE_SIDE:
                 fireDelay = FIRE_DELAY_FAST;
                 powerLevel = TRIPLE_FAST;
                 break;

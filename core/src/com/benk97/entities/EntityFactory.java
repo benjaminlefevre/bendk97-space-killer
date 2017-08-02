@@ -120,6 +120,61 @@ public class EntityFactory implements Disposable {
         positionComponent.x = playerPosition.x + Mappers.sprite.get(player).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
         positionComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
         velocityComponent.y = PLAYER_BULLET_VELOCITY;
+        if (playerComponent.powerLevel.compareTo(PlayerComponent.PowerLevel.TRIPLE_SIDE) >= 0) {
+            createPlayerLeftFire(player);
+            createPlayerRightFire(player);
+        }
+        return bullet;
+    }
+
+    private Entity createPlayerLeftFire(Entity player) {
+        Entity bullet = engine.createEntity();
+        bullet.add(engine.createComponent(PlayerBulletComponent.class));
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
+        bullet.add(positionComponent);
+        VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
+        bullet.add(velocityComponent);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        PlayerComponent playerComponent = Mappers.player.get(player);
+        spriteComponent.sprite = new Sprite(atlasMask.findRegion(playerComponent.powerLevel.leftRegionName));
+        bullet.add(spriteComponent);
+        bullet.add(engine.createComponent(RemovableComponent.class));
+        engine.addEntity(bullet);
+        PositionComponent playerPosition = position.get(player);
+        positionComponent.x = playerPosition.x - spriteComponent.sprite.getWidth();
+        positionComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
+        Vector2 direction = new Vector2(0, 1);
+        direction.rotate(35f);
+        direction.nor();
+        direction.scl(PLAYER_BULLET_VELOCITY * 1.5f);
+        velocityComponent.y = direction.y;
+        velocityComponent.x = direction.x;
+        return bullet;
+    }
+
+
+    private Entity createPlayerRightFire(Entity player) {
+        Entity bullet = engine.createEntity();
+        bullet.add(engine.createComponent(PlayerBulletComponent.class));
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
+        bullet.add(positionComponent);
+        VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
+        bullet.add(velocityComponent);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        PlayerComponent playerComponent = Mappers.player.get(player);
+        spriteComponent.sprite = new Sprite(atlasMask.findRegion(playerComponent.powerLevel.rightRegionName));
+        bullet.add(spriteComponent);
+        bullet.add(engine.createComponent(RemovableComponent.class));
+        engine.addEntity(bullet);
+        PositionComponent playerPosition = position.get(player);
+        positionComponent.x = playerPosition.x + sprite.get(player).sprite.getWidth();
+        positionComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
+        Vector2 direction = new Vector2(0, 1);
+        direction.rotate(-35f);
+        direction.nor();
+        direction.scl(PLAYER_BULLET_VELOCITY * 1.5f);
+        velocityComponent.y = direction.y;
+        velocityComponent.x = direction.x;
         return bullet;
     }
 

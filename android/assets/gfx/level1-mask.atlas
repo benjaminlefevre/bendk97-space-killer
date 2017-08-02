@@ -52,77 +52,77 @@ asteroid
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 0
+  index: 8
 asteroid
   rotate: false
   xy: 941, 133
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 1
+  index: 0
 asteroid
   rotate: false
   xy: 903, 98
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 2
+  index: 1
 asteroid
   rotate: false
   xy: 975, 133
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 12
+  index: 2
 asteroid
   rotate: false
   xy: 493, 38
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 5
+  index: 12
 asteroid
   rotate: false
   xy: 527, 38
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 6
+  index: 5
 asteroid
   rotate: false
   xy: 514, 4
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 7
+  index: 9
 asteroid
   rotate: false
   xy: 561, 43
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 8
+  index: 17
 asteroid
   rotate: false
   xy: 595, 43
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 9
+  index: 7
 asteroid
   rotate: false
   xy: 629, 48
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 17
+  index: 3
 asteroid
   rotate: false
   xy: 663, 48
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 3
+  index: 6
 asteroid
   rotate: false
   xy: 548, 4
@@ -171,108 +171,108 @@ asteroid2
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 14
+  index: 13
 asteroid2
   rotate: false
   xy: 547, 77
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 1
+  index: 14
 asteroid2
   rotate: false
   xy: 882, 166
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 2
+  index: 0
 asteroid2
   rotate: false
   xy: 920, 167
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 18
+  index: 1
 asteroid2
   rotate: false
   xy: 958, 167
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 6
+  index: 17
 asteroid2
   rotate: false
   xy: 585, 77
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 7
+  index: 6
 asteroid2
   rotate: false
   xy: 599, 120
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 8
+  index: 7
 asteroid2
   rotate: false
   xy: 637, 120
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 9
+  index: 8
 asteroid2
   rotate: false
   xy: 623, 82
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 4
+  index: 2
 asteroid2
   rotate: false
   xy: 675, 120
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 3
+  index: 15
 asteroid2
   rotate: false
   xy: 661, 82
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 17
+  index: 9
 asteroid2
   rotate: false
   xy: 713, 128
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 5
+  index: 4
 asteroid2
   rotate: false
   xy: 751, 128
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 13
+  index: 18
 asteroid2
   rotate: false
   xy: 789, 128
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 15
+  index: 3
 asteroid2
   rotate: false
   xy: 827, 128
   size: 36, 36
   orig: 36, 36
   offset: 0, 0
-  index: 0
+  index: 5
 bombUp
   rotate: false
-  xy: 616, 25
+  xy: 1000, 216
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -300,30 +300,72 @@ bullet2
   index: -1
 bullet3
   rotate: false
-  xy: 396, 2
+  xy: 450, 2
   size: 25, 31
   orig: 25, 31
   offset: 0, 0
   index: -1
 bullet4
   rotate: false
-  xy: 423, 2
+  xy: 396, 2
   size: 25, 31
   orig: 25, 31
   offset: 0, 0
   index: -1
 bullet5
   rotate: false
-  xy: 450, 2
+  xy: 423, 2
   size: 25, 31
   orig: 25, 31
   offset: 0, 0
   index: -1
 bulletEnnemy
   rotate: false
-  xy: 652, 32
+  xy: 616, 7
   size: 14, 14
   orig: 14, 14
+  offset: 0, 0
+  index: -1
+bulletLeft1
+  rotate: false
+  xy: 1009, 160
+  size: 13, 17
+  orig: 13, 17
+  offset: 0, 0
+  index: -1
+bulletLeft2
+  rotate: false
+  xy: 1009, 141
+  size: 13, 17
+  orig: 13, 17
+  offset: 0, 0
+  index: -1
+bulletLeft3
+  rotate: false
+  xy: 616, 23
+  size: 13, 18
+  orig: 13, 18
+  offset: 0, 0
+  index: -1
+bulletRight1
+  rotate: false
+  xy: 996, 179
+  size: 13, 17
+  orig: 13, 17
+  offset: 0, 0
+  index: -1
+bulletRight2
+  rotate: false
+  xy: 1009, 123
+  size: 13, 16
+  orig: 13, 16
+  offset: 0, 0
+  index: -1
+bulletRight3
+  rotate: false
+  xy: 685, 29
+  size: 13, 17
+  orig: 13, 17
   offset: 0, 0
   index: -1
 enemy
@@ -339,35 +381,35 @@ enemy
   size: 50, 41
   orig: 50, 41
   offset: 0, 0
-  index: 0
+  index: 4
 enemy
   rotate: false
   xy: 409, 67
   size: 50, 41
   orig: 50, 41
   offset: 0, 0
+  index: 0
+enemy
+  rotate: false
+  xy: 461, 118
+  size: 50, 41
+  orig: 50, 41
+  offset: 0, 0
   index: 1
-enemy
-  rotate: false
-  xy: 461, 118
-  size: 50, 41
-  orig: 50, 41
-  offset: 0, 0
-  index: 2
-enemy
-  rotate: false
-  xy: 461, 118
-  size: 50, 41
-  orig: 50, 41
-  offset: 0, 0
-  index: 7
 enemy
   rotate: false
   xy: 520, 161
   size: 50, 41
   orig: 50, 41
   offset: 0, 0
-  index: 4
+  index: 2
+enemy
+  rotate: false
+  xy: 520, 161
+  size: 50, 41
+  orig: 50, 41
+  offset: 0, 0
+  index: 7
 enemy
   rotate: false
   xy: 461, 75
@@ -395,14 +437,14 @@ enemy2
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 4
+  index: 1
 enemy2
   rotate: false
   xy: 688, 204
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
-  index: 1
+  index: 4
 enemy2
   rotate: false
   xy: 740, 204
@@ -437,14 +479,14 @@ enemy3
   size: 50, 49
   orig: 50, 49
   offset: 0, 0
-  index: 1
+  index: 0
 enemy3
   rotate: false
   xy: 409, 110
   size: 50, 49
   orig: 50, 49
   offset: 0, 0
-  index: 0
+  index: 1
 enemy4
   rotate: false
   xy: 477, 6
@@ -479,7 +521,7 @@ enemy5
   size: 53, 50
   orig: 53, 50
   offset: 0, 0
-  index: 1
+  index: 3
 enemy5
   rotate: false
   xy: 354, 38
@@ -500,7 +542,7 @@ enemy5
   size: 53, 50
   orig: 53, 50
   offset: 0, 0
-  index: 3
+  index: 1
 player
   rotate: false
   xy: 513, 72
@@ -514,7 +556,7 @@ player
   size: 32, 44
   orig: 32, 44
   offset: 0, 0
-  index: 1
+  index: 3
 player
   rotate: false
   xy: 624, 158
@@ -528,17 +570,17 @@ player
   size: 32, 44
   orig: 32, 44
   offset: 0, 0
-  index: 3
+  index: 1
 power-up
   rotate: false
-  xy: 1000, 216
+  xy: 631, 30
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 power-up
   rotate: false
-  xy: 634, 12
+  xy: 1000, 198
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -552,14 +594,14 @@ shield
   index: -1
 shieldup
   rotate: false
-  xy: 616, 7
+  xy: 649, 30
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 shieldup
   rotate: false
-  xy: 634, 30
+  xy: 667, 30
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
