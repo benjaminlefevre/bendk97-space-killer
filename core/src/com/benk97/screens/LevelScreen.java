@@ -94,7 +94,6 @@ public abstract class LevelScreen extends ScreenAdapter {
     public void continueWithExtraLife() {
         final PlayerComponent playerComponent = Mappers.player.get(player);
         player.remove(GameOverComponent.class);
-        resumeGame();
         ((LevelScreen) game.currentScreen).startLevel(playerComponent.secondScript);
         playerComponent.lives++;
         playerComponent.rewardAds--;
@@ -142,6 +141,7 @@ public abstract class LevelScreen extends ScreenAdapter {
     private Level level;
 
     public LevelScreen(Assets assets, SpaceKillerGame game, Level level) {
+        Timer.instance().start();
         this.level = level;
         this.game = game;
         this.fxLightEnabled = Settings.isLightFXEnabled();
@@ -176,7 +176,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         }
         entityFactory = new EntityFactory(game, engine, assets, tweenManager, rayHandler, level);
         squadronFactory = new SquadronFactory(tweenManager, entityFactory, engine);
-        player = entityFactory.createEntityPlayer();
+        player = entityFactory.createEntityPlayer(level);
         Array<Entity> lives = entityFactory.createEntityPlayerLives(player);
         Array<Entity> bombs = entityFactory.createEntityPlayerBombs(player);
         createSystems(player, lives, bombs, batcher);

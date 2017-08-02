@@ -12,7 +12,13 @@ import static com.benk97.components.PlayerComponent.PowerLevel.*;
 public class PlayerComponent implements Component, Pool.Poolable {
 
     public enum PowerLevel {
-        NORMAL, DOUBLE, TRIPLE
+        NORMAL("bullet"), DOUBLE("bullet2"), TRIPLE("bullet3"), TRIPLE_FAST("bullet4"), TRIPLE_VERY_FAST("bullet5");
+
+        public String regionName;
+
+        PowerLevel(String regionName) {
+            this.regionName = regionName;
+        }
     }
 
     public long fireDelay = FIRE_DELAY;
@@ -28,7 +34,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
     public LevelScreen.Level level = LevelScreen.Level.Level1;
     public float secondScript = -3;
 
-    public PlayerData copyPlayerData(){
+    public PlayerData copyPlayerData() {
         return new PlayerData(level, secondScript, rewardAds, fireDelay, enemiesKilled, laserShipKilled, howManyLifesLosed, score, highscore, lives, bombs, powerLevel);
     }
 
@@ -88,14 +94,21 @@ public class PlayerComponent implements Component, Pool.Poolable {
     }
 
     public void powerUp() {
-        if (powerLevel.equals(NORMAL)) {
-            powerLevel = DOUBLE;
-        } else if (powerLevel.equals(DOUBLE)) {
-            powerLevel = TRIPLE;
-        } else if (fireDelay == FIRE_DELAY) {
-            fireDelay = FIRE_DELAY_FAST;
-        } else if (fireDelay == FIRE_DELAY_FAST) {
-            fireDelay = FIRE_DELAY_VERY_FAST;
+        switch (powerLevel) {
+            case NORMAL:
+                powerLevel = DOUBLE;
+                break;
+            case DOUBLE:
+                powerLevel = TRIPLE;
+                break;
+            case TRIPLE:
+                fireDelay = FIRE_DELAY_FAST;
+                powerLevel = TRIPLE_FAST;
+                break;
+            case TRIPLE_FAST:
+                fireDelay = FIRE_DELAY_VERY_FAST;
+                powerLevel = TRIPLE_VERY_FAST;
+                break;
         }
     }
 

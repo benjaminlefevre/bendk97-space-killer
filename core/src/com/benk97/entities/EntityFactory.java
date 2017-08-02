@@ -1,4 +1,4 @@
-    package com.benk97.entities;
+package com.benk97.entities;
 
 import aurelienribon.tweenengine.*;
 import aurelienribon.tweenengine.equations.Linear;
@@ -32,8 +32,7 @@ import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
 import static com.benk97.components.Mappers.position;
 import static com.benk97.components.Mappers.sprite;
-import static com.benk97.components.PlayerComponent.PowerLevel.DOUBLE;
-import static com.benk97.components.PlayerComponent.PowerLevel.NORMAL;
+import static com.benk97.screens.LevelScreen.Level.Level1;
 import static com.benk97.screens.LevelScreen.Level.Level2;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_XY;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_Y;
@@ -113,8 +112,7 @@ public class EntityFactory implements Disposable {
         bullet.add(velocityComponent);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         PlayerComponent playerComponent = Mappers.player.get(player);
-        spriteComponent.sprite = new Sprite(playerComponent.powerLevel.equals(NORMAL) ? atlasMask.findRegion("bullet")
-                : playerComponent.powerLevel.equals(DOUBLE) ? atlasMask.findRegion("bullet2") : atlasMask.findRegion("bullet3"));
+        spriteComponent.sprite = new Sprite(atlasMask.findRegion(playerComponent.powerLevel.regionName));
         bullet.add(spriteComponent);
         bullet.add(engine.createComponent(RemovableComponent.class));
         engine.addEntity(bullet);
@@ -216,25 +214,25 @@ public class EntityFactory implements Disposable {
     }
 
     public final static int ENEMY_FIRE_CIRCLE = 1;
-    public final static int ENEMY_FIRE_CONE = 2;
+    public final static int ENEMY_FIRE_LASER = 2;
 
     public Entity createEnemyFire(Entity enemy, Entity player) {
         switch (Mappers.enemy.get(enemy).attackType) {
             case ENEMY_FIRE_CIRCLE:
                 return createEnemyFireCircle(enemy, player);
-            case ENEMY_FIRE_CONE:
-                return createEnemyFireCone(enemy);
+            case ENEMY_FIRE_LASER:
+                return createEnemyFireLaser(enemy);
         }
         return null;
     }
 
-    private Entity createEnemyFireCone(Entity enemy) {
+    private Entity createEnemyFireLaser(Entity enemy) {
         PositionComponent position = Mappers.position.get(enemy);
         Sprite sprite = Mappers.sprite.get(enemy).sprite;
-        return createEnemyFireCone(enemy, position.x + sprite.getWidth() / 2f, position.y, Mappers.enemy.get(enemy).bulletVelocity);
+        return createEnemyFireLaser(position.x + sprite.getWidth() / 2f, position.y, Mappers.enemy.get(enemy).bulletVelocity);
     }
 
-    private Entity createEnemyFireCone(Entity enemy, float posX, float posY, float velocity) {
+    private Entity createEnemyFireLaser(float posX, float posY, float velocity) {
         assets.playSound(SOUND_FIRE_ENEMY);
         Entity bullet = engine.createEntity();
         bullet.add(engine.createComponent(EnemyBulletComponent.class));
@@ -272,9 +270,14 @@ public class EntityFactory implements Disposable {
         engine.addEntity(bullet);
         PositionComponent playerPosition = position.get(player);
         PositionComponent enemyPosition = position.get(enemy);
-        positionComponent.x = enemyPosition.x + Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
-        positionComponent.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight();
-
+        EnemyComponent enemyComponent = Mappers.enemy.get(enemy);
+        if (enemyComponent.isBoss) {
+            positionComponent.x = enemyPosition.x + Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
+            positionComponent.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight() * 3f / 4f;
+        } else {
+            positionComponent.x = enemyPosition.x + Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
+            positionComponent.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight();
+        }
         Vector2 directionBullet = new Vector2(playerPosition.x - positionComponent.x, playerPosition.y - positionComponent.y);
         directionBullet.nor();
         directionBullet.rotate(-10 + random.nextFloat() * 20f);
@@ -295,16 +298,22 @@ public class EntityFactory implements Disposable {
                     }
                 }, 0f + 0.2f * i);
             }
-        } else {
+        } else if (type == 1 || Mappers.player.get(player).level.equals(Level1)
+                || Mappers.position.get(boss).x < 0 || Mappers.position.get(boss).x > SCREEN_WIDTH * 3f / 4f) {
             createBossFireCircle(boss);
+        } else {
+            PositionComponent position = Mappers.position.get(boss);
+            BossComponent bossComponent = Mappers.boss.get(boss);
+            createEnemyFireLaser(position.x + 160f, position.y + 170f, bossComponent.velocityFire2);
+            createEnemyFireLaser(position.x + 195f, position.y + 170f, bossComponent.velocityFire2);
         }
     }
 
     public void createBossFire2(Entity boss) {
         PositionComponent position = Mappers.position.get(boss);
         BossComponent bossComponent = Mappers.boss.get(boss);
-        createEnemyFireCone(boss, position.x + 12f, position.y + 186f, bossComponent.velocityFire2);
-        createEnemyFireCone(boss, position.x + 342f, position.y + 186f, bossComponent.velocityFire2);
+        createEnemyFireLaser(position.x + 12f, position.y + 186f, bossComponent.velocityFire2);
+        createEnemyFireLaser(position.x + 342f, position.y + 186f, bossComponent.velocityFire2);
     }
 
     public Array<Entity> createBossFireCircle(Entity boss) {
@@ -329,7 +338,7 @@ public class EntityFactory implements Disposable {
 
             PositionComponent enemyPosition = position.get(boss);
             positionComponent.x = enemyPosition.x + Mappers.sprite.get(boss).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
-            positionComponent.y = enemyPosition.y;
+            positionComponent.y = enemyPosition.y + Mappers.sprite.get(boss).sprite.getHeight() / 4f;
 
             bullets.add(bullet);
             engine.addEntity(bullet);
@@ -445,7 +454,7 @@ public class EntityFactory implements Disposable {
         return bombUp;
     }
 
-    public Entity createStaticEnemy(int type, Float velocity, float bulletVelocity, int rateShoot, int gaugelife, int points, boolean fromLeft) {
+    public Entity createLaserShip(int type, Float velocity, float bulletVelocity, int rateShoot, int gaugelife, int points, boolean fromLeft) {
         Entity enemy = engine.createEntity();
         engine.addEntity(enemy);
         PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
@@ -471,7 +480,7 @@ public class EntityFactory implements Disposable {
         enemyComponent.bulletVelocity = bulletVelocity;
         enemyComponent.attackCapacity = Integer.MAX_VALUE;
         enemyComponent.probabilityAttack = rateShoot;
-        enemyComponent.attackType = ENEMY_FIRE_CONE;
+        enemyComponent.attackType = ENEMY_FIRE_LASER;
         enemyComponent.isLaserShip = true;
         enemy.add(enemyComponent);
         return enemy;
@@ -645,11 +654,11 @@ public class EntityFactory implements Disposable {
     }
 
 
-    public Entity createEntityPlayer() {
+    public Entity createEntityPlayer(Level level) {
         Entity player = engine.createEntity();
         PlayerComponent playerComponent = engine.createComponent(PlayerComponent.class);
         playerComponent.setHighScore(Settings.getHighscore());
-        if(game.playerData!=null){
+        if (game.playerData != null) {
             playerComponent.bombs = game.playerData.bombs;
             playerComponent.howManyLifesLosed = game.playerData.howManyLifesLosed;
             playerComponent.enemiesKilled = game.playerData.enemiesKilled;
@@ -660,6 +669,8 @@ public class EntityFactory implements Disposable {
             playerComponent.powerLevel = game.playerData.powerLevel;
             playerComponent.rewardAds = game.playerData.rewardAds;
             playerComponent.level = game.playerData.level;
+        } else {
+            playerComponent.level = level;
         }
         player.add(playerComponent);
         player.add(engine.createComponent(PositionComponent.class));

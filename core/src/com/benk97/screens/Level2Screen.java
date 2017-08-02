@@ -76,7 +76,7 @@ public class Level2Screen extends LevelScreen {
         scriptItemsMediumRight = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromRight(20));
         scriptItemsHardLeft = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromLeft(20));
         scriptItemsHardRight = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromRight(20));
-        boss = new ScriptItem(BOSS_LEVEL_2, BOSS_LEVEL2_MOVE, 200f, 1, false, true, 15000,
+        boss = new ScriptItem(BOSS_LEVEL_2, BOSS_LEVEL2_MOVE, 100f, 1, false, true, 15000,
                 ENEMY_BULLET_EASY_VELOCITY);
     }
 
@@ -191,7 +191,7 @@ public class Level2Screen extends LevelScreen {
             }
         } else if (second >= 255) {
             switch (second) {
-                case 225:
+                case 255:
                     assets.playSound(SOUND_BOSS_ALERT);
                     for (Entity background : backgrounds) {
                         Tween.to(Mappers.velocity.get(background), VELOCITY_Y, 4).ease(Quad.IN)
