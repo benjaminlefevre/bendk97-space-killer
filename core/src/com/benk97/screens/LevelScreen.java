@@ -142,6 +142,7 @@ public abstract class LevelScreen extends ScreenAdapter {
     private Level level;
 
     public LevelScreen(Assets assets, SpaceKillerGame game, Level level) {
+        PausableTimer.instance().stop();
         PausableTimer.instance().start();
         this.level = level;
         this.game = game;
@@ -193,7 +194,7 @@ public abstract class LevelScreen extends ScreenAdapter {
     protected void createSystems(Entity player, Array<Entity> lives, Array<Entity> bombs, SpriteBatch batcher) {
         PlayerListenerImpl playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, tweenManager, this);
         engine.addSystem(playerListener);
-        engine.addSystem(createInputHandlerSystem(player, bombs, playerListener));
+        engine.addSystem(createInputHandlerSystem(player, playerListener));
         CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, assets, entityFactory, playerListener, this);
         engine.addSystem(collisionListener);
         engine.addSystem(new AnimationSystem(0));
@@ -220,7 +221,7 @@ public abstract class LevelScreen extends ScreenAdapter {
     }
 
 
-    private InputListenerImpl createInputHandlerSystem(Entity player, Array<Entity> bombs, PlayerListener playerListener) {
+    private InputListenerImpl createInputHandlerSystem(Entity player, PlayerListener playerListener) {
         // input
         inputProcessor = new InputMultiplexer();
         inputProcessor.addProcessor(new GestureDetector(new GestureHandler(this, camera)));

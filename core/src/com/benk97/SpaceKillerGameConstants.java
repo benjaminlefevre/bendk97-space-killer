@@ -2,10 +2,11 @@ package com.benk97;
 
 public class SpaceKillerGameConstants {
     // general settings
-    public final static String GAME_VERSION = "v0.8.17";
+    public final static String GAME_VERSION = "v0.8.18";
     public final static float SCREEN_WIDTH = 400;
     public final static float SCREEN_HEIGHT = 700;
     public final static boolean DEBUG = false;
+    public final static boolean NO_GOOGLE = false;
     public final static boolean SKIP_SPLASH = false;
     public final static boolean AD_TEST = false;
     // player

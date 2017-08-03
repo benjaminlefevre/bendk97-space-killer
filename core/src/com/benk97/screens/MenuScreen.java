@@ -58,7 +58,7 @@ public class MenuScreen extends HDScreen {
 
     public MenuScreen(final Assets assets, final SpaceKillerGame game) {
         super(game, assets);
-        if (!DEBUG && !game.signInFailed && !game.playServices.isSignedIn()) {
+        if (!NO_GOOGLE && !game.signInFailed && !game.playServices.isSignedIn()) {
             game.playServices.signIn();
         }
         batcher = new SpriteBatch();
