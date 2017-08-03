@@ -31,6 +31,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
     }
 
     public long fireDelay = FIRE_DELAY;
+    public long fireDelaySide = FIRE_DELAY_SIDE;
     public int enemiesKilled = 0;
     public int laserShipKilled = 0;
     public int howManyLifesLosed = 0;
@@ -44,7 +45,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
     public float secondScript = -3;
 
     public PlayerData copyPlayerData() {
-        return new PlayerData(level, secondScript, rewardAds, fireDelay, enemiesKilled, laserShipKilled, howManyLifesLosed, score, highscore, lives, bombs, powerLevel);
+        return new PlayerData(level, secondScript, rewardAds, fireDelay, fireDelaySide, enemiesKilled, laserShipKilled, howManyLifesLosed, score, highscore, lives, bombs, powerLevel);
     }
 
     @Override
@@ -60,6 +61,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
         bombs = BOMBS;
         powerLevel = NORMAL;
         fireDelay = FIRE_DELAY;
+        fireDelaySide = FIRE_DELAY_SIDE;
     }
 
     public String getScore() {
@@ -115,10 +117,12 @@ public class PlayerComponent implements Component, Pool.Poolable {
                 break;
             case TRIPLE_SIDE:
                 fireDelay = FIRE_DELAY_FAST;
+                fireDelaySide = FIRE_DELAY_SIDE_FAST;
                 powerLevel = TRIPLE_FAST;
                 break;
             case TRIPLE_FAST:
                 fireDelay = FIRE_DELAY_VERY_FAST;
+                fireDelaySide = FIRE_DELAY_SIDE_VERY_FAST;
                 powerLevel = TRIPLE_VERY_FAST;
                 break;
         }

@@ -55,6 +55,8 @@ import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
 import static com.benk97.entities.SquadronFactory.*;
 import static com.benk97.google.Achievement.*;
+import static com.benk97.screens.LevelScreen.Level.Level1;
+import static com.benk97.screens.LevelScreen.Level.Level2;
 import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
 
 public abstract class LevelScreen extends ScreenAdapter {
@@ -67,14 +69,14 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     public void nextLevel() {
         PlayerComponent playerComponent = Mappers.player.get(player);
-        playerComponent.level = Level.Level2;
-        PlayerData playerData = playerComponent.copyPlayerData();
         FrameBuffer screenshot = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
         screenshot.begin();
         this.render(Gdx.graphics.getDeltaTime());
         screenshot.end();
+        playerComponent.level = playerComponent.level.equals(Level1) ? Level2 : Level1;
+        PlayerData playerData = playerComponent.copyPlayerData();
         this.dispose();
-        if (level.equals(Level.Level1)) {
+        if (level.equals(Level1)) {
             game.playServices.unlockAchievement(Achievement.KILL_BOSS);
             game.goToScreen(Level2Screen.class, playerData, screenshot);
         } else {

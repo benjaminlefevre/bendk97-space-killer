@@ -120,11 +120,12 @@ public class EntityFactory implements Disposable {
         positionComponent.x = playerPosition.x + Mappers.sprite.get(player).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
         positionComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
         velocityComponent.y = PLAYER_BULLET_VELOCITY;
-        if (playerComponent.powerLevel.compareTo(PlayerComponent.PowerLevel.TRIPLE_SIDE) >= 0) {
-            createPlayerLeftFire(player);
-            createPlayerRightFire(player);
-        }
         return bullet;
+    }
+
+    public void createPlayerFireSide(Entity player){
+        createPlayerLeftFire(player);
+        createPlayerRightFire(player);
     }
 
     private Entity createPlayerLeftFire(Entity player) {
@@ -719,6 +720,7 @@ public class EntityFactory implements Disposable {
             playerComponent.enemiesKilled = game.playerData.enemiesKilled;
             playerComponent.laserShipKilled = game.playerData.laserShipKilled;
             playerComponent.fireDelay = game.playerData.fireDelay;
+            playerComponent.fireDelaySide = game.playerData.fireDelaySide;
             playerComponent.updateScore(game.playerData.score);
             playerComponent.lives = game.playerData.lives;
             playerComponent.powerLevel = game.playerData.powerLevel;

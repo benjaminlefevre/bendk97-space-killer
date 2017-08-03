@@ -39,6 +39,7 @@ public class InputListenerImpl extends EntitySystem implements InputListener {
     }
 
     private long lastShoot = 0;
+    private long lastShootSide = 0;
 
     private float autofireTrigger = 0;
     private final float autofireDelay = 1 / 10f;
@@ -58,10 +59,16 @@ public class InputListenerImpl extends EntitySystem implements InputListener {
     @Override
     public void fire() {
         if (playerFamily.matches(player)) {
-            if (TimeUtils.timeSinceMillis(lastShoot) > Mappers.player.get(player).fireDelay) {
+            PlayerComponent playerComponent = Mappers.player.get(player);
+            if (TimeUtils.timeSinceMillis(lastShoot) > playerComponent.fireDelay) {
                 assets.playSound(SOUND_FIRE, 0.2f);
                 entityFactory.createPlayerFire(player);
                 lastShoot = TimeUtils.millis();
+            }
+            if (playerComponent.powerLevel.compareTo(PlayerComponent.PowerLevel.TRIPLE_SIDE) >= 0
+                    && TimeUtils.timeSinceMillis(lastShootSide) > Mappers.player.get(player).fireDelaySide) {
+                entityFactory.createPlayerFireSide(player);
+                lastShootSide = TimeUtils.millis();
             }
         }
     }

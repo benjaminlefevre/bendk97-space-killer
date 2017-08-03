@@ -2,7 +2,7 @@ package com.benk97;
 
 public class SpaceKillerGameConstants {
     // general settings
-    public final static String GAME_VERSION = "v0.8.13";
+    public final static String GAME_VERSION = "v0.8.16";
     public final static float SCREEN_WIDTH = 400;
     public final static float SCREEN_HEIGHT = 700;
     public final static boolean DEBUG = false;
@@ -19,6 +19,9 @@ public class SpaceKillerGameConstants {
     public final static long FIRE_DELAY = 150;
     public final static long FIRE_DELAY_FAST = 100;
     public final static long FIRE_DELAY_VERY_FAST = 50;
+    public final static long FIRE_DELAY_SIDE = 600;
+    public final static long FIRE_DELAY_SIDE_FAST = 400;
+    public final static long FIRE_DELAY_SIDE_VERY_FAST = 200;
     public final static float PLAYER_VELOCITY = 300.0f;
     public final static float PLAYER_BULLET_VELOCITY = 400.0f;
 

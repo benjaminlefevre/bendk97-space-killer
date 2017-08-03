@@ -9,6 +9,7 @@ import static com.benk97.components.PlayerComponent.PowerLevel.NORMAL;
 /* use to pass player data between screens*/
 public class PlayerData {
     public long fireDelay = FIRE_DELAY;
+    public long fireDelaySide = FIRE_DELAY_SIDE;
     public int enemiesKilled = 0;
     public int laserShipKilled = 0;
     public int howManyLifesLosed = 0;
@@ -21,8 +22,11 @@ public class PlayerData {
     public LevelScreen.Level level;
     public float secondScript;
 
-    public PlayerData(LevelScreen.Level level, float secondScript, int rewardAds, long fireDelay, int enemiesKilled, int laserShipKilled, int howManyLifesLosed, int score, int highscore, int lives, int bombs, PlayerComponent.PowerLevel powerLevel) {
+    public PlayerData(LevelScreen.Level level, float secondScript, int rewardAds, long fireDelay, long fireDelaySide,
+                      int enemiesKilled, int laserShipKilled, int howManyLifesLosed, int score, int highscore,
+                      int lives, int bombs, PlayerComponent.PowerLevel powerLevel) {
         this.fireDelay = fireDelay;
+        this.fireDelaySide = fireDelaySide;
         this.secondScript = secondScript;
         this.rewardAds = rewardAds;
         this.level = level;
