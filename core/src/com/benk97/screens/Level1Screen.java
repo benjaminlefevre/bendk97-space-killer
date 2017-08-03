@@ -39,7 +39,7 @@ public class Level1Screen extends LevelScreen {
         playMusic(MUSIC_LEVEL_1);
         background = entityFactory.createBackground(assets.get(GFX_BGD_LEVEL1), -BGD_VELOCITY);
         background2 = entityFactory.createBackground(assets.get(GFX_BGD_STARS), -BGD_PARALLAX_VELOCITY);
-        startLevel(-3f);
+        startLevel(-3);
     }
 
     @Override

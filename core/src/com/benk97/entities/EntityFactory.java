@@ -17,12 +17,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Timer;
 import com.benk97.Settings;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
 import com.benk97.components.*;
 import com.benk97.screens.LevelScreen.Level;
+import com.benk97.timer.PausableTimer;
 
 import java.util.Random;
 
@@ -239,7 +239,7 @@ public class EntityFactory implements Disposable {
                     }
                 })
                 .start(tweenManager);
-        Timer.schedule(new Timer.Task() {
+        PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
                 if (rayHandler != null) {
@@ -347,7 +347,7 @@ public class EntityFactory implements Disposable {
         int type = random.nextInt(3);
         if (type == 0) {
             for (int i = 0; i < 10; ++i) {
-                Timer.schedule(new Timer.Task() {
+                PausableTimer.schedule(new PausableTimer.Task() {
                     @Override
                     public void run() {
                         createEnemyFire(boss, player);
@@ -635,7 +635,7 @@ public class EntityFactory implements Disposable {
         component.sprite = atlasMask.createSprite("boss-level1");
         enemy.add(component);
         engine.addEntity(enemy);
-        Timer.schedule(new Timer.Task() {
+        PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
                 Mappers.boss.get(enemy).pleaseFire1 = true;
@@ -667,13 +667,13 @@ public class EntityFactory implements Disposable {
         component.sprite = atlasMaskLevel2.createSprite("boss");
         enemy.add(component);
         engine.addEntity(enemy);
-        Timer.schedule(new Timer.Task() {
+        PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
                 Mappers.boss.get(enemy).pleaseFire1 = true;
             }
         }, 5f);
-        Timer.schedule(new Timer.Task() {
+        PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
                 Mappers.boss.get(enemy).pleaseFire2 = true;
@@ -853,7 +853,7 @@ public class EntityFactory implements Disposable {
         final SpriteComponent sprite = Mappers.sprite.get(enemy);
         for (int i = 0; i < 25; ++i) {
             assets.playSound(SOUND_EXPLOSION);
-            Timer.schedule(new Timer.Task() {
+            PausableTimer.schedule(new PausableTimer.Task() {
                 @Override
                 public void run() {
                     PositionComponent position = Mappers.position.get(enemy);

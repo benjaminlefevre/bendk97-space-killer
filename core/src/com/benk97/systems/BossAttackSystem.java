@@ -5,12 +5,12 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.RandomXS128;
-import com.badlogic.gdx.utils.Timer;
 import com.benk97.components.BossComponent;
 import com.benk97.components.Mappers;
 import com.benk97.components.PauseComponent;
 import com.benk97.components.PlayerComponent;
 import com.benk97.entities.EntityFactory;
+import com.benk97.timer.PausableTimer;
 
 import java.util.Random;
 
@@ -39,7 +39,7 @@ public class BossAttackSystem extends IteratingSystem {
             }
             entityFactory.createBossFire(entity, playerEntity.first());
             boss.pleaseFire1 = false;
-            Timer.schedule(new Timer.Task() {
+            PausableTimer.schedule(new PausableTimer.Task() {
                 @Override
                 public void run() {
                     if (!Mappers.enemy.get(entity).isDead()) {
@@ -54,7 +54,7 @@ public class BossAttackSystem extends IteratingSystem {
             }
             entityFactory.createBossFire2(entity);
             boss.pleaseFire2 = false;
-            Timer.schedule(new Timer.Task() {
+            PausableTimer.schedule(new PausableTimer.Task() {
                 @Override
                 public void run() {
                     if (!Mappers.enemy.get(entity).isDead()) {

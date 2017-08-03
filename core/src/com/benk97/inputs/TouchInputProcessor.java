@@ -27,7 +27,7 @@ public abstract class TouchInputProcessor extends InputAdapter {
     @Override
     public boolean keyDown(int keycode) {
         if(keycode == Input.Keys.BACK){
-            screen.pauseGame();
+            screen.pause();
             return true;
         }
         return false;

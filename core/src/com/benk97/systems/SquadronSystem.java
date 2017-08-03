@@ -4,11 +4,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.RandomXS128;
-import com.badlogic.gdx.utils.Timer;
 import com.benk97.components.Mappers;
 import com.benk97.components.SquadronComponent;
 import com.benk97.entities.EntityFactory;
 import com.benk97.listeners.PlayerListener;
+import com.benk97.timer.PausableTimer;
 
 import java.util.Random;
 
@@ -46,7 +46,7 @@ public class SquadronSystem extends IteratingSystem {
                 if (squadron.displayBonusSquadron) {
                     playerListener.updateScore(player, squadron.scoreBonus);
                     final Entity score = entityFactory.createScoreSquadron(entity);
-                    Timer.schedule(new Timer.Task() {
+                    PausableTimer.schedule(new PausableTimer.Task() {
                         @Override
                         public void run() {
                             getEngine().removeEntity(score);

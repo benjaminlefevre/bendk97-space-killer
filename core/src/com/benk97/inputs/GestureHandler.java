@@ -23,7 +23,7 @@ public class GestureHandler extends GestureAdapter {
         Vector3 d3 = camera.unproject(new Vector3(pointer1,0f));
         Vector3 d4 = camera.unproject(new Vector3(pointer2,0f));
         if(d1.dst(d2)>150 && d3.dst(d4)<100){
-            levelScreen.pauseGame();
+            levelScreen.pause();
             return true;
         }else {
             return false;

@@ -24,8 +24,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.benk97.Settings;
@@ -43,6 +41,7 @@ import com.benk97.listeners.impl.PlayerListenerImpl;
 import com.benk97.mask.SpriteMaskFactory;
 import com.benk97.player.PlayerData;
 import com.benk97.systems.*;
+import com.benk97.timer.PausableTimer;
 import com.benk97.tweens.PositionComponentAccessor;
 import com.benk97.tweens.SpriteComponentAccessor;
 import com.benk97.tweens.VelocityComponentAccessor;
@@ -143,7 +142,7 @@ public abstract class LevelScreen extends ScreenAdapter {
     private Level level;
 
     public LevelScreen(Assets assets, SpaceKillerGame game, Level level) {
-        Timer.instance().start();
+        PausableTimer.instance().start();
         this.level = level;
         this.game = game;
         this.fxLightEnabled = Settings.isLightFXEnabled();
@@ -298,10 +297,6 @@ public abstract class LevelScreen extends ScreenAdapter {
         music = assets.playMusic(musicDesc);
     }
 
-    public void pauseGame() {
-        pause();
-    }
-
     @Override
     public void pause() {
         if (player.getComponent(GameOverComponent.class) == null
@@ -311,13 +306,10 @@ public abstract class LevelScreen extends ScreenAdapter {
             if (music != null) {
                 music.pause();
             }
-            timerDelay = TimeUtils.nanosToMillis(TimeUtils.nanoTime());
-            Timer.instance().stop();
+            PausableTimer.pause();
             player.add(engine.createComponent(PauseComponent.class));
         }
     }
-
-    private long timerDelay;
 
     public void resumeGame() {
         state = State.RUNNING;
@@ -325,8 +317,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         if (music != null) {
             music.play();
         }
-        Timer.instance().delay(TimeUtils.nanosToMillis(TimeUtils.nanoTime()) - timerDelay);
-        Timer.instance().start();
+        PausableTimer.resume();
         player.remove(PauseComponent.class);
     }
 
@@ -337,6 +328,7 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
+        PausableTimer.instance().stop();
         batcher.dispose();
         entityFactory.dispose();
         spriteMaskFactory.clear();

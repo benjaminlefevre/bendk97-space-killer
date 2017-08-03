@@ -5,13 +5,13 @@ import aurelienribon.tweenengine.equations.Linear;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.utils.Timer;
 import com.benk97.assets.Assets;
 import com.benk97.components.*;
 import com.benk97.entities.EntityFactory;
 import com.benk97.listeners.CollisionListener;
 import com.benk97.listeners.PlayerListener;
 import com.benk97.screens.LevelScreen;
+import com.benk97.timer.PausableTimer;
 
 import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
@@ -114,11 +114,11 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
                                 if (i == TweenCallback.COMPLETE) {
                                     getEngine().removeEntity(enemy);
                                 }
-                                Timer.schedule(new Timer.Task() {
+                                PausableTimer.schedule(new PausableTimer.Task() {
                                     @Override
                                     public void run() {
                                         player.add(((PooledEngine) getEngine()).createComponent(LeveLFinishedComponent.class));
-                                        Timer.schedule(new Timer.Task() {
+                                        PausableTimer.schedule(new PausableTimer.Task() {
                                             @Override
                                             public void run() {
                                                 player.remove(LeveLFinishedComponent.class);

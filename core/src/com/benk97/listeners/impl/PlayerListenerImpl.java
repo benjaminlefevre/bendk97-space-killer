@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
 import com.benk97.Settings;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
@@ -17,6 +16,7 @@ import com.benk97.components.PlayerComponent;
 import com.benk97.entities.EntityFactory;
 import com.benk97.listeners.PlayerListener;
 import com.benk97.screens.LevelScreen;
+import com.benk97.timer.PausableTimer;
 
 import static com.benk97.SpaceKillerGameConstants.PLAYER_ORIGIN_X;
 import static com.benk97.SpaceKillerGameConstants.PLAYER_ORIGIN_Y;
@@ -70,7 +70,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
             Settings.addScore(playerComponent.getScoreInt());
             Settings.save();
             screen.submitScore(playerComponent.getScoreInt());
-            Timer.schedule(new Timer.Task() {
+            PausableTimer.schedule(new PausableTimer.Task() {
                 @Override
                 public void run() {
                     Gdx.input.setInputProcessor(screen.getGameOverInputProcessor());
