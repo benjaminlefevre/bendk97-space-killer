@@ -5,6 +5,7 @@ import aurelienribon.tweenengine.equations.Linear;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -712,6 +713,9 @@ public class EntityFactory implements Disposable {
 
     public Entity createEntityPlayer(Level level) {
         Entity player = engine.createEntity();
+        if(engine.getEntitiesFor(Family.one(PlayerComponent.class).get()).size()>0){
+            throw new IllegalArgumentException("A player entity already exists!");
+        }
         PlayerComponent playerComponent = engine.createComponent(PlayerComponent.class);
         playerComponent.setHighScore(Settings.getHighscore());
         if (game.playerData != null) {

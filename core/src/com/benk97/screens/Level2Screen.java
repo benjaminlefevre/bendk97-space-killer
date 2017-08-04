@@ -64,12 +64,6 @@ public class Level2Screen extends LevelScreen {
     }
 
     @Override
-    protected void startLevel(float time) {
-        this.time = time;
-        initSpawns();
-    }
-
-    @Override
     protected void initSpawns() {
         scriptItemsEasy = new LinkedList<ScriptItem>(randomEasySpawnEnemies(20));
         scriptItemsMediumLeft = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromLeft(20));
