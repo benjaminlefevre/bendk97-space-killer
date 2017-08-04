@@ -4,6 +4,7 @@ import aurelienribon.tweenengine.*;
 import aurelienribon.tweenengine.equations.Linear;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Bezier;
 import com.badlogic.gdx.math.CatmullRomSpline;
@@ -21,6 +22,7 @@ import java.util.Random;
 import static com.benk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.benk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 import static com.benk97.entities.EntityFactory.*;
+import static com.benk97.tweens.CameraTween.ZOOM;
 
 public class SquadronFactory {
 
@@ -41,11 +43,13 @@ public class SquadronFactory {
     private EntityFactory entityFactory;
     private Engine engine;
     private Random random = new RandomXS128();
+    private OrthographicCamera camera;
 
-    public SquadronFactory(TweenManager tweenManager, EntityFactory entityFactory, Engine engine) {
+    public SquadronFactory(TweenManager tweenManager, EntityFactory entityFactory, OrthographicCamera camera, Engine engine) {
         this.tweenManager = tweenManager;
         this.entityFactory = entityFactory;
         this.engine = engine;
+        this.camera = camera;
     }
 
     public void createSquadron(int shipType, int squadronType, float velocity, int number, boolean powerUp,
@@ -126,7 +130,7 @@ public class SquadronFactory {
         PositionComponent position = Mappers.position.get(entity);
         position.setPosition(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f,
                 SCREEN_HEIGHT + 10f);
-
+        Tween.to(camera, ZOOM, 3f).ease(Linear.INOUT).target(0.75f).repeatYoyo(1, 0.5f).start(tweenManager);
         Timeline.createSequence()
                 .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (spriteComponent.sprite.getHeight() + 30f) / velocity)
                         .ease(Linear.INOUT)
@@ -154,6 +158,7 @@ public class SquadronFactory {
         PositionComponent position = Mappers.position.get(entity);
         position.setPosition(SCREEN_WIDTH / 2f - sprite.getWidth() / 2f,
                 SCREEN_HEIGHT);
+        Tween.to(camera, ZOOM, 3f).ease(Linear.INOUT).target(0.75f).repeatYoyo(1, 0.5f).start(tweenManager);
 
         Timeline.createSequence()
                 .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (sprite.getHeight() + 30f) / velocity)
@@ -297,7 +302,7 @@ public class SquadronFactory {
         for (int i = 0; i < entities.length; ++i) {
             final Entity entity = entities[i];
             PositionComponent position = Mappers.position.get(entity);
-            position.setPosition(startPoint.x, SCREEN_HEIGHT + i * Mappers.sprite.get(entity).sprite.getHeight());
+            position.setPosition(startPoint.x, startPoint.y + i * Mappers.sprite.get(entity).sprite.getHeight());
             Timeline timeline = Timeline.createSequence();
             timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, points[0].dst(position.x, position.y) / velocity)
                     .ease(Linear.INOUT)

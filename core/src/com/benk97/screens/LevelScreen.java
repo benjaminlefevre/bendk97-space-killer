@@ -42,6 +42,7 @@ import com.benk97.mask.SpriteMaskFactory;
 import com.benk97.player.PlayerData;
 import com.benk97.systems.*;
 import com.benk97.timer.PausableTimer;
+import com.benk97.tweens.CameraTween;
 import com.benk97.tweens.PositionComponentAccessor;
 import com.benk97.tweens.SpriteComponentAccessor;
 import com.benk97.tweens.VelocityComponentAccessor;
@@ -85,11 +86,11 @@ public abstract class LevelScreen extends ScreenAdapter {
     }
 
     public InputProcessor getGameOverInputProcessor() {
-        return new GameOverTouchInputProcessor(camera, game, assets, player);
+        return new GameOverTouchInputProcessor(cameraHUD, game, assets, player);
     }
 
     public InputProcessor getPauseInputProcessor() {
-        return new PauseInputProcessor(camera, this);
+        return new PauseInputProcessor(cameraHUD, this);
     }
 
     public void continueWithExtraLife() {
@@ -125,12 +126,15 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     protected Viewport viewport;
     protected OrthographicCamera camera;
+    private SpriteBatch batcher;
+    protected Viewport viewportHUD;
+    protected OrthographicCamera cameraHUD;
+    private SpriteBatch batcherHUD;
     protected PooledEngine engine;
     protected EntityFactory entityFactory;
     protected SquadronFactory squadronFactory;
     protected TweenManager tweenManager;
     public Assets assets;
-    private SpriteBatch batcher;
     protected SpaceKillerGame game;
     protected Entity player;
     protected SpriteMaskFactory spriteMaskFactory;
@@ -152,6 +156,10 @@ public abstract class LevelScreen extends ScreenAdapter {
         viewport = new ExtendViewport(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT * 1.05f, camera);
         camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
         this.batcher = new SpriteBatch();
+        this.cameraHUD = new OrthographicCamera();
+        viewportHUD = new ExtendViewport(SCREEN_WIDTH, SCREEN_HEIGHT, cameraHUD);
+        cameraHUD.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
+        this.batcherHUD = new SpriteBatch();
         this.assets = assets;
         this.tweenManager = new TweenManager();
         engine = new PooledEngine();
@@ -177,7 +185,7 @@ public abstract class LevelScreen extends ScreenAdapter {
             rayHandler.setCombinedMatrix(camera);
         }
         entityFactory = new EntityFactory(game, engine, assets, tweenManager, rayHandler, level);
-        squadronFactory = new SquadronFactory(tweenManager, entityFactory, engine);
+        squadronFactory = new SquadronFactory(tweenManager, entityFactory, camera, engine);
         player = entityFactory.createEntityPlayer(level);
         Array<Entity> lives = entityFactory.createEntityPlayerLives(player);
         Array<Entity> bombs = entityFactory.createEntityPlayerBombs(player);
@@ -189,42 +197,49 @@ public abstract class LevelScreen extends ScreenAdapter {
         Tween.registerAccessor(SpriteComponent.class, new SpriteComponentAccessor());
         Tween.registerAccessor(PositionComponent.class, new PositionComponentAccessor());
         Tween.registerAccessor(VelocityComponent.class, new VelocityComponentAccessor());
+        Tween.registerAccessor(OrthographicCamera.class, new CameraTween());
     }
 
     protected void createSystems(Entity player, Array<Entity> lives, Array<Entity> bombs, SpriteBatch batcher) {
         PlayerListenerImpl playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, tweenManager, this);
         engine.addSystem(playerListener);
         engine.addSystem(createInputHandlerSystem(player, playerListener));
-        CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, assets, entityFactory, playerListener, this);
+        CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, camera, assets, entityFactory, playerListener, this);
         engine.addSystem(collisionListener);
         engine.addSystem(new AnimationSystem(0));
         engine.addSystem(new BombExplosionSystem(0, collisionListener, player));
         engine.addSystem(new StateSystem(1));
-        engine.addSystem(new MovementSystem(2));
-        engine.addSystem(new BackgroundRenderingSystem(batcher, 3));
-        engine.addSystem(new ShieldSystem(4, player));
-        engine.addSystem(new DynamicEntitiesRenderingSystem(batcher, 4));
-        engine.addSystem(new StaticEntitiesRenderingSystem(batcher, 6));
-        engine.addSystem(new ScoresRenderingSystem(batcher, assets, 6));
-        engine.addSystem(new GameOverRenderingSystem(batcher, camera, assets, 7));
-        engine.addSystem(new PauseRenderingSystem(batcher, camera, assets, 7));
-        engine.addSystem(new LevelFinishedRenderingSystem(batcher, assets, level, 7));
+        engine.addSystem(new MovementSystem(camera, 2));
+        engine.addSystem(new ShieldSystem(3, player));
+        // RENDERING
+        engine.addSystem(new BatcherBeginSystem(viewport, batcher, 4));
+        engine.addSystem(new BackgroundRenderingSystem(batcher, 5));
+        engine.addSystem(new DynamicEntitiesRenderingSystem(batcher, 6));
+        engine.addSystem(new ScoreSquadronSystem(6, assets, batcher));
+        engine.addSystem(new BatcherEndSystem(viewport, batcher, 7));
+        engine.addSystem(new BatcherHUDBeginSystem(viewportHUD, batcherHUD, 8));
+        engine.addSystem(new StaticEntitiesRenderingSystem(batcherHUD, 9));
+        engine.addSystem(new ScoresRenderingSystem(batcherHUD, assets, 11));
+        engine.addSystem(new GameOverRenderingSystem(batcherHUD, cameraHUD, assets, 10));
+        engine.addSystem(new PauseRenderingSystem(batcherHUD, cameraHUD, assets, 10));
+        engine.addSystem(new LevelFinishedRenderingSystem(batcherHUD, assets, level, 10));
         if (DEBUG) {
-            engine.addSystem(new FPSDisplayRenderingSystem(this, batcher, 8));
+            engine.addSystem(new FPSDisplayRenderingSystem(this, batcherHUD, 11));
         }
-        engine.addSystem(new CollisionSystem(collisionListener, spriteMaskFactory, 9));
-        engine.addSystem(new EnemyAttackSystem(10, entityFactory));
-        engine.addSystem(new BossAttackSystem(10, entityFactory));
-        engine.addSystem(new SquadronSystem(11, entityFactory, player, playerListener));
-        engine.addSystem(new ScoreSquadronSystem(12, assets, batcher));
-        engine.addSystem(new RemovableSystem(13));
+        engine.addSystem(new BatcherHUDEndSystem(viewportHUD, batcherHUD, 12));
+        // END RENDERING
+        engine.addSystem(new CollisionSystem(collisionListener, spriteMaskFactory, 13));
+        engine.addSystem(new EnemyAttackSystem(14, entityFactory));
+        engine.addSystem(new BossAttackSystem(14, entityFactory));
+        engine.addSystem(new SquadronSystem(15, entityFactory, player, playerListener));
+        engine.addSystem(new RemovableSystem(16));
     }
 
 
     private InputListenerImpl createInputHandlerSystem(Entity player, PlayerListener playerListener) {
         // input
         inputProcessor = new InputMultiplexer();
-        inputProcessor.addProcessor(new GestureDetector(new GestureHandler(this, camera)));
+        inputProcessor.addProcessor(new GestureDetector(new GestureHandler(this, cameraHUD)));
 
         InputListenerImpl inputListener = new InputListenerImpl(player, playerListener, entityFactory, assets, this, Settings.isVirtualPad());
         Entity bombButton = entityFactory.createEntityBombButton(0.2f, BOMB_X, BOMB_Y);
@@ -244,12 +259,12 @@ public abstract class LevelScreen extends ScreenAdapter {
             squareTouchesDirection[6] = new Rectangle(PAD_X + widthTouch, PAD_Y, widthTouch, heightTouch);
             squareTouchesDirection[7] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y, widthTouch, heightTouch);
 
-            inputProcessor.addProcessor(new RetroPadController(this, inputListener, camera, squareTouchesDirection, Mappers.sprite.get(fireButton).getBounds(),
+            inputProcessor.addProcessor(new RetroPadController(this, inputListener, cameraHUD, squareTouchesDirection, Mappers.sprite.get(fireButton).getBounds(),
                     Mappers.sprite.get(bombButton).getBounds()));
 
         } else {
             Mappers.sprite.get(bombButton).sprite.setY(BOMB_Y_VIRTUAL);
-            inputProcessor.addProcessor(new VirtualPadController(this, inputListener, camera, player, Mappers.sprite.get(bombButton).getBounds()));
+            inputProcessor.addProcessor(new VirtualPadController(this, inputListener, cameraHUD, player, Mappers.sprite.get(bombButton).getBounds()));
 
         }
         Gdx.input.setInputProcessor(inputProcessor);
@@ -262,10 +277,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         updateScriptLevel(deltaState);
         tweenManager.update(deltaState);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batcher.begin();
-        batcher.setProjectionMatrix(camera.combined);
         engine.update(deltaState);
-        batcher.end();
         if (fxLightEnabled) {
             rayHandler.updateAndRender();
         }
@@ -286,6 +298,7 @@ public abstract class LevelScreen extends ScreenAdapter {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
+        viewportHUD.update(width, height, true);
     }
 
     public enum State {
@@ -331,6 +344,7 @@ public abstract class LevelScreen extends ScreenAdapter {
     public void dispose() {
         PausableTimer.instance().stop();
         batcher.dispose();
+        batcherHUD.dispose();
         entityFactory.dispose();
         spriteMaskFactory.clear();
         if (fxLightEnabled) {
@@ -422,7 +436,7 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     }
 
-    protected List<ScriptItem> randomSpawnEnemies(int nbSpawns, float velocity, float bulletVelocity, int bonus, int minEnemies, int maxEnemies, boolean comingFromLeft) {
+    protected List<ScriptItem> randomSpawnEnemies(int nbSpawns, float velocity, float bulletVelocity, int bonus, int minEnemies, int maxEnemies, Boolean comingFromLeft) {
         List<ScriptItem> list = new ArrayList<ScriptItem>(nbSpawns);
         for (int i = 0; i < nbSpawns; ++i) {
             int randomMoveType = getRandomMoveType();
@@ -436,7 +450,7 @@ public abstract class LevelScreen extends ScreenAdapter {
                             false, true,
                             number * bonus,
                             bulletVelocity,
-                            getRandomMoveParams(randomMoveType, comingFromLeft)
+                            getRandomMoveParams(randomMoveType, comingFromLeft == null ? random.nextBoolean() : comingFromLeft)
                     ));
         }
         return list;
@@ -468,7 +482,7 @@ public abstract class LevelScreen extends ScreenAdapter {
                             new Vector2(0f + leftOrRight * SCREEN_WIDTH, 0f)};
                 } else {
                     return new Object[]{
-                            new Vector2(-SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + SHIP_WIDTH), SCREEN_HEIGHT / 2f),
+                            new Vector2(-10 * SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + 10 * SHIP_WIDTH), SCREEN_HEIGHT / 2f),
                             new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
                             new Vector2(SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 2 * SHIP_WIDTH), SCREEN_HEIGHT),
                             new Vector2(SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 6 * SHIP_WIDTH), SCREEN_HEIGHT / 2f)};

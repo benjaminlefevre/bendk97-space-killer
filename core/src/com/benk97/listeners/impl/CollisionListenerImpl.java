@@ -5,6 +5,8 @@ import aurelienribon.tweenengine.equations.Linear;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.benk97.assets.Assets;
 import com.benk97.components.*;
 import com.benk97.entities.EntityFactory;
@@ -15,6 +17,7 @@ import com.benk97.timer.PausableTimer;
 
 import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
+import static com.benk97.tweens.CameraTween.ZOOM;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_XY;
 import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
 
@@ -25,10 +28,11 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     private PlayerListener playerListener;
     private TweenManager tweenManager;
     private LevelScreen screen;
-
-    public CollisionListenerImpl(TweenManager tweenManager, Assets assets, EntityFactory entityFactory, PlayerListener playerListener,
+    private Camera camera;
+    public CollisionListenerImpl(TweenManager tweenManager, OrthographicCamera camera, Assets assets, EntityFactory entityFactory, PlayerListener playerListener,
                                  LevelScreen screen) {
         this.playerListener = playerListener;
+        this.camera = camera;
         this.assets = assets;
         this.entityFactory = entityFactory;
         this.tweenManager = tweenManager;
@@ -92,6 +96,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
             SpriteComponent spriteComponent = Mappers.sprite.get(enemy);
             if (Mappers.boss.get(enemy) != null) {
                 assets.playSound(SOUND_BOSS_FINISHED);
+                Tween.to(camera, ZOOM, 5f).ease(Linear.INOUT).target(0.75f).repeatYoyo(1, 0.5f).start(tweenManager);
                 entityFactory.createBossExploding(enemy);
                 entityFactory.addInvulnerableComponent(player);
                 Timeline.createSequence()

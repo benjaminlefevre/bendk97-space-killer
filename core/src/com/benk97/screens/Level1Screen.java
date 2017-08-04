@@ -119,7 +119,7 @@ public class Level1Screen extends LevelScreen {
     }
 
     private List<ScriptItem> randomEasySpawnEnemies(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_VELOCITY_EASY, ENEMY_BULLET_EASY_VELOCITY, BONUS_SQUADRON_EASY, 5, 10, random.nextBoolean());
+        return randomSpawnEnemies(nbSpawns, ENEMY_VELOCITY_EASY, ENEMY_BULLET_EASY_VELOCITY, BONUS_SQUADRON_EASY, 5, 10, null);
 
     }
 

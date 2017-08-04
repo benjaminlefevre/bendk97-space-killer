@@ -855,7 +855,7 @@ public class EntityFactory implements Disposable {
 
     public void createBossExploding(final Entity enemy) {
         final SpriteComponent sprite = Mappers.sprite.get(enemy);
-        for (int i = 0; i < 25; ++i) {
+        for (int i = 0; i < 50; ++i) {
             assets.playSound(SOUND_EXPLOSION);
             PausableTimer.schedule(new PausableTimer.Task() {
                 @Override

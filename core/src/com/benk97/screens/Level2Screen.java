@@ -75,7 +75,7 @@ public class Level2Screen extends LevelScreen {
     }
 
     private List<ScriptItem> randomEasySpawnEnemies(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_EASY, ENEMY_LEVEL2_BULLET_EASY_VELOCITY, BONUS_LEVEL2_SQUADRON_EASY, 3, 6, random.nextBoolean());
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_EASY, ENEMY_LEVEL2_BULLET_EASY_VELOCITY, BONUS_LEVEL2_SQUADRON_EASY, 3, 6, null);
 
     }
 
@@ -134,7 +134,7 @@ public class Level2Screen extends LevelScreen {
         if (second == 1) {
             soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 100);
         }
-        if(second == 5){
+        if (second == 5) {
             soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 100);
         }
 
