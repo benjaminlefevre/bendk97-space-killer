@@ -153,7 +153,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         this.fxLightEnabled = Settings.isLightFXEnabled();
         this.spriteMaskFactory = new SpriteMaskFactory();
         this.camera = new OrthographicCamera();
-        viewport = new ExtendViewport(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT * 1.05f, camera);
+        viewport = new ExtendViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
         camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
         this.batcher = new SpriteBatch();
         this.cameraHUD = new OrthographicCamera();
