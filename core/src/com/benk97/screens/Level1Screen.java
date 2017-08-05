@@ -5,6 +5,7 @@ import aurelienribon.tweenengine.equations.Quad;
 import com.badlogic.ashley.core.Entity;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
+import com.benk97.components.GameOverComponent;
 import com.benk97.components.Mappers;
 
 import java.util.LinkedList;
@@ -98,7 +99,7 @@ public class Level1Screen extends LevelScreen {
             if (second % 10 == 0) {
                 hardOther.poll().execute();
             }
-        } else if (second >= 185) {
+        } else if (second >= 185 && player.getComponent(GameOverComponent.class) == null) {
             switch (second) {
                 case 185:
                     assets.playSound(SOUND_BOSS_ALERT);

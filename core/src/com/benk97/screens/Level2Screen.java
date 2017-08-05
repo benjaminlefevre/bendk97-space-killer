@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
+import com.benk97.components.GameOverComponent;
 import com.benk97.components.Mappers;
 import com.benk97.entities.SoloEnemyFactory;
 import com.benk97.systems.FollowPlayerSystem;
@@ -183,7 +184,7 @@ public class Level2Screen extends LevelScreen {
             if (second % 10 == 0) {
                 hardOther.poll().execute();
             }
-        } else if (second >= 255) {
+        } else if (second >= 255 && player.getComponent(GameOverComponent.class) == null) {
             switch (second) {
                 case 255:
                     assets.playSound(SOUND_BOSS_ALERT);
