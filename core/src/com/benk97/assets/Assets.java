@@ -77,6 +77,10 @@ public class Assets {
     public static final AssetDescriptor<Texture> GFX_BGD_CLOUDS =
             new AssetDescriptor<Texture>("gfx/backgrounds/clouds.png", Texture.class);
 
+
+    public static final AssetDescriptor<Texture> GFX_BGD_LEVEL3 =
+            new AssetDescriptor<Texture>("gfx/backgrounds/level3.jpg", Texture.class);
+
     // GFX
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_NOMASK = new AssetDescriptor<TextureAtlas>("gfx/level1-nomask.atlas", TextureAtlas.class);
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level1-mask.atlas", TextureAtlas.class);
@@ -109,6 +113,8 @@ public class Assets {
             new AssetDescriptor<Music>("sounds/level1.mid", Music.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_2 =
             new AssetDescriptor<Music>("sounds/level2.mid", Music.class);
+    public static final AssetDescriptor<Music> MUSIC_LEVEL_3 =
+            new AssetDescriptor<Music>("sounds/level3.mid", Music.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_1_BOSS =
             new AssetDescriptor<Music>("sounds/level1-boss.mid", Music.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_2_BOSS =
@@ -173,6 +179,18 @@ public class Assets {
                 ICON_GAME, ICON_GOOGLE,
                 GFX_BGD_LEVEL2, GFX_BGD_BIG_PLANET, GFX_BGD_FAR_PLANETS, GFX_BGD_RISING_PLANETS, GFX_BGD_STARS_LEVEL2,
                 GFX_BGD_CLOUDS));
+
+        put(Level3Screen.class, Arrays.<AssetDescriptor>asList(
+                MUSIC_LEVEL_3,
+                SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
+                SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
+                SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, SOUND_BOSS_ALERT,
+                SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION, GFX_BGD_MIST1,
+                GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7,
+                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE,
+                GFX_LEVEL1_ATLAS_NOMASK, GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL2_ATLAS_MASK, FONT_SPACE_KILLER_SMALL,
+                ICON_GAME, ICON_GOOGLE,
+                GFX_BGD_LEVEL3, GFX_BGD_CLOUDS));
 
         put(TransitionScreen.class, Collections.EMPTY_LIST);
         put(SocialScoreScreen.class, Collections.EMPTY_LIST);

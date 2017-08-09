@@ -186,6 +186,44 @@ scaleFactors=[{suffix:"",factor:1}]
 inputFiles=[{path:level2/bullet2.png,type:Input,regionName:null},{path:level2/staticEnemy4.png,type:Input,regionName:null},{path:level2/staticEnemy2.png,type:Input,regionName:null},{path:level2/staticEnemy3.png,type:Input,regionName:null},{path:level2/staticEnemy1.png,type:Input,regionName:null},{path:level2/boss.png,type:Input,regionName:null}]
 
 
+---
+
+name=level3-mask
+filename=
+output=../assets/gfx
+
+alias=true
+alphaThreshold=0
+debug=false
+duplicatePadding=false
+edgePadding=true
+fast=false
+filterMag=Nearest
+filterMin=Nearest
+ignoreBlankImages=true
+maxHeight=1024
+maxWidth=1024
+minHeight=16
+minWidth=16
+paddingX=2
+paddingY=2
+pot=true
+rotation=false
+stripWhitespaceX=false
+stripWhitespaceY=false
+wrapX=ClampToEdge
+wrapY=ClampToEdge
+premultiplyAlpha=false
+grid=false
+square=false
+bleed=true
+limitMemory=true
+useIndexes=true
+
+scaleFactors=[{suffix:"",factor:1}]
+inputFiles=[{path:level3/enemies/tank_0.png,type:Input,regionName:null},{path:level3/enemies/tank_9.png,type:Input,regionName:null},{path:level3/enemies/tank_1.png,type:Input,regionName:null},{path:level3/enemies/tank_10.png,type:Input,regionName:null},{path:level3/enemies/tank_2.png,type:Input,regionName:null},{path:level3/enemies/tank_3.png,type:Input,regionName:null},{path:level3/enemies/tank_4.png,type:Input,regionName:null},{path:level3/enemies/tank_5.png,type:Input,regionName:null},{path:level3/enemies/tank_6.png,type:Input,regionName:null},{path:level3/enemies/tank_7.png,type:Input,regionName:null},{path:level3/enemies/tank_8.png,type:Input,regionName:null}]
+
+
 -PROJ-
 
 version=4.5.0

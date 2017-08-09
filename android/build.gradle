@@ -20,13 +20,13 @@ android {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
     defaultConfig {
-        applicationId "com.benk97.space.killer"
-//        applicationId "com.benk97.space.killer.test"
+//        applicationId "com.benk97.space.killer"
+        applicationId "com.benk97.space.killer.test"
 
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 63
-        versionName "0.8.22"
+        versionCode 64
+        versionName "0.8.23"
     }
     buildTypes {
         release {

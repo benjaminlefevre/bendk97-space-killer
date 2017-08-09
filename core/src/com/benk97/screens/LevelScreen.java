@@ -76,12 +76,17 @@ public abstract class LevelScreen extends ScreenAdapter {
         playerComponent.level = playerComponent.level.equals(Level1) ? Level2 : Level1;
         PlayerData playerData = playerComponent.copyPlayerData();
         this.dispose();
-        if (level.equals(Level1)) {
-            game.playServices.unlockAchievement(Achievement.KILL_BOSS);
-            game.goToScreen(Level2Screen.class, playerData, screenshot);
-        } else {
-            game.playServices.unlockAchievement(Achievement.KILL_BOSS_2);
-            game.goToScreen(Level1Screen.class, playerData, screenshot);
+        switch(level){
+            case Level1:
+                game.playServices.unlockAchievement(Achievement.KILL_BOSS);
+                game.goToScreen(Level2Screen.class, playerData, screenshot);
+                break;
+            case Level2:
+                game.playServices.unlockAchievement(Achievement.KILL_BOSS_2);
+                game.goToScreen(Level3Screen.class, playerData, screenshot);
+                break;
+            case Level3:
+                game.goToScreen(Level1Screen.class, playerData, screenshot);
         }
     }
 
@@ -122,7 +127,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         return time;
     }
 
-    public enum Level {Level1, Level2}
+    public enum Level {Level1, Level2, Level3}
 
     protected Viewport viewport;
     protected OrthographicCamera camera;
