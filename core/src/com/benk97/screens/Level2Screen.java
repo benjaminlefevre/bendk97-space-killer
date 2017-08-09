@@ -174,8 +174,9 @@ public class Level2Screen extends LevelScreen {
             LinkedList<ScriptItem> hardOther = left ? scriptItemsHardRight : scriptItemsHardLeft;
 
             hard.poll().execute();
-            hardOther.poll().execute();
-
+            if (second % 8 == 0) {
+                hardOther.poll().execute();
+            }
         } else if (second >= 255 && player.getComponent(GameOverComponent.class) == null) {
             switch (second) {
                 case 255:
