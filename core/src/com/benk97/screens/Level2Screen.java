@@ -66,27 +66,27 @@ public class Level2Screen extends LevelScreen {
 
     @Override
     protected void initSpawns() {
-        scriptItemsEasy = new LinkedList<ScriptItem>(randomEasySpawnEnemies(20));
-        scriptItemsMediumLeft = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromLeft(20));
-        scriptItemsMediumRight = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromRight(20));
-        scriptItemsHardLeft = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromLeft(20));
-        scriptItemsHardRight = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromRight(20));
+        scriptItemsEasy = new LinkedList<ScriptItem>(randomEasySpawnEnemies(30));
+        scriptItemsMediumLeft = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromLeft(30));
+        scriptItemsMediumRight = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromRight(30));
+        scriptItemsHardLeft = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromLeft(30));
+        scriptItemsHardRight = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromRight(30));
         boss = new ScriptItem(BOSS_LEVEL_2, BOSS_LEVEL2_MOVE, 100f, 1, false, true, 15000,
                 ENEMY_BULLET_EASY_VELOCITY);
     }
 
     private List<ScriptItem> randomEasySpawnEnemies(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_EASY, ENEMY_LEVEL2_BULLET_EASY_VELOCITY, BONUS_LEVEL2_SQUADRON_EASY, 3, 6, null);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_EASY, ENEMY_LEVEL2_BULLET_EASY_VELOCITY, BONUS_LEVEL2_SQUADRON_EASY, 5, 6, null);
 
     }
 
     private List<ScriptItem> randomMediumSpawnEnemiesComingFromLeft(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_MEDIUM, ENEMY_LEVEL2_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL2_SQUADRON_MEDIUM, 5, 7, true);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_MEDIUM, ENEMY_LEVEL2_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL2_SQUADRON_MEDIUM, 5, 8, true);
 
     }
 
     private List<ScriptItem> randomMediumSpawnEnemiesComingFromRight(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_MEDIUM, ENEMY_LEVEL2_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL2_SQUADRON_MEDIUM, 5, 8, false);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_MEDIUM, ENEMY_LEVEL2_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL2_SQUADRON_MEDIUM, 5, 10, false);
 
     }
 
@@ -122,17 +122,25 @@ public class Level2Screen extends LevelScreen {
         if (second == 5) {
             soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 100);
         }
-
+        if (second == 9) {
+            soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 100);
+        }
+        if (second == 13) {
+            soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 100);
+        }
+        if (second == 17) {
+            soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 100);
+        }
 
         // 13 elements
-        if (second >= 20 && second <= 90 && second % 5 == 0) {
+        if (second >= 20 && second <= 90 && (second % 5 == 0 || second % 7 == 0)) {
             scriptItemsEasy.poll().execute();
             if (second == 55) {
                 soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 100);
             }
 
             // 18 elements
-        } else if (second > 90 && second <= 160 && (second % 5 == 0)) {
+        } else if (second > 90 && second <= 160 && (second % 5 == 0 || second % 7 == 0)) {
             if (second == 95) {
                 assets.playSound(SOUND_GO);
             }
@@ -148,7 +156,7 @@ public class Level2Screen extends LevelScreen {
                 soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 100);
             }
 
-        } else if (second > 160 && second <= 250 && (second % 5 == 0)) {
+        } else if (second > 160 && second <= 250 && (second % 5 == 0 || second % 8 == 0)) {
             if (second == 165) {
                 assets.playSound(SOUND_GO);
             }
@@ -165,9 +173,8 @@ public class Level2Screen extends LevelScreen {
             LinkedList<ScriptItem> hardOther = left ? scriptItemsHardRight : scriptItemsHardLeft;
 
             hard.poll().execute();
-            if (second % 10 == 0) {
-                hardOther.poll().execute();
-            }
+            hardOther.poll().execute();
+
         } else if (second >= 255 && player.getComponent(GameOverComponent.class) == null) {
             switch (second) {
                 case 255:
