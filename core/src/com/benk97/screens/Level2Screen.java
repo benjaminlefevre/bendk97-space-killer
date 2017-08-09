@@ -102,21 +102,6 @@ public class Level2Screen extends LevelScreen {
 
 
     @Override
-    public void render(float delta) {
-        updateScript(delta);
-        super.render(delta);
-    }
-
-    private void updateScript(float delta) {
-        int timeBefore = (int) Math.floor(time);
-        time += delta;
-        int newTime = (int) Math.floor(time);
-        if (newTime > timeBefore) {
-            script(newTime);
-        }
-    }
-
-    @Override
     protected void script(int second) {
         if (second % 2 == 0 || second % 9 == 0 || second % 7 == 0) {
             new Level1Screen.ScriptItem(getRandomAsteroidType(), LINEAR_Y,
