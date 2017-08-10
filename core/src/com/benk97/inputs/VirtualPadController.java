@@ -55,47 +55,47 @@ public class VirtualPadController extends TouchInputProcessor {
 
         squareTouches[0] = new Rectangle(
                 0f,
-                position.y + playerHeight,
+                position.y + 1.5f * playerHeight,
                 position.x,
                 SCREEN_HEIGHT);
         squareTouches[1] = new Rectangle(
                 position.x,
-                position.y + playerHeight,
+                position.y + 1.5f * playerHeight,
                 playerWidth,
                 SCREEN_HEIGHT);
         squareTouches[2] = new Rectangle(
                 position.x + playerWidth,
-                position.y + playerHeight,
+                position.y + 1.5f * playerHeight,
                 SCREEN_WIDTH - position.x - playerWidth,
                 SCREEN_HEIGHT);
 
         squareTouches[3] = new Rectangle(
                 0f,
-                position.y,
+                position.y - 0.5f * playerHeight,
                 position.x,
-                playerHeight);
+                2 * playerHeight);
         squareTouches[4] = new Rectangle(
                 position.x + playerWidth,
-                position.y,
+                position.y - 0.5f * playerHeight,
                 SCREEN_WIDTH - position.x - playerWidth,
-                playerHeight);
+                playerHeight * 2);
 
 
         squareTouches[5] = new Rectangle(
                 0f,
                 0f,
                 position.x,
-                position.y);
+                position.y - 0.5f * playerHeight);
         squareTouches[6] = new Rectangle(
                 position.x,
                 0f,
                 playerWidth,
-                position.y);
+                position.y - 0.5f * playerHeight);
         squareTouches[7] = new Rectangle(
                 position.x + playerWidth,
                 0f,
                 SCREEN_WIDTH - position.x - playerWidth,
-                position.y);
+                position.y - 0.5f * playerHeight);
 
     }
 

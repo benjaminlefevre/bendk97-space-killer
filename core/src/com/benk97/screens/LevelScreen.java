@@ -276,6 +276,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         float deltaState = state.equals(State.RUNNING) ? delta : 0f;
         updateScriptLevel(deltaState);
         tweenManager.update(deltaState);
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         engine.update(deltaState);
         if (fxLightEnabled) {

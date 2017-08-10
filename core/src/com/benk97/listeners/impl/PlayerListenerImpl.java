@@ -65,7 +65,6 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
         if (playerComponent.isGameOver()) {
             assets.playSound(SOUND_GAME_OVER);
             Mappers.player.get(player).secondScript = ((LevelScreen) game.currentScreen).getCurrentTimeScript();
-            game.playerData = null;
             player.add(((PooledEngine) getEngine()).createComponent(GameOverComponent.class));
             Settings.addScore(playerComponent.getScoreInt());
             Settings.save();
