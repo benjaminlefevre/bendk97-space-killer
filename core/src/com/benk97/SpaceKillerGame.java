@@ -69,9 +69,7 @@ public class SpaceKillerGame extends Game {
     public void goToScreen(Class screen, PlayerData playerData, FrameBuffer screenshot) {
         try {
             assets.loadResources(screen);
-            if (playerData != null) {
-                this.playerData = playerData;
-            }
+            this.playerData = playerData;
             currentScreen = (Screen) screen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this);
             if (screenshot != null) {
                 this.setScreen(new TransitionScreen(screenshot, currentScreen, this));
@@ -111,8 +109,8 @@ public class SpaceKillerGame extends Game {
     }
 
     public void continueWithExtraLife() {
-        if(currentScreen instanceof LevelScreen){
-            ((LevelScreen)currentScreen).continueWithExtraLife();
+        if (currentScreen instanceof LevelScreen) {
+            ((LevelScreen) currentScreen).continueWithExtraLife();
         }
     }
 }

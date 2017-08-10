@@ -34,7 +34,7 @@ public class TransitionScreen extends ScreenAdapter {
     private Sprite nextScreenSprite;
 
     @Override
-    public void dispose(){
+    public void dispose() {
         spriteBatch.dispose();
         currentBuffer.dispose();
         nextBuffer.dispose();
@@ -49,7 +49,6 @@ public class TransitionScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         manager.update(Gdx.graphics.getDeltaTime());
-
         spriteBatch.begin();
         currentScreenSprite.draw(spriteBatch);
         nextScreenSprite.draw(spriteBatch);
@@ -72,11 +71,10 @@ public class TransitionScreen extends ScreenAdapter {
         };
 
         nextBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, (int) screenWidth, (int) screenHeight, false);
-
         nextBuffer.begin();
+        next.resize((int) screenWidth, (int) screenHeight);
         next.render(Gdx.graphics.getDeltaTime());
         nextBuffer.end();
-
         nextScreenSprite = new Sprite(nextBuffer.getColorBufferTexture());
         nextScreenSprite.setPosition(screenWidth, 0);
         nextScreenSprite.flip(false, true);
