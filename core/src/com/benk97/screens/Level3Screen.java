@@ -21,6 +21,8 @@ import static com.benk97.screens.LevelScreen.Level.Level3;
 
 public class Level3Screen extends LevelScreen {
 
+
+
     private SoloEnemyFactory soloEnemyFactory;
 
     private LinkedList<ScriptItem> scriptItemsEasy;
@@ -36,13 +38,14 @@ public class Level3Screen extends LevelScreen {
 
     public Level3Screen(final Assets assets, SpaceKillerGame game) {
         super(assets, game, Level3);
-        soloEnemyFactory = new SoloEnemyFactory(tweenManager, entityFactory);
-        backgrounds.add(entityFactory.createBackground(assets.get(GFX_BGD_LEVEL3), 0, -200f));
+        soloEnemyFactory = new SoloEnemyFactory(engine, tweenManager, entityFactory);
+        backgrounds.add(entityFactory.createBackground(assets.get(GFX_BGD_LEVEL3), 0, -BGD_VELOCIY_LEVEL3));
         new Thread(new Runnable() {
             @Override
             public void run() {
                 spriteMaskFactory.addMask(assets.get(GFX_LEVEL1_ATLAS_MASK).getTextures().first());
                 spriteMaskFactory.addMask(assets.get(GFX_LEVEL2_ATLAS_MASK).getTextures().first());
+                spriteMaskFactory.addMask(assets.get(GFX_LEVEL3_ATLAS_MASK).getTextures().first());
             }
         }).start();
         playMusic(MUSIC_LEVEL_3);
@@ -101,6 +104,11 @@ public class Level3Screen extends LevelScreen {
                     random.nextFloat() * (SCREEN_WIDTH - 36f),
                     SCREEN_HEIGHT).execute();
         }
+
+        if (second % 10 == 0) {
+            soloEnemyFactory.createTank(BGD_VELOCIY_LEVEL3, 400f, 50, 5, 200);
+        }
+
         if (second % 15 == 0) {
             entityFactory.createForeground(getRandomMist(), 350f);
         }

@@ -59,7 +59,7 @@ public class SquadronFactory {
 
         Entity[] entities = new Entity[number];
         for (int i = 0; i < number; ++i) {
-            Entity ship = null;
+            Entity ship;
             switch (shipType) {
                 case BOSS_LEVEL_1:
                     ship = entityFactory.createBoss(squadron, bulletVelocity);

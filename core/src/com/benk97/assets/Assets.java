@@ -85,6 +85,7 @@ public class Assets {
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_NOMASK = new AssetDescriptor<TextureAtlas>("gfx/level1-nomask.atlas", TextureAtlas.class);
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level1-mask.atlas", TextureAtlas.class);
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL2_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level2-mask.atlas", TextureAtlas.class);
+    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL3_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level3-mask.atlas", TextureAtlas.class);
 
     // SOUNDS
     public static final AssetDescriptor<Sound> SOUND_LOSE_LIFE =
@@ -188,7 +189,9 @@ public class Assets {
                 SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION, GFX_BGD_MIST1,
                 GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7,
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE,
-                GFX_LEVEL1_ATLAS_NOMASK, GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL2_ATLAS_MASK, FONT_SPACE_KILLER_SMALL,
+                GFX_LEVEL1_ATLAS_NOMASK, GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL2_ATLAS_MASK,
+                GFX_LEVEL3_ATLAS_MASK,
+                FONT_SPACE_KILLER_SMALL,
                 ICON_GAME, ICON_GOOGLE,
                 GFX_BGD_LEVEL3, GFX_BGD_CLOUDS));
 

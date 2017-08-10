@@ -15,6 +15,7 @@ public class EnemyComponent implements Component, Pool.Poolable {
     public boolean isLaserShip = false;
     public int probabilityAttack = 150;
     public boolean isBoss = false;
+    public boolean isTank = false;
     public float bulletVelocity = 0f;
     public Entity squadron = null;
 
@@ -25,6 +26,7 @@ public class EnemyComponent implements Component, Pool.Poolable {
         attackType = ENEMY_FIRE_CIRCLE;
         points = 0;
         isBoss = false;
+        isTank = false;
         lifeGauge = 1;
         lifeMax = 1;
         attackCapacity = 0;

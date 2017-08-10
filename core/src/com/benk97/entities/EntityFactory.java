@@ -25,6 +25,8 @@ import com.benk97.components.*;
 import com.benk97.screens.LevelScreen.Level;
 import com.benk97.timer.PausableTimer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
@@ -33,8 +35,7 @@ import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
 import static com.benk97.components.Mappers.position;
 import static com.benk97.components.Mappers.sprite;
-import static com.benk97.screens.LevelScreen.Level.Level1;
-import static com.benk97.screens.LevelScreen.Level.Level2;
+import static com.benk97.screens.LevelScreen.Level.*;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_XY;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_Y;
 import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
@@ -47,6 +48,7 @@ public class EntityFactory implements Disposable {
     protected TextureAtlas atlasNoMask;
     protected TextureAtlas atlasMask;
     protected TextureAtlas atlasMaskLevel2;
+    protected TextureAtlas atlasMaskLevel3;
     protected RayHandler rayHandler;
     protected final Pool<PointLight> lightPool = new Pool<PointLight>() {
         @Override
@@ -65,8 +67,11 @@ public class EntityFactory implements Disposable {
         this.tweenManager = tweenManager;
         this.atlasNoMask = assets.get(GFX_LEVEL1_ATLAS_NOMASK);
         this.atlasMask = assets.get(GFX_LEVEL1_ATLAS_MASK);
-        if (level.equals(Level2)) {
+        if (level.ordinal() >= Level2.ordinal()) {
             this.atlasMaskLevel2 = assets.get(GFX_LEVEL2_ATLAS_MASK);
+        }
+        if (level.ordinal() >= Level3.ordinal()) {
+            this.atlasMaskLevel3 = assets.get(GFX_LEVEL3_ATLAS_MASK);
         }
     }
 
@@ -124,7 +129,7 @@ public class EntityFactory implements Disposable {
         return bullet;
     }
 
-    public void createPlayerFireSide(Entity player){
+    public void createPlayerFireSide(Entity player) {
         createPlayerLeftFire(player);
         createPlayerRightFire(player);
     }
@@ -331,13 +336,27 @@ public class EntityFactory implements Disposable {
         if (enemyComponent.isBoss) {
             positionComponent.x = enemyPosition.x + Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
             positionComponent.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight() * 3f / 4f;
+        } else if (enemyComponent.isTank) {
+            Sprite tank = sprite.get(enemy).sprite;
+            float rotation = tank.getRotation();
+            Vector2 pos = new Vector2(enemyPosition.x + Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f,
+                    enemyPosition.y + 32f);
+            Vector2 angle = new Vector2(0, -1);
+            angle.rotate(rotation);
+            angle.nor();
+            angle.scl(new Vector2(32, 32));
+            angle.add(pos);
+            positionComponent.x = angle.x;
+            positionComponent.y = angle.y;
         } else {
             positionComponent.x = enemyPosition.x + Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
             positionComponent.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight();
         }
         Vector2 directionBullet = new Vector2(playerPosition.x - positionComponent.x, playerPosition.y - positionComponent.y);
         directionBullet.nor();
-        directionBullet.rotate(-10 + random.nextFloat() * 20f);
+        if (!enemyComponent.isTank) {
+            directionBullet.rotate(-10 + random.nextFloat() * 20f);
+        }
         directionBullet.scl(Mappers.enemy.get(enemy).bulletVelocity);
         velocityComponent.x = directionBullet.x;
         velocityComponent.y = directionBullet.y;
@@ -543,6 +562,45 @@ public class EntityFactory implements Disposable {
         return enemy;
     }
 
+
+    public List<Entity> createTank(float velocityBullet, int rateShoot, int gauge, int points) {
+        List<Entity> entities = new ArrayList<Entity>();
+        Entity tankCannon = engine.createEntity();
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
+        enemyComponent.points = points;
+        enemyComponent.isTank = true;
+        enemyComponent.initLifeGauge(gauge);
+        enemyComponent.probabilityAttack = rateShoot;
+        enemyComponent.bulletVelocity = velocityBullet;
+        enemyComponent.attackCapacity = Integer.MAX_VALUE;
+        tankCannon.add(enemyComponent);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
+        tankCannon.add(position);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.sprite = atlasMaskLevel3.createSprite("tankCannon");
+        component.sprite.setOrigin(32f, 46f);
+        component.zIndex = 5;
+        tankCannon.add(component);
+        tankCannon.add(engine.createComponent(GroundEnemyComponent.class));
+        FollowPlayerComponent followPlayerComponent = engine.createComponent(FollowPlayerComponent.class);
+        followPlayerComponent.rotate = true;
+        tankCannon.add(followPlayerComponent);
+        engine.addEntity(tankCannon);
+
+        Entity tankBody = engine.createEntity();
+        tankBody.add(engine.createComponent(PositionComponent.class));
+        SpriteComponent sprite = engine.createComponent(SpriteComponent.class);
+        sprite.sprite = atlasMaskLevel3.createSprite("tankBody");
+        component.zIndex = 4;
+        tankBody.add(sprite);
+        tankBody.add(engine.createComponent(GroundEnemyComponent.class));
+        engine.addEntity(tankBody);
+
+        entities.add(tankBody);
+        entities.add(tankCannon);
+        return entities;
+    }
+
     public Entity createEnemy(Entity squadron, boolean canAttack, int rateShoot, float velocityBullet, String atlasName, int points,
                               int strength, float frameDuration, PlayMode animationType) {
         Entity enemy = engine.createEntity();
@@ -615,6 +673,7 @@ public class EntityFactory implements Disposable {
     public final static int BOSS_LEVEL_2 = 101;
     public final static int ASTEROID_1 = 999;
     public final static int ASTEROID_2 = 1000;
+    public final static int TANK = 2000;
 
 
     public Entity createBoss(Entity squadron, float velocityBullet) {
@@ -713,7 +772,7 @@ public class EntityFactory implements Disposable {
 
     public Entity createEntityPlayer(Level level) {
         Entity player = engine.createEntity();
-        if(engine.getEntitiesFor(Family.one(PlayerComponent.class).get()).size()>0){
+        if (engine.getEntitiesFor(Family.one(PlayerComponent.class).get()).size() > 0) {
             throw new IllegalArgumentException("A player entity already exists!");
         }
         PlayerComponent playerComponent = engine.createComponent(PlayerComponent.class);
@@ -960,4 +1019,5 @@ public class EntityFactory implements Disposable {
             player.remove(InvulnerableComponent.class);
         }
     }
+
 }

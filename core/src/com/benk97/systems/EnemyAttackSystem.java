@@ -40,10 +40,11 @@ public class EnemyAttackSystem extends IteratingSystem {
 
     private boolean isVisible(Entity entity) {
         PositionComponent position = Mappers.position.get(entity);
+        EnemyComponent enemy = Mappers.enemy.get(entity);
         SpriteComponent sprite = Mappers.sprite.get(entity);
         return (position.x >= 0
                 && position.x <= SCREEN_WIDTH - sprite.sprite.getWidth()
                 && position.y <= SCREEN_HEIGHT - sprite.sprite.getHeight()
-                && position.y >= 150f);
+                && (position.y >= 150f || (position.y >= 0 && enemy.isTank)));
     }
 }
