@@ -82,7 +82,7 @@ public class Assets {
             new AssetDescriptor<Texture>("gfx/backgrounds/level3.jpg", Texture.class);
 
     // GFX
-    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_NOMASK = new AssetDescriptor<TextureAtlas>("gfx/level1-nomask.atlas", TextureAtlas.class);
+    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL_ALL_ATLAS_NOMASK = new AssetDescriptor<TextureAtlas>("gfx/level-all-nomask.atlas", TextureAtlas.class);
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level1-mask.atlas", TextureAtlas.class);
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL2_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level2-mask.atlas", TextureAtlas.class);
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL3_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level3-mask.atlas", TextureAtlas.class);
@@ -152,15 +152,6 @@ public class Assets {
     }
 
     public static Map<Class<? extends Screen>, List<AssetDescriptor>> assetsNeededByScreen = new HashMap<Class<? extends Screen>, List<AssetDescriptor>>() {{
-        put(Level1Screen.class, Arrays.<AssetDescriptor>asList(
-                SOUND_FIRE, SOUND_EXPLOSION, MUSIC_LEVEL_1, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
-                SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
-                SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, MUSIC_LEVEL_1_BOSS, SOUND_BOSS_ALERT,
-                SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION, GFX_BGD_MIST1,
-                GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7,
-                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_SMALL,
-                FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE, ICON_GAME, ICON_GOOGLE,
-                GFX_BGD_LEVEL1, GFX_BGD_STARS, GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL1_ATLAS_NOMASK));
         put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
                 SPLASH_MUSIC, SPASH_ATLAS, SPLASH_TXT_LOGO
         ));
@@ -168,32 +159,58 @@ public class Assets {
                 MENU_BGD, FONT_SPACE_KILLER_LARGE, MENU_MUSIC, FONT_SPACE_KILLER_MEDIUM, MENU_CLICK,
                 MENU_ATLAS, FONT_SPACE_KILLER_SMALL
         ));
-        put(Level2Screen.class, Arrays.<AssetDescriptor>asList(
-                MUSIC_LEVEL_2, MUSIC_LEVEL_2_BOSS,
+        put(Level1Screen.class, Arrays.<AssetDescriptor>asList(
+                // MUSIC
+                MUSIC_LEVEL_1, MUSIC_LEVEL_1_BOSS,
+                // SOUNDS
                 SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
                 SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
                 SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, SOUND_BOSS_ALERT,
-                SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION, GFX_BGD_MIST1,
-                GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7,
-                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE,
-                GFX_LEVEL1_ATLAS_NOMASK, GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL2_ATLAS_MASK, FONT_SPACE_KILLER_SMALL,
+                SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION,
+                SOUND_POWER_UP_VOICE,
+                // GFX
+                GFX_BGD_MIST1, GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7,
+                GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL_ALL_ATLAS_NOMASK,
+                ICON_GAME, ICON_GOOGLE,
+                GFX_BGD_LEVEL1, GFX_BGD_STARS,
+                // FONTS
+                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_SMALL,
+                FONT_SPACE_KILLER_MEDIUM));
+        put(Level2Screen.class, Arrays.<AssetDescriptor>asList(
+                // MUSIC
+                MUSIC_LEVEL_2, MUSIC_LEVEL_2_BOSS,
+                // SOUNDS
+                SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
+                SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
+                SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, SOUND_BOSS_ALERT,
+                SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION,
+                SOUND_POWER_UP_VOICE,
+                // GFX
+                GFX_BGD_MIST1, GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7, GFX_BGD_CLOUDS,
+                GFX_LEVEL_ALL_ATLAS_NOMASK, GFX_LEVEL2_ATLAS_MASK,
                 ICON_GAME, ICON_GOOGLE,
                 GFX_BGD_LEVEL2, GFX_BGD_BIG_PLANET, GFX_BGD_FAR_PLANETS, GFX_BGD_RISING_PLANETS, GFX_BGD_STARS_LEVEL2,
-                GFX_BGD_CLOUDS));
+                // FONTS
+                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALL
+        ));
 
         put(Level3Screen.class, Arrays.<AssetDescriptor>asList(
+                // MUSIC
                 MUSIC_LEVEL_3,
+                // SOUNDS
                 SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
                 SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
                 SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, SOUND_BOSS_ALERT,
-                SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION, GFX_BGD_MIST1,
-                GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7,
-                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, SOUND_POWER_UP_VOICE,
-                GFX_LEVEL1_ATLAS_NOMASK, GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL2_ATLAS_MASK,
-                GFX_LEVEL3_ATLAS_MASK,
-                FONT_SPACE_KILLER_SMALL,
+                SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION,
+                SOUND_POWER_UP_VOICE,
+                // GFX
+                GFX_BGD_MIST1, GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7,
+                GFX_LEVEL_ALL_ATLAS_NOMASK, GFX_LEVEL3_ATLAS_MASK,
                 ICON_GAME, ICON_GOOGLE,
-                GFX_BGD_LEVEL3, GFX_BGD_CLOUDS));
+                GFX_BGD_LEVEL3,
+                // FONTS
+                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALL
+        ));
 
         put(TransitionScreen.class, Collections.EMPTY_LIST);
         put(SocialScoreScreen.class, Collections.EMPTY_LIST);

@@ -35,7 +35,7 @@ import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
 import static com.benk97.components.Mappers.position;
 import static com.benk97.components.Mappers.sprite;
-import static com.benk97.screens.LevelScreen.Level.*;
+import static com.benk97.screens.LevelScreen.Level.Level1;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_XY;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_Y;
 import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
@@ -47,8 +47,6 @@ public class EntityFactory implements Disposable {
     protected TweenManager tweenManager;
     protected TextureAtlas atlasNoMask;
     protected TextureAtlas atlasMask;
-    protected TextureAtlas atlasMaskLevel2;
-    protected TextureAtlas atlasMaskLevel3;
     protected RayHandler rayHandler;
     protected final Pool<PointLight> lightPool = new Pool<PointLight>() {
         @Override
@@ -65,14 +63,8 @@ public class EntityFactory implements Disposable {
         this.rayHandler = rayHandler;
         this.assets = assets;
         this.tweenManager = tweenManager;
-        this.atlasNoMask = assets.get(GFX_LEVEL1_ATLAS_NOMASK);
-        this.atlasMask = assets.get(GFX_LEVEL1_ATLAS_MASK);
-        if (level.ordinal() >= Level2.ordinal()) {
-            this.atlasMaskLevel2 = assets.get(GFX_LEVEL2_ATLAS_MASK);
-        }
-        if (level.ordinal() >= Level3.ordinal()) {
-            this.atlasMaskLevel3 = assets.get(GFX_LEVEL3_ATLAS_MASK);
-        }
+        this.atlasNoMask = assets.get(GFX_LEVEL_ALL_ATLAS_NOMASK);
+        this.atlasMask = assets.get(level.getSprites());
     }
 
 
@@ -303,7 +295,7 @@ public class EntityFactory implements Disposable {
         VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
         bullet.add(velocityComponent);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
-        spriteComponent.sprite = new Sprite(atlasMaskLevel2.findRegion("bullet2"));
+        spriteComponent.sprite = new Sprite(atlasMask.findRegion("laser"));
         bullet.add(spriteComponent);
         bullet.add(engine.createComponent(RemovableComponent.class));
         engine.addEntity(bullet);
@@ -546,7 +538,7 @@ public class EntityFactory implements Disposable {
         }
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         enemy.add(spriteComponent);
-        spriteComponent.sprite = atlasMaskLevel2.createSprite("staticEnemy" + type);
+        spriteComponent.sprite = atlasMask.createSprite("staticEnemy" + type);
         spriteComponent.zIndex = 20;
         positionComponent.x = fromLeft ? -spriteComponent.sprite.getWidth() : SCREEN_WIDTH;
         positionComponent.y = SCREEN_HEIGHT - spriteComponent.sprite.getHeight();
@@ -577,7 +569,7 @@ public class EntityFactory implements Disposable {
         PositionComponent position = engine.createComponent(PositionComponent.class);
         tankCannon.add(position);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
-        component.sprite = atlasMaskLevel3.createSprite("tankCannon");
+        component.sprite = atlasMask.createSprite("tankCannon");
         component.sprite.setOrigin(32f, 46f);
         component.zIndex = -5;
         tankCannon.add(component);
@@ -590,7 +582,7 @@ public class EntityFactory implements Disposable {
         Entity tankBody = engine.createEntity();
         tankBody.add(engine.createComponent(PositionComponent.class));
         SpriteComponent sprite = engine.createComponent(SpriteComponent.class);
-        sprite.sprite = atlasMaskLevel3.createSprite("tankBody");
+        sprite.sprite = atlasMask.createSprite("tankBody");
         sprite.zIndex = -6;
         tankBody.add(sprite);
         tankBody.add(engine.createComponent(GroundEnemyComponent.class));
@@ -733,7 +725,7 @@ public class EntityFactory implements Disposable {
         PositionComponent position = engine.createComponent(PositionComponent.class);
         enemy.add(position);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
-        component.sprite = atlasMaskLevel2.createSprite("boss");
+        component.sprite = atlasMask.createSprite("boss");
         enemy.add(component);
         engine.addEntity(enemy);
         PausableTimer.schedule(new PausableTimer.Task() {
@@ -790,7 +782,7 @@ public class EntityFactory implements Disposable {
         house.add(engine.createComponent(PositionComponent.class));
         house.add(engine.createComponent(GroundEnemyComponent.class));
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
-        component.sprite = atlasMaskLevel3.createSprite("house-"+(houseType-HOUSE_1+1));
+        component.sprite = atlasMask.createSprite("house-" + (houseType - HOUSE_1 + 1));
         component.zIndex = -10;
         house.add(component);
         engine.addEntity(house);
@@ -799,7 +791,7 @@ public class EntityFactory implements Disposable {
         houseDestroyed.add(engine.createComponent(PositionComponent.class));
         houseDestroyed.add(engine.createComponent(GroundEnemyComponent.class));
         component = engine.createComponent(SpriteComponent.class);
-        component.sprite = atlasMaskLevel3.createSprite("house-"+(houseType-HOUSE_1+1)+"_destroyed");
+        component.sprite = atlasMask.createSprite("house-" + (houseType - HOUSE_1 + 1) + "_destroyed");
         component.zIndex = -11;
         houseDestroyed.add(component);
         engine.addEntity(houseDestroyed);

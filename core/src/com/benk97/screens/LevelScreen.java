@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.RandomXS128;
@@ -76,7 +77,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         playerComponent.level = playerComponent.level.equals(Level1) ? Level2 : Level1;
         PlayerData playerData = playerComponent.copyPlayerData();
         this.dispose();
-        switch(level){
+        switch (level) {
             case Level1:
                 game.playServices.unlockAchievement(Achievement.KILL_BOSS);
                 game.goToScreen(Level2Screen.class, playerData, screenshot);
@@ -127,7 +128,18 @@ public abstract class LevelScreen extends ScreenAdapter {
         return time;
     }
 
-    public enum Level {Level1, Level2, Level3}
+    public enum Level {
+        Level1(GFX_LEVEL1_ATLAS_MASK), Level2(GFX_LEVEL2_ATLAS_MASK), Level3(GFX_LEVEL3_ATLAS_MASK);
+        AssetDescriptor<TextureAtlas> sprites;
+
+        Level(AssetDescriptor<TextureAtlas> sprites) {
+            this.sprites = sprites;
+        }
+
+        public AssetDescriptor<TextureAtlas> getSprites() {
+            return sprites;
+        }
+    }
 
     protected Viewport viewport;
     protected OrthographicCamera camera;

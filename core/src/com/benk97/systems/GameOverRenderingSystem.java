@@ -43,10 +43,10 @@ public class GameOverRenderingSystem extends IteratingSystem {
         this.mediumFont = assets.get(FONT_SPACE_KILLER_MEDIUM);
         this.mediumFont.setColor(Color.WHITE);
         this.shapeRenderer = new ShapeRenderer();
-        this.playAgain = assets.get(GFX_LEVEL1_ATLAS_NOMASK).createSprite("icon-playagain");
-        this.home = assets.get(GFX_LEVEL1_ATLAS_NOMASK).createSprite("icon-home");
-        this.share = assets.get(GFX_LEVEL1_ATLAS_NOMASK).createSprite("icon-share");
-        this.extraLife = assets.get(GFX_LEVEL1_ATLAS_NOMASK).createSprite("icon-extralife");
+        this.playAgain = assets.get(GFX_LEVEL_ALL_ATLAS_NOMASK).createSprite("icon-playagain");
+        this.home = assets.get(GFX_LEVEL_ALL_ATLAS_NOMASK).createSprite("icon-home");
+        this.share = assets.get(GFX_LEVEL_ALL_ATLAS_NOMASK).createSprite("icon-share");
+        this.extraLife = assets.get(GFX_LEVEL_ALL_ATLAS_NOMASK).createSprite("icon-extralife");
         this.playAgain.setPosition(PLAY_X, PLAY_Y);
         this.home.setPosition(HOME_X, HOME_Y);
         this.share.setPosition(SHARE_X, SHARE_Y);

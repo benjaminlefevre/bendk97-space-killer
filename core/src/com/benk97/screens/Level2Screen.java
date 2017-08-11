@@ -50,7 +50,6 @@ public class Level2Screen extends LevelScreen {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                spriteMaskFactory.addMask(assets.get(GFX_LEVEL1_ATLAS_MASK).getTextures().first());
                 spriteMaskFactory.addMask(assets.get(GFX_LEVEL2_ATLAS_MASK).getTextures().first());
             }
         }).start();
