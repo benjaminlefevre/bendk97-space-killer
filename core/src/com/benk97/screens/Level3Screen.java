@@ -16,7 +16,7 @@ import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
 import static com.benk97.entities.EntityFactory.BOSS_LEVEL_2;
 import static com.benk97.entities.SquadronFactory.BOSS_LEVEL2_MOVE;
-import static com.benk97.entities.SquadronFactory.LINEAR_Y;
+import static com.benk97.entities.SquadronFactory.LINEAR_Y_SAME_POS;
 import static com.benk97.screens.LevelScreen.Level.Level3;
 
 public class Level3Screen extends LevelScreen {
@@ -97,20 +97,20 @@ public class Level3Screen extends LevelScreen {
 
     @Override
     protected void script(int second) {
-        if (second % 2 == 0 || second % 9 == 0 || second % 7 == 0) {
-            new ScriptItem(getRandomAsteroidType(), LINEAR_Y,
-                    40f + random.nextFloat() * 210f,
-                    1, random.nextInt() % 8 == 0, false, 0, 0f,
-                    random.nextFloat() * (SCREEN_WIDTH - 36f),
+        if (second % 3 == 0 || second % 7 == 0) {
+            new ScriptItem(getRandomHouseType(), LINEAR_Y_SAME_POS,
+                    BGD_VELOCIY_LEVEL3,
+                    1, random.nextInt() % 6 == 0, false, 0, 0f,
+                    random.nextFloat() * (SCREEN_WIDTH - 64f),
                     SCREEN_HEIGHT).execute();
         }
 
         if (second % 10 == 0) {
-            soloEnemyFactory.createTank(BGD_VELOCIY_LEVEL3, 400f, 50, 5, 200);
+            soloEnemyFactory.createTank(BGD_VELOCIY_LEVEL3, 400f, 50, 7, 200);
         }
 
-        if (second % 15 == 0) {
-            entityFactory.createForeground(getRandomMist(), 350f);
+        if (second % 10 == 0) {
+            entityFactory.createForeground(getRandomMist(), 450f);
         }
 //
 //        if (second < 0) {

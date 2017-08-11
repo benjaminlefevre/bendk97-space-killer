@@ -579,7 +579,7 @@ public class EntityFactory implements Disposable {
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = atlasMaskLevel3.createSprite("tankCannon");
         component.sprite.setOrigin(32f, 46f);
-        component.zIndex = 5;
+        component.zIndex = -5;
         tankCannon.add(component);
         tankCannon.add(engine.createComponent(GroundEnemyComponent.class));
         FollowPlayerComponent followPlayerComponent = engine.createComponent(FollowPlayerComponent.class);
@@ -591,7 +591,7 @@ public class EntityFactory implements Disposable {
         tankBody.add(engine.createComponent(PositionComponent.class));
         SpriteComponent sprite = engine.createComponent(SpriteComponent.class);
         sprite.sprite = atlasMaskLevel3.createSprite("tankBody");
-        component.zIndex = 4;
+        sprite.zIndex = -6;
         tankBody.add(sprite);
         tankBody.add(engine.createComponent(GroundEnemyComponent.class));
         engine.addEntity(tankBody);
@@ -616,7 +616,6 @@ public class EntityFactory implements Disposable {
         enemy.add(enemyComponent);
         PositionComponent position = engine.createComponent(PositionComponent.class);
         enemy.add(position);
-        enemy.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites(atlasName);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(frameDuration, sprites, animationType));
@@ -673,6 +672,16 @@ public class EntityFactory implements Disposable {
     public final static int BOSS_LEVEL_2 = 101;
     public final static int ASTEROID_1 = 999;
     public final static int ASTEROID_2 = 1000;
+    public final static int HOUSE_1 = 1500;
+    public final static int HOUSE_2 = 1501;
+    public final static int HOUSE_3 = 1502;
+    public final static int HOUSE_4 = 1503;
+    public final static int HOUSE_5 = 1504;
+    public final static int HOUSE_6 = 1505;
+    public final static int HOUSE_7 = 1506;
+    public final static int HOUSE_8 = 1507;
+    public final static int HOUSE_9 = 1508;
+
     public final static int TANK = 2000;
 
 
@@ -754,7 +763,6 @@ public class EntityFactory implements Disposable {
         enemy.add(enemyComponent);
         PositionComponent position = engine.createComponent(PositionComponent.class);
         enemy.add(position);
-        enemy.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         String asteroidSprite = asteroid == ASTEROID_1 ? "asteroid" : "asteroid2";
         Array<Sprite> sprites = atlasMask.createSprites(asteroidSprite);
@@ -767,6 +775,38 @@ public class EntityFactory implements Disposable {
         enemy.add(engine.createComponent(StateComponent.class));
         engine.addEntity(enemy);
         return enemy;
+    }
+
+
+    public Array<Entity> createHouse(Entity squadron, int houseType) {
+        Array<Entity> entities = new Array<Entity>();
+        Entity house = engine.createEntity();
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
+        enemyComponent.points = 50;
+        if (squadron != null) {
+            enemyComponent.squadron = squadron;
+        }
+        house.add(enemyComponent);
+        house.add(engine.createComponent(PositionComponent.class));
+        house.add(engine.createComponent(GroundEnemyComponent.class));
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
+        component.sprite = atlasMaskLevel3.createSprite("house-"+(houseType-HOUSE_1+1));
+        component.zIndex = -10;
+        house.add(component);
+        engine.addEntity(house);
+
+        Entity houseDestroyed = engine.createEntity();
+        houseDestroyed.add(engine.createComponent(PositionComponent.class));
+        houseDestroyed.add(engine.createComponent(GroundEnemyComponent.class));
+        component = engine.createComponent(SpriteComponent.class);
+        component.sprite = atlasMaskLevel3.createSprite("house-"+(houseType-HOUSE_1+1)+"_destroyed");
+        component.zIndex = -11;
+        houseDestroyed.add(component);
+        engine.addEntity(houseDestroyed);
+
+        entities.add(house);
+        entities.add(houseDestroyed);
+        return entities;
     }
 
 
@@ -893,7 +933,6 @@ public class EntityFactory implements Disposable {
         PositionComponent position = engine.createComponent(PositionComponent.class);
         explosion.add(position);
         position.setPosition(x, y);
-        explosion.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasNoMask.createSprites("explosion");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_EXPLOSION, sprites, PlayMode.NORMAL));

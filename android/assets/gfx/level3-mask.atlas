@@ -4,142 +4,142 @@ size: 1024,128
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-house
-  rotate: false
-  xy: 264, 61
-  size: 63, 65
-  orig: 63, 65
-  offset: 0, 0
-  index: 2
-house
-  rotate: false
-  xy: 394, 69
-  size: 60, 57
-  orig: 60, 57
-  offset: 0, 0
-  index: 1
-house_1_destroyed
-  rotate: false
-  xy: 250, 2
-  size: 60, 57
-  orig: 60, 57
-  offset: 0, 0
-  index: -1
-house_1b
-  rotate: false
-  xy: 2, 2
-  size: 60, 57
-  orig: 60, 57
-  offset: 0, 0
-  index: -1
-house_1b_destroyed
-  rotate: false
-  xy: 126, 2
-  size: 60, 57
-  orig: 60, 57
-  offset: 0, 0
-  index: -1
-house_1c
-  rotate: false
-  xy: 64, 2
-  size: 60, 57
-  orig: 60, 57
-  offset: 0, 0
-  index: -1
-house_1c_destroyed
+house-1
   rotate: false
   xy: 188, 2
   size: 60, 57
   orig: 60, 57
   offset: 0, 0
   index: -1
-house_1d
+house-1_destroyed
   rotate: false
-  xy: 594, 86
-  size: 42, 40
-  orig: 42, 40
+  xy: 64, 2
+  size: 60, 57
+  orig: 60, 57
   offset: 0, 0
   index: -1
-house_1d_destroyed
-  rotate: false
-  xy: 682, 86
-  size: 42, 40
-  orig: 42, 40
-  offset: 0, 0
-  index: -1
-house_1e
-  rotate: false
-  xy: 638, 86
-  size: 42, 40
-  orig: 42, 40
-  offset: 0, 0
-  index: -1
-house_1e_destroyed
-  rotate: false
-  xy: 726, 86
-  size: 42, 40
-  orig: 42, 40
-  offset: 0, 0
-  index: -1
-house_2_destroyed
-  rotate: false
-  xy: 2, 61
-  size: 63, 65
-  orig: 63, 65
-  offset: 0, 0
-  index: -1
-house_2b
+house-2
   rotate: false
   xy: 329, 61
   size: 63, 65
   orig: 63, 65
   offset: 0, 0
   index: -1
-house_2b_destroyed
+house-2_destroyed
   rotate: false
   xy: 199, 61
   size: 63, 65
   orig: 63, 65
   offset: 0, 0
   index: -1
-house_2c
+house-3
   rotate: false
-  xy: 502, 80
-  size: 44, 46
-  orig: 44, 46
+  xy: 250, 2
+  size: 60, 57
+  orig: 60, 57
   offset: 0, 0
   index: -1
-house_2c_destroyed
+house-3_destroyed
+  rotate: false
+  xy: 394, 69
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: -1
+house-4
+  rotate: false
+  xy: 2, 2
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: -1
+house-4_destroyed
+  rotate: false
+  xy: 126, 2
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: -1
+house-5
+  rotate: false
+  xy: 594, 86
+  size: 42, 40
+  orig: 42, 40
+  offset: 0, 0
+  index: -1
+house-5_destroyed
+  rotate: false
+  xy: 682, 86
+  size: 42, 40
+  orig: 42, 40
+  offset: 0, 0
+  index: -1
+house-6
+  rotate: false
+  xy: 638, 86
+  size: 42, 40
+  orig: 42, 40
+  offset: 0, 0
+  index: -1
+house-6_destroyed
+  rotate: false
+  xy: 726, 86
+  size: 42, 40
+  orig: 42, 40
+  offset: 0, 0
+  index: -1
+house-7
+  rotate: false
+  xy: 2, 61
+  size: 63, 65
+  orig: 63, 65
+  offset: 0, 0
+  index: -1
+house-7_destroyed
+  rotate: false
+  xy: 264, 61
+  size: 63, 65
+  orig: 63, 65
+  offset: 0, 0
+  index: -1
+house-8
   rotate: false
   xy: 456, 80
   size: 44, 46
   orig: 44, 46
   offset: 0, 0
   index: -1
-house_2d
+house-8_destroyed
   rotate: false
-  xy: 548, 80
+  xy: 502, 80
   size: 44, 46
   orig: 44, 46
   offset: 0, 0
   index: -1
-house_2d_destroyed
+house-9
   rotate: false
   xy: 312, 13
   size: 44, 46
   orig: 44, 46
   offset: 0, 0
   index: -1
+house-9_destroyed
+  rotate: false
+  xy: 548, 80
+  size: 44, 46
+  orig: 44, 46
+  offset: 0, 0
+  index: -1
 tankBody
   rotate: false
-  xy: 133, 62
+  xy: 67, 62
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tankCannon
   rotate: false
-  xy: 67, 62
+  xy: 133, 62
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

@@ -411,6 +411,10 @@ public abstract class LevelScreen extends ScreenAdapter {
         return 999 + random.nextInt(2);
     }
 
+    public int getRandomHouseType() {
+        return 1500 + random.nextInt(9);
+    }
+
     class ScriptItem {
         int typeShip;
         int typeSquadron;
