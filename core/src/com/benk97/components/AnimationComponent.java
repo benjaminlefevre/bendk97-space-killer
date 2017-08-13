@@ -15,4 +15,10 @@ public class AnimationComponent implements Component, Pool.Poolable {
         animations = new IntMap<Animation<Sprite>>();
         playMode = Animation.PlayMode.LOOP;
     }
+
+    public void tintRed(int key, float red) {
+        for (Sprite sprite : animations.get(key).getKeyFrames()) {
+            sprite.setColor(red, 0f, 0f, 1f);
+        }
+    }
 }

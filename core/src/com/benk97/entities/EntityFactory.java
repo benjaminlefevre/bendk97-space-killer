@@ -891,7 +891,8 @@ public class EntityFactory implements Disposable {
 
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites("boss3");
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(0.075f, sprites, LOOP_PINGPONG));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(0.075f, (Sprite[])sprites.toArray(Sprite.class)));
+        animationComponent.animations.get(ANIMATION_MAIN).setPlayMode(LOOP_PINGPONG);
         enemy.add(animationComponent);
 
         SpriteComponent component = engine.createComponent(SpriteComponent.class);

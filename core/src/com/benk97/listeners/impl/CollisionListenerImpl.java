@@ -29,6 +29,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     private TweenManager tweenManager;
     private LevelScreen screen;
     private Camera camera;
+
     public CollisionListenerImpl(TweenManager tweenManager, OrthographicCamera camera, Assets assets, EntityFactory entityFactory, PlayerListener playerListener,
                                  LevelScreen screen) {
         this.playerListener = playerListener;
@@ -80,7 +81,12 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         enemyComponent.hit(bullet != null ? 1 : HIT_EXPLOSION);
         float percentLifeAfter = enemyComponent.getRemainingLifeInPercent();
         if (enemyComponent.isBoss && percentLifeBefore >= 0.25 && percentLifeAfter < 0.25) {
-            Mappers.sprite.get(enemy).tintRed(0.99f);
+            AnimationComponent animationComponent = Mappers.animation.get(enemy);
+            if (animationComponent != null) {
+                animationComponent.tintRed(ANIMATION_MAIN, 0.99f);
+            } else {
+                Mappers.sprite.get(enemy).tintRed(0.99f);
+            }
         }
 
         if (enemyComponent.isDead()) {
