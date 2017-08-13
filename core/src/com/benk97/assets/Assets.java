@@ -120,6 +120,8 @@ public class Assets {
             new AssetDescriptor<Music>("sounds/level1-boss.mid", Music.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_2_BOSS =
             new AssetDescriptor<Music>("sounds/level2-boss.mid", Music.class);
+    public static final AssetDescriptor<Music> MUSIC_LEVEL_3_BOSS =
+            new AssetDescriptor<Music>("sounds/level3-boss.mid", Music.class);
     public static final AssetDescriptor<Sound> SOUND_POWER_UP =
             new AssetDescriptor<Sound>("sounds/powerUp.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_POWER_UP_VOICE =
@@ -196,7 +198,7 @@ public class Assets {
 
         put(Level3Screen.class, Arrays.<AssetDescriptor>asList(
                 // MUSIC
-                MUSIC_LEVEL_3,
+                MUSIC_LEVEL_3, MUSIC_LEVEL_3_BOSS,
                 // SOUNDS
                 SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
                 SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,

@@ -103,7 +103,10 @@ public abstract class LevelScreen extends ScreenAdapter {
         final PlayerComponent playerComponent = Mappers.player.get(player);
         player.remove(GameOverComponent.class);
         ((LevelScreen) game.currentScreen).startLevel(playerComponent.secondScript);
-        playerComponent.lives++;
+        playerComponent.lives = LIVES;
+        playerComponent.bombs = BOMBS;
+        playerComponent.resetScore();
+        playerListener.updateLivesAndBombsAfterContinue(player);
         playerComponent.rewardAds--;
         Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
@@ -217,8 +220,10 @@ public abstract class LevelScreen extends ScreenAdapter {
         Tween.registerAccessor(OrthographicCamera.class, new CameraTween());
     }
 
+    PlayerListenerImpl playerListener;
+
     protected void createSystems(Entity player, Array<Entity> lives, Array<Entity> bombs, SpriteBatch batcher) {
-        PlayerListenerImpl playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, tweenManager, this);
+        playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, tweenManager, this);
         engine.addSystem(playerListener);
         engine.addSystem(createInputHandlerSystem(player, playerListener));
         CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, camera, assets, entityFactory, playerListener, this);
@@ -248,7 +253,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         engine.addSystem(new CollisionSystem(collisionListener, spriteMaskFactory, 13));
         engine.addSystem(new EnemyAttackSystem(14, entityFactory));
         engine.addSystem(new BossAttackSystem(14, entityFactory));
-        engine.addSystem(new SquadronSystem(15, entityFactory, player, playerListener));
+        engine.addSystem(new SquadronSystem(level, 15, entityFactory, player, playerListener));
         engine.addSystem(new RemovableSystem(16));
     }
 

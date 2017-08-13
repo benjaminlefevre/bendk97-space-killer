@@ -11,7 +11,7 @@ public class SpaceKillerGameConstants {
     public final static boolean AD_TEST = true;
     // player
     public final static int LIVES = 3;
-    public final static int EXTRA_LIVES_ADS = 2;
+    public final static int EXTRA_LIVES_ADS = 1;
     public final static int BOMBS = 2;
     public final static int HIT_EXPLOSION = 50;
     public static final float NEW_LIFE = 100000f;
@@ -58,11 +58,29 @@ public class SpaceKillerGameConstants {
     public final static float ENEMY_LEVEL2_BULLET_MEDIUM_VELOCITY = 350.0f;
     public final static float ENEMY_LEVEL2_BULLET_HARD_VELOCITY = 450.0f;
 
+    // enemies level 3
+    public final static int BOSS_LEVEL3_GAUGE = 500;
+    public final static float ENEMY_LEVEL3_VELOCITY_EASY = 275f;
+    public final static float ENEMY_LEVEL3_VELOCITY_MEDIUM = 300f;
+    public final static float ENEMY_LEVEL3_VELOCITY_HARD = 325f;
+    public final static int BONUS_LEVEL3_SQUADRON_EASY = 175;
+    public final static int BONUS_LEVEL3_SQUADRON_MEDIUM = 225;
+    public final static int BONUS_LEVEL3_SQUADRON_HARD = 275;
+    public final static float STATIC_ENEMY_LEVEL3_VELOCITY = 250f;
+    public final static float STATIC_ENEMY_LEVEL3_BULLET_VELOCITY = 325f;
+    public final static int STATIC_ENEMY_LEVEL3_RATE_SHOOT = 75;
+    public final static int STATIC_ENEMY_LEVEL3_RATE_SHOOT_WHEN_TWICE = 125;
+
+    public final static float ENEMY_LEVEL3_BULLET_EASY_VELOCITY = 325.0f;
+    public final static float ENEMY_LEVEL3_BULLET_MEDIUM_VELOCITY = 375.0f;
+    public final static float ENEMY_LEVEL3_BULLET_HARD_VELOCITY = 475.0f;
+
+
     // backgrounds
     public final static float BGD_PARALLAX_VELOCITY = 100.0f;
     public final static float BGD_VELOCITY = 500.0f;
     public final static float BGD_VELOCITY_FORE = 300.0f;
-    public static final float BGD_VELOCIY_LEVEL3 = 100f;
+    public static final float BGD_VELOCIY_LEVEL3 = 150f;
     // animated sprites
     public static final float FRAME_DURATION = 0.05f;
     public static final float FRAME_DURATION_ENEMY_3 = 0.07f;

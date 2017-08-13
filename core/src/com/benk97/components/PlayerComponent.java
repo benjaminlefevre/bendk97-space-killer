@@ -72,6 +72,9 @@ public class PlayerComponent implements Component, Pool.Poolable {
         return String.format("%7s", String.valueOf(highscore)).replace(' ', '0');
     }
 
+    public void resetScore() {
+        this.score = 0;
+    }
 
     public boolean updateScore(int points) {
         int oldScore = score;

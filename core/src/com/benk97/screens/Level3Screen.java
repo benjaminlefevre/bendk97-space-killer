@@ -1,11 +1,11 @@
 package com.benk97.screens;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
+import com.benk97.components.GameOverComponent;
 import com.benk97.entities.SoloEnemyFactory;
 import com.benk97.systems.FollowPlayerSystem;
 
@@ -14,13 +14,12 @@ import java.util.List;
 
 import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
-import static com.benk97.entities.EntityFactory.BOSS_LEVEL_2;
-import static com.benk97.entities.SquadronFactory.BOSS_LEVEL2_MOVE;
+import static com.benk97.entities.EntityFactory.*;
+import static com.benk97.entities.SquadronFactory.BOSS_LEVEL3_MOVE;
 import static com.benk97.entities.SquadronFactory.LINEAR_Y_SAME_POS;
 import static com.benk97.screens.LevelScreen.Level.Level3;
 
 public class Level3Screen extends LevelScreen {
-
 
 
     private SoloEnemyFactory soloEnemyFactory;
@@ -38,7 +37,7 @@ public class Level3Screen extends LevelScreen {
 
     public Level3Screen(final Assets assets, SpaceKillerGame game) {
         super(assets, game, Level3);
-        soloEnemyFactory = new SoloEnemyFactory(engine, tweenManager, entityFactory);
+        soloEnemyFactory = new SoloEnemyFactory(Level3, engine, tweenManager, entityFactory);
         backgrounds.add(entityFactory.createBackground(assets.get(GFX_BGD_LEVEL3), 0, -BGD_VELOCIY_LEVEL3));
         new Thread(new Runnable() {
             @Override
@@ -47,7 +46,7 @@ public class Level3Screen extends LevelScreen {
             }
         }).start();
         playMusic(MUSIC_LEVEL_3);
-        startLevel(-3f);
+        startLevel(250f);
     }
 
     @Override
@@ -63,12 +62,12 @@ public class Level3Screen extends LevelScreen {
         scriptItemsMediumRight = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromRight(20));
         scriptItemsHardLeft = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromLeft(20));
         scriptItemsHardRight = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromRight(20));
-        boss = new ScriptItem(BOSS_LEVEL_2, BOSS_LEVEL2_MOVE, 100f, 1, false, true, 15000,
+        boss = new ScriptItem(BOSS_LEVEL_3, BOSS_LEVEL3_MOVE, 100f, 1, false, true, 20000,
                 ENEMY_BULLET_EASY_VELOCITY);
     }
 
     private List<ScriptItem> randomEasySpawnEnemies(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_EASY, ENEMY_LEVEL2_BULLET_EASY_VELOCITY, BONUS_LEVEL2_SQUADRON_EASY, 3, 6, null);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL3_VELOCITY_EASY, ENEMY_LEVEL3_BULLET_EASY_VELOCITY, BONUS_LEVEL3_SQUADRON_EASY, 5, 7, null);
 
     }
 
@@ -95,7 +94,7 @@ public class Level3Screen extends LevelScreen {
 
     @Override
     protected void script(int second) {
-        if (second % 3 == 0 || second % 7 == 0) {
+        if (second % 2 == 0 || second % 5 == 0 || second % 7 == 0) {
             new ScriptItem(getRandomHouseType(), LINEAR_Y_SAME_POS,
                     BGD_VELOCIY_LEVEL3,
                     1, random.nextInt() % 6 == 0, false, 0, 0f,
@@ -110,24 +109,27 @@ public class Level3Screen extends LevelScreen {
         if (second % 10 == 0) {
             entityFactory.createForeground(getRandomMist(), 450f);
         }
-//
-//        if (second < 0) {
-//            return;
-//        }
-//        if (second == 1) {
-//            soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 100);
-//        }
-//        if (second == 5) {
-//            soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 100);
-//        }
+
+        if (second < 0) {
+            return;
+        }
+        if (second == 1) {
+            soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_LEVEL3_VELOCITY, STATIC_ENEMY_LEVEL3_BULLET_VELOCITY,
+                    STATIC_ENEMY_LEVEL3_RATE_SHOOT, 15, 150);
+        }
+        if (second == 5) {
+            soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_LEVEL3_VELOCITY, STATIC_ENEMY_LEVEL3_BULLET_VELOCITY,
+                    STATIC_ENEMY_LEVEL3_RATE_SHOOT, 15, 150);
+        }
 //
 //
 //        // 13 elements
-//        if (second >= 20 && second <= 90 && second % 5 == 0) {
-//            scriptItemsEasy.poll().execute();
+        if (second >= 0 && second <= 90 && second % 5 == 0) {
+            scriptItemsEasy.poll().execute();
 //            if (second == 55) {
 //                soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 100);
 //            }
+        }
 //
 //            // 18 elements
 //        } else if (second > 90 && second <= 160 && (second % 5 == 0)) {
@@ -166,42 +168,25 @@ public class Level3Screen extends LevelScreen {
 //            if (second % 10 == 0) {
 //                hardOther.poll().execute();
 //            }
-//        } else if (second >= 255 && player.getComponent(GameOverComponent.class) == null) {
-//            switch (second) {
-//                case 255:
-//                    assets.playSound(SOUND_BOSS_ALERT);
-//                    for (Entity background : backgrounds) {
-//                        Tween.to(Mappers.velocity.get(background), VELOCITY_Y, 4).ease(Quad.IN)
-//                                .target(-Mappers.velocity.get(background).y / 10f).start(tweenManager);
-//                    }
-//                    break;
-//                case 259:
-//                    assets.stopMusic(MUSIC_LEVEL_2);
-//                    playMusic(MUSIC_LEVEL_2_BOSS);
-//                    boss.execute();
-//                    break;
-//            }
-//        }
-    }
-
-    @Override
-    protected Texture getRandomMist() {
-        int randomMist = random.nextInt(8);
-        return getMist(randomMist);
-    }
-
-    @Override
-    protected Texture getMist(int mistType) {
-        Texture texture = super.getMist(mistType);
-        if (texture == null) {
-            texture = assets.get(GFX_BGD_CLOUDS);
+//        } else
+        if (second >= 255 && player.getComponent(GameOverComponent.class) == null) {
+            switch (second) {
+                case 255:
+                    assets.playSound(SOUND_BOSS_ALERT);
+                    break;
+                case 259:
+                    assets.stopMusic(MUSIC_LEVEL_3);
+                    playMusic(MUSIC_LEVEL_3_BOSS);
+                    boss.execute();
+                    break;
+            }
         }
-        return texture;
     }
+
 
     @Override
     public int getRandomShipType() {
-        return 1 + random.nextInt(5);
+        return SHIP_LV3_1 + random.nextInt(NB_SHIP_LV3);
     }
 
     @Override

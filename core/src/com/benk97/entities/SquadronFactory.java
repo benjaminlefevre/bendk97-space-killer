@@ -39,6 +39,8 @@ public class SquadronFactory {
     public final static int INFINITE_CIRCLE = 8;
     public final static int BOSS_MOVE = 100;
     public final static int BOSS_LEVEL2_MOVE = 101;
+    public final static int BOSS_LEVEL3_MOVE = 102;
+
 
 
     private TweenManager tweenManager;
@@ -69,6 +71,9 @@ public class SquadronFactory {
                     break;
                 case BOSS_LEVEL_2:
                     entitiesSquadron.add(entityFactory.createBoss2(squadron, bulletVelocity, 800f));
+                    break;
+                case BOSS_LEVEL_3:
+                    entitiesSquadron.add(entityFactory.createBoss3(squadron, bulletVelocity, 800f));
                     break;
                 case SOUCOUPE:
                     entitiesSquadron.add(entityFactory.createEnemySoucoupe(squadron, random.nextBoolean(), bulletVelocity));
@@ -107,6 +112,9 @@ public class SquadronFactory {
                 break;
             case BOSS_LEVEL2_MOVE:
                 createBossMove2(entities, velocity);
+                break;
+            case BOSS_LEVEL3_MOVE:
+                createBossMove3(entities, velocity);
                 break;
             case LINEAR_Y:
                 createLinearYSquadron(entities, velocity, (Float) params[0], (Float) params[1], false);
@@ -195,6 +203,34 @@ public class SquadronFactory {
                         .targetRelative(SCREEN_WIDTH / 2f).delay(2f))
                 .repeatYoyo(Tween.INFINITY, 1f)
                 .start(tweenManager);
+    }
+
+    private void createBossMove3(Entity[] entities, float velocity) {
+        if (entities.length != 1) {
+            throw new IllegalArgumentException("Works only with 1 boss");
+        }
+        final Entity entity = entities[0];
+        Sprite sprite = Mappers.sprite.get(entity).sprite;
+        PositionComponent position = Mappers.position.get(entity);
+        position.setPosition(SCREEN_WIDTH / 2f - sprite.getWidth() / 2f,
+                SCREEN_HEIGHT - sprite.getHeight());
+        Tween.to(camera, ZOOM, 3f).ease(Linear.INOUT).target(0.75f).repeatYoyo(1, 0.5f).start(tweenManager);
+
+//        Timeline.createSequence()
+//                .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (sprite.getHeight() + 30f) / velocity)
+//                        .ease(Linear.INOUT)
+//                        .targetRelative(-sprite.getHeight() - 30f))
+//                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocity * 2))
+//                        .ease(Linear.INOUT)
+//                        .targetRelative(SCREEN_WIDTH / 2f).delay(2f))
+//                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH) / (velocity * 2))
+//                        .ease(Linear.INOUT)
+//                        .targetRelative(-SCREEN_WIDTH).delay(2f))
+//                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocity * 2))
+//                        .ease(Linear.INOUT)
+//                        .targetRelative(SCREEN_WIDTH / 2f).delay(2f))
+//                .repeatYoyo(Tween.INFINITY, 1f)
+//                .start(tweenManager);
     }
 
 
