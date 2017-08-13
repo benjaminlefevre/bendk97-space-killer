@@ -16,6 +16,7 @@ public class Mappers {
     public static ComponentMapper<ScoreSquadronComponent> scoreSquadron = ComponentMapper.getFor(ScoreSquadronComponent.class);
     public static ComponentMapper<GameOverComponent> gameover = ComponentMapper.getFor(GameOverComponent.class);
     public static ComponentMapper<BossComponent> boss = ComponentMapper.getFor(BossComponent.class);
+    public static ComponentMapper<TankComponent> tank = ComponentMapper.getFor(TankComponent.class);
     public static ComponentMapper<FollowPlayerComponent> follow = ComponentMapper.getFor(FollowPlayerComponent.class);
     public static ComponentMapper<InvulnerableComponent> invulnerable = ComponentMapper.getFor(InvulnerableComponent.class);
 }

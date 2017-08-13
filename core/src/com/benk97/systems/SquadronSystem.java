@@ -30,7 +30,7 @@ public class SquadronSystem extends IteratingSystem {
         this.player = player;
         this.playerListener = playerListener;
         if (level.equals(Level.Level3)) {
-            threshold_powerup = 10;
+            threshold_powerup = 14;
             threshold_shield = 20;
         }
     }

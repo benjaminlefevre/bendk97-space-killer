@@ -22,6 +22,7 @@ import com.benk97.Settings;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
 import com.benk97.components.*;
+import com.benk97.components.TankComponent.TankLevel;
 import com.benk97.screens.LevelScreen.Level;
 import com.benk97.timer.PausableTimer;
 
@@ -605,16 +606,16 @@ public class EntityFactory implements Disposable {
     }
 
 
-    public List<Entity> createTank(float velocityBullet, int rateShoot, int gauge, int points) {
+    public List<Entity> createTank(TankLevel level, int gauge, int points) {
         List<Entity> entities = new ArrayList<Entity>();
         Entity tankCannon = engine.createEntity();
-        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
+        final EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = points;
         enemyComponent.isTank = true;
         enemyComponent.initLifeGauge(gauge);
-        enemyComponent.probabilityAttack = rateShoot;
-        enemyComponent.bulletVelocity = velocityBullet;
-        enemyComponent.attackCapacity = Integer.MAX_VALUE;
+        enemyComponent.probabilityAttack = 1;
+        enemyComponent.bulletVelocity = level.bulletVelocity;
+        enemyComponent.attackCapacity = 0;
         tankCannon.add(enemyComponent);
         PositionComponent position = engine.createComponent(PositionComponent.class);
         tankCannon.add(position);
@@ -627,8 +628,10 @@ public class EntityFactory implements Disposable {
         FollowPlayerComponent followPlayerComponent = engine.createComponent(FollowPlayerComponent.class);
         followPlayerComponent.rotate = true;
         tankCannon.add(followPlayerComponent);
+        TankComponent tankComponent = engine.createComponent(TankComponent.class);
+        tankComponent.setLevel(level);
+        tankCannon.add(tankComponent);
         engine.addEntity(tankCannon);
-
         Entity tankBody = engine.createEntity();
         tankBody.add(engine.createComponent(PositionComponent.class));
         SpriteComponent sprite = engine.createComponent(SpriteComponent.class);
@@ -891,7 +894,7 @@ public class EntityFactory implements Disposable {
 
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites("boss3");
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(0.075f, (Sprite[])sprites.toArray(Sprite.class)));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(0.075f, (Sprite[]) sprites.toArray(Sprite.class)));
         animationComponent.animations.get(ANIMATION_MAIN).setPlayMode(LOOP_PINGPONG);
         enemy.add(animationComponent);
 

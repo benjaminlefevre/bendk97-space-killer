@@ -87,6 +87,7 @@ public abstract class LevelScreen extends ScreenAdapter {
                 game.goToScreen(Level3Screen.class, playerData, screenshot);
                 break;
             case Level3:
+                game.playServices.unlockAchievement(Achievement.KILL_BOSS_3);
                 game.goToScreen(Level1Screen.class, playerData, screenshot);
         }
     }
@@ -251,6 +252,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         engine.addSystem(new BatcherHUDEndSystem(viewportHUD, batcherHUD, 12));
         // END RENDERING
         engine.addSystem(new CollisionSystem(collisionListener, spriteMaskFactory, 13));
+        engine.addSystem(new TankAttackSystem(13));
         engine.addSystem(new EnemyAttackSystem(14, entityFactory));
         engine.addSystem(new BossAttackSystem(14, entityFactory));
         engine.addSystem(new SquadronSystem(level, 15, entityFactory, player, playerListener));
@@ -444,9 +446,9 @@ public abstract class LevelScreen extends ScreenAdapter {
         int rateShoot;
         float bulletVelocity;
 
-        public ScriptItem(int typeShip, int typeSquadron, float velocity, int number, boolean powerUp, boolean displayBonus, int bonus, float velocityBullet, Object... params) {
+        public ScriptItem(int typeShip, int typeSquadron, float velocity, int number, boolean powerUp, boolean displayBonus, int bonus, int rateShoot, float velocityBullet, Object... params) {
             this.typeShip = typeShip;
-            this.rateShoot = STANDARD_RATE_SHOOT;
+            this.rateShoot = rateShoot;
             this.typeSquadron = typeSquadron;
             this.velocity = velocity;
             this.number = number;
@@ -457,13 +459,17 @@ public abstract class LevelScreen extends ScreenAdapter {
             this.bulletVelocity = velocityBullet;
         }
 
+        public ScriptItem(int typeShip, int typeSquadron, float velocity, int number, boolean powerUp, boolean displayBonus, int bonus, float velocityBullet, Object... params) {
+            this(typeShip, typeSquadron, velocity, number, powerUp, displayBonus, bonus, STANDARD_RATE_SHOOT, velocityBullet, params);
+        }
+
         public void execute() {
             squadronFactory.createSquadron(typeShip, typeSquadron, velocity, number, powerUp, displayBonus, bonus, bulletVelocity, rateShoot, params);
         }
 
     }
 
-    protected List<ScriptItem> randomSpawnEnemies(int nbSpawns, float velocity, float bulletVelocity, int bonus, int minEnemies, int maxEnemies, Boolean comingFromLeft) {
+    protected List<ScriptItem> randomSpawnEnemies(int nbSpawns, float velocity, int rateShoot, float bulletVelocity, int bonus, int minEnemies, int maxEnemies, Boolean comingFromLeft) {
         List<ScriptItem> list = new ArrayList<ScriptItem>(nbSpawns);
         for (int i = 0; i < nbSpawns; ++i) {
             int randomMoveType = getRandomMoveType();
@@ -476,6 +482,7 @@ public abstract class LevelScreen extends ScreenAdapter {
                             number,
                             false, true,
                             number * bonus,
+                            rateShoot,
                             bulletVelocity,
                             getRandomMoveParams(randomMoveType, comingFromLeft == null ? random.nextBoolean() : comingFromLeft)
                     ));

@@ -10,7 +10,7 @@ public class SpaceKillerGameConstants {
     public final static boolean SKIP_SPLASH = true;
     public final static boolean AD_TEST = true;
     // player
-    public final static int LIVES = 3;
+    public final static int LIVES = 10;
     public final static int EXTRA_LIVES_ADS = 1;
     public final static int BOMBS = 2;
     public final static int HIT_EXPLOSION = 50;
@@ -41,6 +41,8 @@ public class SpaceKillerGameConstants {
     public final static float ENEMY_BULLET_HARD_VELOCITY = 450.0f;
 
     public final static int STANDARD_RATE_SHOOT = 150;
+    public final static int MEDIUM_RATE_SHOOT = 130;
+
     // enemies level 2
     public final static int BOSS_LEVEL2_GAUGE = 400;
     public final static float ENEMY_LEVEL2_VELOCITY_EASY = 225f;

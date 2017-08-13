@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
 import com.benk97.components.Mappers;
 import com.benk97.components.PositionComponent;
+import com.benk97.components.TankComponent;
 import com.benk97.screens.LevelScreen;
 import com.benk97.tweens.PositionComponentAccessor;
 
@@ -66,8 +67,8 @@ public class SoloEnemyFactory {
         }
     }
 
-    public void createTank(float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points) {
-        List<Entity> entities = entityFactory.createTank(bulletVelocity, rateShoot, gaugeLife, points);
+    public void createTank(float velocity, TankComponent.TankLevel level, int gaugeLife, int points) {
+        List<Entity> entities = entityFactory.createTank(level, gaugeLife, points);
         float posX = random.nextFloat() * (SCREEN_WIDTH - 64f);
         for (final Entity entity : entities) {
             PositionComponent position = Mappers.position.get(entity);
