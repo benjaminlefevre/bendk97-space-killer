@@ -17,7 +17,7 @@ public class TankComponent implements Component, Pool.Poolable {
     public long delayBetweenRafales = TankLevel.EASY.delayBetweenRafales;
 
     public enum TankLevel {
-        EASY(3, 500, 1500, 300f), MEDIUM(4, 450, 1250, 350f), HARD(5, 400, 1000, 400f);
+        EASY(2, 500, 1500, 300f), MEDIUM(3, 450, 1250, 325f), HARD(4, 400, 1000, 350f);
         public long delayShoot, delayBetweenRafales;
         public float bulletVelocity;
         public int nbShoots;

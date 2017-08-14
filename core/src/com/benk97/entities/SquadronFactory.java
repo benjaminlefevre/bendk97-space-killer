@@ -42,7 +42,6 @@ public class SquadronFactory {
     public final static int BOSS_LEVEL3_MOVE = 102;
 
 
-
     private TweenManager tweenManager;
     private EntityFactory entityFactory;
     private Engine engine;
@@ -67,13 +66,13 @@ public class SquadronFactory {
         for (int i = 0; i < number; ++i) {
             switch (shipType) {
                 case BOSS_LEVEL_1:
-                    entitiesSquadron.add(entityFactory.createBoss(squadron, bulletVelocity));
+                    entitiesSquadron.add(entityFactory.createBoss(squadron, bulletVelocity, bulletVelocity));
                     break;
                 case BOSS_LEVEL_2:
-                    entitiesSquadron.add(entityFactory.createBoss2(squadron, bulletVelocity, 800f));
+                    entitiesSquadron.add(entityFactory.createBoss2(squadron, bulletVelocity, bulletVelocity, 800f));
                     break;
                 case BOSS_LEVEL_3:
-                    entitiesSquadron.add(entityFactory.createBoss3(squadron, bulletVelocity, 800f));
+                    entitiesSquadron.add(entityFactory.createBoss3(squadron, bulletVelocity, 250f, 800f));
                     break;
                 case SOUCOUPE:
                     entitiesSquadron.add(entityFactory.createEnemySoucoupe(squadron, random.nextBoolean(), bulletVelocity));
@@ -213,24 +212,39 @@ public class SquadronFactory {
         Sprite sprite = Mappers.sprite.get(entity).sprite;
         PositionComponent position = Mappers.position.get(entity);
         position.setPosition(SCREEN_WIDTH / 2f - sprite.getWidth() / 2f,
-                SCREEN_HEIGHT - sprite.getHeight());
+                SCREEN_HEIGHT);
         Tween.to(camera, ZOOM, 3f).ease(Linear.INOUT).target(0.75f).repeatYoyo(1, 0.5f).start(tweenManager);
 
-//        Timeline.createSequence()
-//                .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (sprite.getHeight() + 30f) / velocity)
-//                        .ease(Linear.INOUT)
-//                        .targetRelative(-sprite.getHeight() - 30f))
-//                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocity * 2))
-//                        .ease(Linear.INOUT)
-//                        .targetRelative(SCREEN_WIDTH / 2f).delay(2f))
-//                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH) / (velocity * 2))
-//                        .ease(Linear.INOUT)
-//                        .targetRelative(-SCREEN_WIDTH).delay(2f))
-//                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocity * 2))
-//                        .ease(Linear.INOUT)
-//                        .targetRelative(SCREEN_WIDTH / 2f).delay(2f))
-//                .repeatYoyo(Tween.INFINITY, 1f)
-//                .start(tweenManager);
+        float velocityMin = velocity * 0.75f;
+        float velocityMax = velocity * 2f;
+
+        Timeline.createSequence()
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (3 * sprite.getHeight()) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT)
+                        .targetRelative(-3 * sprite.getHeight()))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (1.5f * sprite.getHeight()) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT)
+                        .targetRelative(1.5f * sprite.getHeight()))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT)
+                        .targetRelative(-SCREEN_WIDTH / 2f))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT)
+                        .targetRelative(SCREEN_WIDTH))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT)
+                        .targetRelative(-SCREEN_WIDTH / 2f))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (0.5f * sprite.getHeight()) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT)
+                        .targetRelative(0.5f * sprite.getHeight()))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 4f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT).delay(1f)
+                        .targetRelative(-SCREEN_WIDTH / 4f))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (2 * SCREEN_WIDTH / 4f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT).delay(1f)
+                        .targetRelative(2 * SCREEN_WIDTH / 4f))
+                .repeatYoyo(Tween.INFINITY, 1f)
+                .start(tweenManager);
     }
 
 

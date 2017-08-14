@@ -61,7 +61,7 @@ public class InputListenerImpl extends EntitySystem implements InputListener {
         if (playerFamily.matches(player)) {
             PlayerComponent playerComponent = Mappers.player.get(player);
             if (TimeUtils.timeSinceMillis(lastShoot) > playerComponent.fireDelay) {
-                assets.playSound(SOUND_FIRE, 0.2f);
+                assets.playSound(SOUND_FIRE, 0.5f);
                 entityFactory.createPlayerFire(player);
                 lastShoot = TimeUtils.millis();
             }

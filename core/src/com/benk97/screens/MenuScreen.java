@@ -127,7 +127,7 @@ public class MenuScreen extends HDScreen {
                 assets.playSound(MENU_CLICK);
                 assets.get(MENU_MUSIC).stop();
                 dispose();
-                game.goToScreen(Level3Screen.class);
+                game.goToScreen(Level1Screen.class);
                 return true;
             }
         });

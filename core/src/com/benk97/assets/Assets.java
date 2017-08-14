@@ -262,6 +262,10 @@ public class Assets {
             if (sound.equals(SOUND_EXPLOSION) && manager.isLoaded(SOUND_EXPLOSION.fileName)) {
                 manager.get(SOUND_EXPLOSION).stop();
             }
+
+            if (sound.equals(SOUND_FIRE_ENEMY) && manager.isLoaded(SOUND_FIRE_ENEMY.fileName)) {
+                manager.get(SOUND_FIRE_ENEMY).stop();
+            }
             manager.get(sound).play(volume);
         }
     }

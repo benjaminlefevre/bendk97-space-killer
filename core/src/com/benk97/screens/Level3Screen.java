@@ -63,32 +63,32 @@ public class Level3Screen extends LevelScreen {
         scriptItemsMediumRight = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromRight(30));
         scriptItemsHardLeft = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromLeft(30));
         scriptItemsHardRight = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromRight(30));
-        boss = new ScriptItem(BOSS_LEVEL_3, BOSS_LEVEL3_MOVE, 100f, 1, false, true, 20000,
-                ENEMY_BULLET_EASY_VELOCITY);
+        boss = new ScriptItem(BOSS_LEVEL_3, BOSS_LEVEL3_MOVE, 150f, 1, false, true, 20000,
+                ENEMY_BULLET_HARD_VELOCITY);
     }
 
     private List<ScriptItem> randomEasySpawnEnemies(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL3_VELOCITY_EASY, MEDIUM_RATE_SHOOT, ENEMY_LEVEL3_BULLET_EASY_VELOCITY, BONUS_LEVEL3_SQUADRON_EASY, 5, 7, null);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL3_VELOCITY_EASY, MEDIUM_RATE_SHOOT, ENEMY_LEVEL3_BULLET_EASY_VELOCITY, BONUS_LEVEL3_SQUADRON_EASY, 4, 6, null);
 
     }
 
     private List<ScriptItem> randomMediumSpawnEnemiesComingFromLeft(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL3_VELOCITY_MEDIUM, MEDIUM_RATE_SHOOT, ENEMY_LEVEL3_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL3_SQUADRON_MEDIUM, 6, 9, true);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL3_VELOCITY_MEDIUM, MEDIUM_RATE_SHOOT, ENEMY_LEVEL3_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL3_SQUADRON_MEDIUM, 5, 7, true);
 
     }
 
     private List<ScriptItem> randomMediumSpawnEnemiesComingFromRight(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL3_VELOCITY_MEDIUM, MEDIUM_RATE_SHOOT, ENEMY_LEVEL3_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL3_SQUADRON_MEDIUM, 6, 9, false);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL3_VELOCITY_MEDIUM, MEDIUM_RATE_SHOOT, ENEMY_LEVEL3_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL3_SQUADRON_MEDIUM, 5, 7, false);
 
     }
 
     private List<ScriptItem> randomHardSpawnEnemiesComingFromLeft(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL3_VELOCITY_HARD, MEDIUM_RATE_SHOOT, ENEMY_LEVEL3_BULLET_HARD_VELOCITY, BONUS_LEVEL3_SQUADRON_HARD, 6, 12, true);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL3_VELOCITY_HARD, MEDIUM_RATE_SHOOT, ENEMY_LEVEL3_BULLET_HARD_VELOCITY, BONUS_LEVEL3_SQUADRON_HARD, 6, 10, true);
 
     }
 
     private List<ScriptItem> randomHardSpawnEnemiesComingFromRight(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL3_VELOCITY_HARD, MEDIUM_RATE_SHOOT, ENEMY_LEVEL3_BULLET_HARD_VELOCITY, BONUS_LEVEL3_SQUADRON_HARD, 6, 12, false);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL3_VELOCITY_HARD, MEDIUM_RATE_SHOOT, ENEMY_LEVEL3_BULLET_HARD_VELOCITY, BONUS_LEVEL3_SQUADRON_HARD, 6, 10, false);
 
     }
 

@@ -2,15 +2,15 @@ package com.benk97;
 
 public class SpaceKillerGameConstants {
     // general settings
-    public final static String GAME_VERSION = "v0.9";
+    public final static String GAME_VERSION = "v1.0";
     public final static float SCREEN_WIDTH = 400;
     public final static float SCREEN_HEIGHT = 700;
-    public final static boolean DEBUG = true;
-    public final static boolean NO_GOOGLE = true;
-    public final static boolean SKIP_SPLASH = true;
-    public final static boolean AD_TEST = true;
+    public final static boolean DEBUG = false;
+    public final static boolean NO_GOOGLE = false;
+    public final static boolean SKIP_SPLASH = false;
+    public final static boolean AD_TEST = false;
     // player
-    public final static int LIVES = 10;
+    public final static int LIVES = 3;
     public final static int EXTRA_LIVES_ADS = 1;
     public final static int BOMBS = 2;
     public final static int HIT_EXPLOSION = 50;
@@ -61,21 +61,21 @@ public class SpaceKillerGameConstants {
     public final static float ENEMY_LEVEL2_BULLET_HARD_VELOCITY = 450.0f;
 
     // enemies level 3
-    public final static int BOSS_LEVEL3_GAUGE = 500;
-    public final static float ENEMY_LEVEL3_VELOCITY_EASY = 275f;
+    public final static int BOSS_LEVEL3_GAUGE = 400;
+    public final static float ENEMY_LEVEL3_VELOCITY_EASY = 250f;
     public final static float ENEMY_LEVEL3_VELOCITY_MEDIUM = 300f;
     public final static float ENEMY_LEVEL3_VELOCITY_HARD = 325f;
-    public final static int BONUS_LEVEL3_SQUADRON_EASY = 175;
-    public final static int BONUS_LEVEL3_SQUADRON_MEDIUM = 225;
-    public final static int BONUS_LEVEL3_SQUADRON_HARD = 275;
+    public final static int BONUS_LEVEL3_SQUADRON_EASY = 150;
+    public final static int BONUS_LEVEL3_SQUADRON_MEDIUM = 200;
+    public final static int BONUS_LEVEL3_SQUADRON_HARD = 250;
     public final static float STATIC_ENEMY_LEVEL3_VELOCITY = 250f;
     public final static float STATIC_ENEMY_LEVEL3_BULLET_VELOCITY = 325f;
     public final static int STATIC_ENEMY_LEVEL3_RATE_SHOOT = 75;
     public final static int STATIC_ENEMY_LEVEL3_RATE_SHOOT_WHEN_TWICE = 125;
 
-    public final static float ENEMY_LEVEL3_BULLET_EASY_VELOCITY = 325.0f;
-    public final static float ENEMY_LEVEL3_BULLET_MEDIUM_VELOCITY = 375.0f;
-    public final static float ENEMY_LEVEL3_BULLET_HARD_VELOCITY = 475.0f;
+    public final static float ENEMY_LEVEL3_BULLET_EASY_VELOCITY = 310.0f;
+    public final static float ENEMY_LEVEL3_BULLET_MEDIUM_VELOCITY = 360.0f;
+    public final static float ENEMY_LEVEL3_BULLET_HARD_VELOCITY = 460.0f;
 
 
     // backgrounds

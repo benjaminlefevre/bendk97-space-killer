@@ -213,7 +213,7 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
     public void submitScore(int highScore) {
         if (isSignedIn()) {
             Games.Leaderboards.submitScore(gameHelper.getApiClient(),
-                    getString(R.string.leaderboard_highscore), highScore);
+                    getString(R.string.leaderboard_highscores), highScore);
         }
     }
 
@@ -230,7 +230,7 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
     public void showScore() {
         if (isSignedIn()) {
             startActivityForResult(Games.Leaderboards.getLeaderboardIntent(gameHelper.getApiClient(),
-                    getString(R.string.leaderboard_highscore)), requestCode);
+                    getString(R.string.leaderboard_highscores)), requestCode);
         } else {
             signIn();
         }

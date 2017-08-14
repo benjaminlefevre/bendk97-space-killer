@@ -37,6 +37,7 @@ import static com.benk97.assets.Assets.*;
 import static com.benk97.components.Mappers.position;
 import static com.benk97.components.Mappers.sprite;
 import static com.benk97.screens.LevelScreen.Level.Level1;
+import static com.benk97.screens.LevelScreen.Level.Level3;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_XY;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_Y;
 import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
@@ -312,6 +313,7 @@ public class EntityFactory implements Disposable {
         return bullet;
     }
 
+
     public Entity createEnemyFireCircle(Entity enemy, Entity player) {
         assets.playSound(SOUND_FIRE_ENEMY);
         Entity bullet = engine.createEntity();
@@ -360,23 +362,34 @@ public class EntityFactory implements Disposable {
 
     public void createBossFire(final Entity boss, final Entity player) {
         int type = random.nextInt(3);
+        Level level = Mappers.player.get(player).level;
         if (type == 0) {
-            for (int i = 0; i < 10; ++i) {
+            final int bullets = level.equals(Level3) ? 20 : 10;
+            float delay = level.equals(Level3) ? 0.1f : 0.2f;
+            for (int i = 0; i < bullets; ++i) {
                 PausableTimer.schedule(new PausableTimer.Task() {
                     @Override
                     public void run() {
                         createEnemyFire(boss, player);
                     }
-                }, 0f + 0.2f * i);
+                }, 0f + delay * i);
             }
-        } else if (type == 1 || Mappers.player.get(player).level.equals(Level1)
+        } else if (type == 1 || level.equals(Level1)
                 || Mappers.position.get(boss).x < 0 || Mappers.position.get(boss).x > SCREEN_WIDTH * 3f / 4f) {
-            createBossFireCircle(boss);
+            createBossFireCircle(boss, false);
+            if (level.equals(Level3)) {
+                createBossFireCircle(boss, true);
+            }
         } else {
             PositionComponent position = Mappers.position.get(boss);
             BossComponent bossComponent = Mappers.boss.get(boss);
             createEnemyFireLaser(position.x + 160f, position.y + 170f, bossComponent.velocityFire2);
             createEnemyFireLaser(position.x + 195f, position.y + 170f, bossComponent.velocityFire2);
+            if (level.equals(Level3)) {
+                createEnemyFireLaser(position.x + 160f, position.y + 170f, -bossComponent.velocityFire2);
+                createEnemyFireLaser(position.x + 195f, position.y + 170f, -bossComponent.velocityFire2);
+
+            }
         }
     }
 
@@ -387,7 +400,7 @@ public class EntityFactory implements Disposable {
         createEnemyFireLaser(position.x + 342f, position.y + 186f, bossComponent.velocityFire2);
     }
 
-    public Array<Entity> createBossFireCircle(Entity boss) {
+    public Array<Entity> createBossFireCircle(Entity boss, boolean yUp) {
         Array<Entity> bullets = new Array<Entity>(10);
         assets.playSound(SOUND_FIRE_ENEMY);
         for (int i = 0; i < 12; ++i) {
@@ -414,12 +427,12 @@ public class EntityFactory implements Disposable {
             bullets.add(bullet);
             engine.addEntity(bullet);
         }
-        float rotation = -35f;
+        float rotation = yUp ? 35f : -35f;
         for (int i = 0; i < bullets.size; ++i) {
             Vector2 directionBullet = new Vector2(1f, 0f);
             directionBullet.setAngle(rotation);
-            rotation -= 10f;
-            directionBullet.scl(Mappers.enemy.get(boss).bulletVelocity);
+            rotation -= yUp ? -10f : 10f;
+            directionBullet.scl(Mappers.boss.get(boss).velocityFire1);
             VelocityComponent velocityComponent = Mappers.velocity.get(bullets.get(i));
             velocityComponent.x = directionBullet.x;
             velocityComponent.y = directionBullet.y;
@@ -734,9 +747,9 @@ public class EntityFactory implements Disposable {
             case SHIP_LV3_5:
                 atlasRegion = "swarmer";
                 playMode = LOOP_PINGPONG;
-                attackCapacity = 3;
-                strength = 3;
-                points = 300;
+                attackCapacity = 2;
+                strength = 1;
+                points = 250;
                 break;
             case SHIP_LV3_6:
                 atlasRegion = "stingray";
@@ -805,9 +818,11 @@ public class EntityFactory implements Disposable {
     public final static int TANK = 2000;
 
 
-    public Entity createBoss(Entity squadron, float velocityBullet) {
+    public Entity createBoss(Entity squadron, float velocityBullet, float velocityCircle) {
         final Entity enemy = engine.createEntity();
-        enemy.add(engine.createComponent(BossComponent.class));
+        BossComponent bossComponent = engine.createComponent(BossComponent.class);
+        bossComponent.velocityFire1 = velocityCircle;
+        enemy.add(bossComponent);
         EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
         enemyComponent.isBoss = true;
@@ -833,12 +848,13 @@ public class EntityFactory implements Disposable {
         return enemy;
     }
 
-    public Entity createBoss2(Entity squadron, float velocityBullet, float velocityBullet2) {
+    public Entity createBoss2(Entity squadron, float velocityBullet, float velocityFireCircle, float velocityBullet2) {
         final Entity enemy = engine.createEntity();
         BossComponent boss = engine.createComponent(BossComponent.class);
         enemy.add(boss);
         boss.minTriggerFire1 = 4;
         boss.minTriggerFire2 = 7;
+        boss.velocityFire1 = velocityFireCircle;
         boss.velocityFire2 = velocityBullet2;
         EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
@@ -872,12 +888,13 @@ public class EntityFactory implements Disposable {
         return enemy;
     }
 
-    public Entity createBoss3(Entity squadron, float velocityBullet, float velocityBullet2) {
+    public Entity createBoss3(Entity squadron, float velocityBullet, float velocityBulletFireCircle, float velocityBullet2) {
         final Entity enemy = engine.createEntity();
         BossComponent boss = engine.createComponent(BossComponent.class);
         enemy.add(boss);
-        boss.minTriggerFire1 = 4;
+        boss.minTriggerFire1 = 3;
         boss.minTriggerFire2 = 7;
+        boss.velocityFire1 = velocityBulletFireCircle;
         boss.velocityFire2 = velocityBullet2;
         EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
@@ -902,18 +919,12 @@ public class EntityFactory implements Disposable {
         component.sprite = sprites.get(0);
         enemy.add(component);
         engine.addEntity(enemy);
-//        PausableTimer.schedule(new PausableTimer.Task() {
-//            @Override
-//            public void run() {
-//                Mappers.boss.get(enemy).pleaseFire1 = true;
-//            }
-//        }, 5f);
-//        PausableTimer.schedule(new PausableTimer.Task() {
-//            @Override
-//            public void run() {
-//                Mappers.boss.get(enemy).pleaseFire2 = true;
-//            }
-//        }, 2f);
+        PausableTimer.schedule(new PausableTimer.Task() {
+            @Override
+            public void run() {
+                Mappers.boss.get(enemy).pleaseFire1 = true;
+            }
+        }, 5f);
         enemy.add(engine.createComponent(StateComponent.class));
         return enemy;
     }
