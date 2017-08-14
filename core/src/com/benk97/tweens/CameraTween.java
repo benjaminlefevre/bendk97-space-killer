@@ -5,7 +5,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class CameraTween implements TweenAccessor<OrthographicCamera> {
     public final static int ZOOM = 0;
-    public final static int POSITION_Y = 1;
+    public final static int X = 1;
+    public final static int Y = 2;
 
     @Override
     public int getValues(OrthographicCamera target, int type, float[] returnValues) {
@@ -13,7 +14,10 @@ public class CameraTween implements TweenAccessor<OrthographicCamera> {
             case ZOOM:
                 returnValues[0] = target.zoom;
                 return 1;
-            case POSITION_Y:
+            case X:
+                returnValues[0] = target.position.x;
+                return 1;
+            case Y:
                 returnValues[0] = target.position.y;
                 return 1;
             default:
@@ -27,7 +31,10 @@ public class CameraTween implements TweenAccessor<OrthographicCamera> {
             case ZOOM:
                 target.zoom = newValues[0];
                 break;
-            case POSITION_Y:
+            case X:
+                target.position.x = newValues[0];
+                break;
+            case Y:
                 target.position.y = newValues[0];
                 break;
             default:

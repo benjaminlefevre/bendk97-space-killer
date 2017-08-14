@@ -8,21 +8,31 @@ import com.benk97.components.Mappers;
 import com.benk97.components.SquadronComponent;
 import com.benk97.entities.EntityFactory;
 import com.benk97.listeners.PlayerListener;
+import com.benk97.screens.LevelScreen.Level;
 import com.benk97.timer.PausableTimer;
 
 import java.util.Random;
 
 public class SquadronSystem extends IteratingSystem {
 
+    public static final int THRESHOLD_POWERUP_DEFAULT = 17;
+    public static final int THRESHOLD_SHIELD_DEFAULT = 21;
+    public int threshold_powerup = THRESHOLD_POWERUP_DEFAULT;
+    public int threshold_shield = THRESHOLD_SHIELD_DEFAULT;
+
     private EntityFactory entityFactory;
     private Entity player;
     private PlayerListener playerListener;
 
-    public SquadronSystem(int priority, EntityFactory entityFactory, Entity player, PlayerListener playerListener) {
+    public SquadronSystem(Level level, int priority, EntityFactory entityFactory, Entity player, PlayerListener playerListener) {
         super(Family.all(SquadronComponent.class).get(), priority);
         this.entityFactory = entityFactory;
         this.player = player;
         this.playerListener = playerListener;
+        if (level.equals(Level.Level3)) {
+            threshold_powerup = 14;
+            threshold_shield = 20;
+        }
     }
 
     private Random random = new RandomXS128();
@@ -35,9 +45,9 @@ public class SquadronSystem extends IteratingSystem {
             if (squadron.toShoot == 0) {
                 if (squadron.powerUpAfterDestruction) {
                     int type = random.nextInt(22);
-                    if (type < 17) {
+                    if (type < threshold_powerup) {
                         entityFactory.createPowerUp(entity);
-                    } else if (type < 21) {
+                    } else if (type < threshold_shield) {
                         entityFactory.createShieldUp(entity);
                     } else {
                         entityFactory.createBombUp(entity);

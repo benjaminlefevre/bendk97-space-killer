@@ -2,6 +2,7 @@ package com.benk97.entities;
 
 import aurelienribon.tweenengine.*;
 import aurelienribon.tweenengine.equations.Linear;
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Bezier;
@@ -9,12 +10,18 @@ import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
 import com.benk97.components.Mappers;
 import com.benk97.components.PositionComponent;
+import com.benk97.components.TankComponent;
+import com.benk97.screens.LevelScreen;
 import com.benk97.tweens.PositionComponentAccessor;
 
+import java.util.List;
 import java.util.Random;
 
 import static com.benk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.benk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.benk97.entities.EntityFactory.*;
+import static com.benk97.screens.LevelScreen.Level.Level2;
+import static com.benk97.screens.LevelScreen.Level.Level3;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_X;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_XY;
 
@@ -28,9 +35,13 @@ public class SoloEnemyFactory {
     private TweenManager tweenManager;
     private EntityFactory entityFactory;
     private Random random = new RandomXS128();
+    private Engine engine;
+    private LevelScreen.Level level;
 
-    public SoloEnemyFactory(TweenManager tweenManager, EntityFactory entityFactory) {
+    public SoloEnemyFactory(LevelScreen.Level level, Engine engine, TweenManager tweenManager, EntityFactory entityFactory) {
         this.tweenManager = tweenManager;
+        this.engine = engine;
+        this.level = level;
         this.entityFactory = entityFactory;
     }
 
@@ -38,6 +49,7 @@ public class SoloEnemyFactory {
                                   int rateShoot, int gaugelife, int points) {
         return createSoloEnemy(velocity, bulletVelocity, rateShoot, gaugelife, points, random.nextBoolean());
     }
+
     public Entity createSoloEnemy(float velocity, float bulletVelocity,
                                   int rateShoot, int gaugelife, int points, boolean comingFromLeft) {
         int soloType = random.nextInt(4);
@@ -52,6 +64,25 @@ public class SoloEnemyFactory {
                 return createSoloEnemyBezier(velocity, bulletVelocity, rateShoot, gaugelife, points, comingFromLeft);
             default:
                 return null;
+        }
+    }
+
+    public void createTank(float velocity, TankComponent.TankLevel level, int gaugeLife, int points) {
+        List<Entity> entities = entityFactory.createTank(level, gaugeLife, points);
+        float posX = random.nextFloat() * (SCREEN_WIDTH - 64f);
+        for (final Entity entity : entities) {
+            PositionComponent position = Mappers.position.get(entity);
+            position.setPosition(posX, SCREEN_HEIGHT + 20f);
+            Tween.to(position, PositionComponentAccessor.POSITION_Y, (SCREEN_HEIGHT + 100f) / velocity)
+                    .ease(Linear.INOUT).targetRelative(-SCREEN_HEIGHT - 100f)
+                    .setCallback(new TweenCallback() {
+                        @Override
+                        public void onEvent(int i, BaseTween<?> baseTween) {
+                            if (i == COMPLETE) {
+                                engine.removeEntity(entity);
+                            }
+                        }
+                    }).start(tweenManager);
         }
     }
 
@@ -147,7 +178,12 @@ public class SoloEnemyFactory {
     }
 
     public int getRandomStaticEnemy() {
-        return random.nextInt(4) + 1;
+        if (level.equals(Level2)) {
+            return random.nextInt(NB_SHIP_LV2_LASER_SHIP) + SHIP_LV2_LASER_SHIP1;
+        } else if (level.equals(Level3)) {
+            return SHIP_LV3_1 + random.nextInt(NB_SHIP_LV3);
+        }
+        throw new IllegalArgumentException("Unexpecte Exception");
     }
 
 

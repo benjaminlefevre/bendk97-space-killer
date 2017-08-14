@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Bezier;
 import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.benk97.components.EnemyComponent;
 import com.benk97.components.Mappers;
 import com.benk97.components.PositionComponent;
@@ -28,6 +29,7 @@ public class SquadronFactory {
 
     public final static int LINEAR_X = 0;
     public final static int LINEAR_Y = 1;
+    public final static int LINEAR_Y_SAME_POS = 9;
     public final static int SEMI_CIRCLE = 2;
     public final static int BEZIER_SPLINE = 3;
     public final static int CATMULL_ROM_SPLINE = 4;
@@ -37,6 +39,7 @@ public class SquadronFactory {
     public final static int INFINITE_CIRCLE = 8;
     public final static int BOSS_MOVE = 100;
     public final static int BOSS_LEVEL2_MOVE = 101;
+    public final static int BOSS_LEVEL3_MOVE = 102;
 
 
     private TweenManager tweenManager;
@@ -57,30 +60,48 @@ public class SquadronFactory {
                                Object... params) {
         Entity squadron = entityFactory.createSquadron(powerUp, displayBonus, bonus);
 
-        Entity[] entities = new Entity[number];
+        Array<Entity> entitiesSquadron = new Array<Entity>(Entity.class);
+        Array<Entity> allEntities = new Array<Entity>(Entity.class);
+
         for (int i = 0; i < number; ++i) {
-            Entity ship = null;
             switch (shipType) {
                 case BOSS_LEVEL_1:
-                    ship = entityFactory.createBoss(squadron, bulletVelocity);
+                    entitiesSquadron.add(entityFactory.createBoss(squadron, bulletVelocity, bulletVelocity));
                     break;
                 case BOSS_LEVEL_2:
-                    ship = entityFactory.createBoss2(squadron, bulletVelocity, 800f);
+                    entitiesSquadron.add(entityFactory.createBoss2(squadron, bulletVelocity, bulletVelocity, 800f));
+                    break;
+                case BOSS_LEVEL_3:
+                    entitiesSquadron.add(entityFactory.createBoss3(squadron, bulletVelocity, 250f, 800f));
                     break;
                 case SOUCOUPE:
-                    ship = entityFactory.createEnemySoucoupe(squadron, random.nextBoolean(), bulletVelocity);
+                    entitiesSquadron.add(entityFactory.createEnemySoucoupe(squadron, random.nextBoolean(), bulletVelocity));
                     break;
                 case ASTEROID_1:
                 case ASTEROID_2:
-                    ship = entityFactory.createAsteroid(squadron, shipType);
+                    entitiesSquadron.add(entityFactory.createAsteroid(squadron, shipType));
+                    break;
+                case HOUSE_1:
+                case HOUSE_2:
+                case HOUSE_3:
+                case HOUSE_4:
+                case HOUSE_5:
+                case HOUSE_6:
+                case HOUSE_7:
+                case HOUSE_8:
+                case HOUSE_9:
+                    Array<Entity> house = entityFactory.createHouse(squadron, shipType);
+                    allEntities.add(house.get(1));
+                    entitiesSquadron.add(house.get(0));
+
                     break;
                 default:
-                    ship = entityFactory.createEnemyShip(squadron, random.nextBoolean(), bulletVelocity, rateShoot, shipType);
+                    entitiesSquadron.add(entityFactory.createEnemyShip(squadron, random.nextBoolean(), bulletVelocity, rateShoot, shipType));
             }
-            entities[i] = ship;
         }
-        formSquadron(entities, squadronType, velocity, params);
-        Mappers.squadron.get(squadron).addEntities(entities);
+        allEntities.addAll(entitiesSquadron);
+        formSquadron(allEntities.toArray(), squadronType, velocity, params);
+        Mappers.squadron.get(squadron).addEntities(entitiesSquadron.toArray());
     }
 
     private void formSquadron(Entity[] entities, int squadronType, float velocity, Object... params) {
@@ -91,8 +112,14 @@ public class SquadronFactory {
             case BOSS_LEVEL2_MOVE:
                 createBossMove2(entities, velocity);
                 break;
+            case BOSS_LEVEL3_MOVE:
+                createBossMove3(entities, velocity);
+                break;
             case LINEAR_Y:
-                createLinearYSquadron(entities, velocity, (Float) params[0], (Float) params[1]);
+                createLinearYSquadron(entities, velocity, (Float) params[0], (Float) params[1], false);
+                break;
+            case LINEAR_Y_SAME_POS:
+                createLinearYSquadron(entities, velocity, (Float) params[0], (Float) params[1], true);
                 break;
             case LINEAR_X:
                 createLinearXSquadron(entities, velocity, (Float) params[0], (Float) params[1], (Float) params[2]);
@@ -173,6 +200,49 @@ public class SquadronFactory {
                 .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocity * 2))
                         .ease(Linear.INOUT)
                         .targetRelative(SCREEN_WIDTH / 2f).delay(2f))
+                .repeatYoyo(Tween.INFINITY, 1f)
+                .start(tweenManager);
+    }
+
+    private void createBossMove3(Entity[] entities, float velocity) {
+        if (entities.length != 1) {
+            throw new IllegalArgumentException("Works only with 1 boss");
+        }
+        final Entity entity = entities[0];
+        Sprite sprite = Mappers.sprite.get(entity).sprite;
+        PositionComponent position = Mappers.position.get(entity);
+        position.setPosition(SCREEN_WIDTH / 2f - sprite.getWidth() / 2f,
+                SCREEN_HEIGHT);
+        Tween.to(camera, ZOOM, 3f).ease(Linear.INOUT).target(0.75f).repeatYoyo(1, 0.5f).start(tweenManager);
+
+        float velocityMin = velocity * 0.75f;
+        float velocityMax = velocity * 2f;
+
+        Timeline.createSequence()
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (3 * sprite.getHeight()) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT)
+                        .targetRelative(-3 * sprite.getHeight()))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (1.5f * sprite.getHeight()) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT)
+                        .targetRelative(1.5f * sprite.getHeight()))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT)
+                        .targetRelative(-SCREEN_WIDTH / 2f))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT)
+                        .targetRelative(SCREEN_WIDTH))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT)
+                        .targetRelative(-SCREEN_WIDTH / 2f))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (0.5f * sprite.getHeight()) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT)
+                        .targetRelative(0.5f * sprite.getHeight()))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 4f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT).delay(1f)
+                        .targetRelative(-SCREEN_WIDTH / 4f))
+                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (2 * SCREEN_WIDTH / 4f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                        .ease(Linear.INOUT).delay(1f)
+                        .targetRelative(2 * SCREEN_WIDTH / 4f))
                 .repeatYoyo(Tween.INFINITY, 1f)
                 .start(tweenManager);
     }
@@ -380,11 +450,15 @@ public class SquadronFactory {
         }
     }
 
-    private void createLinearYSquadron(Entity[] entities, float velocity, float posX, float posY) {
+    private void createLinearYSquadron(Entity[] entities, float velocity, float posX, float posY, boolean samePosition) {
         for (int i = 0; i < entities.length; ++i) {
             final Entity entity = entities[i];
             PositionComponent position = Mappers.position.get(entity);
-            position.setPosition(posX, posY + i * Mappers.sprite.get(entity).sprite.getHeight());
+            if (samePosition) {
+                position.setPosition(posX, posY);
+            } else {
+                position.setPosition(posX, posY + i * Mappers.sprite.get(entity).sprite.getHeight());
+            }
             Timeline.createSequence()
                     .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, 3 * SCREEN_HEIGHT / velocity)
                             .ease(Linear.INOUT)

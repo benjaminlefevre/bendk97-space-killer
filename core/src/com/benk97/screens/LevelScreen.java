@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.RandomXS128;
@@ -76,12 +77,18 @@ public abstract class LevelScreen extends ScreenAdapter {
         playerComponent.level = playerComponent.level.equals(Level1) ? Level2 : Level1;
         PlayerData playerData = playerComponent.copyPlayerData();
         this.dispose();
-        if (level.equals(Level1)) {
-            game.playServices.unlockAchievement(Achievement.KILL_BOSS);
-            game.goToScreen(Level2Screen.class, playerData, screenshot);
-        } else {
-            game.playServices.unlockAchievement(Achievement.KILL_BOSS_2);
-            game.goToScreen(Level1Screen.class, playerData, screenshot);
+        switch (level) {
+            case Level1:
+                game.playServices.unlockAchievement(Achievement.KILL_BOSS);
+                game.goToScreen(Level2Screen.class, playerData, screenshot);
+                break;
+            case Level2:
+                game.playServices.unlockAchievement(Achievement.KILL_BOSS_2);
+                game.goToScreen(Level3Screen.class, playerData, screenshot);
+                break;
+            case Level3:
+                game.playServices.unlockAchievement(Achievement.KILL_BOSS_3);
+                game.goToScreen(Level1Screen.class, playerData, screenshot);
         }
     }
 
@@ -97,7 +104,10 @@ public abstract class LevelScreen extends ScreenAdapter {
         final PlayerComponent playerComponent = Mappers.player.get(player);
         player.remove(GameOverComponent.class);
         ((LevelScreen) game.currentScreen).startLevel(playerComponent.secondScript);
-        playerComponent.lives++;
+        playerComponent.lives = LIVES;
+        playerComponent.bombs = BOMBS;
+        playerComponent.resetScore();
+        playerListener.updateLivesAndBombsAfterContinue(player);
         playerComponent.rewardAds--;
         Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
@@ -122,7 +132,18 @@ public abstract class LevelScreen extends ScreenAdapter {
         return time;
     }
 
-    public enum Level {Level1, Level2}
+    public enum Level {
+        Level1(GFX_LEVEL1_ATLAS_MASK), Level2(GFX_LEVEL2_ATLAS_MASK), Level3(GFX_LEVEL3_ATLAS_MASK);
+        AssetDescriptor<TextureAtlas> sprites;
+
+        Level(AssetDescriptor<TextureAtlas> sprites) {
+            this.sprites = sprites;
+        }
+
+        public AssetDescriptor<TextureAtlas> getSprites() {
+            return sprites;
+        }
+    }
 
     protected Viewport viewport;
     protected OrthographicCamera camera;
@@ -200,8 +221,10 @@ public abstract class LevelScreen extends ScreenAdapter {
         Tween.registerAccessor(OrthographicCamera.class, new CameraTween());
     }
 
+    PlayerListenerImpl playerListener;
+
     protected void createSystems(Entity player, Array<Entity> lives, Array<Entity> bombs, SpriteBatch batcher) {
-        PlayerListenerImpl playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, tweenManager, this);
+        playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, tweenManager, this);
         engine.addSystem(playerListener);
         engine.addSystem(createInputHandlerSystem(player, playerListener));
         CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, camera, assets, entityFactory, playerListener, this);
@@ -229,9 +252,10 @@ public abstract class LevelScreen extends ScreenAdapter {
         engine.addSystem(new BatcherHUDEndSystem(viewportHUD, batcherHUD, 12));
         // END RENDERING
         engine.addSystem(new CollisionSystem(collisionListener, spriteMaskFactory, 13));
+        engine.addSystem(new TankAttackSystem(13));
         engine.addSystem(new EnemyAttackSystem(14, entityFactory));
         engine.addSystem(new BossAttackSystem(14, entityFactory));
-        engine.addSystem(new SquadronSystem(15, entityFactory, player, playerListener));
+        engine.addSystem(new SquadronSystem(level, 15, entityFactory, player, playerListener));
         engine.addSystem(new RemovableSystem(16));
     }
 
@@ -406,6 +430,10 @@ public abstract class LevelScreen extends ScreenAdapter {
         return 999 + random.nextInt(2);
     }
 
+    public int getRandomHouseType() {
+        return 1500 + random.nextInt(9);
+    }
+
     class ScriptItem {
         int typeShip;
         int typeSquadron;
@@ -418,9 +446,9 @@ public abstract class LevelScreen extends ScreenAdapter {
         int rateShoot;
         float bulletVelocity;
 
-        public ScriptItem(int typeShip, int typeSquadron, float velocity, int number, boolean powerUp, boolean displayBonus, int bonus, float velocityBullet, Object... params) {
+        public ScriptItem(int typeShip, int typeSquadron, float velocity, int number, boolean powerUp, boolean displayBonus, int bonus, int rateShoot, float velocityBullet, Object... params) {
             this.typeShip = typeShip;
-            this.rateShoot = STANDARD_RATE_SHOOT;
+            this.rateShoot = rateShoot;
             this.typeSquadron = typeSquadron;
             this.velocity = velocity;
             this.number = number;
@@ -431,13 +459,17 @@ public abstract class LevelScreen extends ScreenAdapter {
             this.bulletVelocity = velocityBullet;
         }
 
+        public ScriptItem(int typeShip, int typeSquadron, float velocity, int number, boolean powerUp, boolean displayBonus, int bonus, float velocityBullet, Object... params) {
+            this(typeShip, typeSquadron, velocity, number, powerUp, displayBonus, bonus, STANDARD_RATE_SHOOT, velocityBullet, params);
+        }
+
         public void execute() {
             squadronFactory.createSquadron(typeShip, typeSquadron, velocity, number, powerUp, displayBonus, bonus, bulletVelocity, rateShoot, params);
         }
 
     }
 
-    protected List<ScriptItem> randomSpawnEnemies(int nbSpawns, float velocity, float bulletVelocity, int bonus, int minEnemies, int maxEnemies, Boolean comingFromLeft) {
+    protected List<ScriptItem> randomSpawnEnemies(int nbSpawns, float velocity, int rateShoot, float bulletVelocity, int bonus, int minEnemies, int maxEnemies, Boolean comingFromLeft) {
         List<ScriptItem> list = new ArrayList<ScriptItem>(nbSpawns);
         for (int i = 0; i < nbSpawns; ++i) {
             int randomMoveType = getRandomMoveType();
@@ -450,6 +482,7 @@ public abstract class LevelScreen extends ScreenAdapter {
                             number,
                             false, true,
                             number * bonus,
+                            rateShoot,
                             bulletVelocity,
                             getRandomMoveParams(randomMoveType, comingFromLeft == null ? random.nextBoolean() : comingFromLeft)
                     ));

@@ -7,6 +7,7 @@ public class BossComponent implements Component, Pool.Poolable {
 
     public boolean pleaseFire1 = false;
     public int minTriggerFire1 = 5;
+    public float velocityFire1 = 0;
     public boolean pleaseFire2 = false;
     public int minTriggerFire2 = 5;
     public float velocityFire2 = 0;
@@ -16,6 +17,7 @@ public class BossComponent implements Component, Pool.Poolable {
         pleaseFire2 = false;
         minTriggerFire2 = 5;
         minTriggerFire1 = 5;
+        velocityFire1 = 0;
         velocityFire2 = 0;
     }
 }

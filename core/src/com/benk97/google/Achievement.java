@@ -9,5 +9,7 @@ public enum Achievement {
 
     KILL_BOSS_2,
     KILL_LASER_SHIP,
-    KILL_5_LASER_SHIPS
+    KILL_5_LASER_SHIPS,
+
+    KILL_BOSS_3
 }

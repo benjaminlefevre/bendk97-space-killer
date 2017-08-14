@@ -18,6 +18,7 @@ public class CollisionSystem extends EntitySystem {
     private Family shieldUp = Family.one(ShieldUpComponent.class).get();
     private Family powerUp = Family.one(PowerUpComponent.class).get();
     private Family bombUp = Family.one(BombUpComponent.class).get();
+    private Family enemyBodies = Family.all(EnemyComponent.class).exclude(GroundEnemyComponent.class).get();
     private Family enemies = Family.all(EnemyComponent.class).get();
     private Family playerVulnerable = Family.one(PlayerComponent.class).exclude(InvulnerableComponent.class, GameOverComponent.class).get();
     private Family player = Family.one(PlayerComponent.class).exclude(GameOverComponent.class).get();
@@ -45,7 +46,7 @@ public class CollisionSystem extends EntitySystem {
                     collisionListener.bulletStoppedByShield(bullet);
                 }
             }
-            for (Entity enemy : getEngine().getEntitiesFor(enemies)) {
+            for (Entity enemy : getEngine().getEntitiesFor(enemyBodies)) {
                 if (Mappers.boss.get(enemy) != null || Mappers.enemy.get(enemy).isLaserShip) {
                     break;
                 }
@@ -56,7 +57,7 @@ public class CollisionSystem extends EntitySystem {
             }
         }
         for (Entity player : getEngine().getEntitiesFor(playerVulnerable)) {
-            for (Entity enemy : getEngine().getEntitiesFor(enemies)) {
+            for (Entity enemy : getEngine().getEntitiesFor(enemyBodies)) {
                 if (thereIsAShield && Mappers.boss.get(enemy) != null) {
                     break;
                 }

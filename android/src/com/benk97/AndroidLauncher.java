@@ -201,6 +201,9 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
             case KILL_5_LASER_SHIPS:
                 r = getString(R.string.achievement_kill_5_laser_ships);
                 break;
+            case KILL_BOSS_3:
+                r = getString(R.string.achievement_kill_the_boss_of_the_level_3);
+                break;
         }
 
         Games.Achievements.unlock(gameHelper.getApiClient(), r);
@@ -210,7 +213,7 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
     public void submitScore(int highScore) {
         if (isSignedIn()) {
             Games.Leaderboards.submitScore(gameHelper.getApiClient(),
-                    getString(R.string.leaderboard_highscore), highScore);
+                    getString(R.string.leaderboard_highscores), highScore);
         }
     }
 
@@ -227,7 +230,7 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
     public void showScore() {
         if (isSignedIn()) {
             startActivityForResult(Games.Leaderboards.getLeaderboardIntent(gameHelper.getApiClient(),
-                    getString(R.string.leaderboard_highscore)), requestCode);
+                    getString(R.string.leaderboard_highscores)), requestCode);
         } else {
             signIn();
         }

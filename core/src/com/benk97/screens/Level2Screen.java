@@ -41,7 +41,7 @@ public class Level2Screen extends LevelScreen {
 
     public Level2Screen(final Assets assets, SpaceKillerGame game) {
         super(assets, game, Level2);
-        soloEnemyFactory = new SoloEnemyFactory(tweenManager, entityFactory);
+        soloEnemyFactory = new SoloEnemyFactory(Level2, engine, tweenManager, entityFactory);
         backgrounds.add(entityFactory.createBackground(assets.get(GFX_BGD_LEVEL2), 0, -500f));
         backgrounds.add(entityFactory.createBackground(assets.get(GFX_BGD_STARS_LEVEL2), 1, -300f));
         backgrounds.add(entityFactory.createBackground(assets.get(GFX_BGD_BIG_PLANET), 4, -250f));
@@ -50,7 +50,6 @@ public class Level2Screen extends LevelScreen {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                spriteMaskFactory.addMask(assets.get(GFX_LEVEL1_ATLAS_MASK).getTextures().first());
                 spriteMaskFactory.addMask(assets.get(GFX_LEVEL2_ATLAS_MASK).getTextures().first());
             }
         }).start();
@@ -76,30 +75,29 @@ public class Level2Screen extends LevelScreen {
     }
 
     private List<ScriptItem> randomEasySpawnEnemies(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_EASY, ENEMY_LEVEL2_BULLET_EASY_VELOCITY, BONUS_LEVEL2_SQUADRON_EASY, 5, 6, null);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_EASY, STANDARD_RATE_SHOOT, ENEMY_LEVEL2_BULLET_EASY_VELOCITY, BONUS_LEVEL2_SQUADRON_EASY, 5, 6, null);
 
     }
 
     private List<ScriptItem> randomMediumSpawnEnemiesComingFromLeft(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_MEDIUM, ENEMY_LEVEL2_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL2_SQUADRON_MEDIUM, 5, 8, true);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_MEDIUM, STANDARD_RATE_SHOOT, ENEMY_LEVEL2_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL2_SQUADRON_MEDIUM, 5, 8, true);
 
     }
 
     private List<ScriptItem> randomMediumSpawnEnemiesComingFromRight(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_MEDIUM, ENEMY_LEVEL2_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL2_SQUADRON_MEDIUM, 5, 10, false);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_MEDIUM, STANDARD_RATE_SHOOT, ENEMY_LEVEL2_BULLET_MEDIUM_VELOCITY, BONUS_LEVEL2_SQUADRON_MEDIUM, 5, 10, false);
 
     }
 
     private List<ScriptItem> randomHardSpawnEnemiesComingFromLeft(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_HARD, ENEMY_LEVEL2_BULLET_HARD_VELOCITY, BONUS_LEVEL2_SQUADRON_HARD, 6, 12, true);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_HARD, STANDARD_RATE_SHOOT, ENEMY_LEVEL2_BULLET_HARD_VELOCITY, BONUS_LEVEL2_SQUADRON_HARD, 6, 12, true);
 
     }
 
     private List<ScriptItem> randomHardSpawnEnemiesComingFromRight(int nbSpawns) {
-        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_HARD, ENEMY_LEVEL2_BULLET_HARD_VELOCITY, BONUS_LEVEL2_SQUADRON_HARD, 6, 12, false);
+        return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL2_VELOCITY_HARD, STANDARD_RATE_SHOOT, ENEMY_LEVEL2_BULLET_HARD_VELOCITY, BONUS_LEVEL2_SQUADRON_HARD, 6, 12, false);
 
     }
-
 
     @Override
     protected void script(int second) {
