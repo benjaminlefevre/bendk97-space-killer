@@ -1090,17 +1090,17 @@ public class EntityFactory implements Disposable {
 
     public Array<Entity> createEntityPlayerBombs(Entity player) {
         PlayerComponent playerComponent = Mappers.player.get(player);
-        Array<Entity> entities = new Array<Entity>(playerComponent.lives);
+        Array<Entity> entities = new Array<Entity>(playerComponent.bombs);
         for (int i = 0; i < playerComponent.bombs; ++i) {
-            Entity life = engine.createEntity();
+            Entity bomb = engine.createEntity();
             SpriteComponent component = engine.createComponent(SpriteComponent.class);
             Sprite sprite = atlasNoMask.createSprite("bomb", 1);
             component.zIndex = 100;
             component.setTexture(sprite, 1f, 0f, 1f);
             component.setPosition(BOMB_STOCK_X - 22f * i, BOMB_STOCK_Y);
-            life.add(component);
-            engine.addEntity(life);
-            entities.add(life);
+            bomb.add(component);
+            engine.addEntity(bomb);
+            entities.add(bomb);
         }
         return entities;
     }
