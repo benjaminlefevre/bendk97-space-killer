@@ -59,6 +59,12 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     }
 
     public void updateLivesAndBombsAfterContinue(Entity player) {
+        for (Entity live : this.lives) {
+            getEngine().removeEntity(live);
+        }
+        for (Entity bomb : this.bombs) {
+            getEngine().removeEntity(bomb);
+        }
         this.lives = entityFactory.createEntityPlayerLives(player);
         this.bombs = entityFactory.createEntityPlayerBombs(player);
     }

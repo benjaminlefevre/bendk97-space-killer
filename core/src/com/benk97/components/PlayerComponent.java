@@ -94,6 +94,8 @@ public class PlayerComponent implements Component, Pool.Poolable {
         lives--;
         howManyLifesLosed++;
         powerLevel = NORMAL;
+        fireDelaySide = FIRE_DELAY_SIDE;
+        fireDelay = FIRE_DELAY;
     }
 
     public boolean hasBombs() {
