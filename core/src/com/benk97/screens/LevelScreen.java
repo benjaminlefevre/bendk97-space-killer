@@ -159,6 +159,7 @@ public abstract class LevelScreen extends ScreenAdapter {
     protected SpaceKillerGame game;
     protected Entity player;
     protected SpriteMaskFactory spriteMaskFactory;
+    protected ScreenShake screenShake;
 
     private World world;
     private RayHandler rayHandler;
@@ -183,6 +184,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         this.batcherHUD = new SpriteBatch();
         this.assets = assets;
         this.tweenManager = new TweenManager();
+        screenShake = new ScreenShake(tweenManager, camera);
         engine = new PooledEngine();
         engine.addEntityListener(new EntityListener() {
             @Override
@@ -205,12 +207,12 @@ public abstract class LevelScreen extends ScreenAdapter {
             rayHandler.setShadows(false);
             rayHandler.setCombinedMatrix(camera);
         }
-        entityFactory = new EntityFactory(game, engine, assets, tweenManager, rayHandler, level);
+        entityFactory = new EntityFactory(game, engine, assets, tweenManager, rayHandler, screenShake, level);
         squadronFactory = new SquadronFactory(tweenManager, entityFactory, camera, engine);
         player = entityFactory.createEntityPlayer(level);
         Array<Entity> lives = entityFactory.createEntityPlayerLives(player);
         Array<Entity> bombs = entityFactory.createEntityPlayerBombs(player);
-        createSystems(player, lives, bombs, batcher);
+        createSystems(player, lives, bombs, batcher, screenShake);
         registerTweensAccessor();
     }
 
@@ -223,11 +225,11 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     PlayerListenerImpl playerListener;
 
-    protected void createSystems(Entity player, Array<Entity> lives, Array<Entity> bombs, SpriteBatch batcher) {
-        playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, tweenManager, this);
+    protected void createSystems(Entity player, Array<Entity> lives, Array<Entity> bombs, SpriteBatch batcher, ScreenShake screenShake) {
+        playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, tweenManager, screenShake, this);
         engine.addSystem(playerListener);
         engine.addSystem(createInputHandlerSystem(player, playerListener));
-        CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, camera, assets, entityFactory, playerListener, this);
+        CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, screenShake, assets, entityFactory, playerListener, this);
         engine.addSystem(collisionListener);
         engine.addSystem(new AnimationSystem(0));
         engine.addSystem(new BombExplosionSystem(0, collisionListener, player));

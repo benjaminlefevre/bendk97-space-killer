@@ -5,19 +5,17 @@ import aurelienribon.tweenengine.equations.Linear;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.benk97.assets.Assets;
 import com.benk97.components.*;
 import com.benk97.entities.EntityFactory;
 import com.benk97.listeners.CollisionListener;
 import com.benk97.listeners.PlayerListener;
 import com.benk97.screens.LevelScreen;
+import com.benk97.screens.ScreenShake;
 import com.benk97.timer.PausableTimer;
 
 import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
-import static com.benk97.tweens.CameraTween.ZOOM;
 import static com.benk97.tweens.PositionComponentAccessor.POSITION_XY;
 import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
 
@@ -28,16 +26,16 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     private PlayerListener playerListener;
     private TweenManager tweenManager;
     private LevelScreen screen;
-    private Camera camera;
+    private ScreenShake screenShake;
 
-    public CollisionListenerImpl(TweenManager tweenManager, OrthographicCamera camera, Assets assets, EntityFactory entityFactory, PlayerListener playerListener,
+    public CollisionListenerImpl(TweenManager tweenManager, ScreenShake screenShake, Assets assets, EntityFactory entityFactory, PlayerListener playerListener,
                                  LevelScreen screen) {
         this.playerListener = playerListener;
-        this.camera = camera;
         this.assets = assets;
         this.entityFactory = entityFactory;
         this.tweenManager = tweenManager;
         this.screen = screen;
+        this.screenShake = screenShake;
     }
 
     @Override
@@ -92,7 +90,11 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         if (enemyComponent.isDead()) {
             Mappers.player.get(player).enemiesKilled++;
             if (enemyComponent.isLaserShip) {
+                screenShake.shake(20, 0.5f, false);
                 Mappers.player.get(player).laserShipKilled++;
+            }
+            if(enemyComponent.isTank){
+                screenShake.shake(20, 0.5f, false);
             }
             screen.checkAchievements(player);
             tweenManager.killTarget(Mappers.position.get(enemy));
@@ -102,8 +104,8 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
             SpriteComponent spriteComponent = Mappers.sprite.get(enemy);
             if (Mappers.boss.get(enemy) != null) {
                 assets.playSound(SOUND_BOSS_FINISHED);
-                Tween.to(camera, ZOOM, 5f).ease(Linear.INOUT).target(0.75f).repeatYoyo(1, 0.5f).start(tweenManager);
                 entityFactory.createBossExploding(enemy);
+                screenShake.shake(20, 2f, true);
                 entityFactory.addInvulnerableComponent(player);
                 Timeline.createSequence()
                         .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))

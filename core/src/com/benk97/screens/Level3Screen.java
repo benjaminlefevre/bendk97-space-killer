@@ -51,8 +51,8 @@ public class Level3Screen extends LevelScreen {
     }
 
     @Override
-    protected void createSystems(Entity player, Array<Entity> lives, Array<Entity> bombs, SpriteBatch batcher) {
-        super.createSystems(player, lives, bombs, batcher);
+    protected void createSystems(Entity player, Array<Entity> lives, Array<Entity> bombs, SpriteBatch batcher, ScreenShake screenShake) {
+        super.createSystems(player, lives, bombs, batcher, screenShake);
         engine.addSystem(new FollowPlayerSystem(2));
     }
 

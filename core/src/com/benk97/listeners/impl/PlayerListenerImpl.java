@@ -16,6 +16,7 @@ import com.benk97.components.PlayerComponent;
 import com.benk97.entities.EntityFactory;
 import com.benk97.listeners.PlayerListener;
 import com.benk97.screens.LevelScreen;
+import com.benk97.screens.ScreenShake;
 import com.benk97.timer.PausableTimer;
 
 import static com.benk97.SpaceKillerGameConstants.PLAYER_ORIGIN_X;
@@ -32,8 +33,11 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     private Assets assets;
     private LevelScreen screen;
     private SpaceKillerGame game;
+    private ScreenShake screenShake;
 
-    public PlayerListenerImpl(SpaceKillerGame game, Assets asset, EntityFactory entityFactory, Array<Entity> lives, Array<Entity> bombs, TweenManager tweenManager, LevelScreen screen) {
+
+    public PlayerListenerImpl(SpaceKillerGame game, Assets asset, EntityFactory entityFactory, Array<Entity> lives,
+                              Array<Entity> bombs, TweenManager tweenManager, ScreenShake screenShake, LevelScreen screen) {
         this.entityFactory = entityFactory;
         this.game = game;
         this.lives = lives;
@@ -41,6 +45,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
         this.tweenManager = tweenManager;
         this.assets = asset;
         this.screen = screen;
+        this.screenShake = screenShake;
     }
 
     @Override
@@ -73,6 +78,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     public void loseLive(final Entity player) {
         PlayerComponent playerComponent = Mappers.player.get(player);
         playerComponent.loseLife();
+        screenShake.shake(20, 0.5f, true);
         if (playerComponent.isGameOver()) {
             assets.playSound(SOUND_GAME_OVER);
             Mappers.player.get(player).secondScript = ((LevelScreen) game.currentScreen).getCurrentTimeScript();
@@ -88,9 +94,6 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
             }, 1);
         } else {
             assets.playSound(SOUND_LOSE_LIFE);
-            if (Settings.isVibrationEnabled()) {
-                Gdx.input.vibrate(new long[]{0, 100, 0, 100, 0, 100, 0}, -1);
-            }
             if (playerComponent.lives > 0) {
                 getEngine().removeEntity(lives.removeIndex(playerComponent.lives - 1));
             }

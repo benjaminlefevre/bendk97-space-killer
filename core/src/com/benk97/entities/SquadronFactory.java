@@ -157,7 +157,7 @@ public class SquadronFactory {
         PositionComponent position = Mappers.position.get(entity);
         position.setPosition(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f,
                 SCREEN_HEIGHT + 10f);
-        Tween.to(camera, ZOOM, 3f).ease(Linear.INOUT).target(0.75f).repeatYoyo(1, 0.5f).start(tweenManager);
+        Tween.to(camera, ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(tweenManager);
         Timeline.createSequence()
                 .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (spriteComponent.sprite.getHeight() + 30f) / velocity)
                         .ease(Linear.INOUT)
@@ -185,7 +185,7 @@ public class SquadronFactory {
         PositionComponent position = Mappers.position.get(entity);
         position.setPosition(SCREEN_WIDTH / 2f - sprite.getWidth() / 2f,
                 SCREEN_HEIGHT);
-        Tween.to(camera, ZOOM, 3f).ease(Linear.INOUT).target(0.75f).repeatYoyo(1, 0.5f).start(tweenManager);
+        Tween.to(camera, ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(tweenManager);
 
         Timeline.createSequence()
                 .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (sprite.getHeight() + 30f) / velocity)
@@ -213,7 +213,7 @@ public class SquadronFactory {
         PositionComponent position = Mappers.position.get(entity);
         position.setPosition(SCREEN_WIDTH / 2f - sprite.getWidth() / 2f,
                 SCREEN_HEIGHT);
-        Tween.to(camera, ZOOM, 3f).ease(Linear.INOUT).target(0.75f).repeatYoyo(1, 0.5f).start(tweenManager);
+        Tween.to(camera, ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(tweenManager);
 
         float velocityMin = velocity * 0.75f;
         float velocityMax = velocity * 2f;

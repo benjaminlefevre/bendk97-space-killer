@@ -24,6 +24,7 @@ import com.benk97.assets.Assets;
 import com.benk97.components.*;
 import com.benk97.components.TankComponent.TankLevel;
 import com.benk97.screens.LevelScreen.Level;
+import com.benk97.screens.ScreenShake;
 import com.benk97.timer.PausableTimer;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class EntityFactory implements Disposable {
     protected PooledEngine engine;
     protected Assets assets;
     protected TweenManager tweenManager;
+    private ScreenShake screenShake;
     protected TextureAtlas atlasNoMask;
     protected TextureAtlas atlasMask;
     protected RayHandler rayHandler;
@@ -60,9 +62,11 @@ public class EntityFactory implements Disposable {
     private SpaceKillerGame game;
     private Level level;
 
-    public EntityFactory(SpaceKillerGame game, PooledEngine engine, Assets assets, TweenManager tweenManager, RayHandler rayHandler, Level level) {
+    public EntityFactory(SpaceKillerGame game, PooledEngine engine, Assets assets, TweenManager tweenManager, RayHandler rayHandler,
+                         ScreenShake screenShake, Level level) {
         this.engine = engine;
         this.level = level;
+        this.screenShake = screenShake;
         this.game = game;
         this.rayHandler = rayHandler;
         this.assets = assets;
@@ -241,6 +245,7 @@ public class EntityFactory implements Disposable {
                     }
                 })
                 .start(tweenManager);
+        screenShake.shake(20f, 1f, false);
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
