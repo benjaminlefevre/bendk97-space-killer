@@ -145,6 +145,9 @@ public class Assets {
     public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER_SMALL =
             new AssetDescriptor<BitmapFont>("font4.ttf", BitmapFont.class,
                     getFontParameters("fonts/regular.ttf", 25));
+    public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER_SMALLEST =
+            new AssetDescriptor<BitmapFont>("font4.ttf", BitmapFont.class,
+                    getFontParameters("fonts/regular.ttf", 20));
 
     public static FreeTypeFontLoaderParameter getFontParameters(String filename, int size) {
         FreeTypeFontLoaderParameter parameter = new FreeTypeFontLoaderParameter();
@@ -176,7 +179,7 @@ public class Assets {
                 ICON_GAME, ICON_GOOGLE,
                 GFX_BGD_LEVEL1, GFX_BGD_STARS,
                 // FONTS
-                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_SMALL,
+                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_SMALLEST,
                 FONT_SPACE_KILLER_MEDIUM));
         put(Level2Screen.class, Arrays.<AssetDescriptor>asList(
                 // MUSIC
@@ -193,7 +196,7 @@ public class Assets {
                 ICON_GAME, ICON_GOOGLE,
                 GFX_BGD_LEVEL2, GFX_BGD_BIG_PLANET, GFX_BGD_FAR_PLANETS, GFX_BGD_RISING_PLANETS, GFX_BGD_STARS_LEVEL2,
                 // FONTS
-                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALL
+                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALLEST
         ));
 
         put(Level3Screen.class, Arrays.<AssetDescriptor>asList(
@@ -211,7 +214,7 @@ public class Assets {
                 ICON_GAME, ICON_GOOGLE,
                 GFX_BGD_LEVEL3,
                 // FONTS
-                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALL
+                FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALLEST
         ));
 
         put(TransitionScreen.class, Collections.EMPTY_LIST);

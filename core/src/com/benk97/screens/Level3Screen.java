@@ -38,7 +38,7 @@ public class Level3Screen extends LevelScreen {
 
     public Level3Screen(final Assets assets, SpaceKillerGame game) {
         super(assets, game, Level3);
-        soloEnemyFactory = new SoloEnemyFactory(Level3, engine, tweenManager, entityFactory);
+        soloEnemyFactory = new SoloEnemyFactory(Level3, engine, tweenManager, entityFactory, player);
         backgrounds.add(entityFactory.createBackground(assets.get(GFX_BGD_LEVEL3), 0, -BGD_VELOCIY_LEVEL3));
         new Thread(new Runnable() {
             @Override
@@ -46,7 +46,7 @@ public class Level3Screen extends LevelScreen {
                 spriteMaskFactory.addMask(assets.get(GFX_LEVEL3_ATLAS_MASK).getTextures().first());
             }
         }).start();
-        playMusic(MUSIC_LEVEL_3, 0.6f);
+        playMusic(MUSIC_LEVEL_3, 0.4f);
         startLevel(-3f);
     }
 

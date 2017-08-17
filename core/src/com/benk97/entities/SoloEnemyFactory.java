@@ -37,12 +37,14 @@ public class SoloEnemyFactory {
     private Random random = new RandomXS128();
     private Engine engine;
     private LevelScreen.Level level;
+    private Entity player;
 
-    public SoloEnemyFactory(LevelScreen.Level level, Engine engine, TweenManager tweenManager, EntityFactory entityFactory) {
+    public SoloEnemyFactory(LevelScreen.Level level, Engine engine, TweenManager tweenManager, EntityFactory entityFactory, Entity player) {
         this.tweenManager = tweenManager;
         this.engine = engine;
         this.level = level;
         this.entityFactory = entityFactory;
+        this.player = player;
     }
 
     public Entity createSoloEnemy(float velocity, float bulletVelocity,
@@ -52,6 +54,7 @@ public class SoloEnemyFactory {
 
     public Entity createSoloEnemy(float velocity, float bulletVelocity,
                                   int rateShoot, int gaugelife, int points, boolean comingFromLeft) {
+        Mappers.player.get(player).enemiesCountLevel++;
         int soloType = random.nextInt(4);
         switch (soloType) {
             case FOLLOW_PLAYER:
@@ -69,6 +72,7 @@ public class SoloEnemyFactory {
 
     public void createTank(float velocity, TankComponent.TankLevel level, int gaugeLife, int points) {
         List<Entity> entities = entityFactory.createTank(level, gaugeLife, points);
+        Mappers.player.get(player).enemiesCountLevel++;
         float posX = random.nextFloat() * (SCREEN_WIDTH - 64f);
         for (final Entity entity : entities) {
             PositionComponent position = Mappers.position.get(entity);

@@ -11,6 +11,11 @@ import static com.benk97.components.PlayerComponent.PowerLevel.*;
 
 public class PlayerComponent implements Component, Pool.Poolable {
 
+    public void enemyKilled() {
+        enemiesKilledLevel++;
+        enemiesKilled++;
+    }
+
     public enum PowerLevel {
         NORMAL("bullet"), DOUBLE("bullet2"), TRIPLE("bullet3"), TRIPLE_SIDE("bullet3", "bulletLeft1", "bulletRight1"),
         TRIPLE_FAST("bullet4", "bulletLeft2", "bulletRight2"), TRIPLE_VERY_FAST("bullet5", "bulletLeft3", "bulletRight3");
@@ -29,6 +34,9 @@ public class PlayerComponent implements Component, Pool.Poolable {
         }
 
     }
+
+    public int enemiesCountLevel = 0;
+    public int enemiesKilledLevel = 0;
 
     public long fireDelay = FIRE_DELAY;
     public long fireDelaySide = FIRE_DELAY_SIDE;
@@ -62,6 +70,8 @@ public class PlayerComponent implements Component, Pool.Poolable {
         powerLevel = NORMAL;
         fireDelay = FIRE_DELAY;
         fireDelaySide = FIRE_DELAY_SIDE;
+        enemiesCountLevel = 0;
+        enemiesKilledLevel = 0;
     }
 
     public String getScore() {

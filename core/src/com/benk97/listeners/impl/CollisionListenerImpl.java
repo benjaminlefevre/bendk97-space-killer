@@ -88,7 +88,9 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         }
 
         if (enemyComponent.isDead()) {
-            Mappers.player.get(player).enemiesKilled++;
+            if (Mappers.levelFinished.get(player) == null) {
+                Mappers.player.get(player).enemyKilled();
+            }
             if (enemyComponent.isLaserShip) {
                 screenShake.shake(20, 0.5f, false);
                 Mappers.player.get(player).laserShipKilled++;

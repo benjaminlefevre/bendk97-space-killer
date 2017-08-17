@@ -467,6 +467,9 @@ public abstract class LevelScreen extends ScreenAdapter {
 
         public void execute() {
             squadronFactory.createSquadron(typeShip, typeSquadron, velocity, number, powerUp, displayBonus, bonus, bulletVelocity, rateShoot, params);
+            if (Mappers.levelFinished.get(player) == null) {
+                Mappers.player.get(player).enemiesCountLevel += number;
+            }
         }
 
     }

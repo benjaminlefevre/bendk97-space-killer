@@ -41,7 +41,7 @@ public class Level2Screen extends LevelScreen {
 
     public Level2Screen(final Assets assets, SpaceKillerGame game) {
         super(assets, game, Level2);
-        soloEnemyFactory = new SoloEnemyFactory(Level2, engine, tweenManager, entityFactory);
+        soloEnemyFactory = new SoloEnemyFactory(Level2, engine, tweenManager, entityFactory, player);
         backgrounds.add(entityFactory.createBackground(assets.get(GFX_BGD_LEVEL2), 0, -500f));
         backgrounds.add(entityFactory.createBackground(assets.get(GFX_BGD_STARS_LEVEL2), 1, -300f));
         backgrounds.add(entityFactory.createBackground(assets.get(GFX_BGD_BIG_PLANET), 4, -250f));
