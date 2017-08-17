@@ -60,12 +60,10 @@ public class EntityFactory implements Disposable {
     };
     protected Random random = new RandomXS128();
     private SpaceKillerGame game;
-    private Level level;
 
     public EntityFactory(SpaceKillerGame game, PooledEngine engine, Assets assets, TweenManager tweenManager, RayHandler rayHandler,
                          ScreenShake screenShake, Level level) {
         this.engine = engine;
-        this.level = level;
         this.screenShake = screenShake;
         this.game = game;
         this.rayHandler = rayHandler;

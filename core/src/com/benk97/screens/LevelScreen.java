@@ -56,8 +56,7 @@ import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.*;
 import static com.benk97.entities.SquadronFactory.*;
 import static com.benk97.google.Achievement.*;
-import static com.benk97.screens.LevelScreen.Level.Level1;
-import static com.benk97.screens.LevelScreen.Level.Level2;
+import static com.benk97.screens.LevelScreen.Level.*;
 import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
 
 public abstract class LevelScreen extends ScreenAdapter {
@@ -74,7 +73,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         screenshot.begin();
         this.render(Gdx.graphics.getDeltaTime());
         screenshot.end();
-        playerComponent.level = playerComponent.level.equals(Level1) ? Level2 : Level1;
+        playerComponent.level = playerComponent.level.equals(Level1) ? Level2 : (playerComponent.level.equals(Level2) ? Level3 : Level1);
         PlayerData playerData = playerComponent.copyPlayerData();
         this.dispose();
         switch (level) {
