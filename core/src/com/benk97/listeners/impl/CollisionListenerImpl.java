@@ -93,7 +93,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
                 screenShake.shake(20, 0.5f, false);
                 Mappers.player.get(player).laserShipKilled++;
             }
-            if(enemyComponent.isTank){
+            if (enemyComponent.isTank) {
                 screenShake.shake(20, 0.5f, false);
             }
             screen.checkAchievements(player);
@@ -169,8 +169,10 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     @Override
     public void playerPowerUp(Entity player, Entity powerUp) {
         assets.playSound(SOUND_POWER_UP);
-        assets.playSound(SOUND_POWER_UP_VOICE);
         PlayerComponent playerComponent = Mappers.player.get(player);
+        if (!playerComponent.powerLevel.equals(PlayerComponent.PowerLevel.TRIPLE_VERY_FAST)) {
+            assets.playSound(SOUND_POWER_UP_VOICE);
+        }
         playerComponent.powerUp();
         tweenManager.killTarget(Mappers.position.get(powerUp));
         tweenManager.killTarget(Mappers.sprite.get(powerUp));

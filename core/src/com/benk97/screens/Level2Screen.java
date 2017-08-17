@@ -104,7 +104,7 @@ public class Level2Screen extends LevelScreen {
         if (second % 2 == 0 || second % 9 == 0 || second % 7 == 0) {
             new Level1Screen.ScriptItem(getRandomAsteroidType(), LINEAR_Y,
                     40f + random.nextFloat() * 260f,
-                    1, random.nextInt() % 8 == 0, false, 0, 0f,
+                    1, random.nextInt() % 4 == 0, false, 0, 0f,
                     random.nextFloat() * (SCREEN_WIDTH - 36f),
                     SCREEN_HEIGHT).execute();
         }

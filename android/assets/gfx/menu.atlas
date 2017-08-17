@@ -1,33 +1,40 @@
 
 menu.png
-size: 512,512
+size: 1024,512
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 achievements
   rotate: false
-  xy: 394, 338
+  xy: 786, 338
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 achievements_off
   rotate: false
-  xy: 2, 2
+  xy: 904, 470
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+credits
+  rotate: false
+  xy: 394, 102
+  size: 390, 400
+  orig: 390, 400
+  offset: 0, 0
+  index: -1
 gplay
   rotate: false
-  xy: 460, 452
+  xy: 134, 50
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 gplay_off
   rotate: false
-  xy: 460, 400
+  xy: 852, 452
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
@@ -41,42 +48,42 @@ help
   index: -1
 leaderboard
   rotate: false
-  xy: 36, 2
+  xy: 852, 418
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 leaderboard_off
   rotate: false
-  xy: 134, 68
+  xy: 2, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 music-off
   rotate: false
-  xy: 394, 372
+  xy: 68, 36
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 music-on
   rotate: false
-  xy: 2, 36
+  xy: 786, 372
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sound-off
   rotate: false
-  xy: 394, 438
+  xy: 2, 36
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sound-on
   rotate: false
-  xy: 68, 36
+  xy: 786, 438
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

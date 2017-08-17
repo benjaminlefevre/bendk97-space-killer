@@ -130,6 +130,9 @@ public class PlayerComponent implements Component, Pool.Poolable {
                 fireDelaySide = FIRE_DELAY_SIDE_VERY_FAST;
                 powerLevel = TRIPLE_VERY_FAST;
                 break;
+            case TRIPLE_VERY_FAST:
+                updateScore(100);
+                break;
         }
     }
 

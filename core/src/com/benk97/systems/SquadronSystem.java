@@ -32,6 +32,9 @@ public class SquadronSystem extends IteratingSystem {
         if (level.equals(Level.Level3)) {
             threshold_powerup = 14;
             threshold_shield = 20;
+        } else if(level.equals(Level.Level2)){
+            threshold_powerup = 17;
+            threshold_shield = 21;
         }
     }
 

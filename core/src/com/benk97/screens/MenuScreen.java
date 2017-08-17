@@ -33,6 +33,7 @@ public class MenuScreen extends HDScreen {
     TextButton highscoresButton;
     TextButton controllerButton;
     TextButton helpButton;
+    TextButton creditsButton;
     ImageButton soundOff;
     ImageButton soundOn;
     ImageButton musicOff;
@@ -55,6 +56,8 @@ public class MenuScreen extends HDScreen {
     ImageButton gplay;
     ImageButton gplayOff;
     ImageButton helpScreen;
+    ImageButton creditsScreen;
+
 
     public MenuScreen(final Assets assets, final SpaceKillerGame game) {
         super(game, assets);
@@ -76,6 +79,8 @@ public class MenuScreen extends HDScreen {
         controllerButton.setSize(200f, 75f);
         helpButton = new TextButton("help", buttonStyle);
         helpButton.setSize(200f, 75f);
+        creditsButton = new TextButton("credits", buttonStyle);
+        creditsButton.setSize(200f, 75f);
 
 
         final TextButtonStyle styleRetro = new TextButtonStyle();
@@ -116,10 +121,12 @@ public class MenuScreen extends HDScreen {
         stage.addActor(highscoresButton);
         stage.addActor(controllerButton);
         stage.addActor(helpButton);
+        stage.addActor(creditsButton);
         playButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f + 75f);
-        highscoresButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f - 25f);
-        controllerButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f - 150f);
-        helpButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f - 250f);
+        highscoresButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f);
+        controllerButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f - 75f);
+        helpButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f - 150f);
+        creditsButton.setPosition(SCREEN_WIDTH / 4f, SCREEN_HEIGHT / 2f - 225f);
         Gdx.input.setInputProcessor(stage);
         playButton.addListener(new InputListener() {
             @Override
@@ -139,6 +146,7 @@ public class MenuScreen extends HDScreen {
                 highscoresButton.remove();
                 controllerButton.remove();
                 helpButton.remove();
+                creditsButton.remove();
                 displayScores = new TextButton(Settings.getHighscoreString(), buttonStyle);
                 displayScores.setSize(300f, 375f);
                 displayScores.setPosition(SCREEN_WIDTH / 7f, 75f);
@@ -151,6 +159,7 @@ public class MenuScreen extends HDScreen {
                         stage.addActor(highscoresButton);
                         stage.addActor(controllerButton);
                         stage.addActor(helpButton);
+                        stage.addActor(creditsButton);
                         return true;
                     }
                 });
@@ -213,6 +222,7 @@ public class MenuScreen extends HDScreen {
                 stage.addActor(highscoresButton);
                 stage.addActor(controllerButton);
                 stage.addActor(helpButton);
+                stage.addActor(creditsButton);
                 retroPad.remove();
                 virtualPad.remove();
                 lightFx.remove();
@@ -231,6 +241,7 @@ public class MenuScreen extends HDScreen {
                 highscoresButton.remove();
                 controllerButton.remove();
                 helpButton.remove();
+                creditsButton.remove();
 
                 stage.addActor(virtualPad);
                 stage.addActor(retroPad);
@@ -249,8 +260,22 @@ public class MenuScreen extends HDScreen {
                 highscoresButton.remove();
                 controllerButton.remove();
                 helpButton.remove();
-
+                creditsButton.remove();
                 stage.addActor(helpScreen);
+                return true;
+            }
+        });
+
+        creditsButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                assets.playSound(MENU_CLICK);
+                playButton.remove();
+                highscoresButton.remove();
+                controllerButton.remove();
+                helpButton.remove();
+                creditsButton.remove();
+                stage.addActor(creditsScreen);
                 return true;
             }
         });
@@ -326,22 +351,37 @@ public class MenuScreen extends HDScreen {
 
         helpScreen = new ImageButton(new TextureRegionDrawable(atlas.findRegion("help")));
         helpScreen.setColor(new Color(1f, 1f, 1f, 0.6f));
-        helpScreen.addListener(new
-
-                                       InputListener() {
-                                           @Override
-                                           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                                               assets.playSound(MENU_CLICK);
-                                               helpScreen.remove();
-                                               stage.addActor(playButton);
-                                               stage.addActor(highscoresButton);
-                                               stage.addActor(helpButton);
-                                               stage.addActor(controllerButton);
-                                               return true;
-                                           }
-                                       });
-
+        helpScreen.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                assets.playSound(MENU_CLICK);
+                helpScreen.remove();
+                stage.addActor(playButton);
+                stage.addActor(highscoresButton);
+                stage.addActor(helpButton);
+                stage.addActor(controllerButton);
+                stage.addActor(creditsButton);
+                return true;
+            }
+        });
         helpScreen.setPosition(5f, 100f);
+
+        creditsScreen = new ImageButton(new TextureRegionDrawable(atlas.findRegion("credits")));
+        creditsScreen.setColor(new Color(1f, 1f, 1f, 0.6f));
+        creditsScreen.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                assets.playSound(MENU_CLICK);
+                creditsScreen.remove();
+                stage.addActor(playButton);
+                stage.addActor(highscoresButton);
+                stage.addActor(helpButton);
+                stage.addActor(controllerButton);
+                stage.addActor(creditsButton);
+                return true;
+            }
+        });
+        creditsScreen.setPosition(5f, 100f);
 
         TextureRegionDrawable drawable = new TextureRegionDrawable(atlas.findRegion("sound-off"));
         soundOff = new ImageButton(drawable);
