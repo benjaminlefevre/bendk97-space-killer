@@ -53,7 +53,7 @@ public class Level2Screen extends LevelScreen {
                 spriteMaskFactory.addMask(assets.get(GFX_LEVEL2_ATLAS_MASK).getTextures().first());
             }
         }).start();
-        playMusic(MUSIC_LEVEL_2);
+        playMusic(MUSIC_LEVEL_2, 0.3f);
         startLevel(-3f);
     }
 
@@ -186,7 +186,7 @@ public class Level2Screen extends LevelScreen {
                     break;
                 case 259:
                     assets.stopMusic(MUSIC_LEVEL_2);
-                    playMusic(MUSIC_LEVEL_2_BOSS);
+                    playMusic(MUSIC_LEVEL_2_BOSS, 1f);
                     boss.execute();
                     break;
             }

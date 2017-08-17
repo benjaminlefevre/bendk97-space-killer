@@ -334,8 +334,8 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     protected State state = State.RUNNING;
 
-    protected void playMusic(AssetDescriptor<Music> musicDesc) {
-        music = assets.playMusic(musicDesc);
+    protected void playMusic(AssetDescriptor<Music> musicDesc, float volume) {
+        music = assets.playMusic(musicDesc, volume);
     }
 
     @Override

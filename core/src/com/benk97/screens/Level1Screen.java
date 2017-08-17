@@ -37,7 +37,7 @@ public class Level1Screen extends LevelScreen {
                 spriteMaskFactory.addMask(assets.get(GFX_LEVEL1_ATLAS_MASK).getTextures().first());
             }
         }).start();
-        playMusic(MUSIC_LEVEL_1);
+        playMusic(MUSIC_LEVEL_1, 0.3f);
         background = entityFactory.createBackground(assets.get(GFX_BGD_LEVEL1), -BGD_VELOCITY);
         background2 = entityFactory.createBackground(assets.get(GFX_BGD_STARS), -BGD_PARALLAX_VELOCITY);
         startLevel(-3);
@@ -111,7 +111,7 @@ public class Level1Screen extends LevelScreen {
                     break;
                 case 189:
                     assets.stopMusic(MUSIC_LEVEL_1);
-                    playMusic(MUSIC_LEVEL_1_BOSS);
+                    playMusic(MUSIC_LEVEL_1_BOSS, 1f);
                     boss.execute();
                     break;
             }

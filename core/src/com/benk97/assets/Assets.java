@@ -111,11 +111,11 @@ public class Assets {
     public static final AssetDescriptor<Sound> SOUND_BOSS_ALERT =
             new AssetDescriptor<Sound>("sounds/boss-alert.ogg", Sound.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_1 =
-            new AssetDescriptor<Music>("sounds/level1.mid", Music.class);
+            new AssetDescriptor<Music>("sounds/level1.ogg", Music.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_2 =
-            new AssetDescriptor<Music>("sounds/level2.mid", Music.class);
+            new AssetDescriptor<Music>("sounds/level2.ogg", Music.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_3 =
-            new AssetDescriptor<Music>("sounds/level3.mid", Music.class);
+            new AssetDescriptor<Music>("sounds/level3.ogg", Music.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_1_BOSS =
             new AssetDescriptor<Music>("sounds/level1-boss.mid", Music.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_2_BOSS =
@@ -271,9 +271,14 @@ public class Assets {
     }
 
     public Music playMusic(AssetDescriptor<Music> musicDescriptor) {
+        return playMusic(musicDescriptor, 1.0f);
+    }
+
+    public Music playMusic(AssetDescriptor<Music> musicDescriptor, float volume) {
         if (Settings.isMusicOn()) {
             Music music = manager.get(musicDescriptor);
             music.setLooping(true);
+            music.setVolume(volume);
             music.play();
             return music;
         }
