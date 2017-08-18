@@ -17,9 +17,9 @@ import static com.benk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.benk97.assets.Assets.FONT_SPACE_KILLER_SMALLEST;
 
 public class LevelFinishedRenderingSystem extends IteratingSystem {
-    public static final String LEVEL_1_FINISHED = "level 1 finished";
-    public static final String LEVEL_2_FINISHED = "level 2 finished";
-    public static final String LEVEL_3_FINISHED = "level 3 finished";
+    public static final String LEVEL_1_FINISHED = "lvl 1 completed";
+    public static final String LEVEL_2_FINISHED = "lvl 2 completed";
+    public static final String LEVEL_3_FINISHED = "lvl 3 completed";
     public static final String ENEMIES_KILLED = "enemies killed";
     public static final String NEXT_NOT_IMPLEMNTED = "no level 4 yet";
     public static final String START_AGAIN = "start again";
