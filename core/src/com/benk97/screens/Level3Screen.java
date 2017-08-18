@@ -46,7 +46,7 @@ public class Level3Screen extends LevelScreen {
                 spriteMaskFactory.addMask(assets.get(GFX_LEVEL3_ATLAS_MASK).getTextures().first());
             }
         }).start();
-        playMusic(MUSIC_LEVEL_3, 0.4f);
+        playMusic(MUSIC_LEVEL_3, 0.6f);
         startLevel(-3f);
     }
 
