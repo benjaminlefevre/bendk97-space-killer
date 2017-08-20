@@ -112,16 +112,6 @@ public class CollisionSystem extends EntitySystem {
             }
             for (int i = (int) collision.x; i < Math.floor(collision.x + collision.width); ++i) {
                 for (int j = (int) collision.y; j < Math.floor(collision.y + collision.height); ++j) {
-//                    Gdx.app.log("debug",
-//                            "px [x = " + i + ", y = " + j + "]\n"
-//                                    + "sprite 1 [x = " + sprite1.getX() + ", y = " + sprite1.getY()
-//                                    + ", height = " + sprite1.getHeight()
-//                                    + ", regionX = " + sprite1.getRegionX() + ", regionY = " + sprite1.getRegionY() + "]\n"
-//                                    + "sprite 1 [x = " + sprite2.getX() + ", y = " + sprite2.getY()
-//                                    + ", height = " + sprite2.getHeight()
-//                                    + ", regionX = " + sprite2.getRegionX() + ", regionY = " + sprite2.getRegionY() + "]\n"
-//
-//                    );
                     try {
                         if (mask1.get(sprite1.getRegionX() + i - (int) sprite1.getX()).get(sprite1.getRegionY() + (int) sprite1.getHeight() - (j - (int) sprite1.getY()))
                                 && mask2.get(sprite2.getRegionX() + i - (int) sprite2.getX()).get(sprite2.getRegionY() + (int) sprite2.getHeight() - (j - (int) sprite2.getY()))) {

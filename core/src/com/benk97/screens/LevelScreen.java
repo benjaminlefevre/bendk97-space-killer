@@ -184,7 +184,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         this.assets = assets;
         this.tweenManager = new TweenManager();
         screenShake = new ScreenShake(tweenManager, camera);
-        engine = new PooledEngine();
+        engine = new PooledEngine(50, 150, 50, 150);
         engine.addEntityListener(new EntityListener() {
             @Override
             public void entityAdded(Entity entity) {

@@ -17,7 +17,9 @@ public class AnimationComponent implements Component, Pool.Poolable {
     }
 
     public void tintRed(int key, float red) {
-        for (Sprite sprite : animations.get(key).getKeyFrames()) {
+        int length = animations.get(key).getKeyFrames().length;
+        for (int i = 0; i < length; ++i) {
+            Sprite sprite = animations.get(key).getKeyFrames()[i];
             sprite.setColor(red, 0f, 0f, 1f);
         }
     }
