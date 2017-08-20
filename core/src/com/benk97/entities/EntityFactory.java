@@ -55,7 +55,7 @@ public class EntityFactory implements Disposable {
     protected final Pool<PointLight> lightPool = new Pool<PointLight>() {
         @Override
         protected PointLight newObject() {
-            return new PointLight(rayHandler, 10);
+            return new PointLight(rayHandler, 5);
         }
     };
     protected Random random = new RandomXS128();
@@ -124,6 +124,9 @@ public class EntityFactory implements Disposable {
         positionComponent.x = playerPosition.x + Mappers.sprite.get(player).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
         positionComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
         velocityComponent.y = PLAYER_BULLET_VELOCITY;
+        if (rayHandler != null) {
+            createLight(bullet, playerComponent.powerLevel.color, spriteComponent.sprite.getWidth() * 7f);
+        }
         return bullet;
     }
 
@@ -154,6 +157,9 @@ public class EntityFactory implements Disposable {
         direction.scl(PLAYER_BULLET_VELOCITY * 1.5f);
         velocityComponent.y = direction.y;
         velocityComponent.x = direction.x;
+        if (rayHandler != null) {
+            createLight(bullet, playerComponent.powerLevel.color, spriteComponent.sprite.getWidth() * 7f);
+        }
         return bullet;
     }
 
@@ -180,6 +186,9 @@ public class EntityFactory implements Disposable {
         direction.scl(PLAYER_BULLET_VELOCITY * 1.5f);
         velocityComponent.y = direction.y;
         velocityComponent.x = direction.x;
+        if (rayHandler != null) {
+            createLight(bullet, playerComponent.powerLevel.color, spriteComponent.sprite.getWidth() * 7f);
+        }
         return bullet;
     }
 
@@ -218,7 +227,7 @@ public class EntityFactory implements Disposable {
         final Entity bombExplosion = engine.createEntity();
         PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         bombExplosion.add(positionComponent);
-        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        final SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_BOMB_EXPLOSION,
                 atlasNoMask.createSprites("bomb_explosion"), LOOP_PINGPONG));
@@ -248,7 +257,7 @@ public class EntityFactory implements Disposable {
             @Override
             public void run() {
                 if (rayHandler != null) {
-                    createLight(bombExplosion, new Color(1f, 1f, 1f, 0.8f));
+                    createLight(bombExplosion, new Color(1f, 1f, 1f, 0.8f), spriteComponent.sprite.getHeight() * 20f);
                 }
             }
         }, 0.6f);
@@ -256,17 +265,18 @@ public class EntityFactory implements Disposable {
     }
 
     private void createLight(Entity entity) {
-        createLight(entity, new Color(0.5f, 0f, 0f, 0.3f));
+        createLight(entity, new Color(0.5f, 0f, 0f, 0.3f),
+                Mappers.sprite.get(entity).sprite.getHeight() * 20f);
     }
 
-    private void createLight(Entity entity, Color color) {
+    private void createLight(Entity entity, Color color, float distance) {
         SpriteComponent sprite = Mappers.sprite.get(entity);
         PositionComponent position = Mappers.position.get(entity);
         LightComponent lightComponent = engine.createComponent(LightComponent.class);
         PointLight light = lightPool.obtain();
         light.setActive(true);
         light.setColor(color);
-        light.setDistance(sprite.sprite.getHeight() * 10f);
+        light.setDistance(distance);
         light.setPosition(position.x + sprite.sprite.getWidth() / 2f,
                 position.y + sprite.sprite.getHeight() / 2f);
         lightComponent.light = light;
@@ -1145,7 +1155,7 @@ public class EntityFactory implements Disposable {
             }, 0.05f + i * 0.2f);
         }
         if (rayHandler != null) {
-            createLight(enemy, new Color(0.7f, 0f, 0f, 0.4f));
+            createLight(enemy, new Color(0.7f, 0f, 0f, 0.4f), sprite.sprite.getHeight() * 20f);
         }
     }
 

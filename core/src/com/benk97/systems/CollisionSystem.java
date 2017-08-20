@@ -44,6 +44,7 @@ public class CollisionSystem extends EntitySystem {
                 SpriteComponent enemyBullet = Mappers.sprite.get(bullet);
                 if (isCollisionBetween(enemyBullet.sprite, Mappers.sprite.get(shield).sprite)) {
                     collisionListener.bulletStoppedByShield(bullet);
+                    return;
                 }
             }
             for (Entity enemy : getEngine().getEntitiesFor(enemyBodies)) {
@@ -53,6 +54,7 @@ public class CollisionSystem extends EntitySystem {
                 SpriteComponent enemySprite = Mappers.sprite.get(enemy);
                 if (isCollisionBetween(enemySprite.sprite, Mappers.sprite.get(shield).sprite)) {
                     collisionListener.enemyShootByShield(enemy, shield);
+                    return;
                 }
             }
         }
@@ -63,6 +65,7 @@ public class CollisionSystem extends EntitySystem {
                 }
                 if (isCollisionBetween(Mappers.sprite.get(enemy).sprite, Mappers.sprite.get(player).sprite)) {
                     collisionListener.playerHitByEnnemyBody(player, enemy);
+                    return;
                 }
 
             }
@@ -70,6 +73,7 @@ public class CollisionSystem extends EntitySystem {
                 SpriteComponent enemyBullet = Mappers.sprite.get(bullet);
                 if (isCollisionBetween(enemyBullet.sprite, Mappers.sprite.get(player).sprite)) {
                     collisionListener.playerHitByEnnemyBullet(player, bullet);
+                    return;
                 }
             }
         }
@@ -79,6 +83,7 @@ public class CollisionSystem extends EntitySystem {
                     if (!Mappers.enemy.get(enemy).isDead()) {
                         if (isCollisionBetween(Mappers.sprite.get(enemy).sprite, Mappers.sprite.get(bullet).sprite)) {
                             collisionListener.enemyShoot(enemy, player, bullet);
+                            return;
                         }
                     }
                 }
@@ -87,16 +92,19 @@ public class CollisionSystem extends EntitySystem {
             for (Entity powerUp : getEngine().getEntitiesFor(powerUp)) {
                 if (isCollisionBetween(Mappers.sprite.get(player).sprite, Mappers.sprite.get(powerUp).sprite)) {
                     collisionListener.playerPowerUp(player, powerUp);
+                    return;
                 }
             }
             for (Entity shieldUp : getEngine().getEntitiesFor(shieldUp)) {
                 if (isCollisionBetween(Mappers.sprite.get(player).sprite, Mappers.sprite.get(shieldUp).sprite)) {
                     collisionListener.playerShieldUp(player, shieldUp);
+                    return;
                 }
             }
             for (Entity bombUp : getEngine().getEntitiesFor(bombUp)) {
                 if (isCollisionBetween(Mappers.sprite.get(player).sprite, Mappers.sprite.get(bombUp).sprite)) {
                     collisionListener.playerBombUp(player, bombUp);
+                    return;
                 }
             }
         }

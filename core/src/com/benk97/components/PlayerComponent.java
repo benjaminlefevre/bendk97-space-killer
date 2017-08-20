@@ -1,6 +1,7 @@
 package com.benk97.components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Pool;
 import com.benk97.player.PlayerData;
 import com.benk97.screens.LevelScreen;
@@ -17,17 +18,24 @@ public class PlayerComponent implements Component, Pool.Poolable {
     }
 
     public enum PowerLevel {
-        NORMAL("bullet"), DOUBLE("bullet2"), TRIPLE("bullet3"), TRIPLE_SIDE("bullet3", "bulletLeft1", "bulletRight1"),
-        TRIPLE_FAST("bullet4", "bulletLeft2", "bulletRight2"), TRIPLE_VERY_FAST("bullet5", "bulletLeft3", "bulletRight3");
+        NORMAL(new Color(43f/255f, 197f/255f, 205f/255f, 0.6f), "bullet"),
+        DOUBLE(new Color(43f/255f, 197f/255f, 205f/255f, 0.6f), "bullet2"),
+        TRIPLE(new Color(43f/255f, 197f/255f, 205f/255f, 0.6f), "bullet3"),
+        TRIPLE_SIDE(new Color(43f/255f, 197f/255f, 205f/255f, 0.6f), "bullet3", "bulletLeft1", "bulletRight1"),
+        TRIPLE_FAST(new Color(3f/255f, 255f/255f, 136f/255f, 0.6f), "bullet4", "bulletLeft2", "bulletRight2"),
+        TRIPLE_VERY_FAST(new Color(255f/255f, 120f/255f, 0f, 0.6f),"bullet5", "bulletLeft3", "bulletRight3");
 
+        public com.badlogic.gdx.graphics.Color color;
         public String regionName;
         public String leftRegionName;
         public String rightRegionName;
 
-        PowerLevel(String regionName) {
+        PowerLevel(Color color, String regionName) {
+            this.color = color;
             this.regionName = regionName;
         }
-        PowerLevel(String regionName, String left, String right) {
+        PowerLevel(Color color, String regionName, String left, String right) {
+            this.color = color;
             this.regionName = regionName;
             this.leftRegionName = left;
             this.rightRegionName = right;
