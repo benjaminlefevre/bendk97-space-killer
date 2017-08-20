@@ -42,7 +42,7 @@ public class BossAttackSystem extends IteratingSystem {
             PausableTimer.schedule(new PausableTimer.Task() {
                 @Override
                 public void run() {
-                    if (!Mappers.enemy.get(entity).isDead()) {
+                    if (Mappers.enemy.get(entity) != null && !Mappers.enemy.get(entity).isDead()) {
                         boss.pleaseFire1 = true;
                     }
                 }

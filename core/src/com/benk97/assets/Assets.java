@@ -230,6 +230,9 @@ public class Assets {
     }
 
     public AssetManager getAssetManager() {
+        if (manager != null) {
+            manager.dispose();
+        }
         AssetManager manager = new AssetManager();
         FileHandleResolver resolver = new InternalFileHandleResolver();
         manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));

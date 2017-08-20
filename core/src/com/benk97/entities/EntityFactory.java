@@ -1144,15 +1144,17 @@ public class EntityFactory implements Disposable {
     public void createBossExploding(final Entity enemy) {
         final SpriteComponent sprite = Mappers.sprite.get(enemy);
         for (int i = 0; i < 50; ++i) {
-            assets.playSound(SOUND_EXPLOSION);
             PausableTimer.schedule(new PausableTimer.Task() {
                 @Override
                 public void run() {
+                    assets.playSound(SOUND_EXPLOSION);
                     PositionComponent position = Mappers.position.get(enemy);
-                    createEntityExploding(position.x + random.nextFloat() * sprite.sprite.getWidth(),
-                            position.y + random.nextFloat() * sprite.sprite.getHeight());
+                    if (position != null) {
+                        createEntityExploding(position.x + random.nextFloat() * sprite.sprite.getWidth(),
+                                position.y + random.nextFloat() * sprite.sprite.getHeight());
+                    }
                 }
-            }, 0.05f + i * 0.2f);
+            }, i * 0.1f);
         }
         if (rayHandler != null) {
             createLight(enemy, new Color(0.7f, 0f, 0f, 0.4f), sprite.sprite.getHeight() * 20f);
