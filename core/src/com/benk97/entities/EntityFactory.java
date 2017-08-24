@@ -55,7 +55,9 @@ public class EntityFactory implements Disposable {
     protected final Pool<PointLight> lightPool = new Pool<PointLight>() {
         @Override
         protected PointLight newObject() {
-            return new PointLight(rayHandler, 5);
+            PointLight light = new PointLight(rayHandler, 5);
+            light.setXray(true);
+            return light;
         }
     };
     protected Random random = new RandomXS128();
@@ -67,6 +69,15 @@ public class EntityFactory implements Disposable {
         this.screenShake = screenShake;
         this.game = game;
         this.rayHandler = rayHandler;
+        if (rayHandler != null) {
+            Array<PointLight> poolObjects = new Array<PointLight>(30);
+            for (int i = 0; i < 30; ++i) {
+                PointLight light = lightPool.obtain();
+                light.setActive(false);
+                poolObjects.add(light);
+            }
+            lightPool.freeAll(poolObjects);
+        }
         this.assets = assets;
         this.tweenManager = tweenManager;
         this.atlasNoMask = assets.get(GFX_LEVEL_ALL_ATLAS_NOMASK);

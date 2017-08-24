@@ -202,7 +202,8 @@ public abstract class LevelScreen extends ScreenAdapter {
         });
         if (fxLightEnabled) {
             world = new World(new Vector2(0, 0), false);
-            rayHandler = new RayHandler(world);
+            rayHandler = new RayHandler(world,Gdx.graphics.getWidth() / 8, Gdx.graphics
+                    .getHeight() / 8);
             rayHandler.setShadows(false);
             rayHandler.setCombinedMatrix(camera);
         }
