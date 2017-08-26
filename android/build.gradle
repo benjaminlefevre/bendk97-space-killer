@@ -25,8 +25,8 @@ android {
 
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 86
-        versionName "1.0.18"
+        versionCode 88
+        versionName "1.0.20"
     }
     buildTypes {
         release {

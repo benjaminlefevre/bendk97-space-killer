@@ -202,8 +202,8 @@ public abstract class LevelScreen extends ScreenAdapter {
         });
         if (fxLightEnabled) {
             world = new World(new Vector2(0, 0), false);
-            rayHandler = new RayHandler(world,Gdx.graphics.getWidth() / 8, Gdx.graphics
-                    .getHeight() / 8);
+            rayHandler = new RayHandler(world,Gdx.graphics.getWidth() / 16, Gdx.graphics
+                    .getHeight() / 16);
             rayHandler.setShadows(false);
             rayHandler.setCombinedMatrix(camera);
         }
@@ -521,7 +521,7 @@ public abstract class LevelScreen extends ScreenAdapter {
                             new Vector2(0f + leftOrRight * SCREEN_WIDTH, 0f)};
                 } else {
                     return new Object[]{
-                            new Vector2(-10 * SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + 10 * SHIP_WIDTH), SCREEN_HEIGHT / 2f),
+                            new Vector2(-11 * SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + 11 * SHIP_WIDTH), SCREEN_HEIGHT / 2f),
                             new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
                             new Vector2(SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 2 * SHIP_WIDTH), SCREEN_HEIGHT),
                             new Vector2(SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 6 * SHIP_WIDTH), SCREEN_HEIGHT / 2f)};
