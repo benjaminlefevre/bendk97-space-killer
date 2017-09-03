@@ -95,6 +95,7 @@ public class Level3Screen extends LevelScreen {
 
     @Override
     protected void script(int second) {
+        super.script(second);
         if (second % 2 == 0 || second % 5 == 0 || second % 7 == 0) {
             new ScriptItem(getRandomHouseType(), LINEAR_Y_SAME_POS,
                     BGD_VELOCIY_LEVEL3,

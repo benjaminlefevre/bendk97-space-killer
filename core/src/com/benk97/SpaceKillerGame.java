@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.benk97.ads.AdsController;
 import com.benk97.assets.Assets;
 import com.benk97.google.PlayServices;
@@ -27,6 +28,9 @@ public class SpaceKillerGame extends Game {
         this.adsController = adsController;
         this.playServices = playServices;
         this.intentShare = intentShare;
+        if (SpaceKillerGameConstants.DEBUG) {
+            GLProfiler.enable();
+        }
     }
 
     public void askExtraLifeRewardWithAd() {
@@ -79,6 +83,8 @@ public class SpaceKillerGame extends Game {
         } catch (Exception e) {
             Gdx.app.log("Guru Meditation", "error: " + e.getMessage());
             Gdx.app.exit();
+        } finally {
+            Runtime.getRuntime().gc();
         }
     }
 

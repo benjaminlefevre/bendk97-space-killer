@@ -57,6 +57,7 @@ public class Level1Screen extends LevelScreen {
 
     @Override
     protected void script(int second) {
+        super.script(second);
         if (second % 3 == 0 || second % 7 == 0) {
             new ScriptItem(getRandomAsteroidType(), LINEAR_Y,
                     40f + random.nextFloat() * 160f,

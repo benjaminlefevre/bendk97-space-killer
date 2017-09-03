@@ -319,7 +319,11 @@ public abstract class LevelScreen extends ScreenAdapter {
         }
     }
 
-    protected abstract void script(int second);
+    protected void script(int second) {
+        if(second == 0) {
+            assets.playSound(SOUND_READY);
+        }
+    }
 
 
     @Override

@@ -92,6 +92,8 @@ public class Assets {
             new AssetDescriptor<Sound>("sounds/loseLife.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_NEW_LIFE =
             new AssetDescriptor<Sound>("sounds/newLife.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_READY =
+            new AssetDescriptor<Sound>("sounds/ready.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_GAME_OVER =
             new AssetDescriptor<Sound>("sounds/game_over.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_SHIELD_BULLET =
@@ -168,7 +170,7 @@ public class Assets {
                 // MUSIC
                 MUSIC_LEVEL_1, MUSIC_LEVEL_1_BOSS,
                 // SOUNDS
-                SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
+                SOUND_READY, SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
                 SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
                 SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, SOUND_BOSS_ALERT,
                 SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION,
@@ -185,7 +187,7 @@ public class Assets {
                 // MUSIC
                 MUSIC_LEVEL_2, MUSIC_LEVEL_2_BOSS,
                 // SOUNDS
-                SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
+                SOUND_READY, SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
                 SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
                 SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, SOUND_BOSS_ALERT,
                 SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION,
@@ -203,7 +205,7 @@ public class Assets {
                 // MUSIC
                 MUSIC_LEVEL_3, MUSIC_LEVEL_3_BOSS,
                 // SOUNDS
-                SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
+                SOUND_READY, SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
                 SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
                 SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, SOUND_BOSS_ALERT,
                 SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION,

@@ -101,6 +101,7 @@ public class Level2Screen extends LevelScreen {
 
     @Override
     protected void script(int second) {
+        super.script(second);
         if (second % 2 == 0 || second % 9 == 0 || second % 7 == 0) {
             new Level1Screen.ScriptItem(getRandomAsteroidType(), LINEAR_Y,
                     40f + random.nextFloat() * 260f,
