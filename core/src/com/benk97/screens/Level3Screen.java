@@ -3,6 +3,7 @@ package com.benk97.screens;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.SnapshotArray;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
 import com.benk97.components.GameOverComponent;
@@ -51,7 +52,7 @@ public class Level3Screen extends LevelScreen {
     }
 
     @Override
-    protected void createSystems(Entity player, Array<Entity> lives, Array<Entity> bombs, SpriteBatch batcher, ScreenShake screenShake) {
+    protected void createSystems(Entity player, SnapshotArray<Entity> lives, SnapshotArray<Entity> bombs, SpriteBatch batcher, ScreenShake screenShake) {
         super.createSystems(player, lives, bombs, batcher, screenShake);
         engine.addSystem(new FollowPlayerSystem(2));
     }

@@ -24,7 +24,7 @@ import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.SnapshotArray;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.benk97.Settings;
@@ -210,8 +210,8 @@ public abstract class LevelScreen extends ScreenAdapter {
         entityFactory = new EntityFactory(game, engine, assets, tweenManager, rayHandler, screenShake, level);
         squadronFactory = new SquadronFactory(tweenManager, entityFactory, camera, engine);
         player = entityFactory.createEntityPlayer(level);
-        Array<Entity> lives = entityFactory.createEntityPlayerLives(player);
-        Array<Entity> bombs = entityFactory.createEntityPlayerBombs(player);
+        SnapshotArray<Entity> lives = entityFactory.createEntityPlayerLives(player);
+        SnapshotArray<Entity> bombs = entityFactory.createEntityPlayerBombs(player);
         createSystems(player, lives, bombs, batcher, screenShake);
         registerTweensAccessor();
     }
@@ -225,7 +225,7 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     PlayerListenerImpl playerListener;
 
-    protected void createSystems(Entity player, Array<Entity> lives, Array<Entity> bombs, SpriteBatch batcher, ScreenShake screenShake) {
+    protected void createSystems(Entity player, SnapshotArray<Entity> lives, SnapshotArray<Entity> bombs, SpriteBatch batcher, ScreenShake screenShake) {
         playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, tweenManager, screenShake, this);
         engine.addSystem(playerListener);
         engine.addSystem(createInputHandlerSystem(player, playerListener));

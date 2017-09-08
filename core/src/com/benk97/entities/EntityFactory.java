@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.SnapshotArray;
 import com.benk97.Settings;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
@@ -1096,9 +1097,9 @@ public class EntityFactory implements Disposable {
         return shield;
     }
 
-    public Array<Entity> createEntityPlayerLives(Entity player) {
+    public SnapshotArray<Entity> createEntityPlayerLives(Entity player) {
         PlayerComponent playerComponent = Mappers.player.get(player);
-        Array<Entity> entities = new Array<Entity>(playerComponent.lives);
+        SnapshotArray<Entity> entities = new SnapshotArray<Entity>(true, playerComponent.lives, Entity.class);
         for (int i = 0; i < playerComponent.lives - 1; ++i) {
             Entity life = engine.createEntity();
             SpriteComponent component = engine.createComponent(SpriteComponent.class);
@@ -1112,9 +1113,9 @@ public class EntityFactory implements Disposable {
         return entities;
     }
 
-    public Array<Entity> createEntityPlayerBombs(Entity player) {
+    public SnapshotArray<Entity> createEntityPlayerBombs(Entity player) {
         PlayerComponent playerComponent = Mappers.player.get(player);
-        Array<Entity> entities = new Array<Entity>(playerComponent.bombs);
+        SnapshotArray<Entity> entities = new SnapshotArray<Entity>(true, playerComponent.bombs, Entity.class);
         for (int i = 0; i < playerComponent.bombs; ++i) {
             Entity bomb = engine.createEntity();
             SpriteComponent component = engine.createComponent(SpriteComponent.class);

@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.SnapshotArray;
 import com.benk97.Settings;
 import com.benk97.SpaceKillerGame;
 import com.benk97.assets.Assets;
@@ -27,8 +27,8 @@ import static com.benk97.tweens.SpriteComponentAccessor.ALPHA;
 
 public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     private EntityFactory entityFactory;
-    private Array<Entity> lives;
-    private Array<Entity> bombs;
+    private SnapshotArray<Entity> lives;
+    private SnapshotArray<Entity> bombs;
     private TweenManager tweenManager;
     private Assets assets;
     private LevelScreen screen;
@@ -36,8 +36,8 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     private ScreenShake screenShake;
 
 
-    public PlayerListenerImpl(SpaceKillerGame game, Assets asset, EntityFactory entityFactory, Array<Entity> lives,
-                              Array<Entity> bombs, TweenManager tweenManager, ScreenShake screenShake, LevelScreen screen) {
+    public PlayerListenerImpl(SpaceKillerGame game, Assets asset, EntityFactory entityFactory, SnapshotArray<Entity> lives,
+                              SnapshotArray<Entity> bombs, TweenManager tweenManager, ScreenShake screenShake, LevelScreen screen) {
         this.entityFactory = entityFactory;
         this.game = game;
         this.lives = lives;
@@ -56,20 +56,26 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     @Override
     public void newBombObtained(Entity player) {
         Mappers.player.get(player).bombs++;
-        for (Entity bomb : bombs) {
-            getEngine().removeEntity(bomb);
+        Entity[] bombsArray = bombs.begin();
+        for (int i = 0; i < bombs.size; ++i) {
+            getEngine().removeEntity(bombsArray[i]);
         }
+        bombs.end();
         this.bombs = entityFactory.createEntityPlayerBombs(player);
 
     }
 
     public void updateLivesAndBombsAfterContinue(Entity player) {
-        for (Entity live : this.lives) {
-            getEngine().removeEntity(live);
+        Entity[] livesArray = this.lives.begin();
+        for (int i = 0; i < lives.size; ++i) {
+            getEngine().removeEntity(livesArray[i]);
         }
-        for (Entity bomb : this.bombs) {
-            getEngine().removeEntity(bomb);
+        this.lives.end();
+        Entity[] bombsArray = this.bombs.begin();
+        for (int i = 0; i < bombs.size; ++i) {
+            getEngine().removeEntity(bombsArray[i]);
         }
+        this.bombs.end();
         this.lives = entityFactory.createEntityPlayerLives(player);
         this.bombs = entityFactory.createEntityPlayerBombs(player);
     }
@@ -135,9 +141,11 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
         }
         if (newLife) {
             assets.playSound(SOUND_NEW_LIFE);
-            for (Entity life : lives) {
-                getEngine().removeEntity(life);
+            Entity[] livesArray = lives.begin();
+            for (int i = 0; i < lives.size; ++i) {
+                getEngine().removeEntity(livesArray[i]);
             }
+            lives.end();
             this.lives = entityFactory.createEntityPlayerLives(player);
         }
     }
