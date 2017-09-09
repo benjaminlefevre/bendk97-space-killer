@@ -34,12 +34,10 @@ public class Level3Screen extends LevelScreen {
     private ScriptItem boss;
 
 
-    private Array<Entity> backgrounds = new Array<Entity>();
-
-
     public Level3Screen(final Assets assets, SpaceKillerGame game) {
         super(assets, game, Level3);
         soloEnemyFactory = new SoloEnemyFactory(Level3, engine, tweenManager, entityFactory, player);
+        Array<Entity> backgrounds = new Array<Entity>();
         backgrounds.add(entityFactory.createBackground(assets.get(GFX_BGD_LEVEL3), 0, -BGD_VELOCIY_LEVEL3));
         new Thread(new Runnable() {
             @Override

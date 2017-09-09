@@ -19,11 +19,9 @@ public class ScoresRenderingSystem extends IteratingSystem {
     public static final String HIGH = "HIGH";
     private SpriteBatch batcher;
     private BitmapFont bitmapFont;
-    private Assets assets;
 
     public ScoresRenderingSystem(SpriteBatch batcher, Assets assets, int priority) {
         super(Family.one(PlayerComponent.class).get() ,priority);
-        this.assets = assets;
         this.batcher = batcher;
         this.bitmapFont = assets.get(FONT_SPACE_KILLER);
     }

@@ -28,7 +28,6 @@ public class TransitionScreen extends ScreenAdapter {
 
     private SpriteBatch spriteBatch;
     private TweenManager manager;
-    private TweenCallback backgroundAnimationTweenComplete;
 
     private Sprite currentScreenSprite;
     private Sprite nextScreenSprite;
@@ -62,7 +61,7 @@ public class TransitionScreen extends ScreenAdapter {
         manager = new TweenManager();
         Tween.registerAccessor(Sprite.class, new SpriteTween());
 
-        backgroundAnimationTweenComplete = new TweenCallback() {
+        TweenCallback backgroundAnimationTweenComplete = new TweenCallback() {
             @Override
             public void onEvent(int type, BaseTween<?> source) {
                 dispose();

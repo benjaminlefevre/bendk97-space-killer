@@ -234,14 +234,14 @@ public abstract class LevelScreen extends ScreenAdapter {
         engine.addSystem(new AnimationSystem(0));
         engine.addSystem(new BombExplosionSystem(0, collisionListener, player));
         engine.addSystem(new StateSystem(1));
-        engine.addSystem(new MovementSystem(camera, 2));
+        engine.addSystem(new MovementSystem(2));
         engine.addSystem(new ShieldSystem(3, player));
         // RENDERING
         engine.addSystem(new BatcherBeginSystem(viewport, batcher, 4));
         engine.addSystem(new BackgroundRenderingSystem(batcher, 5));
         engine.addSystem(new DynamicEntitiesRenderingSystem(batcher, 6));
         engine.addSystem(new ScoreSquadronSystem(6, assets, batcher));
-        engine.addSystem(new BatcherEndSystem(viewport, batcher, 7));
+        engine.addSystem(new BatcherEndSystem(batcher, 7));
         engine.addSystem(new BatcherHUDBeginSystem(viewportHUD, batcherHUD, 8));
         engine.addSystem(new StaticEntitiesRenderingSystem(batcherHUD, 9));
         engine.addSystem(new ScoresRenderingSystem(batcherHUD, assets, 11));
@@ -251,7 +251,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         if (DEBUG) {
             engine.addSystem(new FPSDisplayRenderingSystem(this, batcherHUD, 11));
         }
-        engine.addSystem(new BatcherHUDEndSystem(viewportHUD, batcherHUD, 12));
+        engine.addSystem(new BatcherHUDEndSystem(batcherHUD, 12));
         // END RENDERING
         engine.addSystem(new CollisionSystem(collisionListener, spriteMaskFactory, 13));
         engine.addSystem(new TankAttackSystem(13));
@@ -267,7 +267,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         inputProcessor = new InputMultiplexer();
         inputProcessor.addProcessor(new GestureDetector(new GestureHandler(this, cameraHUD)));
 
-        InputListenerImpl inputListener = new InputListenerImpl(player, playerListener, entityFactory, assets, this, Settings.isVirtualPad());
+        InputListenerImpl inputListener = new InputListenerImpl(player, playerListener, entityFactory, assets, Settings.isVirtualPad());
         Entity bombButton = entityFactory.createEntityBombButton(0.2f, BOMB_X, BOMB_Y);
         if (!Settings.isVirtualPad()) {
             Entity fireButton = entityFactory.createEntityFireButton(0.2f, FIRE_X, FIRE_Y);

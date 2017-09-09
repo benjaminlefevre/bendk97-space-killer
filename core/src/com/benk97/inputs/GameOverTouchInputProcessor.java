@@ -40,10 +40,7 @@ public class GameOverTouchInputProcessor implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode == Input.Keys.BACK){
-            return true;
-        }
-        return false;
+        return keycode == Input.Keys.BACK;
     }
     @Override
     public boolean keyUp(int keycode) {

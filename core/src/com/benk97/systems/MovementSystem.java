@@ -3,7 +3,6 @@ package com.benk97.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.benk97.components.*;
 
@@ -13,11 +12,9 @@ import static com.benk97.components.Mappers.sprite;
 
 public class MovementSystem extends IteratingSystem {
 
-    private OrthographicCamera camera;
 
-    public MovementSystem(OrthographicCamera camera, int priority) {
+    public MovementSystem(int priority) {
         super(Family.all(PositionComponent.class, VelocityComponent.class).exclude(GameOverComponent.class).get(), priority);
-        this.camera = camera;
     }
 
     @Override

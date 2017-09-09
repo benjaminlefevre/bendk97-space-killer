@@ -22,7 +22,6 @@ public class SocialScoreScreen extends ScreenAdapter {
 
     public static final String TEMP_DIRECTORY = "temp/spacekiller";
     public static final String TEMP_SPACEKILLER_SCORE_PNG = TEMP_DIRECTORY + "/score-";
-    private Assets assets;
     private SpaceKillerGame game;
     private OrthographicCamera camera;
     private SpriteBatch batcher;
@@ -41,7 +40,6 @@ public class SocialScoreScreen extends ScreenAdapter {
     public SocialScoreScreen(Assets assets, SpaceKillerGame game, int score) {
         this.game = game;
         this.score = score;
-        this.assets = assets;
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, screen_width, screen_height);
         this.batcher = new SpriteBatch();

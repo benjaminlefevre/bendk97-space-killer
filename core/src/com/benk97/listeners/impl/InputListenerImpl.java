@@ -12,7 +12,6 @@ import com.benk97.components.PlayerComponent;
 import com.benk97.entities.EntityFactory;
 import com.benk97.listeners.InputListener;
 import com.benk97.listeners.PlayerListener;
-import com.benk97.screens.LevelScreen;
 
 import static com.benk97.SpaceKillerGameConstants.*;
 import static com.benk97.assets.Assets.SOUND_BOMB_DROP;
@@ -24,17 +23,15 @@ public class InputListenerImpl extends EntitySystem implements InputListener {
     private Entity player;
     private EntityFactory entityFactory;
     private Assets assets;
-    private LevelScreen screen;
     private boolean autoFire = true;
     private PlayerListener playerListener;
 
     public InputListenerImpl(Entity player, PlayerListener playerListener, EntityFactory entityFactory, Assets assets,
-                             LevelScreen screen, boolean autoFire) {
+                             boolean autoFire) {
         this.player = player;
         this.playerListener = playerListener;
         this.assets = assets;
         this.entityFactory = entityFactory;
-        this.screen = screen;
         this.autoFire = autoFire;
     }
 

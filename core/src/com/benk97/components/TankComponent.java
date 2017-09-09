@@ -23,7 +23,7 @@ public class TankComponent implements Component, Pool.Poolable {
         public int nbShoots;
         public Random random = new RandomXS128();
 
-        private TankLevel(int nbShoots, long delayShoot, long delayBetweenRafales, float bulletVelocity) {
+        TankLevel(int nbShoots, long delayShoot, long delayBetweenRafales, float bulletVelocity) {
             this.nbShoots = (nbShoots - 1) + random.nextInt(3);
             this.delayShoot = (delayShoot - 100) + (long) random.nextFloat() * 200;
             this.bulletVelocity = bulletVelocity;

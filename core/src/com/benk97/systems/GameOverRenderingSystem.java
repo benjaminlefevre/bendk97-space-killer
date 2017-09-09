@@ -27,7 +27,6 @@ public class GameOverRenderingSystem extends IteratingSystem {
     private BitmapFont largeFont;
     private BitmapFont mediumFont;
 
-    private Assets assets;
     private ShapeRenderer shapeRenderer;
     private Camera camera;
 
@@ -35,7 +34,6 @@ public class GameOverRenderingSystem extends IteratingSystem {
 
     public GameOverRenderingSystem(SpriteBatch batcher, Camera camera, Assets assets, int priority) {
         super(Family.all(PlayerComponent.class, GameOverComponent.class).get(), priority);
-        this.assets = assets;
         this.camera = camera;
         this.batcher = batcher;
         this.largeFont = assets.get(FONT_SPACE_KILLER_LARGE);

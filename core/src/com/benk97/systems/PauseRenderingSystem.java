@@ -23,13 +23,11 @@ public class PauseRenderingSystem extends IteratingSystem {
     private SpriteBatch batcher;
     private BitmapFont mediumFont;
 
-    private Assets assets;
     private ShapeRenderer shapeRenderer;
     private Camera camera;
 
     public PauseRenderingSystem(SpriteBatch batcher, Camera camera, Assets assets, int priority) {
         super(Family.all(PauseComponent.class).get(), priority);
-        this.assets = assets;
         this.camera = camera;
         this.batcher = batcher;
         this.mediumFont = assets.get(FONT_SPACE_KILLER_MEDIUM);

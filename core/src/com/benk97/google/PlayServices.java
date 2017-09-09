@@ -2,13 +2,13 @@ package com.benk97.google;
 
 public interface PlayServices
 {
-    public void startGooglePlay();
-    public void signIn();
-    public void signOut();
-    public void rateGame();
-    public void unlockAchievement(Achievement achievement);
-    public void submitScore(int highScore);
-    public void showAchievement();
-    public void showScore();
-    public boolean isSignedIn();
+    void startGooglePlay();
+    void signIn();
+    void signOut();
+    void rateGame();
+    void unlockAchievement(Achievement achievement);
+    void submitScore(int highScore);
+    void showAchievement();
+    void showScore();
+    boolean isSignedIn();
 }
