@@ -3,7 +3,7 @@
 
     <string name="app_name">Space Killer</string>
     <string name="app_id">86130026568</string>
-    <string name="package_name">com.benk97.space.killer</string>
+    <string name="package_name">com.bendk97.space.killer</string>
     <string name="achievement_kill_the_boss">CgkIyND_7cACEAIQAQ</string>
     <string name="leaderboard_highscores">CgkIyND_7cACEAIQDA</string>
     <string name="achievement_kill_50_enemies">CgkIyND_7cACEAIQAw</string>
