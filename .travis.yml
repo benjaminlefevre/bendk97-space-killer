@@ -1,0 +1,16 @@
+language: android # can be 'java' if there is no android build target
+android:
+  components:
+    - build-tools-20.0.0
+    - android-26
+jdk: oraclejdk8
+
+# Cache gradle dependencies (should be faster to download them from cache)
+cache:
+  directories:
+  - $HOME/.gradle/wrapper
+  - $HOME/.gradle/caches/modules-2/files-2.1
+
+# Setup environment
+before_install:
+- chmod +x gradlew
