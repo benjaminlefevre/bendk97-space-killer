@@ -63,7 +63,7 @@ public class GameOverTouchInputProcessor implements InputProcessor {
                 game.intentShare.shareScore(filePath);
             }
         } else if (extraLife.contains(worldTouch.x, worldTouch.y)) {
-            game.askExtraLifeRewardWithAd();
+            game.continueWithExtraLife();
         }
         return true;
     }
