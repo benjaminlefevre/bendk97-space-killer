@@ -26,3 +26,6 @@ License
 This project is licenced underthe MIT license.
 
 For more details check the [LICENCE](LICENSE) file
+
+# CI
+Travis CI is installed to build every Pull Requests and the master on a daily basis.
