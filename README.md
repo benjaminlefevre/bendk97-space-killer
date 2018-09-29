@@ -20,3 +20,9 @@ The game is only tested and compiled for android platforms :
 gradle android:assembleRelease
 ```
 But as libgdx is cross-platform, it should be easy to compile for HTML5, iOS...and so on
+
+# LICENSE
+License
+This project is licenced underthe MIT license.
+
+For more details check the [LICENCE](LICENSE) file
