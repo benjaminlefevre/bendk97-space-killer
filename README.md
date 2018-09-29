@@ -8,3 +8,9 @@ Several libraries are used:
   - roboVMVersion = '2.3.1'
   - box2DLightsVersion = '1.4'
         - aiVersion = '1.8.0'
+
+The game is only tested and compiled for android platforms :
+```
+gradle android:assembleRelease
+```
+But as libgdx is cross-platform, it should be easy to compile for HTML5, iOS...and so on
