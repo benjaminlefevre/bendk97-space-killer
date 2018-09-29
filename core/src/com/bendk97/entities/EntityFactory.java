@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 22:06
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.entities;
 
 import aurelienribon.tweenengine.*;
@@ -1026,7 +1032,7 @@ public class EntityFactory implements Disposable {
             playerComponent.updateScore(game.playerData.score);
             playerComponent.lives = game.playerData.lives;
             playerComponent.powerLevel = game.playerData.powerLevel;
-            playerComponent.rewardAds = game.playerData.rewardAds;
+            playerComponent.numberOfContinue = game.playerData.numberOfContinue;
             playerComponent.level = game.playerData.level;
         } else {
             playerComponent.level = level;

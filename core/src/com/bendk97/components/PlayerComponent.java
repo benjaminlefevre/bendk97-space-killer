@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 22:06
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.components;
 
 import com.badlogic.ashley.core.Component;
@@ -54,19 +60,19 @@ public class PlayerComponent implements Component, Pool.Poolable {
     public int lives = LIVES;
     public int bombs = BOMBS;
     public PowerLevel powerLevel = NORMAL;
-    public int rewardAds = EXTRA_LIVES_ADS;
+    public int numberOfContinue = NUMBER_OF_CONTINUE;
     public com.bendk97.screens.LevelScreen.Level level = com.bendk97.screens.LevelScreen.Level.Level1;
     public float secondScript = -3;
 
     public com.bendk97.player.PlayerData copyPlayerData() {
-        return new com.bendk97.player.PlayerData(level, secondScript, rewardAds, fireDelay, fireDelaySide, enemiesKilled, laserShipKilled, howManyLifesLosed, score, highscore, lives, bombs, powerLevel);
+        return new com.bendk97.player.PlayerData(level, secondScript, numberOfContinue, fireDelay, fireDelaySide, enemiesKilled, laserShipKilled, howManyLifesLosed, score, highscore, lives, bombs, powerLevel);
     }
 
     @Override
     public void reset() {
         secondScript = -3;
         level = com.bendk97.screens.LevelScreen.Level.Level1;
-        rewardAds = EXTRA_LIVES_ADS;
+        numberOfContinue = NUMBER_OF_CONTINUE;
         howManyLifesLosed = 0;
         score = 0;
         enemiesKilled = 0;

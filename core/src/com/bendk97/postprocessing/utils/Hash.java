@@ -1,21 +1,10 @@
-package com.bendk97.postprocessing.utils;
-
-/**************************************************************************
- * *
- * General Purpose Hash Function Algorithms Library *
- * *
- * Author: Arash Partow - 2002 *
- * URL: http://www.partow.net *
- * URL: http://www.partow.net/programming/hashfunctions/index.html *
- * *
- * Copyright notice: *
- * Free use of the General Purpose Hash Function Algorithms Library is *
- * permitted under the guidelines and in accordance with the most current *
- * version of the Common Public License. *
- * http://www.opensource.org/licenses/cpl1.0.php *
- * *
- * *************************************************************************
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
  */
+
+package com.bendk97.postprocessing.utils;
 
 public final class Hash {
 

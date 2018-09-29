@@ -21,12 +21,13 @@ android {
     }
     defaultConfig {
         applicationId "com.benk97.space.killer"
-//        applicationId "com.benk97.space.killer.test"
+        // use this appId to install under another id without conflict with official version
+//      applicationId "com.benk97.space.killer.test"
 
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 96
-        versionName "1.1"
+        versionCode 97
+        versionName "1.1.1"
     }
     buildTypes {
         release {
@@ -36,6 +37,12 @@ android {
         }
     }
 }
+
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 22:22
+ * Copyright (c) 2018. All rights reserved.
+ */
 
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders

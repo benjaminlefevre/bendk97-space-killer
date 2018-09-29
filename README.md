@@ -5,11 +5,15 @@ Space Killer is a shmup game (shoot'em up) developed with libgdx, a cross-platfo
 The game is currently published in the google playstore here: https://play.google.com/store/apps/details?id=com.benk97.space.killer&hl=en_US
 
 Several libraries are used:
- - gdxVersion = '1.9.6'
-  - ashleyVersion = '1.7.3' ( the famous ECS framework, Entity-Component-System design pattern)
-  - roboVMVersion = '2.3.1'
-  - box2DLightsVersion = '1.4'
-        - aiVersion = '1.8.0'
+
+| Library  | Version | Link |
+| ------------- | ------------- |
+| libgdx | 1.9.8 | https://libgdx.badlogicgames.com/ |
+| ashleyVersion (ECS design pattern) | 1.7.3 | https://github.com/libgdx/ashley |
+| box2DLightsVersion | 1.4 | https://github.com/libgdx/box2dlights |
+| Tween Universal Engine | | https://github.com/AurelienRibon/universal-tween-engine |
+| roboVM | 2.3.1 | |
+| ai | 1.8.0 | |
 
 The game is only tested and compiled for android platforms :
 ```

@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 22:06
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.screens;
 
 import aurelienribon.tweenengine.*;
@@ -108,7 +114,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         playerComponent.bombs = BOMBS;
         playerComponent.resetScore();
         playerListener.updateLivesAndBombsAfterContinue(player);
-        playerComponent.rewardAds--;
+        playerComponent.numberOfContinue--;
         com.bendk97.components.Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         com.bendk97.components.Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         entityFactory.addInvulnerableComponent(player);

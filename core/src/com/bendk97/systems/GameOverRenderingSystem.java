@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 22:06
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.systems;
 
 import com.badlogic.ashley.core.Entity;
@@ -66,7 +72,7 @@ public class GameOverRenderingSystem extends IteratingSystem {
         largeFont.draw(batcher, GAME_OVER, SCREEN_WIDTH / 4f - 10f, SCREEN_HEIGHT - 100f);
         mediumFont.draw(batcher, SCORE + Mappers.player.get(entity).getScore(), 20f, SCREEN_HEIGHT / 2f + 30f);
         mediumFont.draw(batcher, HIGHSCORE + Mappers.player.get(entity).getHighccore(), 10f, SCREEN_HEIGHT / 2f - 130f);
-        if (Mappers.player.get(entity).rewardAds > 0) {
+        if (Mappers.player.get(entity).numberOfContinue > 0) {
             extraLife.draw(batcher);
         }
         playAgain.draw(batcher);

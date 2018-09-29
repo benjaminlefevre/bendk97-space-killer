@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 /*******************************************************************************
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
