@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Developed by Benjamin Lefèvre
+  ~ Last modified 29/09/18 22:33
+  ~ Copyright (c) 2018. All rights reserved.
+  -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.bendk97.space.killer">
 
@@ -25,16 +31,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-                android:name="com.unity3d.ads.adunit.AdUnitActivity"
-                android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
-                android:hardwareAccelerated="false"
-                android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
-        <activity
-                android:name="com.unity3d.ads.adunit.AdUnitSoftwareActivity"
-                android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
-                android:hardwareAccelerated="false"
-                android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <meta-data android:name="com.google.android.gms.games.APP_ID" android:value="@string/app_id"/>
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
     </application>

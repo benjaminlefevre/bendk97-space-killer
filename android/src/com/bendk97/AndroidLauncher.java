@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 22:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97;
 
 import android.Manifest;
@@ -9,25 +15,21 @@ import android.support.v4.app.ActivityCompat;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.bendk97.ads.AdsController;
 import com.bendk97.google.Achievement;
 import com.bendk97.google.PlayServices;
 import com.bendk97.share.IntentShare;
 import com.bendk97.space.killer.R;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.GameHelper;
-import com.unity3d.ads.IUnityAdsListener;
-import com.unity3d.ads.UnityAds;
 
 import static com.bendk97.SpaceKillerGameConstants.DEBUG;
 
 
-public class AndroidLauncher extends AndroidApplication implements AdsController, IUnityAdsListener, PlayServices, IntentShare {
+public class AndroidLauncher extends AndroidApplication implements PlayServices, IntentShare {
 
-    private final String UNITY_ADS_GAME_ID = "1487325";
     private GameHelper gameHelper;
     private final static int requestCode = 1;
-    private com.bendk97.SpaceKillerGame game = null;
+    private SpaceKillerGame game = null;
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -38,7 +40,6 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupAds();
         setupGooglePlay();
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useImmersiveMode = true;
@@ -46,14 +47,8 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
         config.useAccelerometer = false;
         config.useCompass = false;
         config.useWakelock = true;
-        game = new com.bendk97.SpaceKillerGame(this, this, this);
+        game = new com.bendk97.SpaceKillerGame(this, this);
         initialize(game, config);
-    }
-
-
-
-    private void setupAds() {
-        UnityAds.initialize(this, UNITY_ADS_GAME_ID, this, com.bendk97.SpaceKillerGameConstants.AD_TEST);
     }
 
     private void setupGooglePlay() {
@@ -76,35 +71,6 @@ public class AndroidLauncher extends AndroidApplication implements AdsController
             }
         };
         gameHelper.setup(gameHelperListener);
-    }
-
-
-    @Override
-    public void showInterstitialAd() {
-        if (UnityAds.isReady()) {
-            UnityAds.show(this);
-        }
-    }
-
-
-    @Override
-    public void onUnityAdsReady(String s) {
-
-    }
-
-    @Override
-    public void onUnityAdsStart(String s) {
-
-    }
-
-    @Override
-    public void onUnityAdsFinish(String s, UnityAds.FinishState finishState) {
-        game.continueWithExtraLife();
-    }
-
-    @Override
-    public void onUnityAdsError(UnityAds.UnityAdsError unityAdsError, String s) {
-
     }
 
     @Override

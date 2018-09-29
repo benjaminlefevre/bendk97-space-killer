@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 22:06
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97;
 
 import com.badlogic.gdx.Game;
@@ -14,23 +20,18 @@ import static com.bendk97.SpaceKillerGameConstants.SKIP_SPLASH;
 
 public class SpaceKillerGame extends Game {
     private com.bendk97.assets.Assets assets = new com.bendk97.assets.Assets();
-    private com.bendk97.ads.AdsController adsController;
     public PlayServices playServices;
     public Screen currentScreen;
     public com.bendk97.player.PlayerData playerData;
     public com.bendk97.share.IntentShare intentShare;
 
-    public SpaceKillerGame(com.bendk97.ads.AdsController adsController, PlayServices playServices, com.bendk97.share.IntentShare intentShare) {
-        this.adsController = adsController;
+    public SpaceKillerGame(PlayServices playServices, com.bendk97.share.IntentShare intentShare) {
         this.playServices = playServices;
         this.intentShare = intentShare;
         if (com.bendk97.SpaceKillerGameConstants.DEBUG) {
-            GLProfiler.enable();
+            GLProfiler profiler = new GLProfiler(Gdx.graphics);
+            profiler.enable();
         }
-    }
-
-    public void askExtraLifeRewardWithAd() {
-        adsController.showInterstitialAd();
     }
 
     private void cleanTempDirectory() {

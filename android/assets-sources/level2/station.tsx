@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 28/07/17 23:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset name="station" tilewidth="32" tileheight="32" tilecount="25" columns="5">
  <grid orientation="orthogonal" width="100" height="100"/>

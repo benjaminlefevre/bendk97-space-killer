@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 22:14
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.screens;
 
 import com.badlogic.ashley.core.Entity;
@@ -112,7 +118,7 @@ public class Level3Screen extends LevelScreen {
                 soloEnemyFactory.createTank(BGD_VELOCIY_LEVEL3, TankComponent.TankLevel.EASY, 5, 200);
             }
             if (second % 25 == 0) {
-                soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 200);
+                soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_LEVEL3_VELOCITY, STATIC_ENEMY_LEVEL3_BULLET_VELOCITY, STATIC_ENEMY_LEVEL3_RATE_SHOOT, 10, 200);
             }
             if (second % 4 == 0) {
                 scriptItemsEasy.poll().execute();
@@ -126,7 +132,7 @@ public class Level3Screen extends LevelScreen {
                 soloEnemyFactory.createTank(BGD_VELOCIY_LEVEL3, TankComponent.TankLevel.MEDIUM, 5, 300);
             }
             if (second % 25 == 0) {
-                soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT, 10, 200);
+                soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_LEVEL3_VELOCITY, STATIC_ENEMY_LEVEL3_BULLET_VELOCITY, STATIC_ENEMY_LEVEL3_RATE_SHOOT, 10, 200);
             }
             boolean left = random.nextBoolean();
             LinkedList<ScriptItem> medium = left ? scriptItemsMediumLeft : scriptItemsMediumRight;
@@ -147,7 +153,7 @@ public class Level3Screen extends LevelScreen {
                 soloEnemyFactory.createTank(BGD_VELOCIY_LEVEL3, TankComponent.TankLevel.HARD, 5, 400);
             }
             if (second == 180 || second == 190 || second == 200) {
-                soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_VELOCITY, STATIC_ENEMY_BULLET_VELOCITY, STATIC_ENEMY_RATE_SHOOT_WHEN_TWICE, 10, 200, false);
+                soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_LEVEL3_VELOCITY, STATIC_ENEMY_LEVEL3_BULLET_VELOCITY, STATIC_ENEMY_LEVEL3_RATE_SHOOT_WHEN_TWICE, 10, 200, false);
             }
 
             boolean left = random.nextBoolean();
