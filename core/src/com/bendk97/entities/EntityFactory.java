@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 22:06
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.entities;
 
 import aurelienribon.tweenengine.*;
@@ -22,9 +28,10 @@ import com.badlogic.gdx.utils.SnapshotArray;
 import com.bendk97.Settings;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
-import com.bendk97.components.TankComponent;
+import com.bendk97.components.*;
 import com.bendk97.components.TankComponent.TankLevel;
 import com.bendk97.screens.LevelScreen;
+import com.bendk97.screens.ScreenShake;
 import com.bendk97.timer.PausableTimer;
 
 import java.util.ArrayList;
@@ -62,7 +69,7 @@ public class EntityFactory implements Disposable {
     private SpaceKillerGame game;
 
     public EntityFactory(SpaceKillerGame game, PooledEngine engine, Assets assets, TweenManager tweenManager, RayHandler rayHandler,
-                         com.bendk97.screens.ScreenShake screenShake, LevelScreen.Level level) {
+                         ScreenShake screenShake, LevelScreen.Level level) {
         this.engine = engine;
         this.screenShake = screenShake;
         this.game = game;
@@ -89,28 +96,28 @@ public class EntityFactory implements Disposable {
 
     public Entity createBackground(Texture texture, int zIndex, float velocity) {
         Entity background = engine.createEntity();
-        com.bendk97.components.BackgroundComponent component = engine.createComponent(com.bendk97.components.BackgroundComponent.class);
+        BackgroundComponent component = engine.createComponent(BackgroundComponent.class);
         component.setTexture(texture);
         component.zIndex = zIndex;
         background.add(component);
-        background.add(engine.createComponent(com.bendk97.components.PositionComponent.class));
-        background.add(engine.createComponent(com.bendk97.components.VelocityComponent.class));
-        background.getComponent(com.bendk97.components.VelocityComponent.class).y = velocity;
+        background.add(engine.createComponent(PositionComponent.class));
+        background.add(engine.createComponent(VelocityComponent.class));
+        background.getComponent(VelocityComponent.class).y = velocity;
         engine.addEntity(background);
         return background;
     }
 
     public Entity createForeground(Texture texture, float velocity) {
         Entity foreground = engine.createEntity();
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.setTexture(new Sprite(texture), 1.0f, 0, 1.0f);
         component.zIndex = 100;
         foreground.add(component);
-        foreground.add(engine.createComponent(com.bendk97.components.PositionComponent.class));
-        foreground.add(engine.createComponent(com.bendk97.components.VelocityComponent.class));
-        foreground.add(engine.createComponent(com.bendk97.components.RemovableComponent.class));
-        foreground.getComponent(com.bendk97.components.PositionComponent.class).setPosition(0f, SCREEN_HEIGHT + 20f);
-        foreground.getComponent(com.bendk97.components.VelocityComponent.class).y = -velocity;
+        foreground.add(engine.createComponent(PositionComponent.class));
+        foreground.add(engine.createComponent(VelocityComponent.class));
+        foreground.add(engine.createComponent(RemovableComponent.class));
+        foreground.getComponent(PositionComponent.class).setPosition(0f, SCREEN_HEIGHT + 20f);
+        foreground.getComponent(VelocityComponent.class).y = -velocity;
         engine.addEntity(foreground);
         return foreground;
     }
@@ -118,19 +125,19 @@ public class EntityFactory implements Disposable {
 
     public Entity createPlayerFire(Entity player) {
         Entity bullet = engine.createEntity();
-        bullet.add(engine.createComponent(com.bendk97.components.PlayerBulletComponent.class));
-        com.bendk97.components.PositionComponent positionComponent = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        bullet.add(engine.createComponent(PlayerBulletComponent.class));
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         bullet.add(positionComponent);
-        com.bendk97.components.VelocityComponent velocityComponent = engine.createComponent(com.bendk97.components.VelocityComponent.class);
+        VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
         bullet.add(velocityComponent);
-        com.bendk97.components.SpriteComponent spriteComponent = engine.createComponent(com.bendk97.components.SpriteComponent.class);
-        com.bendk97.components.PlayerComponent playerComponent = com.bendk97.components.Mappers.player.get(player);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        PlayerComponent playerComponent = Mappers.player.get(player);
         spriteComponent.sprite = new Sprite(atlasMask.findRegion(playerComponent.powerLevel.regionName));
         bullet.add(spriteComponent);
-        bullet.add(engine.createComponent(com.bendk97.components.RemovableComponent.class));
+        bullet.add(engine.createComponent(RemovableComponent.class));
         engine.addEntity(bullet);
-        com.bendk97.components.PositionComponent playerPosition = position.get(player);
-        positionComponent.x = playerPosition.x + com.bendk97.components.Mappers.sprite.get(player).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
+        PositionComponent playerPosition = position.get(player);
+        positionComponent.x = playerPosition.x + Mappers.sprite.get(player).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
         positionComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
         velocityComponent.y = PLAYER_BULLET_VELOCITY;
         if (rayHandler != null) {
@@ -146,18 +153,18 @@ public class EntityFactory implements Disposable {
 
     private Entity createPlayerLeftFire(Entity player) {
         Entity bullet = engine.createEntity();
-        bullet.add(engine.createComponent(com.bendk97.components.PlayerBulletComponent.class));
-        com.bendk97.components.PositionComponent positionComponent = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        bullet.add(engine.createComponent(PlayerBulletComponent.class));
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         bullet.add(positionComponent);
-        com.bendk97.components.VelocityComponent velocityComponent = engine.createComponent(com.bendk97.components.VelocityComponent.class);
+        VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
         bullet.add(velocityComponent);
-        com.bendk97.components.SpriteComponent spriteComponent = engine.createComponent(com.bendk97.components.SpriteComponent.class);
-        com.bendk97.components.PlayerComponent playerComponent = com.bendk97.components.Mappers.player.get(player);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        PlayerComponent playerComponent = Mappers.player.get(player);
         spriteComponent.sprite = new Sprite(atlasMask.findRegion(playerComponent.powerLevel.leftRegionName));
         bullet.add(spriteComponent);
-        bullet.add(engine.createComponent(com.bendk97.components.RemovableComponent.class));
+        bullet.add(engine.createComponent(RemovableComponent.class));
         engine.addEntity(bullet);
-        com.bendk97.components.PositionComponent playerPosition = position.get(player);
+        PositionComponent playerPosition = position.get(player);
         positionComponent.x = playerPosition.x - spriteComponent.sprite.getWidth();
         positionComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
         Vector2 direction = new Vector2(0, 1);
@@ -175,18 +182,18 @@ public class EntityFactory implements Disposable {
 
     private Entity createPlayerRightFire(Entity player) {
         Entity bullet = engine.createEntity();
-        bullet.add(engine.createComponent(com.bendk97.components.PlayerBulletComponent.class));
-        com.bendk97.components.PositionComponent positionComponent = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        bullet.add(engine.createComponent(PlayerBulletComponent.class));
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         bullet.add(positionComponent);
-        com.bendk97.components.VelocityComponent velocityComponent = engine.createComponent(com.bendk97.components.VelocityComponent.class);
+        VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
         bullet.add(velocityComponent);
-        com.bendk97.components.SpriteComponent spriteComponent = engine.createComponent(com.bendk97.components.SpriteComponent.class);
-        com.bendk97.components.PlayerComponent playerComponent = com.bendk97.components.Mappers.player.get(player);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        PlayerComponent playerComponent = Mappers.player.get(player);
         spriteComponent.sprite = new Sprite(atlasMask.findRegion(playerComponent.powerLevel.rightRegionName));
         bullet.add(spriteComponent);
-        bullet.add(engine.createComponent(com.bendk97.components.RemovableComponent.class));
+        bullet.add(engine.createComponent(RemovableComponent.class));
         engine.addEntity(bullet);
-        com.bendk97.components.PositionComponent playerPosition = position.get(player);
+        PositionComponent playerPosition = position.get(player);
         positionComponent.x = playerPosition.x + sprite.get(player).sprite.getWidth();
         positionComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
         Vector2 direction = new Vector2(0, 1);
@@ -203,19 +210,19 @@ public class EntityFactory implements Disposable {
 
     public Entity createPlayerBomb(Entity player) {
         final Entity bomb = engine.createEntity();
-        com.bendk97.components.PositionComponent positionComponent = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         bomb.add(positionComponent);
-        com.bendk97.components.SpriteComponent spriteComponent = engine.createComponent(com.bendk97.components.SpriteComponent.class);
-        com.bendk97.components.AnimationComponent animationComponent = engine.createComponent(com.bendk97.components.AnimationComponent.class);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, atlasNoMask.createSprites("bomb"), LOOP));
         spriteComponent.sprite = animationComponent.animations.get(ANIMATION_MAIN).getKeyFrame(0);
         bomb.add(spriteComponent);
         bomb.add(animationComponent);
-        bomb.add(engine.createComponent(com.bendk97.components.StateComponent.class));
+        bomb.add(engine.createComponent(StateComponent.class));
         engine.addEntity(bomb);
-        com.bendk97.components.PositionComponent playerPosition = position.get(player);
-        positionComponent.x = playerPosition.x + com.bendk97.components.Mappers.sprite.get(player).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
-        positionComponent.y = playerPosition.y + com.bendk97.components.Mappers.sprite.get(player).sprite.getHeight() >= SCREEN_HEIGHT * 3f / 4f ?
+        PositionComponent playerPosition = position.get(player);
+        positionComponent.x = playerPosition.x + Mappers.sprite.get(player).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
+        positionComponent.y = playerPosition.y + Mappers.sprite.get(player).sprite.getHeight() >= SCREEN_HEIGHT * 3f / 4f ?
                 playerPosition.y : playerPosition.y + sprite.get(player).sprite.getHeight();
         Tween.to(positionComponent, POSITION_XY, 0.6f).ease(Linear.INOUT)
                 .target(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f, SCREEN_HEIGHT * 3f / 4f)
@@ -234,20 +241,20 @@ public class EntityFactory implements Disposable {
 
     public Entity createBombExplosion(Entity bomb) {
         final Entity bombExplosion = engine.createEntity();
-        com.bendk97.components.PositionComponent positionComponent = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         bombExplosion.add(positionComponent);
-        final com.bendk97.components.SpriteComponent spriteComponent = engine.createComponent(com.bendk97.components.SpriteComponent.class);
-        com.bendk97.components.AnimationComponent animationComponent = engine.createComponent(com.bendk97.components.AnimationComponent.class);
+        final SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_BOMB_EXPLOSION,
                 atlasNoMask.createSprites("bomb_explosion"), LOOP_PINGPONG));
         spriteComponent.sprite = atlasNoMask.createSprite("bomb_explosion", 6);
         spriteComponent.zIndex = 100;
         bombExplosion.add(spriteComponent);
         bombExplosion.add(animationComponent);
-        bombExplosion.add(engine.createComponent(com.bendk97.components.StateComponent.class));
+        bombExplosion.add(engine.createComponent(StateComponent.class));
         engine.addEntity(bombExplosion);
         assets.playSound(SOUND_BOMB_EXPLOSION);
-        com.bendk97.components.PositionComponent bombPosition = position.get(bomb);
+        PositionComponent bombPosition = position.get(bomb);
         positionComponent.x = bombPosition.x - spriteComponent.sprite.getWidth() / 2f;
         positionComponent.y = bombPosition.y - spriteComponent.sprite.getHeight() / 2f;
         Tween.to(positionComponent, POSITION_Y, 0.7f).ease(Linear.INOUT)
@@ -256,7 +263,7 @@ public class EntityFactory implements Disposable {
                     @Override
                     public void onEvent(int event, BaseTween<?> baseTween) {
                         if (event == COMPLETE) {
-                            bombExplosion.add(engine.createComponent(com.bendk97.components.BombExplosionComponent.class));
+                            bombExplosion.add(engine.createComponent(BombExplosionComponent.class));
                         }
                     }
                 })
@@ -275,13 +282,13 @@ public class EntityFactory implements Disposable {
 
     private void createLight(Entity entity) {
         createLight(entity, new Color(0.5f, 0f, 0f, 0.3f),
-                com.bendk97.components.Mappers.sprite.get(entity).sprite.getHeight() * 20f);
+                Mappers.sprite.get(entity).sprite.getHeight() * 20f);
     }
 
     private void createLight(Entity entity, Color color, float distance) {
-        com.bendk97.components.SpriteComponent sprite = com.bendk97.components.Mappers.sprite.get(entity);
-        com.bendk97.components.PositionComponent position = com.bendk97.components.Mappers.position.get(entity);
-        com.bendk97.components.LightComponent lightComponent = engine.createComponent(com.bendk97.components.LightComponent.class);
+        SpriteComponent sprite = Mappers.sprite.get(entity);
+        PositionComponent position = Mappers.position.get(entity);
+        LightComponent lightComponent = engine.createComponent(LightComponent.class);
         PointLight light = lightPool.obtain();
         light.setActive(true);
         light.setColor(color);
@@ -297,7 +304,7 @@ public class EntityFactory implements Disposable {
     public final static int ENEMY_FIRE_LASER = 2;
 
     public Entity createEnemyFire(Entity enemy, Entity player) {
-        switch (com.bendk97.components.Mappers.enemy.get(enemy).attackType) {
+        switch (Mappers.enemy.get(enemy).attackType) {
             case ENEMY_FIRE_CIRCLE:
                 return createEnemyFireCircle(enemy, player);
             case ENEMY_FIRE_LASER:
@@ -307,23 +314,23 @@ public class EntityFactory implements Disposable {
     }
 
     private Entity createEnemyFireLaser(Entity enemy) {
-        com.bendk97.components.PositionComponent position = com.bendk97.components.Mappers.position.get(enemy);
-        Sprite sprite = com.bendk97.components.Mappers.sprite.get(enemy).sprite;
-        return createEnemyFireLaser(position.x + sprite.getWidth() / 2f, position.y, com.bendk97.components.Mappers.enemy.get(enemy).bulletVelocity);
+        PositionComponent position = Mappers.position.get(enemy);
+        Sprite sprite = Mappers.sprite.get(enemy).sprite;
+        return createEnemyFireLaser(position.x + sprite.getWidth() / 2f, position.y, Mappers.enemy.get(enemy).bulletVelocity);
     }
 
     private Entity createEnemyFireLaser(float posX, float posY, float velocity) {
         assets.playSound(SOUND_FIRE_ENEMY);
         Entity bullet = engine.createEntity();
-        bullet.add(engine.createComponent(com.bendk97.components.EnemyBulletComponent.class));
-        com.bendk97.components.PositionComponent positionComponent = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        bullet.add(engine.createComponent(EnemyBulletComponent.class));
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         bullet.add(positionComponent);
-        com.bendk97.components.VelocityComponent velocityComponent = engine.createComponent(com.bendk97.components.VelocityComponent.class);
+        VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
         bullet.add(velocityComponent);
-        com.bendk97.components.SpriteComponent spriteComponent = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         spriteComponent.sprite = new Sprite(atlasMask.findRegion("laser"));
         bullet.add(spriteComponent);
-        bullet.add(engine.createComponent(com.bendk97.components.RemovableComponent.class));
+        bullet.add(engine.createComponent(RemovableComponent.class));
         engine.addEntity(bullet);
         positionComponent.x = posX - spriteComponent.sprite.getWidth() / 2f;
         positionComponent.y = posY - spriteComponent.sprite.getHeight() / 2f;
@@ -339,26 +346,26 @@ public class EntityFactory implements Disposable {
     public Entity createEnemyFireCircle(Entity enemy, Entity player) {
         assets.playSound(SOUND_FIRE_ENEMY);
         Entity bullet = engine.createEntity();
-        bullet.add(engine.createComponent(com.bendk97.components.EnemyBulletComponent.class));
-        com.bendk97.components.PositionComponent positionComponent = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        bullet.add(engine.createComponent(EnemyBulletComponent.class));
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         bullet.add(positionComponent);
-        com.bendk97.components.VelocityComponent velocityComponent = engine.createComponent(com.bendk97.components.VelocityComponent.class);
+        VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
         bullet.add(velocityComponent);
-        com.bendk97.components.SpriteComponent spriteComponent = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         spriteComponent.sprite = new Sprite(atlasMask.findRegion("bulletEnnemy"));
         bullet.add(spriteComponent);
-        bullet.add(engine.createComponent(com.bendk97.components.RemovableComponent.class));
+        bullet.add(engine.createComponent(RemovableComponent.class));
         engine.addEntity(bullet);
-        com.bendk97.components.PositionComponent playerPosition = position.get(player);
-        com.bendk97.components.PositionComponent enemyPosition = position.get(enemy);
-        com.bendk97.components.EnemyComponent enemyComponent = com.bendk97.components.Mappers.enemy.get(enemy);
+        PositionComponent playerPosition = position.get(player);
+        PositionComponent enemyPosition = position.get(enemy);
+        EnemyComponent enemyComponent = Mappers.enemy.get(enemy);
         if (enemyComponent.isBoss) {
-            positionComponent.x = enemyPosition.x + com.bendk97.components.Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
+            positionComponent.x = enemyPosition.x + Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
             positionComponent.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight() * 3f / 4f;
         } else if (enemyComponent.isTank) {
             Sprite tank = sprite.get(enemy).sprite;
             float rotation = tank.getRotation();
-            Vector2 pos = new Vector2(enemyPosition.x + com.bendk97.components.Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f,
+            Vector2 pos = new Vector2(enemyPosition.x + Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f,
                     enemyPosition.y + 32f);
             Vector2 angle = new Vector2(0, -1);
             angle.rotate(rotation);
@@ -368,7 +375,7 @@ public class EntityFactory implements Disposable {
             positionComponent.x = angle.x;
             positionComponent.y = angle.y;
         } else {
-            positionComponent.x = enemyPosition.x + com.bendk97.components.Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
+            positionComponent.x = enemyPosition.x + Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
             positionComponent.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight();
         }
         Vector2 directionBullet = new Vector2(playerPosition.x - positionComponent.x, playerPosition.y - positionComponent.y);
@@ -376,7 +383,7 @@ public class EntityFactory implements Disposable {
         if (!enemyComponent.isTank) {
             directionBullet.rotate(-10 + random.nextFloat() * 20f);
         }
-        directionBullet.scl(com.bendk97.components.Mappers.enemy.get(enemy).bulletVelocity);
+        directionBullet.scl(Mappers.enemy.get(enemy).bulletVelocity);
         velocityComponent.x = directionBullet.x;
         velocityComponent.y = directionBullet.y;
         return bullet;
@@ -384,7 +391,7 @@ public class EntityFactory implements Disposable {
 
     public void createBossFire(final Entity boss, final Entity player) {
         int type = random.nextInt(3);
-        LevelScreen.Level level = com.bendk97.components.Mappers.player.get(player).level;
+        LevelScreen.Level level = Mappers.player.get(player).level;
         if (type == 0) {
             final int bullets = level.equals(LevelScreen.Level.Level3) ? 20 : 10;
             float delay = level.equals(LevelScreen.Level.Level3) ? 0.1f : 0.2f;
@@ -397,14 +404,14 @@ public class EntityFactory implements Disposable {
                 }, 0f + delay * i);
             }
         } else if (type == 1 || level.equals(LevelScreen.Level.Level1)
-                || com.bendk97.components.Mappers.position.get(boss).x < 0 || com.bendk97.components.Mappers.position.get(boss).x > SCREEN_WIDTH * 3f / 4f) {
+                || Mappers.position.get(boss).x < 0 || Mappers.position.get(boss).x > SCREEN_WIDTH * 3f / 4f) {
             createBossFireCircle(boss, false);
             if (level.equals(LevelScreen.Level.Level3)) {
                 createBossFireCircle(boss, true);
             }
         } else {
-            com.bendk97.components.PositionComponent position = com.bendk97.components.Mappers.position.get(boss);
-            com.bendk97.components.BossComponent bossComponent = com.bendk97.components.Mappers.boss.get(boss);
+            PositionComponent position = Mappers.position.get(boss);
+            BossComponent bossComponent = Mappers.boss.get(boss);
             createEnemyFireLaser(position.x + 160f, position.y + 170f, bossComponent.velocityFire2);
             createEnemyFireLaser(position.x + 195f, position.y + 170f, bossComponent.velocityFire2);
             if (level.equals(LevelScreen.Level.Level3)) {
@@ -416,8 +423,8 @@ public class EntityFactory implements Disposable {
     }
 
     public void createBossFire2(Entity boss) {
-        com.bendk97.components.PositionComponent position = com.bendk97.components.Mappers.position.get(boss);
-        com.bendk97.components.BossComponent bossComponent = com.bendk97.components.Mappers.boss.get(boss);
+        PositionComponent position = Mappers.position.get(boss);
+        BossComponent bossComponent = Mappers.boss.get(boss);
         createEnemyFireLaser(position.x + 12f, position.y + 186f, bossComponent.velocityFire2);
         createEnemyFireLaser(position.x + 342f, position.y + 186f, bossComponent.velocityFire2);
     }
@@ -428,23 +435,23 @@ public class EntityFactory implements Disposable {
         for (int i = 0; i < 12; ++i) {
             Entity bullet = engine.createEntity();
 
-            bullet.add(engine.createComponent(com.bendk97.components.EnemyBulletComponent.class));
+            bullet.add(engine.createComponent(EnemyBulletComponent.class));
 
-            com.bendk97.components.PositionComponent positionComponent = engine.createComponent(com.bendk97.components.PositionComponent.class);
+            PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
             bullet.add(positionComponent);
 
-            com.bendk97.components.VelocityComponent velocityComponent = engine.createComponent(com.bendk97.components.VelocityComponent.class);
+            VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
             bullet.add(velocityComponent);
 
-            com.bendk97.components.SpriteComponent spriteComponent = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+            SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
             spriteComponent.sprite = new Sprite(atlasMask.findRegion("bulletEnnemy"));
             bullet.add(spriteComponent);
 
-            bullet.add(engine.createComponent(com.bendk97.components.RemovableComponent.class));
+            bullet.add(engine.createComponent(RemovableComponent.class));
 
-            com.bendk97.components.PositionComponent enemyPosition = position.get(boss);
-            positionComponent.x = enemyPosition.x + com.bendk97.components.Mappers.sprite.get(boss).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
-            positionComponent.y = enemyPosition.y + com.bendk97.components.Mappers.sprite.get(boss).sprite.getHeight() / 4f;
+            PositionComponent enemyPosition = position.get(boss);
+            positionComponent.x = enemyPosition.x + Mappers.sprite.get(boss).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
+            positionComponent.y = enemyPosition.y + Mappers.sprite.get(boss).sprite.getHeight() / 4f;
 
             bullets.add(bullet);
             engine.addEntity(bullet);
@@ -454,8 +461,8 @@ public class EntityFactory implements Disposable {
             Vector2 directionBullet = new Vector2(1f, 0f);
             directionBullet.setAngle(rotation);
             rotation -= yUp ? -10f : 10f;
-            directionBullet.scl(com.bendk97.components.Mappers.boss.get(boss).velocityFire1);
-            com.bendk97.components.VelocityComponent velocityComponent = com.bendk97.components.Mappers.velocity.get(bullets.get(i));
+            directionBullet.scl(Mappers.boss.get(boss).velocityFire1);
+            VelocityComponent velocityComponent = Mappers.velocity.get(bullets.get(i));
             velocityComponent.x = directionBullet.x;
             velocityComponent.y = directionBullet.y;
         }
@@ -465,20 +472,20 @@ public class EntityFactory implements Disposable {
 
     public Entity createPowerUp(Entity squadron) {
         final Entity powerUp = engine.createEntity();
-        powerUp.add(engine.createComponent(com.bendk97.components.PowerUpComponent.class));
-        com.bendk97.components.PositionComponent position = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        powerUp.add(engine.createComponent(PowerUpComponent.class));
+        PositionComponent position = engine.createComponent(PositionComponent.class);
         powerUp.add(position);
-        powerUp.add(engine.createComponent(com.bendk97.components.VelocityComponent.class));
-        com.bendk97.components.AnimationComponent animationComponent = engine.createComponent(com.bendk97.components.AnimationComponent.class);
+        powerUp.add(engine.createComponent(VelocityComponent.class));
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites("power-up");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_POWERUP, sprites, LOOP));
         powerUp.add(animationComponent);
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
         powerUp.add(component);
-        position.x = com.bendk97.components.Mappers.squadron.get(squadron).lastKilledPosition.x;
-        position.y = com.bendk97.components.Mappers.squadron.get(squadron).lastKilledPosition.y;
-        powerUp.add(engine.createComponent(com.bendk97.components.StateComponent.class));
+        position.x = Mappers.squadron.get(squadron).lastKilledPosition.x;
+        position.y = Mappers.squadron.get(squadron).lastKilledPosition.y;
+        powerUp.add(engine.createComponent(StateComponent.class));
         Timeline.createSequence()
                 .beginParallel()
                 .push(Tween.to(position, POSITION_Y, 8f).ease(Linear.INOUT).target(50f))
@@ -499,20 +506,20 @@ public class EntityFactory implements Disposable {
 
     public Entity createShieldUp(Entity squadron) {
         final Entity shieldUp = engine.createEntity();
-        shieldUp.add(engine.createComponent(com.bendk97.components.ShieldUpComponent.class));
-        com.bendk97.components.PositionComponent position = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        shieldUp.add(engine.createComponent(ShieldUpComponent.class));
+        PositionComponent position = engine.createComponent(PositionComponent.class);
         shieldUp.add(position);
-        shieldUp.add(engine.createComponent(com.bendk97.components.VelocityComponent.class));
-        com.bendk97.components.AnimationComponent animationComponent = engine.createComponent(com.bendk97.components.AnimationComponent.class);
+        shieldUp.add(engine.createComponent(VelocityComponent.class));
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites("shieldup");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_POWERUP, sprites, LOOP));
         shieldUp.add(animationComponent);
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
         shieldUp.add(component);
-        position.x = com.bendk97.components.Mappers.squadron.get(squadron).lastKilledPosition.x;
-        position.y = com.bendk97.components.Mappers.squadron.get(squadron).lastKilledPosition.y;
-        shieldUp.add(engine.createComponent(com.bendk97.components.StateComponent.class));
+        position.x = Mappers.squadron.get(squadron).lastKilledPosition.x;
+        position.y = Mappers.squadron.get(squadron).lastKilledPosition.y;
+        shieldUp.add(engine.createComponent(StateComponent.class));
         Timeline.createSequence()
                 .beginParallel()
                 .push(Tween.to(position, POSITION_Y, 8f).ease(Linear.INOUT).target(50f))
@@ -533,15 +540,15 @@ public class EntityFactory implements Disposable {
 
     public Entity createBombUp(Entity squadron) {
         final Entity bombUp = engine.createEntity();
-        bombUp.add(engine.createComponent(com.bendk97.components.BombUpComponent.class));
-        com.bendk97.components.PositionComponent position = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        bombUp.add(engine.createComponent(BombUpComponent.class));
+        PositionComponent position = engine.createComponent(PositionComponent.class);
         bombUp.add(position);
-        bombUp.add(engine.createComponent(com.bendk97.components.VelocityComponent.class));
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        bombUp.add(engine.createComponent(VelocityComponent.class));
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = new Sprite(atlasMask.findRegion("bombUp"));
         bombUp.add(component);
-        position.x = com.bendk97.components.Mappers.squadron.get(squadron).lastKilledPosition.x;
-        position.y = com.bendk97.components.Mappers.squadron.get(squadron).lastKilledPosition.y;
+        position.x = Mappers.squadron.get(squadron).lastKilledPosition.x;
+        position.y = Mappers.squadron.get(squadron).lastKilledPosition.y;
         Timeline.createSequence()
                 .beginParallel()
                 .push(Tween.to(position, POSITION_Y, 8f).ease(Linear.INOUT).target(50f))
@@ -606,28 +613,28 @@ public class EntityFactory implements Disposable {
     public Entity createLaserShip(String atlasRegion, Float velocity, float bulletVelocity, int rateShoot, int gaugelife, int points, boolean fromLeft) {
         Entity enemy = engine.createEntity();
         engine.addEntity(enemy);
-        com.bendk97.components.PositionComponent positionComponent = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         enemy.add(positionComponent);
         if (velocity != null) {
-            com.bendk97.components.VelocityComponent velocityComponent = engine.createComponent(com.bendk97.components.VelocityComponent.class);
+            VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
             velocityComponent.x = velocity;
             enemy.add(velocityComponent);
-            com.bendk97.components.FollowPlayerComponent followPlayerComponent = engine.createComponent(com.bendk97.components.FollowPlayerComponent.class);
+            FollowPlayerComponent followPlayerComponent = engine.createComponent(FollowPlayerComponent.class);
             enemy.add(followPlayerComponent);
             followPlayerComponent.velocity = velocity;
 
         }
-        com.bendk97.components.AnimationComponent animationComponent = engine.createComponent(com.bendk97.components.AnimationComponent.class);
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites(atlasRegion);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, LOOP_PINGPONG));
         enemy.add(animationComponent);
-        com.bendk97.components.SpriteComponent spriteComponent = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         enemy.add(spriteComponent);
         spriteComponent.sprite = sprites.get(0);
         spriteComponent.zIndex = 20;
         positionComponent.x = fromLeft ? -spriteComponent.sprite.getWidth() : SCREEN_WIDTH;
         positionComponent.y = SCREEN_HEIGHT - spriteComponent.sprite.getHeight();
-        com.bendk97.components.EnemyComponent enemyComponent = engine.createComponent(com.bendk97.components.EnemyComponent.class);
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.initLifeGauge(gaugelife);
         enemyComponent.points = points;
         enemyComponent.bulletVelocity = bulletVelocity;
@@ -636,7 +643,7 @@ public class EntityFactory implements Disposable {
         enemyComponent.attackType = ENEMY_FIRE_LASER;
         enemyComponent.isLaserShip = true;
         enemy.add(enemyComponent);
-        enemy.add(engine.createComponent(com.bendk97.components.StateComponent.class));
+        enemy.add(engine.createComponent(StateComponent.class));
         return enemy;
     }
 
@@ -644,7 +651,7 @@ public class EntityFactory implements Disposable {
     public List<Entity> createTank(TankLevel level, int gauge, int points) {
         List<Entity> entities = new ArrayList<Entity>();
         Entity tankCannon = engine.createEntity();
-        final com.bendk97.components.EnemyComponent enemyComponent = engine.createComponent(com.bendk97.components.EnemyComponent.class);
+        final EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = points;
         enemyComponent.isTank = true;
         enemyComponent.initLifeGauge(gauge);
@@ -652,28 +659,28 @@ public class EntityFactory implements Disposable {
         enemyComponent.bulletVelocity = level.bulletVelocity;
         enemyComponent.attackCapacity = 0;
         tankCannon.add(enemyComponent);
-        com.bendk97.components.PositionComponent position = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
         tankCannon.add(position);
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = atlasMask.createSprite("tankCannon");
         component.sprite.setOrigin(32f, 46f);
         component.zIndex = -5;
         tankCannon.add(component);
-        tankCannon.add(engine.createComponent(com.bendk97.components.GroundEnemyComponent.class));
-        com.bendk97.components.FollowPlayerComponent followPlayerComponent = engine.createComponent(com.bendk97.components.FollowPlayerComponent.class);
+        tankCannon.add(engine.createComponent(GroundEnemyComponent.class));
+        FollowPlayerComponent followPlayerComponent = engine.createComponent(FollowPlayerComponent.class);
         followPlayerComponent.rotate = true;
         tankCannon.add(followPlayerComponent);
-        com.bendk97.components.TankComponent tankComponent = engine.createComponent(TankComponent.class);
+        TankComponent tankComponent = engine.createComponent(TankComponent.class);
         tankComponent.setLevel(level);
         tankCannon.add(tankComponent);
         engine.addEntity(tankCannon);
         Entity tankBody = engine.createEntity();
-        tankBody.add(engine.createComponent(com.bendk97.components.PositionComponent.class));
-        com.bendk97.components.SpriteComponent sprite = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        tankBody.add(engine.createComponent(PositionComponent.class));
+        SpriteComponent sprite = engine.createComponent(SpriteComponent.class);
         sprite.sprite = atlasMask.createSprite("tankBody");
         sprite.zIndex = -6;
         tankBody.add(sprite);
-        tankBody.add(engine.createComponent(com.bendk97.components.GroundEnemyComponent.class));
+        tankBody.add(engine.createComponent(GroundEnemyComponent.class));
         engine.addEntity(tankBody);
 
         entities.add(tankBody);
@@ -684,7 +691,7 @@ public class EntityFactory implements Disposable {
     public Entity createEnemy(Entity squadron, boolean canAttack, int rateShoot, float velocityBullet, String atlasName, int points,
                               int strength, float frameDuration, PlayMode animationType, int attackCapacity) {
         Entity enemy = engine.createEntity();
-        com.bendk97.components.EnemyComponent enemyComponent = engine.createComponent(com.bendk97.components.EnemyComponent.class);
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = points;
         enemyComponent.initLifeGauge(strength);
         enemyComponent.probabilityAttack = rateShoot;
@@ -694,16 +701,16 @@ public class EntityFactory implements Disposable {
             enemyComponent.squadron = squadron;
         }
         enemy.add(enemyComponent);
-        com.bendk97.components.PositionComponent position = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
         enemy.add(position);
-        com.bendk97.components.AnimationComponent animationComponent = engine.createComponent(com.bendk97.components.AnimationComponent.class);
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites(atlasName);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(frameDuration, sprites, animationType));
         enemy.add(animationComponent);
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
         enemy.add(component);
-        enemy.add(engine.createComponent(com.bendk97.components.StateComponent.class));
+        enemy.add(engine.createComponent(StateComponent.class));
         engine.addEntity(enemy);
         return enemy;
     }
@@ -842,10 +849,10 @@ public class EntityFactory implements Disposable {
 
     public Entity createBoss(Entity squadron, float velocityBullet, float velocityCircle) {
         final Entity enemy = engine.createEntity();
-        com.bendk97.components.BossComponent bossComponent = engine.createComponent(com.bendk97.components.BossComponent.class);
+        BossComponent bossComponent = engine.createComponent(BossComponent.class);
         bossComponent.velocityFire1 = velocityCircle;
         enemy.add(bossComponent);
-        com.bendk97.components.EnemyComponent enemyComponent = engine.createComponent(com.bendk97.components.EnemyComponent.class);
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
         enemyComponent.isBoss = true;
         enemyComponent.initLifeGauge(BOSS_LEVEL1_GAUGE);
@@ -855,16 +862,16 @@ public class EntityFactory implements Disposable {
             enemyComponent.squadron = squadron;
         }
         enemy.add(enemyComponent);
-        com.bendk97.components.PositionComponent position = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
         enemy.add(position);
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = atlasMask.createSprite("boss-level1");
         enemy.add(component);
         engine.addEntity(enemy);
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
-                com.bendk97.components.Mappers.boss.get(enemy).pleaseFire1 = true;
+                Mappers.boss.get(enemy).pleaseFire1 = true;
             }
         }, 5f);
         return enemy;
@@ -872,13 +879,13 @@ public class EntityFactory implements Disposable {
 
     public Entity createBoss2(Entity squadron, float velocityBullet, float velocityFireCircle, float velocityBullet2) {
         final Entity enemy = engine.createEntity();
-        com.bendk97.components.BossComponent boss = engine.createComponent(com.bendk97.components.BossComponent.class);
+        BossComponent boss = engine.createComponent(BossComponent.class);
         enemy.add(boss);
         boss.minTriggerFire1 = 4;
         boss.minTriggerFire2 = 7;
         boss.velocityFire1 = velocityFireCircle;
         boss.velocityFire2 = velocityBullet2;
-        com.bendk97.components.EnemyComponent enemyComponent = engine.createComponent(com.bendk97.components.EnemyComponent.class);
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
         enemyComponent.isBoss = true;
         enemyComponent.initLifeGauge(BOSS_LEVEL2_GAUGE);
@@ -888,22 +895,22 @@ public class EntityFactory implements Disposable {
             enemyComponent.squadron = squadron;
         }
         enemy.add(enemyComponent);
-        com.bendk97.components.PositionComponent position = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
         enemy.add(position);
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = atlasMask.createSprite("boss");
         enemy.add(component);
         engine.addEntity(enemy);
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
-                com.bendk97.components.Mappers.boss.get(enemy).pleaseFire1 = true;
+                Mappers.boss.get(enemy).pleaseFire1 = true;
             }
         }, 5f);
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
-                com.bendk97.components.Mappers.boss.get(enemy).pleaseFire2 = true;
+                Mappers.boss.get(enemy).pleaseFire2 = true;
             }
         }, 2f);
 
@@ -912,13 +919,13 @@ public class EntityFactory implements Disposable {
 
     public Entity createBoss3(Entity squadron, float velocityBullet, float velocityBulletFireCircle, float velocityBullet2) {
         final Entity enemy = engine.createEntity();
-        com.bendk97.components.BossComponent boss = engine.createComponent(com.bendk97.components.BossComponent.class);
+        BossComponent boss = engine.createComponent(BossComponent.class);
         enemy.add(boss);
         boss.minTriggerFire1 = 3;
         boss.minTriggerFire2 = 7;
         boss.velocityFire1 = velocityBulletFireCircle;
         boss.velocityFire2 = velocityBullet2;
-        com.bendk97.components.EnemyComponent enemyComponent = engine.createComponent(com.bendk97.components.EnemyComponent.class);
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
         enemyComponent.isBoss = true;
         enemyComponent.initLifeGauge(BOSS_LEVEL3_GAUGE);
@@ -928,50 +935,50 @@ public class EntityFactory implements Disposable {
             enemyComponent.squadron = squadron;
         }
         enemy.add(enemyComponent);
-        com.bendk97.components.PositionComponent position = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
         enemy.add(position);
 
-        com.bendk97.components.AnimationComponent animationComponent = engine.createComponent(com.bendk97.components.AnimationComponent.class);
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites("boss3");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(0.075f, (Sprite[]) sprites.toArray(Sprite.class)));
         animationComponent.animations.get(ANIMATION_MAIN).setPlayMode(LOOP_PINGPONG);
         enemy.add(animationComponent);
 
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
         enemy.add(component);
         engine.addEntity(enemy);
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
-                com.bendk97.components.Mappers.boss.get(enemy).pleaseFire1 = true;
+                Mappers.boss.get(enemy).pleaseFire1 = true;
             }
         }, 5f);
-        enemy.add(engine.createComponent(com.bendk97.components.StateComponent.class));
+        enemy.add(engine.createComponent(StateComponent.class));
         return enemy;
     }
 
 
     public Entity createAsteroid(Entity squadron, int asteroid) {
         Entity enemy = engine.createEntity();
-        com.bendk97.components.EnemyComponent enemyComponent = engine.createComponent(com.bendk97.components.EnemyComponent.class);
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
         if (squadron != null) {
             enemyComponent.squadron = squadron;
         }
         enemy.add(enemyComponent);
-        com.bendk97.components.PositionComponent position = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
         enemy.add(position);
-        com.bendk97.components.AnimationComponent animationComponent = engine.createComponent(com.bendk97.components.AnimationComponent.class);
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         String asteroidSprite = asteroid == ASTEROID_1 ? "asteroid" : "asteroid2";
         Array<Sprite> sprites = atlasMask.createSprites(asteroidSprite);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, LOOP));
         enemy.add(animationComponent);
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
         component.zIndex = -99;
         enemy.add(component);
-        enemy.add(engine.createComponent(com.bendk97.components.StateComponent.class));
+        enemy.add(engine.createComponent(StateComponent.class));
         engine.addEntity(enemy);
         return enemy;
     }
@@ -980,24 +987,24 @@ public class EntityFactory implements Disposable {
     public Array<Entity> createHouse(Entity squadron, int houseType) {
         Array<Entity> entities = new Array<Entity>();
         Entity house = engine.createEntity();
-        com.bendk97.components.EnemyComponent enemyComponent = engine.createComponent(com.bendk97.components.EnemyComponent.class);
+        EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
         if (squadron != null) {
             enemyComponent.squadron = squadron;
         }
         house.add(enemyComponent);
-        house.add(engine.createComponent(com.bendk97.components.PositionComponent.class));
-        house.add(engine.createComponent(com.bendk97.components.GroundEnemyComponent.class));
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        house.add(engine.createComponent(PositionComponent.class));
+        house.add(engine.createComponent(GroundEnemyComponent.class));
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = atlasMask.createSprite("house-" + (houseType - HOUSE_1 + 1));
         component.zIndex = -10;
         house.add(component);
         engine.addEntity(house);
 
         Entity houseDestroyed = engine.createEntity();
-        houseDestroyed.add(engine.createComponent(com.bendk97.components.PositionComponent.class));
-        houseDestroyed.add(engine.createComponent(com.bendk97.components.GroundEnemyComponent.class));
-        component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        houseDestroyed.add(engine.createComponent(PositionComponent.class));
+        houseDestroyed.add(engine.createComponent(GroundEnemyComponent.class));
+        component = engine.createComponent(SpriteComponent.class);
         component.sprite = atlasMask.createSprite("house-" + (houseType - HOUSE_1 + 1) + "_destroyed");
         component.zIndex = -11;
         houseDestroyed.add(component);
@@ -1011,10 +1018,10 @@ public class EntityFactory implements Disposable {
 
     public Entity createEntityPlayer(LevelScreen.Level level) {
         Entity player = engine.createEntity();
-        if (engine.getEntitiesFor(Family.one(com.bendk97.components.PlayerComponent.class).get()).size() > 0) {
+        if (engine.getEntitiesFor(Family.one(PlayerComponent.class).get()).size() > 0) {
             throw new IllegalArgumentException("A player entity already exists!");
         }
-        com.bendk97.components.PlayerComponent playerComponent = engine.createComponent(com.bendk97.components.PlayerComponent.class);
+        PlayerComponent playerComponent = engine.createComponent(PlayerComponent.class);
         playerComponent.setHighScore(Settings.getHighscore());
         if (game.playerData != null) {
             playerComponent.bombs = game.playerData.bombs;
@@ -1026,15 +1033,15 @@ public class EntityFactory implements Disposable {
             playerComponent.updateScore(game.playerData.score);
             playerComponent.lives = game.playerData.lives;
             playerComponent.powerLevel = game.playerData.powerLevel;
-            playerComponent.rewardAds = game.playerData.rewardAds;
+            playerComponent.numberOfContinue = game.playerData.numberOfContinue;
             playerComponent.level = game.playerData.level;
         } else {
             playerComponent.level = level;
         }
         player.add(playerComponent);
-        player.add(engine.createComponent(com.bendk97.components.PositionComponent.class));
-        player.add(engine.createComponent(com.bendk97.components.VelocityComponent.class));
-        com.bendk97.components.AnimationComponent animationComponent = engine.createComponent(com.bendk97.components.AnimationComponent.class);
+        player.add(engine.createComponent(PositionComponent.class));
+        player.add(engine.createComponent(VelocityComponent.class));
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> spritesMAIN = new Array<Sprite>(2);
         spritesMAIN.add(atlasMask.createSprite("player", 1));
         spritesMAIN.add(atlasMask.createSprite("player", 2));
@@ -1050,31 +1057,31 @@ public class EntityFactory implements Disposable {
         animationComponent.animations.put(GO_LEFT, new Animation<Sprite>(FRAME_DURATION, spritesLEFT, LOOP));
         animationComponent.animations.put(GO_RIGHT, new Animation<Sprite>(FRAME_DURATION, spritesRIGHT, LOOP));
         player.add(animationComponent);
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = spritesMAIN.get(0);
         component.zIndex = 99;
         component.stayInBoundaries = true;
         player.add(component);
-        player.add(engine.createComponent(com.bendk97.components.StateComponent.class));
+        player.add(engine.createComponent(StateComponent.class));
         engine.addEntity(player);
-        com.bendk97.components.Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+        Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         return player;
     }
 
     public Entity createShield(final Entity player) {
         final Entity shield = engine.createEntity();
-        com.bendk97.components.PositionComponent playerPosition = com.bendk97.components.Mappers.position.get(player);
+        PositionComponent playerPosition = Mappers.position.get(player);
         addInvulnerableComponent(player);
-        com.bendk97.components.SpriteComponent playerSprite = com.bendk97.components.Mappers.sprite.get(player);
-        com.bendk97.components.SpriteComponent spriteComponent = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent playerSprite = Mappers.sprite.get(player);
+        SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         spriteComponent.zIndex = 99;
         spriteComponent.sprite = atlasMask.createSprite("shield");
-        com.bendk97.components.PositionComponent positionComponent = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         positionComponent.setPosition(playerPosition.x - (spriteComponent.sprite.getWidth() - playerSprite.sprite.getWidth()) / 2f,
                 playerPosition.y - (spriteComponent.sprite.getHeight() - playerSprite.sprite.getHeight()) / 2f);
         shield.add(positionComponent);
         shield.add(spriteComponent);
-        shield.add(engine.createComponent(com.bendk97.components.ShieldComponent.class));
+        shield.add(engine.createComponent(ShieldComponent.class));
         engine.addEntity(shield);
         Timeline.createSequence().beginSequence()
                 .delay(5f)
@@ -1095,11 +1102,11 @@ public class EntityFactory implements Disposable {
     }
 
     public SnapshotArray<Entity> createEntityPlayerLives(Entity player) {
-        com.bendk97.components.PlayerComponent playerComponent = com.bendk97.components.Mappers.player.get(player);
+        PlayerComponent playerComponent = Mappers.player.get(player);
         SnapshotArray<Entity> entities = new SnapshotArray<Entity>(true, playerComponent.lives, Entity.class);
         for (int i = 0; i < playerComponent.lives - 1; ++i) {
             Entity life = engine.createEntity();
-            com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+            SpriteComponent component = engine.createComponent(SpriteComponent.class);
             Sprite sprite = atlasMask.createSprite("player", 1);
             component.setTexture(sprite, 1f, 0f, 0.5f);
             component.setPosition(LIVES_X + 20f * i, LIVES_Y - sprite.getHeight());
@@ -1111,11 +1118,11 @@ public class EntityFactory implements Disposable {
     }
 
     public SnapshotArray<Entity> createEntityPlayerBombs(Entity player) {
-        com.bendk97.components.PlayerComponent playerComponent = com.bendk97.components.Mappers.player.get(player);
+        PlayerComponent playerComponent = Mappers.player.get(player);
         SnapshotArray<Entity> entities = new SnapshotArray<Entity>(true, playerComponent.bombs, Entity.class);
         for (int i = 0; i < playerComponent.bombs; ++i) {
             Entity bomb = engine.createEntity();
-            com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+            SpriteComponent component = engine.createComponent(SpriteComponent.class);
             Sprite sprite = atlasNoMask.createSprite("bomb", 1);
             component.zIndex = 100;
             component.setTexture(sprite, 1f, 0f, 1f);
@@ -1129,19 +1136,19 @@ public class EntityFactory implements Disposable {
 
     public Entity createEntityExploding(float x, float y) {
         Entity explosion = engine.createEntity();
-        com.bendk97.components.PositionComponent position = engine.createComponent(com.bendk97.components.PositionComponent.class);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
         explosion.add(position);
         position.setPosition(x, y);
-        com.bendk97.components.AnimationComponent animationComponent = engine.createComponent(com.bendk97.components.AnimationComponent.class);
+        AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasNoMask.createSprites("explosion");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_EXPLOSION, sprites, PlayMode.NORMAL));
         animationComponent.playMode = PlayMode.NORMAL;
         explosion.add(animationComponent);
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = animationComponent.animations.get(ANIMATION_MAIN).getKeyFrame(0);
         component.zIndex = 100;
         explosion.add(component);
-        explosion.add(engine.createComponent(com.bendk97.components.StateComponent.class));
+        explosion.add(engine.createComponent(StateComponent.class));
         engine.addEntity(explosion);
         //
         if (rayHandler != null) {
@@ -1151,13 +1158,13 @@ public class EntityFactory implements Disposable {
     }
 
     public void createBossExploding(final Entity enemy) {
-        final com.bendk97.components.SpriteComponent sprite = com.bendk97.components.Mappers.sprite.get(enemy);
+        final SpriteComponent sprite = Mappers.sprite.get(enemy);
         for (int i = 0; i < 50; ++i) {
             PausableTimer.schedule(new PausableTimer.Task() {
                 @Override
                 public void run() {
                     assets.playSound(SOUND_EXPLOSION);
-                    com.bendk97.components.PositionComponent position = com.bendk97.components.Mappers.position.get(enemy);
+                    PositionComponent position = Mappers.position.get(enemy);
                     if (position != null) {
                         createEntityExploding(position.x + random.nextFloat() * sprite.sprite.getWidth(),
                                 position.y + random.nextFloat() * sprite.sprite.getHeight());
@@ -1172,7 +1179,7 @@ public class EntityFactory implements Disposable {
 
     public Entity createEntityFireButton(float alpha, float posX, float posY) {
         Entity entity = engine.createEntity();
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.setTexture(atlasNoMask.createSprite("fire_button"), alpha, 0, 1f);
         component.zIndex = 100;
         component.setPosition(posX, posY);
@@ -1183,7 +1190,7 @@ public class EntityFactory implements Disposable {
 
     public Entity createEntityBombButton(float alpha, float posX, float posY) {
         Entity entity = engine.createEntity();
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.zIndex = 100;
         component.setTexture(atlasNoMask.createSprite("bomb_button"), alpha, 0, 1f);
         component.setPosition(posX, posY);
@@ -1195,7 +1202,7 @@ public class EntityFactory implements Disposable {
 
     public Entity createEntitiesPadController(float alpha, float scale, float posX, float posY) {
         Entity pad = engine.createEntity();
-        com.bendk97.components.SpriteComponent component = engine.createComponent(com.bendk97.components.SpriteComponent.class);
+        SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.zIndex = 100;
         component.setTexture(atlasNoMask.createSprite("pad"), alpha, 0f, scale);
         component.setPosition(posX, posY);
@@ -1206,7 +1213,7 @@ public class EntityFactory implements Disposable {
 
     public Entity createSquadron(boolean powerUp, boolean displayScoreBonus, int bonus) {
         Entity squadron = engine.createEntity();
-        com.bendk97.components.SquadronComponent squadronComponent = engine.createComponent(com.bendk97.components.SquadronComponent.class);
+        SquadronComponent squadronComponent = engine.createComponent(SquadronComponent.class);
         squadronComponent.powerUpAfterDestruction = powerUp;
         squadronComponent.displayBonusSquadron = displayScoreBonus;
         squadronComponent.scoreBonus = bonus;
@@ -1217,9 +1224,9 @@ public class EntityFactory implements Disposable {
 
     public Entity createScoreSquadron(Entity squadron) {
         Entity scoreSquadron = engine.createEntity();
-        com.bendk97.components.ScoreSquadronComponent score = engine.createComponent(com.bendk97.components.ScoreSquadronComponent.class);
-        com.bendk97.components.PositionComponent position = engine.createComponent(com.bendk97.components.PositionComponent.class);
-        com.bendk97.components.SquadronComponent squadronComponent = com.bendk97.components.Mappers.squadron.get(squadron);
+        ScoreSquadronComponent score = engine.createComponent(ScoreSquadronComponent.class);
+        PositionComponent position = engine.createComponent(PositionComponent.class);
+        SquadronComponent squadronComponent = Mappers.squadron.get(squadron);
         score.score = squadronComponent.scoreBonus + "";
         position.x = squadronComponent.lastKilledPosition.x;
         position.y = squadronComponent.lastKilledPosition.y;
@@ -1244,19 +1251,19 @@ public class EntityFactory implements Disposable {
     }
 
     public void addInvulnerableComponent(Entity player) {
-        com.bendk97.components.InvulnerableComponent invulnerableComponent = com.bendk97.components.Mappers.invulnerable.get(player);
+        com.bendk97.components.InvulnerableComponent invulnerableComponent = Mappers.invulnerable.get(player);
         if (invulnerableComponent != null) {
             invulnerableComponent.nbItems++;
         } else {
-            player.add(engine.createComponent(com.bendk97.components.InvulnerableComponent.class));
+            player.add(engine.createComponent(InvulnerableComponent.class));
         }
     }
 
     public void removeInvulnerableComponent(Entity player) {
-        com.bendk97.components.InvulnerableComponent invulnerableComponent = com.bendk97.components.Mappers.invulnerable.get(player);
+        InvulnerableComponent invulnerableComponent = Mappers.invulnerable.get(player);
         invulnerableComponent.nbItems--;
         if (invulnerableComponent.nbItems == 0) {
-            player.remove(com.bendk97.components.InvulnerableComponent.class);
+            player.remove(InvulnerableComponent.class);
         }
     }
 

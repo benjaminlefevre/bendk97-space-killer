@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.listeners.impl;
 
 import aurelienribon.tweenengine.*;
@@ -13,7 +19,10 @@ import com.bendk97.components.EnemyComponent;
 import com.bendk97.components.GameOverComponent;
 import com.bendk97.components.Mappers;
 import com.bendk97.components.PlayerComponent;
+import com.bendk97.entities.EntityFactory;
 import com.bendk97.listeners.PlayerListener;
+import com.bendk97.screens.LevelScreen;
+import com.bendk97.screens.ScreenShake;
 import com.bendk97.timer.PausableTimer;
 
 import static com.bendk97.SpaceKillerGameConstants.PLAYER_ORIGIN_X;
@@ -28,13 +37,14 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     private SnapshotArray<Entity> bombs;
     private TweenManager tweenManager;
     private Assets assets;
-    private com.bendk97.screens.LevelScreen screen;
+    private LevelScreen screen;
     private SpaceKillerGame game;
     private com.bendk97.screens.ScreenShake screenShake;
 
 
-    public PlayerListenerImpl(SpaceKillerGame game, Assets asset, com.bendk97.entities.EntityFactory entityFactory, SnapshotArray<Entity> lives,
-                              SnapshotArray<Entity> bombs, TweenManager tweenManager, com.bendk97.screens.ScreenShake screenShake, com.bendk97.screens.LevelScreen screen) {
+    public PlayerListenerImpl(SpaceKillerGame game, Assets asset, EntityFactory entityFactory, SnapshotArray<Entity> lives,
+                              SnapshotArray<Entity> bombs, TweenManager tweenManager, ScreenShake screenShake,
+                              LevelScreen screen) {
         this.entityFactory = entityFactory;
         this.game = game;
         this.lives = lives;
@@ -84,7 +94,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
         screenShake.shake(20, 0.5f, true);
         if (playerComponent.isGameOver()) {
             assets.playSound(SOUND_GAME_OVER);
-            Mappers.player.get(player).secondScript = ((com.bendk97.screens.LevelScreen) game.currentScreen).getCurrentTimeScript();
+            Mappers.player.get(player).secondScript = ((LevelScreen) game.currentScreen).getCurrentTimeScript();
             player.add(((PooledEngine) getEngine()).createComponent(GameOverComponent.class));
             Settings.addScore(playerComponent.getScoreInt());
             Settings.save();

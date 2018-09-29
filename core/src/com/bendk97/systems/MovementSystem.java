@@ -1,10 +1,16 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.bendk97.components.GameOverComponent;
+import com.bendk97.components.*;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
@@ -13,18 +19,19 @@ public class MovementSystem extends IteratingSystem {
 
 
     public MovementSystem(int priority) {
-        super(Family.all(com.bendk97.components.PositionComponent.class, com.bendk97.components.VelocityComponent.class).exclude(GameOverComponent.class).get(), priority);
+        super(Family.all(PositionComponent.class, VelocityComponent.class).exclude(GameOverComponent.class).get(),
+                priority);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        com.bendk97.components.PositionComponent position = com.bendk97.components.Mappers.position.get(entity);
-        com.bendk97.components.VelocityComponent velocity = com.bendk97.components.Mappers.velocity.get(entity);
+        PositionComponent position = Mappers.position.get(entity);
+        VelocityComponent velocity = Mappers.velocity.get(entity);
         position.x += velocity.x * deltaTime;
         position.y += velocity.y * deltaTime;
-        com.bendk97.components.LightComponent light = com.bendk97.components.Mappers.light.get(entity);
+        LightComponent light = Mappers.light.get(entity);
         if(light!=null){
-            Sprite sprite = com.bendk97.components.Mappers.sprite.get(entity).sprite;
+            Sprite sprite = Mappers.sprite.get(entity).sprite;
             light.light.setPosition(position.x + sprite.getWidth() / 2f,
                     position.y + sprite.getHeight() / 2f);
         }
@@ -32,8 +39,8 @@ public class MovementSystem extends IteratingSystem {
         playerCannotGetOutBoundaries(entity, position);
     }
 
-    private void playerCannotGetOutBoundaries(Entity entity, com.bendk97.components.PositionComponent position) {
-        com.bendk97.components.SpriteComponent spriteComponent = com.bendk97.components.Mappers.sprite.get(entity);
+    private void playerCannotGetOutBoundaries(Entity entity, PositionComponent position) {
+        SpriteComponent spriteComponent = Mappers.sprite.get(entity);
         if (spriteComponent != null && spriteComponent.stayInBoundaries) {
             if (position.x < 0) {
                 position.x = 0;

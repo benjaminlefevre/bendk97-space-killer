@@ -1,6 +1,13 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.tweens;
 
 import aurelienribon.tweenengine.TweenAccessor;
+import com.bendk97.components.PositionComponent;
 
 public class PositionComponentAccessor implements TweenAccessor<com.bendk97.components.PositionComponent> {
     public final static int POSITION_X = 0;
@@ -8,7 +15,7 @@ public class PositionComponentAccessor implements TweenAccessor<com.bendk97.comp
     public final static int POSITION_XY = 2;
 
     @Override
-    public int getValues(com.bendk97.components.PositionComponent target, int type, float[] returnValues) {
+    public int getValues(PositionComponent target, int type, float[] returnValues) {
         switch (type) {
             case POSITION_X:
                 returnValues[0] = target.x;
@@ -26,7 +33,7 @@ public class PositionComponentAccessor implements TweenAccessor<com.bendk97.comp
     }
 
     @Override
-    public void setValues(com.bendk97.components.PositionComponent target, int type, float[] newValues) {
+    public void setValues(PositionComponent target, int type, float[] newValues) {
         switch (type) {
             case POSITION_X:
                 target.x = newValues[0];

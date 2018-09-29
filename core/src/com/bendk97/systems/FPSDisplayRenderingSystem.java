@@ -1,9 +1,16 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.systems;
 
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.bendk97.screens.LevelScreen;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
@@ -11,9 +18,9 @@ public class FPSDisplayRenderingSystem extends EntitySystem {
 
     private SpriteBatch batcher;
     private BitmapFont bitmapFont;
-    private com.bendk97.screens.LevelScreen screen;
+    private LevelScreen screen;
 
-    public FPSDisplayRenderingSystem(com.bendk97.screens.LevelScreen screen, SpriteBatch batcher, int priority) {
+    public FPSDisplayRenderingSystem(LevelScreen screen, SpriteBatch batcher, int priority) {
         super(priority);
         this.screen = screen;
         this.batcher = batcher;

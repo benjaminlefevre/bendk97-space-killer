@@ -1,8 +1,16 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 22:06
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Pool;
+import com.bendk97.player.PlayerData;
+import com.bendk97.screens.LevelScreen.Level;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.components.PlayerComponent.PowerLevel.*;
@@ -23,7 +31,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
         TRIPLE_FAST(new Color(3f/255f, 255f/255f, 136f/255f, 0.6f), "bullet4", "bulletLeft2", "bulletRight2"),
         TRIPLE_VERY_FAST(new Color(255f/255f, 120f/255f, 0f, 0.6f),"bullet5", "bulletLeft3", "bulletRight3");
 
-        public com.badlogic.gdx.graphics.Color color;
+        public Color color;
         public String regionName;
         public String leftRegionName;
         public String rightRegionName;
@@ -54,19 +62,19 @@ public class PlayerComponent implements Component, Pool.Poolable {
     public int lives = LIVES;
     public int bombs = BOMBS;
     public PowerLevel powerLevel = NORMAL;
-    public int rewardAds = EXTRA_LIVES_ADS;
-    public com.bendk97.screens.LevelScreen.Level level = com.bendk97.screens.LevelScreen.Level.Level1;
+    public int numberOfContinue = NUMBER_OF_CONTINUE;
+    public Level level = Level.Level1;
     public float secondScript = -3;
 
-    public com.bendk97.player.PlayerData copyPlayerData() {
-        return new com.bendk97.player.PlayerData(level, secondScript, rewardAds, fireDelay, fireDelaySide, enemiesKilled, laserShipKilled, howManyLifesLosed, score, highscore, lives, bombs, powerLevel);
+    public PlayerData copyPlayerData() {
+        return new PlayerData(level, secondScript, numberOfContinue, fireDelay, fireDelaySide, enemiesKilled, laserShipKilled, howManyLifesLosed, score, lives, bombs, powerLevel);
     }
 
     @Override
     public void reset() {
         secondScript = -3;
-        level = com.bendk97.screens.LevelScreen.Level.Level1;
-        rewardAds = EXTRA_LIVES_ADS;
+        level = Level.Level1;
+        numberOfContinue = NUMBER_OF_CONTINUE;
         howManyLifesLosed = 0;
         score = 0;
         enemiesKilled = 0;
@@ -84,7 +92,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
         return String.format("%7s", String.valueOf(score)).replace(' ', '0');
     }
 
-    public String getHighccore() {
+    public String getHighscore() {
         return String.format("%7s", String.valueOf(highscore)).replace(' ', '0');
     }
 

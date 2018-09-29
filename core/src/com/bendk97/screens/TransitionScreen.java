@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.screens;
 
 import aurelienribon.tweenengine.BaseTween;
@@ -19,7 +25,6 @@ public class TransitionScreen extends ScreenAdapter {
     public final static float screenHeight = Gdx.graphics.getHeight();
 
     private SpaceKillerGame game;
-    private com.bendk97.assets.Assets assets;
     private Screen next;
 
     private FrameBuffer currentBuffer;

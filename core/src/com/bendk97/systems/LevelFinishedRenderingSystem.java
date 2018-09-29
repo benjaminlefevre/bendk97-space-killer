@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.systems;
 
 import com.badlogic.ashley.core.Entity;
@@ -6,9 +12,12 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.bendk97.assets.Assets;
+import com.bendk97.components.LeveLFinishedComponent;
 import com.bendk97.components.Mappers;
 import com.bendk97.components.PauseComponent;
 import com.bendk97.components.PlayerComponent;
+import com.bendk97.screens.LevelScreen.Level;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 
@@ -22,25 +31,25 @@ public class LevelFinishedRenderingSystem extends IteratingSystem {
     public static final String GO_NEXT = "go next level";
     private SpriteBatch batcher;
     private BitmapFont mediumFont;
-    private com.bendk97.screens.LevelScreen.Level level;
+    private Level level;
 
-    public LevelFinishedRenderingSystem(SpriteBatch batcher, com.bendk97.assets.Assets assets, com.bendk97.screens.LevelScreen.Level level, int priority) {
-        super(Family.all(PlayerComponent.class, com.bendk97.components.LeveLFinishedComponent.class).exclude(PauseComponent.class).get(), priority);
+    public LevelFinishedRenderingSystem(SpriteBatch batcher, Assets assets, Level level, int priority) {
+        super(Family.all(PlayerComponent.class, LeveLFinishedComponent.class).exclude(PauseComponent.class).get(), priority);
         this.level = level;
         this.batcher = batcher;
-        this.mediumFont = assets.get(com.bendk97.assets.Assets.FONT_SPACE_KILLER_SMALLEST);
+        this.mediumFont = assets.get(Assets.FONT_SPACE_KILLER_SMALLEST);
         this.mediumFont.setColor(Color.WHITE);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         mediumFont.draw(batcher,
-                level.equals(com.bendk97.screens.LevelScreen.Level.Level3) ? LEVEL_3_FINISHED :
-                        level.equals(com.bendk97.screens.LevelScreen.Level.Level2) ? LEVEL_2_FINISHED : LEVEL_1_FINISHED, 10f, 4 * SCREEN_HEIGHT / 5f);
+                level.equals(Level.Level3) ? LEVEL_3_FINISHED :
+                        level.equals(Level.Level2) ? LEVEL_2_FINISHED : LEVEL_1_FINISHED, 10f, 4 * SCREEN_HEIGHT / 5f);
         PlayerComponent player = Mappers.player.get(entity);
         mediumFont.draw(batcher, ENEMIES_KILLED, 10f, 4 * SCREEN_HEIGHT / 5f - 100f);
         mediumFont.draw(batcher, player.enemiesKilledLevel + " out of " + player.enemiesCountLevel, 40f, 4 * SCREEN_HEIGHT / 5f - 150f);
-        if (!level.equals(com.bendk97.screens.LevelScreen.Level.Level3)) {
+        if (!level.equals(Level.Level3)) {
             mediumFont.draw(batcher, GO_NEXT, 10f, 4 * SCREEN_HEIGHT / 5f - 250f);
         } else {
             mediumFont.draw(batcher, NEXT_NOT_IMPLEMNTED, 10f, 4 * SCREEN_HEIGHT / 5f - 250f);

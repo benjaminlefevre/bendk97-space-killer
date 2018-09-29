@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -11,6 +17,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.bendk97.SpaceKillerGame;
+import com.bendk97.assets.Assets;
 
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
 
@@ -28,15 +35,15 @@ public class SplashScreen extends HDScreen {
     Actor fader = new Actor();
 
 
-    public SplashScreen(com.bendk97.assets.Assets assets, SpaceKillerGame game) {
+    public SplashScreen(Assets assets, SpaceKillerGame game) {
         super(game, assets,1080,1920);
-        assets.playMusic(com.bendk97.assets.Assets.SPLASH_MUSIC);
+        assets.playMusic(Assets.SPLASH_MUSIC);
         initGraphics();
         initFader();
     }
 
     public void initGraphics() {
-        TextureAtlas atlas = assets.get(com.bendk97.assets.Assets.SPASH_ATLAS);
+        TextureAtlas atlas = assets.get(Assets.SPASH_ATLAS);
         // Initialize the Animation with the frame interval and array of frames
         walkAnimation = new Animation<TextureRegion>(0.025f, atlas.findRegions("human_running"), LOOP);
 
@@ -44,7 +51,7 @@ public class SplashScreen extends HDScreen {
         // time to 0
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
-        logo = assets.get(com.bendk97.assets.Assets.SPLASH_TXT_LOGO);
+        logo = assets.get(Assets.SPLASH_TXT_LOGO);
         logoBatcher = new SpriteBatch();
     }
 
@@ -89,7 +96,7 @@ public class SplashScreen extends HDScreen {
         logoBatcher.end();
         if(stateTime>5 && stateTimeBefore <= 5){
             this.dispose();
-            game.goToScreen(com.bendk97.screens.MenuScreen.class);
+            game.goToScreen(MenuScreen.class);
         }
     }
 

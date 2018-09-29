@@ -1,9 +1,19 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.inputs;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.bendk97.components.Mappers;
+import com.bendk97.components.PositionComponent;
+import com.bendk97.listeners.InputListener;
+import com.bendk97.screens.LevelScreen;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
@@ -13,7 +23,7 @@ public class VirtualPadController extends com.bendk97.inputs.TouchInputProcessor
     private Entity player;
 
 
-    public VirtualPadController(com.bendk97.screens.LevelScreen screen, com.bendk97.listeners.InputListener inputListener, Camera camera, Entity player, Rectangle bombButton) {
+    public VirtualPadController(LevelScreen screen, InputListener inputListener, Camera camera, Entity player, Rectangle bombButton) {
         super(screen, inputListener, camera, bombButton);
         this.player = player;
         this.squareTouches = new Rectangle[8];
@@ -45,9 +55,9 @@ public class VirtualPadController extends com.bendk97.inputs.TouchInputProcessor
     }
 
     private void computeVirtualButtons() {
-        com.bendk97.components.PositionComponent position = com.bendk97.components.Mappers.position.get(player);
-        float playerWidth = com.bendk97.components.Mappers.sprite.get(player).sprite.getWidth();
-        float playerHeight = com.bendk97.components.Mappers.sprite.get(player).sprite.getHeight();
+        PositionComponent position = Mappers.position.get(player);
+        float playerWidth = Mappers.sprite.get(player).sprite.getWidth();
+        float playerHeight = Mappers.sprite.get(player).sprite.getHeight();
 
         squareTouches[0] = new Rectangle(
                 0f,

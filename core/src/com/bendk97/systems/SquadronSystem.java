@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.systems;
 
 import com.badlogic.ashley.core.Entity;
@@ -6,6 +12,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.RandomXS128;
 import com.bendk97.components.Mappers;
 import com.bendk97.components.SquadronComponent;
+import com.bendk97.entities.EntityFactory;
 import com.bendk97.listeners.PlayerListener;
 import com.bendk97.screens.LevelScreen;
 import com.bendk97.timer.PausableTimer;
@@ -23,7 +30,7 @@ public class SquadronSystem extends IteratingSystem {
     private Entity player;
     private PlayerListener playerListener;
 
-    public SquadronSystem(LevelScreen.Level level, int priority, com.bendk97.entities.EntityFactory entityFactory, Entity player, PlayerListener playerListener) {
+    public SquadronSystem(LevelScreen.Level level, int priority, EntityFactory entityFactory, Entity player, PlayerListener playerListener) {
         super(Family.all(SquadronComponent.class).get(), priority);
         this.entityFactory = entityFactory;
         this.player = player;

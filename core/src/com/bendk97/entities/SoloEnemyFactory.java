@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.entities;
 
 import aurelienribon.tweenengine.*;
@@ -8,6 +14,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Bezier;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
+import com.bendk97.components.Mappers;
+import com.bendk97.components.PositionComponent;
+import com.bendk97.components.TankComponent.TankLevel;
+import com.bendk97.screens.LevelScreen.Level;
+import com.bendk97.tweens.PositionComponentAccessor;
 
 import java.util.List;
 import java.util.Random;
@@ -26,10 +37,10 @@ public class SoloEnemyFactory {
     private EntityFactory entityFactory;
     private Random random = new RandomXS128();
     private Engine engine;
-    private com.bendk97.screens.LevelScreen.Level level;
+    private Level level;
     private Entity player;
 
-    public SoloEnemyFactory(com.bendk97.screens.LevelScreen.Level level, Engine engine, TweenManager tweenManager, EntityFactory entityFactory, Entity player) {
+    public SoloEnemyFactory(Level level, Engine engine, TweenManager tweenManager, EntityFactory entityFactory, Entity player) {
         this.tweenManager = tweenManager;
         this.engine = engine;
         this.level = level;
@@ -44,7 +55,7 @@ public class SoloEnemyFactory {
 
     public Entity createSoloEnemy(float velocity, float bulletVelocity,
                                   int rateShoot, int gaugelife, int points, boolean comingFromLeft) {
-        com.bendk97.components.Mappers.player.get(player).enemiesCountLevel++;
+        Mappers.player.get(player).enemiesCountLevel++;
         int soloType = random.nextInt(4);
         switch (soloType) {
             case FOLLOW_PLAYER:
@@ -60,14 +71,14 @@ public class SoloEnemyFactory {
         }
     }
 
-    public void createTank(float velocity, com.bendk97.components.TankComponent.TankLevel level, int gaugeLife, int points) {
+    public void createTank(float velocity, TankLevel level, int gaugeLife, int points) {
         List<Entity> entities = entityFactory.createTank(level, gaugeLife, points);
-        com.bendk97.components.Mappers.player.get(player).enemiesCountLevel++;
+        Mappers.player.get(player).enemiesCountLevel++;
         float posX = random.nextFloat() * (SCREEN_WIDTH - 64f);
         for (final Entity entity : entities) {
-            com.bendk97.components.PositionComponent position = com.bendk97.components.Mappers.position.get(entity);
+            PositionComponent position = Mappers.position.get(entity);
             position.setPosition(posX, SCREEN_HEIGHT + 20f);
-            Tween.to(position, com.bendk97.tweens.PositionComponentAccessor.POSITION_Y, (SCREEN_HEIGHT + 100f) / velocity)
+            Tween.to(position, PositionComponentAccessor.POSITION_Y, (SCREEN_HEIGHT + 100f) / velocity)
                     .ease(Linear.INOUT).targetRelative(-SCREEN_HEIGHT - 100f)
                     .setCallback(new TweenCallback() {
                         @Override
@@ -84,8 +95,8 @@ public class SoloEnemyFactory {
         final boolean direction = comingFromLeft;
         final int directionFactor = direction ? 1 : -1;
         Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugelife, points, direction);
-        final com.bendk97.components.PositionComponent position = com.bendk97.components.Mappers.position.get(enemy);
-        Sprite sprite = com.bendk97.components.Mappers.sprite.get(enemy).sprite;
+        final PositionComponent position = Mappers.position.get(enemy);
+        Sprite sprite = Mappers.sprite.get(enemy).sprite;
         final int k = 100;
         Bezier<Vector2> bezier = new Bezier<Vector2>(new Vector2(0f, SCREEN_HEIGHT - sprite.getHeight()), new Vector2(0f, SCREEN_HEIGHT / 2f),
                 new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT / 2f), new Vector2(SCREEN_WIDTH - sprite.getWidth(), SCREEN_HEIGHT - sprite.getHeight()));
@@ -94,18 +105,18 @@ public class SoloEnemyFactory {
             vPoints[i] = new Vector2();
             bezier.valueAt(vPoints[i], ((float) i) / ((float) k - 1));
         }
-        Tween.to(position, com.bendk97.tweens.PositionComponentAccessor.POSITION_X, sprite.getWidth() / velocity)
+        Tween.to(position, PositionComponentAccessor.POSITION_X, sprite.getWidth() / velocity)
                 .ease(Linear.INOUT).targetRelative(directionFactor * sprite.getWidth())
                 .setCallback(new TweenCallback() {
                     @Override
                     public void onEvent(int i, BaseTween<?> baseTween) {
                         Timeline timeline = Timeline.createSequence();
-                        timeline.push(Tween.to(position, com.bendk97.tweens.PositionComponentAccessor.POSITION_XY, vPoints[direction ? 0 : k - 1].dst(position.x, position.y) / velocity)
+                        timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, vPoints[direction ? 0 : k - 1].dst(position.x, position.y) / velocity)
                                 .ease(Linear.INOUT)
                                 .target(vPoints[direction ? 0 : k - 1].x, vPoints[direction ? 0 : k - 1].y));
                         for (int j = 1; j < vPoints.length; ++j) {
                             int jx = direction ? j : k - j;
-                            timeline.push(Tween.to(position, com.bendk97.tweens.PositionComponentAccessor.POSITION_XY, vPoints[jx].dst(vPoints[jx - 1].x, vPoints[jx - 1].y) / velocity)
+                            timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, vPoints[jx].dst(vPoints[jx - 1].x, vPoints[jx - 1].y) / velocity)
                                     .ease(Linear.INOUT)
                                     .target(vPoints[jx].x, vPoints[jx].y));
                         }
@@ -121,9 +132,9 @@ public class SoloEnemyFactory {
         final boolean direction = comingFromLeft;
         final int directionFactor = direction ? 1 : -1;
         Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugelife, points, direction);
-        final com.bendk97.components.PositionComponent position = com.bendk97.components.Mappers.position.get(enemy);
-        final Sprite sprite = com.bendk97.components.Mappers.sprite.get(enemy).sprite;
-        Tween.to(position, com.bendk97.tweens.PositionComponentAccessor.POSITION_X, sprite.getWidth() / velocity)
+        final PositionComponent position = Mappers.position.get(enemy);
+        final Sprite sprite = Mappers.sprite.get(enemy).sprite;
+        Tween.to(position, PositionComponentAccessor.POSITION_X, sprite.getWidth() / velocity)
                 .ease(Linear.INOUT).targetRelative(directionFactor * sprite.getWidth())
                 .setCallback(new TweenCallback() {
                     @Override
@@ -131,13 +142,13 @@ public class SoloEnemyFactory {
                         if (i == COMPLETE) {
                             float distance = (new Vector2(0f, SCREEN_HEIGHT - sprite.getHeight())).dst(new Vector2(75f, SCREEN_HEIGHT - sprite.getHeight() - 75f));
                             Timeline.createSequence()
-                                    .push(Tween.to(position, com.bendk97.tweens.PositionComponentAccessor.POSITION_XY, distance / velocity)
+                                    .push(Tween.to(position, PositionComponentAccessor.POSITION_XY, distance / velocity)
                                             .ease(Linear.INOUT).targetRelative(75f * directionFactor, -75f))
-                                    .push(Tween.to(position, com.bendk97.tweens.PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH - 2 * 75f - sprite.getWidth()) / velocity)
+                                    .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH - 2 * 75f - sprite.getWidth()) / velocity)
                                             .delay(2.0f).ease(Linear.INOUT).targetRelative(directionFactor * (SCREEN_WIDTH - 2 * 75f - sprite.getWidth())))
-                                    .push(Tween.to(position, com.bendk97.tweens.PositionComponentAccessor.POSITION_XY, distance / velocity)
+                                    .push(Tween.to(position, PositionComponentAccessor.POSITION_XY, distance / velocity)
                                             .delay(2.0f).ease(Linear.INOUT).targetRelative(75f * directionFactor, 75f))
-                                    .push(Tween.to(position, com.bendk97.tweens.PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH - sprite.getWidth()) / velocity)
+                                    .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH - sprite.getWidth()) / velocity)
                                             .ease(Linear.INOUT).targetRelative(-directionFactor * (SCREEN_WIDTH - sprite.getWidth())))
                                     .repeat(Tween.INFINITY, 0f).start(tweenManager);
                         }
@@ -150,15 +161,15 @@ public class SoloEnemyFactory {
         final boolean direction = comingFromLeft;
         final int directionFactor = direction ? 1 : -1;
         Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugelife, points, direction);
-        final com.bendk97.components.PositionComponent position = com.bendk97.components.Mappers.position.get(enemy);
-        final Sprite sprite = com.bendk97.components.Mappers.sprite.get(enemy).sprite;
-        Tween.to(position, com.bendk97.tweens.PositionComponentAccessor.POSITION_X, SCREEN_WIDTH / velocity)
+        final PositionComponent position = Mappers.position.get(enemy);
+        final Sprite sprite = Mappers.sprite.get(enemy).sprite;
+        Tween.to(position, PositionComponentAccessor.POSITION_X, SCREEN_WIDTH / velocity)
                 .ease(Linear.INOUT).targetRelative(directionFactor * SCREEN_WIDTH)
                 .setCallback(new TweenCallback() {
                     @Override
                     public void onEvent(int i, BaseTween<?> baseTween) {
                         if (i == COMPLETE) {
-                            Tween.to(position, com.bendk97.tweens.PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH - sprite.getWidth()) / velocity)
+                            Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH - sprite.getWidth()) / velocity)
                                     .ease(Linear.INOUT).targetRelative(-directionFactor * (SCREEN_WIDTH - sprite.getWidth()))
                                     .repeatYoyo(Tween.INFINITY, 0f).start(tweenManager);
                         }
@@ -172,9 +183,9 @@ public class SoloEnemyFactory {
     }
 
     public int getRandomStaticEnemy() {
-        if (level.equals(com.bendk97.screens.LevelScreen.Level.Level2)) {
+        if (level.equals(Level.Level2)) {
             return random.nextInt(EntityFactory.NB_SHIP_LV2_LASER_SHIP) + EntityFactory.SHIP_LV2_LASER_SHIP1;
-        } else if (level.equals(com.bendk97.screens.LevelScreen.Level.Level3)) {
+        } else if (level.equals(Level.Level3)) {
             return EntityFactory.SHIP_LV3_1 + random.nextInt(EntityFactory.NB_SHIP_LV3);
         }
         throw new IllegalArgumentException("Unexpecte Exception");

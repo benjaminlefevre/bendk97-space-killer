@@ -1,10 +1,18 @@
-    package com.bendk97.inputs;
+    /*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
+package com.bendk97.inputs;
 
     import com.badlogic.gdx.Input;
     import com.badlogic.gdx.InputAdapter;
     import com.badlogic.gdx.graphics.Camera;
     import com.badlogic.gdx.math.Rectangle;
     import com.badlogic.gdx.math.Vector3;
+    import com.bendk97.listeners.InputListener;
+    import com.bendk97.screens.LevelScreen;
 
 
     public abstract class TouchInputProcessor extends InputAdapter {
@@ -13,9 +21,9 @@
     protected Camera camera;
     protected Rectangle[] squareTouches;
     protected Rectangle bombButton;
-    protected com.bendk97.screens.LevelScreen screen;
+    protected LevelScreen screen;
 
-    public TouchInputProcessor(com.bendk97.screens.LevelScreen screen, com.bendk97.listeners.InputListener inputListener, Camera camera, Rectangle bombButton) {
+    public TouchInputProcessor(LevelScreen screen, InputListener inputListener, Camera camera, Rectangle bombButton) {
         this.listener = inputListener;
         this.screen = screen;
         this.camera = camera;

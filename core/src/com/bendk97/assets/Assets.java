@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.assets;
 
 import com.badlogic.gdx.Screen;
@@ -15,7 +21,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.bendk97.Settings;
-import com.bendk97.screens.SplashScreen;
+import com.bendk97.screens.*;
 
 import java.util.*;
 
@@ -162,11 +168,11 @@ public class Assets {
         put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
                 SPLASH_MUSIC, SPASH_ATLAS, SPLASH_TXT_LOGO
         ));
-        put(com.bendk97.screens.MenuScreen.class, Arrays.<AssetDescriptor>asList(
+        put(MenuScreen.class, Arrays.<AssetDescriptor>asList(
                 MENU_BGD, FONT_SPACE_KILLER_LARGE, MENU_MUSIC, FONT_SPACE_KILLER_MEDIUM, MENU_CLICK,
                 MENU_ATLAS, FONT_SPACE_KILLER_SMALL
         ));
-        put(com.bendk97.screens.Level1Screen.class, Arrays.<AssetDescriptor>asList(
+        put(Level1Screen.class, Arrays.<AssetDescriptor>asList(
                 // MUSIC
                 MUSIC_LEVEL_1, MUSIC_LEVEL_1_BOSS,
                 // SOUNDS
@@ -183,7 +189,7 @@ public class Assets {
                 // FONTS
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_SMALLEST,
                 FONT_SPACE_KILLER_MEDIUM));
-        put(com.bendk97.screens.Level2Screen.class, Arrays.<AssetDescriptor>asList(
+        put(Level2Screen.class, Arrays.<AssetDescriptor>asList(
                 // MUSIC
                 MUSIC_LEVEL_2, MUSIC_LEVEL_2_BOSS,
                 // SOUNDS
@@ -201,7 +207,7 @@ public class Assets {
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALLEST
         ));
 
-        put(com.bendk97.screens.Level3Screen.class, Arrays.<AssetDescriptor>asList(
+        put(Level3Screen.class, Arrays.<AssetDescriptor>asList(
                 // MUSIC
                 MUSIC_LEVEL_3, MUSIC_LEVEL_3_BOSS,
                 // SOUNDS
@@ -219,8 +225,8 @@ public class Assets {
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALLEST
         ));
 
-        put(com.bendk97.screens.TransitionScreen.class, Collections.EMPTY_LIST);
-        put(com.bendk97.screens.SocialScoreScreen.class, Collections.EMPTY_LIST);
+        put(TransitionScreen.class, Collections.EMPTY_LIST);
+        put(SocialScoreScreen.class, Collections.EMPTY_LIST);
 
     }};
 

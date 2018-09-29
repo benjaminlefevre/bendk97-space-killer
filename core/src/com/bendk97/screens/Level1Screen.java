@@ -1,3 +1,9 @@
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 29/09/18 21:09
+ * Copyright (c) 2018. All rights reserved.
+ */
+
 package com.bendk97.screens;
 
 import aurelienribon.tweenengine.Tween;
@@ -19,7 +25,7 @@ import static com.bendk97.entities.SquadronFactory.LINEAR_Y;
 import static com.bendk97.screens.LevelScreen.Level.Level1;
 import static com.bendk97.tweens.VelocityComponentAccessor.VELOCITY_Y;
 
-public class Level1Screen extends com.bendk97.screens.LevelScreen {
+public class Level1Screen extends LevelScreen {
     private LinkedList<ScriptItem> scriptItemsEasy;
     private LinkedList<ScriptItem> scriptItemsMediumLeft;
     private LinkedList<ScriptItem> scriptItemsMediumRight;
