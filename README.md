@@ -7,7 +7,7 @@ The game is currently published in the google playstore here: https://play.googl
 Several libraries are used:
 
 | Library  | Version | Link |
-| ------------- | ------------- |
+| ------------- | ------------- | ------------- |
 | libgdx | 1.9.8 | https://libgdx.badlogicgames.com/ |
 | ashleyVersion (ECS design pattern) | 1.7.3 | https://github.com/libgdx/ashley |
 | box2DLightsVersion | 1.4 | https://github.com/libgdx/box2dlights |
