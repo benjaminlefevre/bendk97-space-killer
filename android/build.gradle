@@ -26,14 +26,44 @@ android {
 
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 97
-        versionName "1.1.1"
+        versionCode 100
+        versionName "1.2"
     }
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    splits {
+        // Configures multiple APKs based on ABI.
+        abi {
+            // Enables building multiple APKs per ABI.
+            enable true
+
+            // By default all ABIs are included, so use reset() and include to specify that we only
+            // want APKs for x86, armeabi-v7a, and mips.
+            reset()
+
+            // Specifies a list of ABIs that Gradle should create APKs for.
+            include "x86", "x86_64", "armeabi", "armeabi-v7a", "arm64-v8a"
+
+            // Specifies that we want to also generate a universal APK that includes all ABIs.
+            universalApk false
+        }
+    }
+
+    // Map for the version code that gives each ABI a value.
+    def abiCodes = ['x86':1, 'x86_64':2, 'armeabi-v7a':4, 'arm64-v8a':5, 'armeabi':3]
+
+    // APKs for the same app that all have the same version information.
+    android.applicationVariants.all { variant ->
+        // Assigns a different version code for each output APK.
+        variant.outputs.each {
+            output ->
+                def abiName = output.getFilter(com.android.build.OutputFile.ABI)
+                output.versionCodeOverride = abiCodes.get(abiName, 0) * 100000 + variant.versionCode
         }
     }
 }
