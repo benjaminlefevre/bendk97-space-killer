@@ -71,7 +71,7 @@ public class GameOverRenderingSystem extends IteratingSystem {
         batcher.begin();
         largeFont.draw(batcher, GAME_OVER, SCREEN_WIDTH / 4f - 10f, SCREEN_HEIGHT - 100f);
         mediumFont.draw(batcher, SCORE + Mappers.player.get(entity).getScore(), 20f, SCREEN_HEIGHT / 2f + 30f);
-        mediumFont.draw(batcher, HIGHSCORE + Mappers.player.get(entity).getHighccore(), 10f, SCREEN_HEIGHT / 2f - 130f);
+        mediumFont.draw(batcher, HIGHSCORE + Mappers.player.get(entity).getHighscore(), 10f, SCREEN_HEIGHT / 2f - 130f);
         if (Mappers.player.get(entity).numberOfContinue > 0) {
             extraLife.draw(batcher);
         }

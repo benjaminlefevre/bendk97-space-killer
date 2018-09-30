@@ -10,12 +10,13 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.bendk97.screens.LevelScreen;
 
 public class GestureHandler extends GestureAdapter {
-    protected com.bendk97.screens.LevelScreen levelScreen;
+    protected LevelScreen levelScreen;
     protected Camera camera;
 
-    public GestureHandler(com.bendk97.screens.LevelScreen screen, Camera camera) {
+    public GestureHandler(LevelScreen screen, Camera camera) {
         this.levelScreen = screen;
         this.camera = camera;
     }

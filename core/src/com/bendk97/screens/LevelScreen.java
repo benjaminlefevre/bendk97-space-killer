@@ -33,11 +33,13 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.bendk97.Settings;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
-import com.bendk97.components.PositionComponent;
+import com.bendk97.components.*;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.entities.SquadronFactory;
 import com.bendk97.google.Achievement;
+import com.bendk97.inputs.GestureHandler;
 import com.bendk97.inputs.RetroPadController;
+import com.bendk97.inputs.VirtualPadController;
 import com.bendk97.listeners.PlayerListener;
 import com.bendk97.listeners.impl.CollisionListenerImpl;
 import com.bendk97.listeners.impl.InputListenerImpl;
@@ -48,6 +50,7 @@ import com.bendk97.postprocessing.PostProcessor;
 import com.bendk97.postprocessing.effects.MotionBlur;
 import com.bendk97.postprocessing.utils.ShaderLoader;
 import com.bendk97.systems.DynamicEntitiesRenderingSystem;
+import com.bendk97.systems.FPSDisplayRenderingSystem;
 import com.bendk97.timer.PausableTimer;
 import com.bendk97.tweens.CameraTween;
 import com.bendk97.tweens.PositionComponentAccessor;
@@ -75,7 +78,7 @@ public abstract class LevelScreen extends ScreenAdapter {
 
 
     public void nextLevel() {
-        com.bendk97.components.PlayerComponent playerComponent = com.bendk97.components.Mappers.player.get(player);
+        PlayerComponent playerComponent = Mappers.player.get(player);
         FrameBuffer screenshot = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
         screenshot.begin();
         this.render(Gdx.graphics.getDeltaTime());
@@ -86,11 +89,11 @@ public abstract class LevelScreen extends ScreenAdapter {
         switch (level) {
             case Level1:
                 game.playServices.unlockAchievement(Achievement.KILL_BOSS);
-                game.goToScreen(com.bendk97.screens.Level2Screen.class, playerData, screenshot);
+                game.goToScreen(Level2Screen.class, playerData, screenshot);
                 break;
             case Level2:
                 game.playServices.unlockAchievement(Achievement.KILL_BOSS_2);
-                game.goToScreen(com.bendk97.screens.Level3Screen.class, playerData, screenshot);
+                game.goToScreen(Level3Screen.class, playerData, screenshot);
                 break;
             case Level3:
                 game.playServices.unlockAchievement(Achievement.KILL_BOSS_3);
@@ -107,21 +110,21 @@ public abstract class LevelScreen extends ScreenAdapter {
     }
 
     public void continueWithExtraLife() {
-        final com.bendk97.components.PlayerComponent playerComponent = com.bendk97.components.Mappers.player.get(player);
-        player.remove(com.bendk97.components.GameOverComponent.class);
+        final PlayerComponent playerComponent = Mappers.player.get(player);
+        player.remove(GameOverComponent.class);
         ((LevelScreen) game.currentScreen).startLevel(playerComponent.secondScript);
         playerComponent.lives = LIVES;
         playerComponent.bombs = BOMBS;
         playerComponent.resetScore();
         playerListener.updateLivesAndBombsAfterContinue(player);
         playerComponent.numberOfContinue--;
-        com.bendk97.components.Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
-        com.bendk97.components.Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+        Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+        Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         entityFactory.addInvulnerableComponent(player);
         Gdx.input.setInputProcessor(inputProcessor);
         Timeline.createSequence()
-                .push(Tween.to(com.bendk97.components.Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
-                .push(Tween.to(com.bendk97.components.Mappers.sprite.get(player), ALPHA, 0.2f).target(1f))
+                .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
+                .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(1f))
                 .repeat(10, 0f)
                 .setCallback(new TweenCallback() {
                     @Override
@@ -231,15 +234,16 @@ public abstract class LevelScreen extends ScreenAdapter {
     }
 
     private void registerTweensAccessor() {
-        Tween.registerAccessor(com.bendk97.components.SpriteComponent.class, new SpriteComponentAccessor());
+        Tween.registerAccessor(SpriteComponent.class, new SpriteComponentAccessor());
         Tween.registerAccessor(PositionComponent.class, new PositionComponentAccessor());
-        Tween.registerAccessor(com.bendk97.components.VelocityComponent.class, new VelocityComponentAccessor());
+        Tween.registerAccessor(VelocityComponent.class, new VelocityComponentAccessor());
         Tween.registerAccessor(OrthographicCamera.class, new CameraTween());
     }
 
     PlayerListenerImpl playerListener;
 
-    protected void createSystems(Entity player, SnapshotArray<Entity> lives, SnapshotArray<Entity> bombs, SpriteBatch batcher, com.bendk97.screens.ScreenShake screenShake) {
+    protected void createSystems(Entity player, SnapshotArray<Entity> lives, SnapshotArray<Entity> bombs, SpriteBatch batcher,
+                                 ScreenShake screenShake) {
         playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, tweenManager, screenShake, this);
         engine.addSystem(playerListener);
         engine.addSystem(createInputHandlerSystem(player, playerListener));
@@ -263,7 +267,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         engine.addSystem(new com.bendk97.systems.PauseRenderingSystem(batcherHUD, cameraHUD, assets, 10));
         engine.addSystem(new com.bendk97.systems.LevelFinishedRenderingSystem(batcherHUD, assets, level, 10));
         if (DEBUG) {
-            engine.addSystem(new com.bendk97.systems.FPSDisplayRenderingSystem(this, batcherHUD, 11));
+            engine.addSystem(new FPSDisplayRenderingSystem(this, batcherHUD, 11));
         }
         engine.addSystem(new com.bendk97.systems.BatcherHUDEndSystem(batcherHUD, 12));
         // END RENDERING
@@ -279,7 +283,7 @@ public abstract class LevelScreen extends ScreenAdapter {
     private InputListenerImpl createInputHandlerSystem(Entity player, PlayerListener playerListener) {
         // input
         inputProcessor = new InputMultiplexer();
-        inputProcessor.addProcessor(new GestureDetector(new com.bendk97.inputs.GestureHandler(this, cameraHUD)));
+        inputProcessor.addProcessor(new GestureDetector(new GestureHandler(this, cameraHUD)));
 
         InputListenerImpl inputListener = new InputListenerImpl(player, playerListener, entityFactory, assets, Settings.isVirtualPad());
         Entity bombButton = entityFactory.createEntityBombButton(0.2f, BOMB_X, BOMB_Y);
@@ -287,7 +291,7 @@ public abstract class LevelScreen extends ScreenAdapter {
             Entity fireButton = entityFactory.createEntityFireButton(0.2f, FIRE_X, FIRE_Y);
             Entity padController = entityFactory.createEntitiesPadController(0.2f, 1.4f, PAD_X, PAD_Y);
             // define touch area as rectangles
-            Sprite padSprite = com.bendk97.components.Mappers.sprite.get(padController).sprite;
+            Sprite padSprite = Mappers.sprite.get(padController).sprite;
             float heightTouch = padSprite.getHeight() * 1.2f / 3f, widthTouch = padSprite.getWidth() * 1.2f / 3f;
             Rectangle[] squareTouchesDirection = new Rectangle[8];
             squareTouchesDirection[0] = new Rectangle(PAD_X, PAD_Y + 2 * heightTouch, widthTouch, heightTouch);
@@ -299,12 +303,14 @@ public abstract class LevelScreen extends ScreenAdapter {
             squareTouchesDirection[6] = new Rectangle(PAD_X + widthTouch, PAD_Y, widthTouch, heightTouch);
             squareTouchesDirection[7] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y, widthTouch, heightTouch);
 
-            inputProcessor.addProcessor(new RetroPadController(this, inputListener, cameraHUD, squareTouchesDirection, com.bendk97.components.Mappers.sprite.get(fireButton).getBounds(),
-                    com.bendk97.components.Mappers.sprite.get(bombButton).getBounds()));
+            inputProcessor.addProcessor(new RetroPadController(this, inputListener, cameraHUD, squareTouchesDirection,
+                    Mappers.sprite.get(fireButton).getBounds(),
+                    Mappers.sprite.get(bombButton).getBounds()));
 
         } else {
-            com.bendk97.components.Mappers.sprite.get(bombButton).sprite.setY(BOMB_Y_VIRTUAL);
-            inputProcessor.addProcessor(new com.bendk97.inputs.VirtualPadController(this, inputListener, cameraHUD, player, com.bendk97.components.Mappers.sprite.get(bombButton).getBounds()));
+            Mappers.sprite.get(bombButton).sprite.setY(BOMB_Y_VIRTUAL);
+            inputProcessor.addProcessor(new VirtualPadController(this, inputListener, cameraHUD, player,
+                    Mappers.sprite.get(bombButton).getBounds()));
 
         }
         Gdx.input.setInputProcessor(inputProcessor);
@@ -360,15 +366,15 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     @Override
     public void pause() {
-        if (player.getComponent(com.bendk97.components.GameOverComponent.class) == null
-                && player.getComponent(com.bendk97.components.PauseComponent.class) == null) {
+        if (player.getComponent(GameOverComponent.class) == null
+                && player.getComponent(PauseComponent.class) == null) {
             state = State.PAUSED;
             Gdx.input.setInputProcessor(this.getPauseInputProcessor());
             if (music != null) {
                 music.pause();
             }
             PausableTimer.pause();
-            player.add(engine.createComponent(com.bendk97.components.PauseComponent.class));
+            player.add(engine.createComponent(PauseComponent.class));
         }
     }
 
@@ -379,13 +385,13 @@ public abstract class LevelScreen extends ScreenAdapter {
             music.play();
         }
         PausableTimer.resume();
-        player.remove(com.bendk97.components.PauseComponent.class);
+        player.remove(PauseComponent.class);
         postProcessor.rebind();
     }
 
     public void quitGame() {
         this.dispose();
-        game.goToScreen(com.bendk97.screens.MenuScreen.class);
+        game.goToScreen(MenuScreen.class);
     }
 
     @Override
@@ -410,7 +416,7 @@ public abstract class LevelScreen extends ScreenAdapter {
     }
 
     public void checkAchievements(Entity player) {
-        com.bendk97.components.PlayerComponent playerComponent = com.bendk97.components.Mappers.player.get(player);
+        PlayerComponent playerComponent = Mappers.player.get(player);
         if (playerComponent.enemiesKilled == 50) {
             game.playServices.unlockAchievement(KILL_50_ENEMIES);
         } else if (playerComponent.enemiesKilled == 100) {
@@ -489,8 +495,8 @@ public abstract class LevelScreen extends ScreenAdapter {
 
         public void execute() {
             squadronFactory.createSquadron(typeShip, typeSquadron, velocity, number, powerUp, displayBonus, bonus, bulletVelocity, rateShoot, params);
-            if (com.bendk97.components.Mappers.levelFinished.get(player) == null) {
-                com.bendk97.components.Mappers.player.get(player).enemiesCountLevel += number;
+            if (Mappers.levelFinished.get(player) == null) {
+                Mappers.player.get(player).enemiesCountLevel += number;
             }
         }
 

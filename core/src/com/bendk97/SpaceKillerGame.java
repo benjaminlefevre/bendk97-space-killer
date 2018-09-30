@@ -11,24 +11,30 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
+import com.bendk97.assets.Assets;
 import com.bendk97.google.PlayServices;
+import com.bendk97.player.PlayerData;
+import com.bendk97.screens.LevelScreen;
 import com.bendk97.screens.MenuScreen;
+import com.bendk97.screens.SplashScreen;
+import com.bendk97.share.IntentShare;
 
 import java.io.File;
 
 import static com.bendk97.SpaceKillerGameConstants.SKIP_SPLASH;
+import static com.bendk97.screens.SocialScoreScreen.TEMP_DIRECTORY;
 
 public class SpaceKillerGame extends Game {
-    private com.bendk97.assets.Assets assets = new com.bendk97.assets.Assets();
+    private Assets assets = new Assets();
     public PlayServices playServices;
     public Screen currentScreen;
-    public com.bendk97.player.PlayerData playerData;
-    public com.bendk97.share.IntentShare intentShare;
+    public PlayerData playerData;
+    public IntentShare intentShare;
 
-    public SpaceKillerGame(PlayServices playServices, com.bendk97.share.IntentShare intentShare) {
+    public SpaceKillerGame(PlayServices playServices, IntentShare intentShare) {
         this.playServices = playServices;
         this.intentShare = intentShare;
-        if (com.bendk97.SpaceKillerGameConstants.DEBUG) {
+        if (SpaceKillerGameConstants.DEBUG) {
             GLProfiler profiler = new GLProfiler(Gdx.graphics);
             profiler.enable();
         }
@@ -36,7 +42,7 @@ public class SpaceKillerGame extends Game {
 
     private void cleanTempDirectory() {
         if (Gdx.files.isExternalStorageAvailable()) {
-            final File directory = Gdx.files.external(com.bendk97.screens.SocialScoreScreen.TEMP_DIRECTORY).file();
+            final File directory = Gdx.files.external(TEMP_DIRECTORY).file();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -57,9 +63,9 @@ public class SpaceKillerGame extends Game {
         Gdx.input.setCatchBackKey(true);
         cleanTempDirectory();
         if (SKIP_SPLASH) {
-            goToScreen(com.bendk97.screens.MenuScreen.class);
+            goToScreen(MenuScreen.class);
         } else {
-            goToScreen(com.bendk97.screens.SplashScreen.class);
+            goToScreen(SplashScreen.class);
         }
     }
 
@@ -67,11 +73,11 @@ public class SpaceKillerGame extends Game {
         goToScreen(screen, null, null);
     }
 
-    public void goToScreen(Class screen, com.bendk97.player.PlayerData playerData, FrameBuffer screenshot) {
+    public void goToScreen(Class screen, PlayerData playerData, FrameBuffer screenshot) {
         try {
             assets.loadResources(screen);
             this.playerData = playerData;
-            currentScreen = (Screen) screen.getConstructor(com.bendk97.assets.Assets.class, SpaceKillerGame.class).newInstance(assets, this);
+            currentScreen = (Screen) screen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this);
             if (screenshot != null) {
                 this.setScreen(new com.bendk97.screens.TransitionScreen(screenshot, currentScreen, this));
             } else {
@@ -96,24 +102,24 @@ public class SpaceKillerGame extends Game {
     }
 
     public void signInSucceeded() {
-        if (currentScreen instanceof com.bendk97.screens.MenuScreen) {
+        if (currentScreen instanceof MenuScreen) {
             signInFailed = false;
-            ((com.bendk97.screens.MenuScreen) currentScreen).signInSucceeded();
+            ((MenuScreen) currentScreen).signInSucceeded();
         }
     }
 
     public boolean signInFailed = false;
 
     public void signInFailed() {
-        if (currentScreen instanceof com.bendk97.screens.MenuScreen) {
+        if (currentScreen instanceof MenuScreen) {
             signInFailed = true;
             ((MenuScreen) currentScreen).signInFailed();
         }
     }
 
     public void continueWithExtraLife() {
-        if (currentScreen instanceof com.bendk97.screens.LevelScreen) {
-            ((com.bendk97.screens.LevelScreen) currentScreen).continueWithExtraLife();
+        if (currentScreen instanceof LevelScreen) {
+            ((LevelScreen) currentScreen).continueWithExtraLife();
         }
     }
 }

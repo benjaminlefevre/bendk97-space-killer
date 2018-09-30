@@ -11,19 +11,22 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.RandomXS128;
+import com.bendk97.components.BossComponent;
 import com.bendk97.components.Mappers;
+import com.bendk97.components.PauseComponent;
 import com.bendk97.components.PlayerComponent;
+import com.bendk97.entities.EntityFactory;
 
 import java.util.Random;
 
 public class BossAttackSystem extends IteratingSystem {
 
     private com.bendk97.entities.EntityFactory entityFactory;
-    private Family player = Family.one(PlayerComponent.class).exclude(com.bendk97.components.PauseComponent.class).get();
+    private Family player = Family.one(PlayerComponent.class).exclude(PauseComponent.class).get();
     private Random random = new RandomXS128();
 
-    public BossAttackSystem(int priority, com.bendk97.entities.EntityFactory entityFactory) {
-        super(Family.all(com.bendk97.components.BossComponent.class).get(), priority);
+    public BossAttackSystem(int priority, EntityFactory entityFactory) {
+        super(Family.all(BossComponent.class).get(), priority);
         this.entityFactory = entityFactory;
     }
 
@@ -34,7 +37,7 @@ public class BossAttackSystem extends IteratingSystem {
         if (playerEntity.size() == 0) {
             return;
         }
-        final com.bendk97.components.BossComponent boss = Mappers.boss.get(entity);
+        final BossComponent boss = Mappers.boss.get(entity);
         if (boss.pleaseFire1) {
             if (Mappers.enemy.get(entity).isDead()) {
                 return;

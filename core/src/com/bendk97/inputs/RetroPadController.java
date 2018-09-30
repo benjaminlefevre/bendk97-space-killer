@@ -9,12 +9,14 @@ package com.bendk97.inputs;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.bendk97.listeners.InputListener;
+import com.bendk97.screens.LevelScreen;
 
 public class RetroPadController extends com.bendk97.inputs.TouchInputProcessor {
 
     private Rectangle fireButton;
 
-    public RetroPadController(com.bendk97.screens.LevelScreen screen, com.bendk97.listeners.InputListener inputListener, Camera camera, Rectangle[] squareTouches, Rectangle fireButton,
+    public RetroPadController(LevelScreen screen, InputListener inputListener, Camera camera, Rectangle[] squareTouches, Rectangle fireButton,
                               Rectangle bombButton) {
         super(screen, inputListener, camera, bombButton);
         this.squareTouches = squareTouches;

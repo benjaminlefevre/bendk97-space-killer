@@ -12,7 +12,7 @@ public interface PlayServices
     void signIn();
     void signOut();
     void rateGame();
-    void unlockAchievement(com.bendk97.google.Achievement achievement);
+    void unlockAchievement(Achievement achievement);
     void submitScore(int highScore);
     void showAchievement();
     void showScore();

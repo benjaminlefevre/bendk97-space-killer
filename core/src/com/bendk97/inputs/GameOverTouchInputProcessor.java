@@ -12,6 +12,11 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.bendk97.SpaceKillerGame;
+import com.bendk97.assets.Assets;
+import com.bendk97.components.Mappers;
+import com.bendk97.screens.Level1Screen;
+import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SocialScoreScreen;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
@@ -25,10 +30,10 @@ public class GameOverTouchInputProcessor implements InputProcessor {
     protected Rectangle home;
     protected Rectangle share;
     protected Rectangle extraLife;
-    protected com.bendk97.assets.Assets assets;
+    protected Assets assets;
     protected Entity player;
 
-    public GameOverTouchInputProcessor(Camera camera, com.bendk97.SpaceKillerGame game, com.bendk97.assets.Assets assets, Entity player) {
+    public GameOverTouchInputProcessor(Camera camera, SpaceKillerGame game, Assets assets, Entity player) {
         this.camera = camera;
         this.player = player;
         this.game = game;
@@ -58,12 +63,12 @@ public class GameOverTouchInputProcessor implements InputProcessor {
         Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
         if (playAgain.contains(worldTouch.x, worldTouch.y)) {
             game.currentScreen.dispose();
-            game.goToScreen(com.bendk97.screens.Level1Screen.class);
+            game.goToScreen(Level1Screen.class);
         } else if (home.contains(worldTouch.x, worldTouch.y)) {
             game.currentScreen.dispose();
-            game.goToScreen(com.bendk97.screens.MenuScreen.class);
+            game.goToScreen(MenuScreen.class);
         } else if (share.contains(worldTouch.x, worldTouch.y)) {
-            SocialScoreScreen socialScoreScreen = new SocialScoreScreen(assets, game, com.bendk97.components.Mappers.player.get(player).getScoreInt());
+            SocialScoreScreen socialScoreScreen = new SocialScoreScreen(assets, game, Mappers.player.get(player).getScoreInt());
             String filePath = socialScoreScreen.takeScreenshot();
             if (filePath != null) {
                 game.intentShare.shareScore(filePath);
