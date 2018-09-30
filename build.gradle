@@ -10,11 +10,10 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
-
-
+        classpath "com.vanniktech:gradle-dependency-graph-generator-plugin:0.5.0"
     }
 }
-
+apply plugin: "com.vanniktech.dependency.graph.generator"
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"

@@ -1,0 +1,289 @@
+<!--
+  ~ Developed by Benjamin Lefèvre
+  ~ Last modified 30/09/18 23:34
+  ~ Copyright (c) 2018. All rights reserved.
+  -->
+
+<svg width="854pt" height="548pt"
+     viewBox="0.00 0.00 854.11 548.00" xmlns="http://www.w3.org/2000/svg">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 544)">
+<title>G</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-544 850.1069,-544 850.1069,4 -4,4"/>
+<!-- spacekillerBaseGameUtils -->
+<g id="node1" class="node">
+<title>spacekillerBaseGameUtils</title>
+<polygon fill="none" stroke="#000000" points="228.1014,-468 124.3816,-468 124.3816,-432 228.1014,-432 228.1014,-468"/>
+<text text-anchor="middle" x="176.2415" y="-445.8" font-family="Times New Roman" font-size="14.00" fill="#000000">BaseGameUtils</text>
+</g>
+<!-- comandroidsupportappcompatv7 -->
+<g id="node9" class="node">
+<title>comandroidsupportappcompatv7</title>
+<polygon fill="none" stroke="#000000" points="124.3271,-180 28.1559,-180 28.1559,-144 124.3271,-144 124.3271,-180"/>
+<text text-anchor="middle" x="76.2415" y="-157.8" font-family="Times New Roman" font-size="14.00" fill="#000000">appcompat&#45;v7</text>
+</g>
+<!-- spacekillerBaseGameUtils&#45;&gt;comandroidsupportappcompatv7 -->
+<g id="edge1" class="edge">
+<title>spacekillerBaseGameUtils&#45;&gt;comandroidsupportappcompatv7</title>
+<path fill="none" stroke="#000000" d="M139.6663,-431.8665C125.6445,-423.0119 110.9382,-410.9963 102.2415,-396 64.179,-330.3663 67.6437,-236.8897 72.4257,-190.4523"/>
+<polygon fill="#000000" stroke="#000000" points="75.9359,-190.5591 73.5805,-180.2294 68.9801,-189.7733 75.9359,-190.5591"/>
+</g>
+<!-- comandroidsupportsupportv4 -->
+<g id="node10" class="node">
+<title>comandroidsupportsupportv4</title>
+<polygon fill="none" stroke="#000000" points="114.3987,-108 38.0843,-108 38.0843,-72 114.3987,-72 114.3987,-108"/>
+<text text-anchor="middle" x="76.2415" y="-85.8" font-family="Times New Roman" font-size="14.00" fill="#000000">support&#45;v4</text>
+</g>
+<!-- spacekillerBaseGameUtils&#45;&gt;comandroidsupportsupportv4 -->
+<g id="edge4" class="edge">
+<title>spacekillerBaseGameUtils&#45;&gt;comandroidsupportsupportv4</title>
+<path fill="none" stroke="#000000" d="M123.9122,-432.4674C72.0322,-411.3847 .2415,-370.5492 .2415,-306 .2415,-306 .2415,-306 .2415,-234 .2415,-193.1184 -.7245,-179.6745 19.2415,-144 25.3268,-133.127 34.3334,-123.1341 43.3993,-114.7791"/>
+<polygon fill="#000000" stroke="#000000" points="45.7418,-117.3801 50.9658,-108.1627 41.134,-112.1106 45.7418,-117.3801"/>
+</g>
+<!-- comgoogleandroidgmsplayservicesgames -->
+<g id="node12" class="node">
+<title>comgoogleandroidgmsplayservicesgames</title>
+<polygon fill="none" stroke="#000000" points="241.5168,-396 110.9662,-396 110.9662,-360 241.5168,-360 241.5168,-396"/>
+<text text-anchor="middle" x="176.2415" y="-373.8" font-family="Times New Roman" font-size="14.00" fill="#000000">play&#45;services&#45;games</text>
+</g>
+<!-- spacekillerBaseGameUtils&#45;&gt;comgoogleandroidgmsplayservicesgames -->
+<g id="edge2" class="edge">
+<title>spacekillerBaseGameUtils&#45;&gt;comgoogleandroidgmsplayservicesgames</title>
+<path fill="none" stroke="#000000" d="M176.2415,-431.8314C176.2415,-424.131 176.2415,-414.9743 176.2415,-406.4166"/>
+<polygon fill="#000000" stroke="#000000" points="179.7416,-406.4132 176.2415,-396.4133 172.7416,-406.4133 179.7416,-406.4132"/>
+</g>
+<!-- comgoogleandroidgmsplayservicesplus -->
+<g id="node16" class="node">
+<title>comgoogleandroidgmsplayservicesplus</title>
+<polygon fill="none" stroke="#000000" points="402.0874,-324 284.3956,-324 284.3956,-288 402.0874,-288 402.0874,-324"/>
+<text text-anchor="middle" x="343.2415" y="-301.8" font-family="Times New Roman" font-size="14.00" fill="#000000">play&#45;services&#45;plus</text>
+</g>
+<!-- spacekillerBaseGameUtils&#45;&gt;comgoogleandroidgmsplayservicesplus -->
+<g id="edge3" class="edge">
+<title>spacekillerBaseGameUtils&#45;&gt;comgoogleandroidgmsplayservicesplus</title>
+<path fill="none" stroke="#000000" d="M202.9415,-431.8646C217.3209,-421.7666 235.1542,-408.7002 250.2415,-396 274.607,-375.4896 300.503,-350.0992 318.7643,-331.5215"/>
+<polygon fill="#000000" stroke="#000000" points="321.6153,-333.6114 326.0964,-324.0108 316.6064,-328.7215 321.6153,-333.6114"/>
+</g>
+<!-- spacekillerandroid -->
+<g id="node2" class="node">
+<title>spacekillerandroid</title>
+<polygon fill="none" stroke="#000000" points="535.5078,-540 476.9752,-540 476.9752,-504 535.5078,-504 535.5078,-540"/>
+<text text-anchor="middle" x="506.2415" y="-517.8" font-family="Times New Roman" font-size="14.00" fill="#000000">android</text>
+</g>
+<!-- spacekillerandroid&#45;&gt;spacekillerBaseGameUtils -->
+<g id="edge6" class="edge">
+<title>spacekillerandroid&#45;&gt;spacekillerBaseGameUtils</title>
+<path fill="none" stroke="#000000" d="M476.9562,-515.6105C423.6582,-503.9818 309.7433,-479.1277 238.4285,-463.5681"/>
+<polygon fill="#000000" stroke="#000000" points="238.7443,-460.0547 228.2281,-461.3425 237.2521,-466.8938 238.7443,-460.0547"/>
+</g>
+<!-- spacekillercore -->
+<g id="node3" class="node">
+<title>spacekillercore</title>
+<polygon fill="none" stroke="#000000" points="533.2415,-468 479.2415,-468 479.2415,-432 533.2415,-432 533.2415,-468"/>
+<text text-anchor="middle" x="506.2415" y="-445.8" font-family="Times New Roman" font-size="14.00" fill="#000000">core</text>
+</g>
+<!-- spacekillerandroid&#45;&gt;spacekillercore -->
+<g id="edge5" class="edge">
+<title>spacekillerandroid&#45;&gt;spacekillercore</title>
+<path fill="none" stroke="#000000" d="M506.2415,-503.8314C506.2415,-496.131 506.2415,-486.9743 506.2415,-478.4166"/>
+<polygon fill="#000000" stroke="#000000" points="509.7416,-478.4132 506.2415,-468.4133 502.7416,-478.4133 509.7416,-478.4132"/>
+</g>
+<!-- combadlogicgamesgdxgdxfreetype -->
+<g id="node4" class="node">
+<title>combadlogicgamesgdxgdxfreetype</title>
+<polygon fill="none" stroke="#000000" points="405.759,-396 318.724,-396 318.724,-360 405.759,-360 405.759,-396"/>
+<text text-anchor="middle" x="362.2415" y="-373.8" font-family="Times New Roman" font-size="14.00" fill="#000000">gdx&#45;freetype</text>
+</g>
+<!-- spacekillerandroid&#45;&gt;combadlogicgamesgdxgdxfreetype -->
+<g id="edge8" class="edge">
+<title>spacekillerandroid&#45;&gt;combadlogicgamesgdxgdxfreetype</title>
+<path fill="none" stroke="#000000" d="M488.0038,-503.7623C462.5769,-478.3354 416.3668,-432.1253 387.5984,-403.3569"/>
+<polygon fill="#000000" stroke="#000000" points="389.8771,-400.6858 380.3311,-396.0896 384.9273,-405.6356 389.8771,-400.6858"/>
+</g>
+<!-- combadlogicgamesashleyashley -->
+<g id="node6" class="node">
+<title>combadlogicgamesashleyashley</title>
+<polygon fill="none" stroke="#000000" points="478.2415,-396 424.2415,-396 424.2415,-360 478.2415,-360 478.2415,-396"/>
+<text text-anchor="middle" x="451.2415" y="-373.8" font-family="Times New Roman" font-size="14.00" fill="#000000">ashley</text>
+</g>
+<!-- spacekillerandroid&#45;&gt;combadlogicgamesashleyashley -->
+<g id="edge9" class="edge">
+<title>spacekillerandroid&#45;&gt;combadlogicgamesashleyashley</title>
+<path fill="none" stroke="#000000" d="M491.3562,-503.5185C483.9953,-493.5296 475.5695,-480.6716 470.2415,-468 461.9109,-448.1876 457.0882,-424.3321 454.3874,-406.1605"/>
+<polygon fill="#000000" stroke="#000000" points="457.8474,-405.6289 453.032,-396.1917 450.9113,-406.5721 457.8474,-405.6289"/>
+</g>
+<!-- combadlogicgamesbox2dlightsbox2dlights -->
+<g id="node7" class="node">
+<title>combadlogicgamesbox2dlightsbox2dlights</title>
+<polygon fill="none" stroke="#000000" points="654.358,-396 572.125,-396 572.125,-360 654.358,-360 654.358,-396"/>
+<text text-anchor="middle" x="613.2415" y="-373.8" font-family="Times New Roman" font-size="14.00" fill="#000000">box2dlights</text>
+</g>
+<!-- spacekillerandroid&#45;&gt;combadlogicgamesbox2dlightsbox2dlights -->
+<g id="edge10" class="edge">
+<title>spacekillerandroid&#45;&gt;combadlogicgamesbox2dlightsbox2dlights</title>
+<path fill="none" stroke="#000000" d="M519.7931,-503.7623C538.4455,-478.66 572.1492,-433.3017 593.575,-404.4671"/>
+<polygon fill="#000000" stroke="#000000" points="596.6449,-406.2038 599.7999,-396.0896 591.0263,-402.0288 596.6449,-406.2038"/>
+</g>
+<!-- combadlogicgamesgdxgdxbox2d -->
+<g id="node8" class="node">
+<title>combadlogicgamesgdxgdxbox2d</title>
+<polygon fill="none" stroke="#000000" points="631.4028,-324 555.0801,-324 555.0801,-288 631.4028,-288 631.4028,-324"/>
+<text text-anchor="middle" x="593.2415" y="-301.8" font-family="Times New Roman" font-size="14.00" fill="#000000">gdx&#45;box2d</text>
+</g>
+<!-- spacekillerandroid&#45;&gt;combadlogicgamesgdxgdxbox2d -->
+<g id="edge11" class="edge">
+<title>spacekillerandroid&#45;&gt;combadlogicgamesgdxgdxbox2d</title>
+<path fill="none" stroke="#000000" d="M535.5362,-508.7176C573.2046,-489.8092 636.8976,-451.197 663.2415,-396 670.1331,-381.5603 670.2996,-374.3591 663.2415,-360 657.4181,-348.1528 647.6064,-338.171 637.1437,-330.1383"/>
+<polygon fill="#000000" stroke="#000000" points="638.8544,-327.0601 628.6769,-324.1158 634.7969,-332.7642 638.8544,-327.0601"/>
+</g>
+<!-- combadlogicgamesgdxgdxbackendandroid -->
+<g id="node17" class="node">
+<title>combadlogicgamesgdxgdxbackendandroid</title>
+<polygon fill="none" stroke="#000000" points="845.9726,-468 710.5104,-468 710.5104,-432 845.9726,-432 845.9726,-468"/>
+<text text-anchor="middle" x="778.2415" y="-445.8" font-family="Times New Roman" font-size="14.00" fill="#000000">gdx&#45;backend&#45;android</text>
+</g>
+<!-- spacekillerandroid&#45;&gt;combadlogicgamesgdxgdxbackendandroid -->
+<g id="edge7" class="edge">
+<title>spacekillerandroid&#45;&gt;combadlogicgamesgdxgdxbackendandroid</title>
+<path fill="none" stroke="#000000" d="M535.6087,-514.2263C574.8093,-503.8497 645.6854,-485.0884 700.7503,-470.5124"/>
+<polygon fill="#000000" stroke="#000000" points="701.7162,-473.8773 710.4876,-467.9349 699.9249,-467.1104 701.7162,-473.8773"/>
+</g>
+<!-- spacekillercore&#45;&gt;combadlogicgamesgdxgdxfreetype -->
+<g id="edge12" class="edge">
+<title>spacekillercore&#45;&gt;combadlogicgamesgdxgdxfreetype</title>
+<path fill="none" stroke="#000000" d="M479.1562,-436.4574C459.0175,-426.388 431.0733,-412.4159 407.5544,-400.6564"/>
+<polygon fill="#000000" stroke="#000000" points="408.9605,-397.4464 398.451,-396.1047 405.83,-403.7074 408.9605,-397.4464"/>
+</g>
+<!-- combadlogicgamesgdxgdx -->
+<g id="node5" class="node">
+<title>combadlogicgamesgdxgdx</title>
+<polygon fill="none" stroke="#000000" points="533.2415,-252 479.2415,-252 479.2415,-216 533.2415,-216 533.2415,-252"/>
+<text text-anchor="middle" x="506.2415" y="-229.8" font-family="Times New Roman" font-size="14.00" fill="#000000">gdx</text>
+</g>
+<!-- spacekillercore&#45;&gt;combadlogicgamesgdxgdx -->
+<g id="edge16" class="edge">
+<title>spacekillercore&#45;&gt;combadlogicgamesgdxgdx</title>
+<path fill="none" stroke="#000000" d="M506.2415,-431.9555C506.2415,-394.3938 506.2415,-307.5541 506.2415,-262.4103"/>
+<polygon fill="#000000" stroke="#000000" points="509.7416,-262.145 506.2415,-252.1451 502.7416,-262.1451 509.7416,-262.145"/>
+</g>
+<!-- spacekillercore&#45;&gt;combadlogicgamesashleyashley -->
+<g id="edge13" class="edge">
+<title>spacekillercore&#45;&gt;combadlogicgamesashleyashley</title>
+<path fill="none" stroke="#000000" d="M492.3627,-431.8314C486.0279,-423.5386 478.4031,-413.557 471.4489,-404.4533"/>
+<polygon fill="#000000" stroke="#000000" points="474.159,-402.2353 465.3072,-396.4133 468.5963,-406.4847 474.159,-402.2353"/>
+</g>
+<!-- spacekillercore&#45;&gt;combadlogicgamesbox2dlightsbox2dlights -->
+<g id="edge14" class="edge">
+<title>spacekillercore&#45;&gt;combadlogicgamesbox2dlightsbox2dlights</title>
+<path fill="none" stroke="#000000" d="M533.2421,-431.8314C546.6746,-422.7927 563.0888,-411.7476 577.5454,-402.0198"/>
+<polygon fill="#000000" stroke="#000000" points="579.9069,-404.6494 586.2495,-396.1628 575.999,-398.8418 579.9069,-404.6494"/>
+</g>
+<!-- spacekillercore&#45;&gt;combadlogicgamesgdxgdxbox2d -->
+<g id="edge15" class="edge">
+<title>spacekillercore&#45;&gt;combadlogicgamesgdxgdxbox2d</title>
+<path fill="none" stroke="#000000" d="M517.2601,-431.7623C532.3607,-406.7682 559.594,-361.6924 577.0251,-332.8409"/>
+<polygon fill="#000000" stroke="#000000" points="580.1369,-334.4587 582.3123,-324.0896 574.1454,-330.8389 580.1369,-334.4587"/>
+</g>
+<!-- combadlogicgamesgdxgdxfreetype&#45;&gt;combadlogicgamesgdxgdx -->
+<g id="edge17" class="edge">
+<title>combadlogicgamesgdxgdxfreetype&#45;&gt;combadlogicgamesgdxgdx</title>
+<path fill="none" stroke="#000000" d="M380.4792,-359.7623C405.906,-334.3354 452.1162,-288.1253 480.8846,-259.3569"/>
+<polygon fill="#000000" stroke="#000000" points="483.5557,-261.6356 488.1519,-252.0896 478.6059,-256.6858 483.5557,-261.6356"/>
+</g>
+<!-- combadlogicgamesashleyashley&#45;&gt;combadlogicgamesgdxgdx -->
+<g id="edge18" class="edge">
+<title>combadlogicgamesashleyashley&#45;&gt;combadlogicgamesgdxgdx</title>
+<path fill="none" stroke="#000000" d="M458.2073,-359.7623C467.671,-334.9846 484.6726,-290.4714 495.7022,-261.5939"/>
+<polygon fill="#000000" stroke="#000000" points="499.0338,-262.6803 499.3323,-252.0896 492.4945,-260.1826 499.0338,-262.6803"/>
+</g>
+<!-- combadlogicgamesbox2dlightsbox2dlights&#45;&gt;combadlogicgamesgdxgdxbox2d -->
+<g id="edge19" class="edge">
+<title>combadlogicgamesbox2dlightsbox2dlights&#45;&gt;combadlogicgamesgdxgdxbox2d</title>
+<path fill="none" stroke="#000000" d="M608.1946,-359.8314C606.0321,-352.0463 603.4562,-342.7729 601.0567,-334.1347"/>
+<polygon fill="#000000" stroke="#000000" points="604.4051,-333.1117 598.3563,-324.4133 597.6605,-334.9852 604.4051,-333.1117"/>
+</g>
+<!-- combadlogicgamesgdxgdxbox2d&#45;&gt;combadlogicgamesgdxgdx -->
+<g id="edge20" class="edge">
+<title>combadlogicgamesgdxgdxbox2d&#45;&gt;combadlogicgamesgdxgdx</title>
+<path fill="none" stroke="#000000" d="M571.2877,-287.8314C560.572,-278.9632 547.5226,-268.1637 535.9325,-258.5718"/>
+<polygon fill="#000000" stroke="#000000" points="538.1237,-255.8422 528.1882,-252.1628 533.6607,-261.2349 538.1237,-255.8422"/>
+</g>
+<!-- comandroidsupportappcompatv7&#45;&gt;comandroidsupportsupportv4 -->
+<g id="edge21" class="edge">
+<title>comandroidsupportappcompatv7&#45;&gt;comandroidsupportsupportv4</title>
+<path fill="none" stroke="#000000" d="M76.2415,-143.8314C76.2415,-136.131 76.2415,-126.9743 76.2415,-118.4166"/>
+<polygon fill="#000000" stroke="#000000" points="79.7416,-118.4132 76.2415,-108.4133 72.7416,-118.4133 79.7416,-118.4132"/>
+</g>
+<!-- comandroidsupportsupportannotations -->
+<g id="node11" class="node">
+<title>comandroidsupportsupportannotations</title>
+<polygon fill="none" stroke="#000000" points="139.9436,-36 12.5393,-36 12.5393,0 139.9436,0 139.9436,-36"/>
+<text text-anchor="middle" x="76.2415" y="-13.8" font-family="Times New Roman" font-size="14.00" fill="#000000">support&#45;annotations</text>
+</g>
+<!-- comandroidsupportsupportv4&#45;&gt;comandroidsupportsupportannotations -->
+<g id="edge22" class="edge">
+<title>comandroidsupportsupportv4&#45;&gt;comandroidsupportsupportannotations</title>
+<path fill="none" stroke="#000000" d="M76.2415,-71.8314C76.2415,-64.131 76.2415,-54.9743 76.2415,-46.4166"/>
+<polygon fill="#000000" stroke="#000000" points="79.7416,-46.4132 76.2415,-36.4133 72.7416,-46.4133 79.7416,-46.4132"/>
+</g>
+<!-- comgoogleandroidgmsplayservicesbase -->
+<g id="node13" class="node">
+<title>comgoogleandroidgmsplayservicesbase</title>
+<polygon fill="none" stroke="#000000" points="270.1265,-252 150.3565,-252 150.3565,-216 270.1265,-216 270.1265,-252"/>
+<text text-anchor="middle" x="210.2415" y="-229.8" font-family="Times New Roman" font-size="14.00" fill="#000000">play&#45;services&#45;base</text>
+</g>
+<!-- comgoogleandroidgmsplayservicesgames&#45;&gt;comgoogleandroidgmsplayservicesbase -->
+<g id="edge23" class="edge">
+<title>comgoogleandroidgmsplayservicesgames&#45;&gt;comgoogleandroidgmsplayservicesbase</title>
+<path fill="none" stroke="#000000" d="M157.2425,-359.8935C140.4499,-341.592 120.4569,-312.581 133.2415,-288 139.6054,-275.7642 150.1527,-265.7239 161.43,-257.7624"/>
+<polygon fill="#000000" stroke="#000000" points="163.6782,-260.4745 170.1388,-252.0774 159.8518,-254.6129 163.6782,-260.4745"/>
+</g>
+<!-- comgoogleandroidgmsplayservicesdrive -->
+<g id="node15" class="node">
+<title>comgoogleandroidgmsplayservicesdrive</title>
+<polygon fill="none" stroke="#000000" points="266.0182,-324 142.4648,-324 142.4648,-288 266.0182,-288 266.0182,-324"/>
+<text text-anchor="middle" x="204.2415" y="-301.8" font-family="Times New Roman" font-size="14.00" fill="#000000">play&#45;services&#45;drive</text>
+</g>
+<!-- comgoogleandroidgmsplayservicesgames&#45;&gt;comgoogleandroidgmsplayservicesdrive -->
+<g id="edge24" class="edge">
+<title>comgoogleandroidgmsplayservicesgames&#45;&gt;comgoogleandroidgmsplayservicesdrive</title>
+<path fill="none" stroke="#000000" d="M183.3071,-359.8314C186.3675,-351.9617 190.0194,-342.5712 193.4097,-333.8533"/>
+<polygon fill="#000000" stroke="#000000" points="196.7183,-335.0019 197.0808,-324.4133 190.1942,-332.4647 196.7183,-335.0019"/>
+</g>
+<!-- comgoogleandroidgmsplayservicesbasement -->
+<g id="node14" class="node">
+<title>comgoogleandroidgmsplayservicesbasement</title>
+<polygon fill="none" stroke="#000000" points="290.1222,-180 142.3608,-180 142.3608,-144 290.1222,-144 290.1222,-180"/>
+<text text-anchor="middle" x="216.2415" y="-157.8" font-family="Times New Roman" font-size="14.00" fill="#000000">play&#45;services&#45;basement</text>
+</g>
+<!-- comgoogleandroidgmsplayservicesbase&#45;&gt;comgoogleandroidgmsplayservicesbasement -->
+<g id="edge25" class="edge">
+<title>comgoogleandroidgmsplayservicesbase&#45;&gt;comgoogleandroidgmsplayservicesbasement</title>
+<path fill="none" stroke="#000000" d="M211.7555,-215.8314C212.3972,-208.131 213.1603,-198.9743 213.8734,-190.4166"/>
+<polygon fill="#000000" stroke="#000000" points="217.3644,-190.6694 214.7071,-180.4133 210.3886,-190.088 217.3644,-190.6694"/>
+</g>
+<!-- comgoogleandroidgmsplayservicesbasement&#45;&gt;comandroidsupportsupportv4 -->
+<g id="edge26" class="edge">
+<title>comgoogleandroidgmsplayservicesbasement&#45;&gt;comandroidsupportsupportv4</title>
+<path fill="none" stroke="#000000" d="M180.9136,-143.8314C162.5922,-134.4089 140.0313,-122.8062 120.552,-112.7883"/>
+<polygon fill="#000000" stroke="#000000" points="122.0517,-109.6239 111.5581,-108.1628 118.8503,-115.8489 122.0517,-109.6239"/>
+</g>
+<!-- comgoogleandroidgmsplayservicesdrive&#45;&gt;comgoogleandroidgmsplayservicesbase -->
+<g id="edge27" class="edge">
+<title>comgoogleandroidgmsplayservicesdrive&#45;&gt;comgoogleandroidgmsplayservicesbase</title>
+<path fill="none" stroke="#000000" d="M205.7555,-287.8314C206.3972,-280.131 207.1603,-270.9743 207.8734,-262.4166"/>
+<polygon fill="#000000" stroke="#000000" points="211.3644,-262.6694 208.7071,-252.4133 204.3886,-262.088 211.3644,-262.6694"/>
+</g>
+<!-- comgoogleandroidgmsplayservicesplus&#45;&gt;comgoogleandroidgmsplayservicesbase -->
+<g id="edge28" class="edge">
+<title>comgoogleandroidgmsplayservicesplus&#45;&gt;comgoogleandroidgmsplayservicesbase</title>
+<path fill="none" stroke="#000000" d="M309.68,-287.8314C292.3534,-278.4516 271.0357,-266.9112 252.5879,-256.9244"/>
+<polygon fill="#000000" stroke="#000000" points="254.2526,-253.8457 243.7923,-252.1628 250.9201,-260.0015 254.2526,-253.8457"/>
+</g>
+<!-- combadlogicgamesgdxgdxbackendandroid&#45;&gt;combadlogicgamesgdxgdx -->
+<g id="edge29" class="edge">
+<title>combadlogicgamesgdxgdxbackendandroid&#45;&gt;combadlogicgamesgdxgdx</title>
+<path fill="none" stroke="#000000" d="M767.1442,-431.948C746.1385,-399.1205 697.5038,-329.2401 640.2415,-288 610.6948,-266.7206 571.5673,-252.2102 543.2267,-243.6346"/>
+<polygon fill="#000000" stroke="#000000" points="543.8912,-240.1827 533.3112,-240.7422 541.9309,-246.9026 543.8912,-240.1827"/>
+</g>
+</g>
+</svg>
