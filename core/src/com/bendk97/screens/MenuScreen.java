@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.bendk97.Settings;
 import com.bendk97.SpaceKillerGameConstants;
+import com.bendk97.assets.Assets;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
 
@@ -62,18 +63,18 @@ public class MenuScreen extends HDScreen {
     ImageButton creditsScreen;
 
 
-    public MenuScreen(final com.bendk97.assets.Assets assets, final com.bendk97.SpaceKillerGame game) {
+    public MenuScreen(final Assets assets, final com.bendk97.SpaceKillerGame game) {
         super(game, assets);
         if (!NO_GOOGLE && !game.signInFailed && !game.playServices.isSignedIn()) {
             game.playServices.signIn();
         }
         batcher = new SpriteBatch();
         stage = new Stage(viewport, batcher);
-        image = new Image(assets.get(com.bendk97.assets.Assets.MENU_BGD));
+        image = new Image(assets.get(Assets.MENU_BGD));
         image.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         stage.addActor(image);
         buttonStyle = new TextButtonStyle();
-        buttonStyle.font = assets.get(com.bendk97.assets.Assets.FONT_SPACE_KILLER_SMALL);
+        buttonStyle.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
         playButton = new TextButton("play", buttonStyle);
         playButton.setSize(200f, 75f);
         highscoresButton = new TextButton("scores", buttonStyle);
@@ -87,22 +88,22 @@ public class MenuScreen extends HDScreen {
 
 
         final TextButtonStyle styleRetro = new TextButtonStyle();
-        styleRetro.font = assets.get(com.bendk97.assets.Assets.FONT_SPACE_KILLER_SMALL);
+        styleRetro.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
         styleRetro.fontColor = !Settings.isVirtualPad() ? Color.YELLOW : Color.WHITE;
         retroPad = new TextButton("retro pad", styleRetro);
 
         TextButtonStyle styleVirtual = new TextButtonStyle();
-        styleVirtual.font = assets.get(com.bendk97.assets.Assets.FONT_SPACE_KILLER_SMALL);
+        styleVirtual.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
         styleVirtual.fontColor = Settings.isVirtualPad() ? Color.YELLOW : Color.WHITE;
         virtualPad = new TextButton("virtual pad\n\n   / autofire", styleVirtual);
 
         TextButtonStyle styleFX = new TextButtonStyle();
-        styleFX.font = assets.get(com.bendk97.assets.Assets.FONT_SPACE_KILLER_SMALL);
+        styleFX.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
         styleFX.fontColor = Settings.isLightFXEnabled() ? Color.YELLOW : Color.WHITE;
         lightFx = new TextButton("light fx", styleFX);
 
         TextButtonStyle styleVibration = new TextButtonStyle();
-        styleVibration.font = assets.get(com.bendk97.assets.Assets.FONT_SPACE_KILLER_SMALL);
+        styleVibration.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
         styleVibration.fontColor = Settings.isVibrationEnabled() ? Color.YELLOW : Color.WHITE;
         vibration = new TextButton("vibration", styleVibration);
 
@@ -134,8 +135,8 @@ public class MenuScreen extends HDScreen {
         playButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
-                assets.get(com.bendk97.assets.Assets.MENU_MUSIC).stop();
+                assets.playSound(Assets.MENU_CLICK);
+                assets.get(Assets.MENU_MUSIC).stop();
                 dispose();
                 game.goToScreen(Level1Screen.class);
                 return true;
@@ -144,7 +145,7 @@ public class MenuScreen extends HDScreen {
         highscoresButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                assets.playSound(Assets.MENU_CLICK);
                 playButton.remove();
                 highscoresButton.remove();
                 controllerButton.remove();
@@ -156,7 +157,7 @@ public class MenuScreen extends HDScreen {
                 displayScores.addListener(new InputListener() {
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                        assets.playSound(Assets.MENU_CLICK);
                         displayScores.remove();
                         stage.addActor(playButton);
                         stage.addActor(highscoresButton);
@@ -175,7 +176,7 @@ public class MenuScreen extends HDScreen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (Settings.isVirtualPad()) {
-                    assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                    assets.playSound(Assets.MENU_CLICK);
                     Settings.setRetroPad();
                     retroPad.getStyle().fontColor = Color.YELLOW;
                     virtualPad.getStyle().fontColor = Color.WHITE;
@@ -188,7 +189,7 @@ public class MenuScreen extends HDScreen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (!Settings.isVirtualPad()) {
-                    assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                    assets.playSound(Assets.MENU_CLICK);
                     Settings.setVirtualPad();
                     virtualPad.getStyle().fontColor = Color.YELLOW;
                     retroPad.getStyle().fontColor = Color.WHITE;
@@ -201,7 +202,7 @@ public class MenuScreen extends HDScreen {
         lightFx.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                assets.playSound(Assets.MENU_CLICK);
                 Settings.changeLightFXEnabled();
                 lightFx.getStyle().fontColor = Settings.isLightFXEnabled() ? Color.YELLOW : Color.WHITE;
                 return true;
@@ -211,7 +212,7 @@ public class MenuScreen extends HDScreen {
         vibration.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                assets.playSound(Assets.MENU_CLICK);
                 Settings.changeVibrationEnabled();
                 vibration.getStyle().fontColor = Settings.isVibrationEnabled() ? Color.YELLOW : Color.WHITE;
                 return true;
@@ -239,7 +240,7 @@ public class MenuScreen extends HDScreen {
         controllerButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                assets.playSound(Assets.MENU_CLICK);
                 playButton.remove();
                 highscoresButton.remove();
                 controllerButton.remove();
@@ -258,7 +259,7 @@ public class MenuScreen extends HDScreen {
         helpButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                assets.playSound(Assets.MENU_CLICK);
                 playButton.remove();
                 highscoresButton.remove();
                 controllerButton.remove();
@@ -272,7 +273,7 @@ public class MenuScreen extends HDScreen {
         creditsButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                assets.playSound(Assets.MENU_CLICK);
                 playButton.remove();
                 highscoresButton.remove();
                 controllerButton.remove();
@@ -283,7 +284,7 @@ public class MenuScreen extends HDScreen {
             }
         });
 
-        TextureAtlas atlas = assets.get(com.bendk97.assets.Assets.MENU_ATLAS);
+        TextureAtlas atlas = assets.get(Assets.MENU_ATLAS);
         gplay = new ImageButton(new TextureRegionDrawable(atlas.findRegion("gplay")));
         gplayOff = new ImageButton(new TextureRegionDrawable(atlas.findRegion("gplay_off")));
         achievements = new ImageButton(new TextureRegionDrawable(atlas.findRegion("achievements")));
@@ -301,7 +302,7 @@ public class MenuScreen extends HDScreen {
                                      InputListener() {
                                          @Override
                                          public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                                             assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                                             assets.playSound(Assets.MENU_CLICK);
                                              game.playServices.signIn();
                                              return true;
                                          }
@@ -312,7 +313,7 @@ public class MenuScreen extends HDScreen {
                                   InputListener() {
                                       @Override
                                       public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                                          assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                                          assets.playSound(Assets.MENU_CLICK);
                                           game.playServices.rateGame();
                                           return true;
                                       }
@@ -323,7 +324,7 @@ public class MenuScreen extends HDScreen {
                                          InputListener() {
                                              @Override
                                              public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                                                 assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                                                 assets.playSound(Assets.MENU_CLICK);
                                                  game.playServices.showAchievement();
                                                  return true;
                                              }
@@ -334,7 +335,7 @@ public class MenuScreen extends HDScreen {
                                         InputListener() {
                                             @Override
                                             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                                                assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                                                assets.playSound(Assets.MENU_CLICK);
                                                 game.playServices.showScore();
                                                 return true;
                                             }
@@ -357,7 +358,7 @@ public class MenuScreen extends HDScreen {
         helpScreen.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                assets.playSound(Assets.MENU_CLICK);
                 helpScreen.remove();
                 stage.addActor(playButton);
                 stage.addActor(highscoresButton);
@@ -374,7 +375,7 @@ public class MenuScreen extends HDScreen {
         creditsScreen.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                assets.playSound(Assets.MENU_CLICK);
                 creditsScreen.remove();
                 stage.addActor(playButton);
                 stage.addActor(highscoresButton);
@@ -414,7 +415,7 @@ public class MenuScreen extends HDScreen {
                                     InputListener() {
                                         @Override
                                         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                                            assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                                            assets.playSound(Assets.MENU_CLICK);
                                             Settings.setSoundOff();
                                             table.getCells().get(0).clearActor();
                                             table.getCells().get(0).setActor(soundOff);
@@ -426,7 +427,7 @@ public class MenuScreen extends HDScreen {
                                      InputListener() {
                                          @Override
                                          public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                                             assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                                             assets.playSound(Assets.MENU_CLICK);
                                              Settings.setSoundOn();
                                              table.getCells().get(0).clearActor();
                                              table.getCells().get(0).setActor(soundOn);
@@ -438,9 +439,9 @@ public class MenuScreen extends HDScreen {
                                     InputListener() {
                                         @Override
                                         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                                            assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                                            assets.playSound(Assets.MENU_CLICK);
                                             Settings.setMusicOff();
-                                            assets.get(com.bendk97.assets.Assets.MENU_MUSIC).pause();
+                                            assets.get(Assets.MENU_MUSIC).pause();
                                             table.getCells().get(1).clearActor();
                                             table.getCells().get(1).setActor(musicOff);
                                             return true;
@@ -451,9 +452,9 @@ public class MenuScreen extends HDScreen {
                                      InputListener() {
                                          @Override
                                          public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                                             assets.playSound(com.bendk97.assets.Assets.MENU_CLICK);
+                                             assets.playSound(Assets.MENU_CLICK);
                                              Settings.setMusicOn();
-                                             assets.playMusic(com.bendk97.assets.Assets.MENU_MUSIC);
+                                             assets.playMusic(Assets.MENU_MUSIC);
                                              table.getCells().get(1).clearActor();
                                              table.getCells().get(1).setActor(musicOn);
                                              return true;
@@ -461,8 +462,8 @@ public class MenuScreen extends HDScreen {
                                      });
 
 
-        assets.playMusic(com.bendk97.assets.Assets.MENU_MUSIC);
-        font = assets.get(com.bendk97.assets.Assets.FONT_SPACE_KILLER_LARGE);
+        assets.playMusic(Assets.MENU_MUSIC);
+        font = assets.get(Assets.FONT_SPACE_KILLER_LARGE);
         fontVersion = new BitmapFont();
         fontVersion.setColor(Color.WHITE);
         fontVersion.getData().setScale(0.5f);

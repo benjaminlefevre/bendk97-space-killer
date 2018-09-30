@@ -12,16 +12,20 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.bendk97.components.Mappers;
+import com.bendk97.components.PauseComponent;
+import com.bendk97.components.PlayerComponent;
+import com.bendk97.components.TankComponent;
 
 import java.util.Random;
 
 public class TankAttackSystem extends IteratingSystem {
 
-    private Family player = Family.one(com.bendk97.components.PlayerComponent.class).exclude(com.bendk97.components.PauseComponent.class).get();
+    private Family player = Family.one(PlayerComponent.class).exclude(PauseComponent.class).get();
     private Random random = new RandomXS128();
 
     public TankAttackSystem(int priority) {
-        super(Family.all(com.bendk97.components.TankComponent.class).get(), priority);
+        super(Family.all(TankComponent.class).get(), priority);
     }
 
 
@@ -31,7 +35,7 @@ public class TankAttackSystem extends IteratingSystem {
         if (playerEntity.size() == 0) {
             return;
         }
-        final com.bendk97.components.TankComponent tank = com.bendk97.components.Mappers.tank.get(entity);
+        final TankComponent tank = Mappers.tank.get(entity);
         if (tank.nbShootsBeforeLastReload >= tank.nbShoots) {
             if ((TimeUtils.millis() - tank.lastShoot) > tank.delayBetweenRafales) {
                 tank.reRandomCharacteristics();
@@ -40,7 +44,7 @@ public class TankAttackSystem extends IteratingSystem {
         } else if ((TimeUtils.millis() - tank.lastShoot) > tank.delayShoot) {
             tank.lastShoot = TimeUtils.millis();
             tank.nbShootsBeforeLastReload++;
-            com.bendk97.components.Mappers.enemy.get(entity).attackCapacity = 1;
+            Mappers.enemy.get(entity).attackCapacity = 1;
         }
 
     }

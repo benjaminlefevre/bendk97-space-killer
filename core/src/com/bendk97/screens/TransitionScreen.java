@@ -25,7 +25,6 @@ public class TransitionScreen extends ScreenAdapter {
     public final static float screenHeight = Gdx.graphics.getHeight();
 
     private SpaceKillerGame game;
-    private com.bendk97.assets.Assets assets;
     private Screen next;
 
     private FrameBuffer currentBuffer;

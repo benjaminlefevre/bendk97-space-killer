@@ -11,6 +11,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.bendk97.screens.LevelScreen;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 
@@ -18,11 +19,11 @@ import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 public class PauseInputProcessor implements InputProcessor {
 
     protected Camera camera;
-    protected com.bendk97.screens.LevelScreen screen;
+    protected LevelScreen screen;
     protected Rectangle resume;
     protected Rectangle quit;
 
-    public PauseInputProcessor(Camera camera, com.bendk97.screens.LevelScreen screen) {
+    public PauseInputProcessor(Camera camera, LevelScreen screen) {
         this.camera = camera;
         this.screen = screen;
         this.resume = new Rectangle(50f, SCREEN_HEIGHT * 2f / 3f, 300f, 35f);

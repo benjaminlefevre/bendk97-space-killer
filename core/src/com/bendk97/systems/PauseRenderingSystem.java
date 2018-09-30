@@ -16,6 +16,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.bendk97.assets.Assets;
+import com.bendk97.components.PauseComponent;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
@@ -29,11 +31,11 @@ public class PauseRenderingSystem extends IteratingSystem {
     private ShapeRenderer shapeRenderer;
     private Camera camera;
 
-    public PauseRenderingSystem(SpriteBatch batcher, Camera camera, com.bendk97.assets.Assets assets, int priority) {
-        super(Family.all(com.bendk97.components.PauseComponent.class).get(), priority);
+    public PauseRenderingSystem(SpriteBatch batcher, Camera camera, Assets assets, int priority) {
+        super(Family.all(PauseComponent.class).get(), priority);
         this.camera = camera;
         this.batcher = batcher;
-        this.mediumFont = assets.get(com.bendk97.assets.Assets.FONT_SPACE_KILLER_MEDIUM);
+        this.mediumFont = assets.get(Assets.FONT_SPACE_KILLER_MEDIUM);
         this.mediumFont.setColor(Color.WHITE);
         this.shapeRenderer = new ShapeRenderer();
       }
