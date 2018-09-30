@@ -12,8 +12,6 @@ Several libraries are used:
 | ashley (ECS design pattern) | 1.7.3 | https://github.com/libgdx/ashley |
 | box2DLights | 1.4 | https://github.com/libgdx/box2dlights |
 | Tween Universal Engine | | https://github.com/AurelienRibon/universal-tween-engine |
-| roboVM | 2.3.1 | |
-| ai | 1.8.0 | |
 
 The game is only tested and compiled for android platforms :
 ```
