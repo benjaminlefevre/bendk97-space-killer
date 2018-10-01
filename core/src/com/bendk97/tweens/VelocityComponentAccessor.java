@@ -10,7 +10,7 @@ import aurelienribon.tweenengine.TweenAccessor;
 import com.bendk97.components.VelocityComponent;
 
 public class VelocityComponentAccessor implements TweenAccessor<VelocityComponent> {
-    public final static int VELOCITY_X = 0;
+    private final static int VELOCITY_X = 0;
     public final static int VELOCITY_Y = 1;
 
     @Override

@@ -13,7 +13,7 @@ import com.bendk97.components.*;
 
 public class ShieldSystem extends IteratingSystem {
 
-    private Entity player;
+    private final Entity player;
 
     public ShieldSystem(int priority, Entity player) {
         super(Family.all(ShieldComponent.class).exclude(GameOverComponent.class).get(), priority);

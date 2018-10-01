@@ -11,12 +11,13 @@ import com.bendk97.postprocessing.utils.PingPongBuffer;
  * 
  * @author bmanuel */
 public final class Convolve2D extends MultipassFilter {
-	public final int radius;
+	private final int radius;
 	public final int length; // NxN taps filter, w/ N=length
 
 	public final float[] weights, offsetsHor, offsetsVert;
 
-	private Convolve1D hor, vert;
+	private final Convolve1D hor;
+	private final Convolve1D vert;
 
 	public Convolve2D (int radius) {
 		this.radius = radius;

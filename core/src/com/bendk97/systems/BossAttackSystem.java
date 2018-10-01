@@ -21,9 +21,9 @@ import java.util.Random;
 
 public class BossAttackSystem extends IteratingSystem {
 
-    private com.bendk97.entities.EntityFactory entityFactory;
-    private Family player = Family.one(PlayerComponent.class).exclude(PauseComponent.class).get();
-    private Random random = new RandomXS128();
+    private final com.bendk97.entities.EntityFactory entityFactory;
+    private final Family player = Family.one(PlayerComponent.class).exclude(PauseComponent.class).get();
+    private final Random random = new RandomXS128();
 
     public BossAttackSystem(int priority, EntityFactory entityFactory) {
         super(Family.all(BossComponent.class).get(), priority);

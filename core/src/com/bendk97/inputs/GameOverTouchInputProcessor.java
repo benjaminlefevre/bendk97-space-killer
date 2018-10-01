@@ -24,14 +24,14 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 
 public class GameOverTouchInputProcessor implements InputProcessor {
 
-    protected Camera camera;
-    protected com.bendk97.SpaceKillerGame game;
-    protected Rectangle playAgain;
-    protected Rectangle home;
-    protected Rectangle share;
-    protected Rectangle extraLife;
-    protected Assets assets;
-    protected Entity player;
+    private final Camera camera;
+    private final com.bendk97.SpaceKillerGame game;
+    private final Rectangle playAgain;
+    private final Rectangle home;
+    private final Rectangle share;
+    private final Rectangle extraLife;
+    private final Assets assets;
+    private final Entity player;
 
     public GameOverTouchInputProcessor(Camera camera, SpaceKillerGame game, Assets assets, Entity player) {
         this.camera = camera;

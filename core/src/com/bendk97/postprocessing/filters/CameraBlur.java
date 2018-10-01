@@ -18,7 +18,7 @@ import com.bendk97.postprocessing.utils.ShaderLoader;
 public final class CameraBlur extends Filter<CameraBlur> {
 
 	private Texture normaldepth = null;
-	private Vector2 viewport = new Vector2();
+	private final Vector2 viewport = new Vector2();
 
 	public enum Param implements Parameter {
 		// @formatter:off
@@ -28,9 +28,9 @@ public final class CameraBlur extends Filter<CameraBlur> {
 		// @formatter:on
 
 		private final String mnemonic;
-		private int elementSize;
+		private final int elementSize;
 
-		private Param (String m, int elementSize) {
+		Param(String m, int elementSize) {
 			this.mnemonic = m;
 			this.elementSize = elementSize;
 		}

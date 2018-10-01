@@ -31,8 +31,8 @@ public class PlayerComponent implements Component, Pool.Poolable {
         TRIPLE_FAST(new Color(3f/255f, 255f/255f, 136f/255f, 0.6f), "bullet4", "bulletLeft2", "bulletRight2"),
         TRIPLE_VERY_FAST(new Color(255f/255f, 120f/255f, 0f, 0.6f),"bullet5", "bulletLeft3", "bulletRight3");
 
-        public Color color;
-        public String regionName;
+        public final Color color;
+        public final String regionName;
         public String leftRegionName;
         public String rightRegionName;
 

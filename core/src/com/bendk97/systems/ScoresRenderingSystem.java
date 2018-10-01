@@ -20,11 +20,11 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.FONT_SPACE_KILLER;
 
 public class ScoresRenderingSystem extends IteratingSystem {
-    public static final String SCORE = "SCORE";
-    public static final String LIVES = "LIVES";
-    public static final String HIGH = "HIGH";
-    private SpriteBatch batcher;
-    private BitmapFont bitmapFont;
+    private static final String SCORE = "SCORE";
+    private static final String LIVES = "LIVES";
+    private static final String HIGH = "HIGH";
+    private final SpriteBatch batcher;
+    private final BitmapFont bitmapFont;
 
     public ScoresRenderingSystem(SpriteBatch batcher, Assets assets, int priority) {
         super(Family.one(PlayerComponent.class).get() ,priority);

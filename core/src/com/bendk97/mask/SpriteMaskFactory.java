@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class SpriteMaskFactory {
 
-    public Map<Texture, Array<Array<Boolean>>> masks = new HashMap<Texture, Array<Array<Boolean>>>();
+    private final Map<Texture, Array<Array<Boolean>>> masks = new HashMap<Texture, Array<Array<Boolean>>>();
 
     public void addMask(Texture texture){
         computeMask(texture);

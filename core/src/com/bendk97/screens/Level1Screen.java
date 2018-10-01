@@ -32,8 +32,8 @@ public class Level1Screen extends LevelScreen {
     private LinkedList<ScriptItem> scriptItemsHardLeft;
     private LinkedList<ScriptItem> scriptItemsHardRight;
     private ScriptItem boss;
-    private Entity background;
-    private Entity background2;
+    private final Entity background;
+    private final Entity background2;
 
     public Level1Screen(final Assets assets, SpaceKillerGame game) {
         super(assets, game, Level1);

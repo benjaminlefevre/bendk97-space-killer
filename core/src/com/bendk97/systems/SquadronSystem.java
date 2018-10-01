@@ -21,14 +21,14 @@ import java.util.Random;
 
 public class SquadronSystem extends IteratingSystem {
 
-    public static final int THRESHOLD_POWERUP_DEFAULT = 17;
-    public static final int THRESHOLD_SHIELD_DEFAULT = 21;
-    public int threshold_powerup = THRESHOLD_POWERUP_DEFAULT;
-    public int threshold_shield = THRESHOLD_SHIELD_DEFAULT;
+    private static final int THRESHOLD_POWERUP_DEFAULT = 17;
+    private static final int THRESHOLD_SHIELD_DEFAULT = 21;
+    private int threshold_powerup = THRESHOLD_POWERUP_DEFAULT;
+    private int threshold_shield = THRESHOLD_SHIELD_DEFAULT;
 
-    private com.bendk97.entities.EntityFactory entityFactory;
-    private Entity player;
-    private PlayerListener playerListener;
+    private final com.bendk97.entities.EntityFactory entityFactory;
+    private final Entity player;
+    private final PlayerListener playerListener;
 
     public SquadronSystem(LevelScreen.Level level, int priority, EntityFactory entityFactory, Entity player, PlayerListener playerListener) {
         super(Family.all(SquadronComponent.class).get(), priority);
@@ -44,7 +44,7 @@ public class SquadronSystem extends IteratingSystem {
         }
     }
 
-    private Random random = new RandomXS128();
+    private final Random random = new RandomXS128();
 
     @Override
     public void processEntity(final Entity entity, float deltaTime) {

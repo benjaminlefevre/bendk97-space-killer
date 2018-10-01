@@ -6,7 +6,7 @@
 
 package com.bendk97.postprocessing.utils;
 
-public final class Hash {
+final class Hash {
 
 	private Hash() {
 	}
@@ -40,8 +40,8 @@ public final class Hash {
 
 	public static long PJWHash( String str ) {
 		long BitsInUnsignedInt = (long)(4 * 8);
-		long ThreeQuarters = (long)((BitsInUnsignedInt * 3) / 4);
-		long OneEighth = (long)(BitsInUnsignedInt / 8);
+		long ThreeQuarters = (BitsInUnsignedInt * 3) / 4;
+		long OneEighth = BitsInUnsignedInt / 8;
 		long HighBits = (long)(0xFFFFFFFF) << (BitsInUnsignedInt - OneEighth);
 		long hash = 0;
 		long test = 0;

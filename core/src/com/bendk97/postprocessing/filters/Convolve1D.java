@@ -13,10 +13,10 @@ public final class Convolve1D extends Filter<Convolve1D> {
 		Texture("u_texture0", 0), SampleWeights("SampleWeights", 1), SampleOffsets("SampleOffsets", 2 /* vec2 */);
 		// @formatter:on
 
-		private String mnemonic;
-		private int elementSize;
+		private final String mnemonic;
+		private final int elementSize;
 
-		private Param (String mnemonic, int arrayElementSize) {
+		Param(String mnemonic, int arrayElementSize) {
 			this.mnemonic = mnemonic;
 			this.elementSize = arrayElementSize;
 		}
@@ -32,7 +32,7 @@ public final class Convolve1D extends Filter<Convolve1D> {
 		}
 	}
 
-	public int length;
+	private int length;
 	public float[] weights;
 	public float[] offsets;
 
@@ -44,13 +44,13 @@ public final class Convolve1D extends Filter<Convolve1D> {
 		this(length, weights_data, new float[length * 2]);
 	}
 
-	public Convolve1D (int length, float[] weights_data, float[] offsets) {
+	private Convolve1D(int length, float[] weights_data, float[] offsets) {
 		super(ShaderLoader.fromFile("screenspace", "convolve-1d", "#define LENGTH " + length));
 		setWeights(length, weights_data, offsets);
 		rebind();
 	}
 
-	public void setWeights (int length, float[] weights, float[] offsets) {
+	private void setWeights(int length, float[] weights, float[] offsets) {
 		this.weights = weights;
 		this.length = length;
 		this.offsets = offsets;

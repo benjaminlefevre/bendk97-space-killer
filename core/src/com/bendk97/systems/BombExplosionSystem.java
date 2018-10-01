@@ -16,10 +16,10 @@ import com.bendk97.listeners.CollisionListener;
 
 public class BombExplosionSystem extends IteratingSystem {
 
-    private Family enemies = Family.one(EnemyComponent.class).get();
-    private Family bullets = Family.one(EnemyBulletComponent.class).get();
-    private com.bendk97.listeners.CollisionListener collisionListener;
-    private Entity player;
+    private final Family enemies = Family.one(EnemyComponent.class).get();
+    private final Family bullets = Family.one(EnemyBulletComponent.class).get();
+    private final com.bendk97.listeners.CollisionListener collisionListener;
+    private final Entity player;
 
     public BombExplosionSystem(int priority, CollisionListener collisionListener, Entity player) {
         super(Family.all(BombExplosionComponent.class).get(), priority);

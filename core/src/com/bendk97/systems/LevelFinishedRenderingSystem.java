@@ -22,16 +22,16 @@ import com.bendk97.screens.LevelScreen.Level;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 
 public class LevelFinishedRenderingSystem extends IteratingSystem {
-    public static final String LEVEL_1_FINISHED = "lvl 1 completed";
-    public static final String LEVEL_2_FINISHED = "lvl 2 completed";
-    public static final String LEVEL_3_FINISHED = "lvl 3 completed";
-    public static final String ENEMIES_KILLED = "enemies killed";
-    public static final String NEXT_NOT_IMPLEMNTED = "no level 4 yet";
-    public static final String START_AGAIN = "start again";
-    public static final String GO_NEXT = "go next level";
-    private SpriteBatch batcher;
-    private BitmapFont mediumFont;
-    private Level level;
+    private static final String LEVEL_1_FINISHED = "lvl 1 completed";
+    private static final String LEVEL_2_FINISHED = "lvl 2 completed";
+    private static final String LEVEL_3_FINISHED = "lvl 3 completed";
+    private static final String ENEMIES_KILLED = "enemies killed";
+    private static final String NEXT_NOT_IMPLEMNTED = "no level 4 yet";
+    private static final String START_AGAIN = "start again";
+    private static final String GO_NEXT = "go next level";
+    private final SpriteBatch batcher;
+    private final BitmapFont mediumFont;
+    private final Level level;
 
     public LevelFinishedRenderingSystem(SpriteBatch batcher, Assets assets, Level level, int priority) {
         super(Family.all(PlayerComponent.class, LeveLFinishedComponent.class).exclude(PauseComponent.class).get(), priority);

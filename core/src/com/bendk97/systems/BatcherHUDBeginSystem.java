@@ -15,8 +15,4 @@ public class BatcherHUDBeginSystem extends BatcherBeginSystem {
         super(viewport, batcher, priority);
     }
 
-    @Override
-    public void update(float delta){
-        super.update(delta);
-    }
 }

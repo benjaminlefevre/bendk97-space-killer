@@ -6,13 +6,13 @@
 
 package com.bendk97.components;
 
-import box2dLight.Light;
+import box2dLight.PointLight;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Pool;
 
 public class LightComponent implements Component, Pool.Poolable {
-    public Light light;
-    public Pool lights;
+    public PointLight light;
+    public Pool<PointLight> lights;
 
     @Override
     public void reset() {

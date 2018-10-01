@@ -30,37 +30,37 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 
 public class MenuScreen extends HDScreen {
 
-    SpriteBatch batcher;
-    Image image;
-    TextButton playButton;
-    TextButtonStyle buttonStyle;
-    TextButton highscoresButton;
-    TextButton controllerButton;
-    TextButton helpButton;
-    TextButton creditsButton;
-    ImageButton soundOff;
-    ImageButton soundOn;
-    ImageButton musicOff;
-    ImageButton musicOn;
-    Table table;
-    BitmapFont font;
-    BitmapFont fontVersion;
-    Stage stage;
-    TextButton displayScores;
-    TextButton retroPad;
-    TextButton virtualPad;
-    TextButton lightFx;
-    TextButton vibration;
-    TextButton back;
+    private final SpriteBatch batcher;
+    private final Image image;
+    private final TextButton playButton;
+    private final TextButtonStyle buttonStyle;
+    private final TextButton highscoresButton;
+    private final TextButton controllerButton;
+    private final TextButton helpButton;
+    private final TextButton creditsButton;
+    private final ImageButton soundOff;
+    private final ImageButton soundOn;
+    private final ImageButton musicOff;
+    private final ImageButton musicOn;
+    private final Table table;
+    private final BitmapFont font;
+    private final BitmapFont fontVersion;
+    private final Stage stage;
+    private TextButton displayScores;
+    private final TextButton retroPad;
+    private final TextButton virtualPad;
+    private final TextButton lightFx;
+    private final TextButton vibration;
+    private final TextButton back;
 
-    ImageButton leaderboard;
-    ImageButton achievements;
-    ImageButton leaderboard_off;
-    ImageButton achievements_off;
-    ImageButton gplay;
-    ImageButton gplayOff;
-    ImageButton helpScreen;
-    ImageButton creditsScreen;
+    private final ImageButton leaderboard;
+    private final ImageButton achievements;
+    private final ImageButton leaderboard_off;
+    private final ImageButton achievements_off;
+    private final ImageButton gplay;
+    private final ImageButton gplayOff;
+    private ImageButton helpScreen;
+    private ImageButton creditsScreen;
 
 
     public MenuScreen(final Assets assets, final com.bendk97.SpaceKillerGame game) {
@@ -499,23 +499,19 @@ public class MenuScreen extends HDScreen {
     }
 
     public void signInSucceeded() {
-        stage.addActor(gplay);
-        stage.addActor(leaderboard);
-        stage.addActor(achievements);
-        gplayOff.remove();
-        achievements_off.remove();
-        leaderboard_off.remove();
-
+        dispayGoogleIcons(true);
     }
 
     public void signInFailed() {
-        stage.addActor(gplayOff);
-        stage.addActor(leaderboard_off);
-        stage.addActor(achievements_off);
-        achievements.remove();
-        leaderboard.remove();
-        gplay.remove();
+        dispayGoogleIcons(false);
     }
 
-
+    private void dispayGoogleIcons(boolean success) {
+        stage.addActor(success ? gplay : gplayOff);
+        stage.addActor(success ? leaderboard : leaderboard_off);
+        stage.addActor(success ? achievements : achievements_off);
+        (success ? gplayOff : gplay).remove();
+        (success ? achievements_off : achievements).remove();
+        (success ? leaderboard_off : leaderboard).remove();
+    }
 }

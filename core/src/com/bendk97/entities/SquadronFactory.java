@@ -23,7 +23,6 @@ import com.bendk97.components.SpriteComponent;
 import com.bendk97.tweens.CameraTween;
 import com.bendk97.tweens.PositionComponentAccessor;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
@@ -46,11 +45,11 @@ public class SquadronFactory {
     public final static int BOSS_LEVEL3_MOVE = 102;
 
 
-    private TweenManager tweenManager;
-    private EntityFactory entityFactory;
-    private Engine engine;
-    private Random random = new RandomXS128();
-    private OrthographicCamera camera;
+    private final TweenManager tweenManager;
+    private final EntityFactory entityFactory;
+    private final Engine engine;
+    private final Random random = new RandomXS128();
+    private final OrthographicCamera camera;
 
     public SquadronFactory(TweenManager tweenManager, EntityFactory entityFactory, OrthographicCamera camera, Engine engine) {
         this.tweenManager = tweenManager;
@@ -135,10 +134,10 @@ public class SquadronFactory {
                 createSemiCircleSquadron(entities, velocity, (Float) params[0], (Float) params[1]);
                 break;
             case BEZIER_SPLINE:
-                createBezierSplineSquadron(entities, velocity, Arrays.copyOf(params, params.length, Vector2[].class));
+                createBezierSplineSquadron(entities, velocity, convertObjectArrayToVector2Array(params));
                 break;
             case CATMULL_ROM_SPLINE:
-                createCatmullSplineSquadron(entities, velocity, Arrays.copyOf(params, params.length, Vector2[].class));
+                createCatmullSplineSquadron(entities, velocity, convertObjectArrayToVector2Array(params));
                 break;
             case ARROW_DOWN:
                 createArrowDownSquadron(entities, velocity);
@@ -150,6 +149,12 @@ public class SquadronFactory {
                 createInfiniteCircle(entities, velocity);
                 break;
         }
+    }
+
+    private Vector2[] convertObjectArrayToVector2Array(Object[] params) {
+        Vector2[] vectors = new Vector2[params.length];
+        System.arraycopy(params, 0, vectors, 0, params.length);
+        return vectors;
     }
 
     private void createBossMove(Entity[] entities, float velocity) {
@@ -399,8 +404,7 @@ public class SquadronFactory {
     }
 
     private void placeEntitiesOnSplineInfinite(Entity[] entities, final float velocity, final Vector2[] points) {
-        for (int i = 0; i < entities.length; ++i) {
-            final Entity entity = entities[i];
+        for (final Entity entity : entities) {
             final PositionComponent position = Mappers.position.get(entity);
             Tween.to(position, PositionComponentAccessor.POSITION_XY, points[0].dst(position.x, position.y) / velocity)
                     .ease(Linear.INOUT)

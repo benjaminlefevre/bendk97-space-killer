@@ -70,10 +70,10 @@ import static com.bendk97.tweens.SpriteComponentAccessor.ALPHA;
 
 public abstract class LevelScreen extends ScreenAdapter {
 
-    protected float time = -1000f;
-    protected Random random = new RandomXS128();
-    InputMultiplexer inputProcessor = null;
-    protected Music music = null;
+    private float time = -1000f;
+    final Random random = new RandomXS128();
+    private InputMultiplexer inputProcessor = null;
+    private Music music = null;
     private static final boolean isDesktop = (Gdx.app.getType() == Application.ApplicationType.Desktop);
 
 
@@ -105,7 +105,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         return new com.bendk97.inputs.GameOverTouchInputProcessor(cameraHUD, game, assets, player);
     }
 
-    public InputProcessor getPauseInputProcessor() {
+    private InputProcessor getPauseInputProcessor() {
         return new com.bendk97.inputs.PauseInputProcessor(cameraHUD, this);
     }
 
@@ -143,7 +143,7 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     public enum Level {
         Level1(GFX_LEVEL1_ATLAS_MASK), Level2(GFX_LEVEL2_ATLAS_MASK), Level3(GFX_LEVEL3_ATLAS_MASK);
-        AssetDescriptor<TextureAtlas> sprites;
+        final AssetDescriptor<TextureAtlas> sprites;
 
         Level(AssetDescriptor<TextureAtlas> sprites) {
             this.sprites = sprites;
@@ -154,30 +154,30 @@ public abstract class LevelScreen extends ScreenAdapter {
         }
     }
 
-    protected Viewport viewport;
-    protected OrthographicCamera camera;
-    private SpriteBatch batcher;
-    protected Viewport viewportHUD;
-    protected OrthographicCamera cameraHUD;
-    private SpriteBatch batcherHUD;
-    protected PooledEngine engine;
-    protected EntityFactory entityFactory;
-    protected SquadronFactory squadronFactory;
-    protected TweenManager tweenManager;
-    public Assets assets;
-    protected SpaceKillerGame game;
-    protected Entity player;
-    protected SpriteMaskFactory spriteMaskFactory;
-    protected com.bendk97.screens.ScreenShake screenShake;
+    private final Viewport viewport;
+    private final OrthographicCamera camera;
+    private final SpriteBatch batcher;
+    private final Viewport viewportHUD;
+    private final OrthographicCamera cameraHUD;
+    private final SpriteBatch batcherHUD;
+    final PooledEngine engine;
+    final EntityFactory entityFactory;
+    private final SquadronFactory squadronFactory;
+    final TweenManager tweenManager;
+    final Assets assets;
+    private final SpaceKillerGame game;
+    final Entity player;
+    final SpriteMaskFactory spriteMaskFactory;
+    private final com.bendk97.screens.ScreenShake screenShake;
 
     private World world;
     private RayHandler rayHandler;
     private boolean fxLightEnabled = false;
-    private PostProcessor postProcessor;
+    private final PostProcessor postProcessor;
 
-    private Level level;
+    private final Level level;
 
-    public LevelScreen(Assets assets, SpaceKillerGame game, Level level) {
+    LevelScreen(Assets assets, SpaceKillerGame game, Level level) {
         PausableTimer.instance().stop();
         PausableTimer.instance().start();
         this.level = level;
@@ -240,10 +240,10 @@ public abstract class LevelScreen extends ScreenAdapter {
         Tween.registerAccessor(OrthographicCamera.class, new CameraTween());
     }
 
-    PlayerListenerImpl playerListener;
+    private PlayerListenerImpl playerListener;
 
-    protected void createSystems(Entity player, SnapshotArray<Entity> lives, SnapshotArray<Entity> bombs, SpriteBatch batcher,
-                                 ScreenShake screenShake) {
+    void createSystems(Entity player, SnapshotArray<Entity> lives, SnapshotArray<Entity> bombs, SpriteBatch batcher,
+                       ScreenShake screenShake) {
         playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, tweenManager, screenShake, this);
         engine.addSystem(playerListener);
         engine.addSystem(createInputHandlerSystem(player, playerListener));
@@ -341,7 +341,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         }
     }
 
-    protected void script(int second) {
+    void script(int second) {
         if(second == 0) {
             assets.playSound(SOUND_READY);
         }
@@ -358,9 +358,9 @@ public abstract class LevelScreen extends ScreenAdapter {
         PAUSED, RUNNING
     }
 
-    protected State state = State.RUNNING;
+    private State state = State.RUNNING;
 
-    protected void playMusic(AssetDescriptor<Music> musicDesc, float volume) {
+    void playMusic(AssetDescriptor<Music> musicDesc, float volume) {
         music = assets.playMusic(musicDesc, volume);
     }
 
@@ -431,12 +431,12 @@ public abstract class LevelScreen extends ScreenAdapter {
         }
     }
 
-    protected Texture getRandomMist() {
+    Texture getRandomMist() {
         int randomMist = random.nextInt(7);
         return getMist(randomMist);
     }
 
-    protected Texture getMist(int mistType) {
+    Texture getMist(int mistType) {
         switch (mistType) {
             case 0:
                 return assets.get(GFX_BGD_MIST7);
@@ -456,27 +456,27 @@ public abstract class LevelScreen extends ScreenAdapter {
         return null;
     }
 
-    public int getRandomAsteroidType() {
+    int getRandomAsteroidType() {
         return 999 + random.nextInt(2);
     }
 
-    public int getRandomHouseType() {
+    int getRandomHouseType() {
         return 1500 + random.nextInt(9);
     }
 
     class ScriptItem {
-        int typeShip;
-        int typeSquadron;
-        float velocity;
-        int number;
-        Object[] params;
-        boolean powerUp;
-        boolean displayBonus;
-        int bonus;
-        int rateShoot;
-        float bulletVelocity;
+        final int typeShip;
+        final int typeSquadron;
+        final float velocity;
+        final int number;
+        final Object[] params;
+        final boolean powerUp;
+        final boolean displayBonus;
+        final int bonus;
+        final int rateShoot;
+        final float bulletVelocity;
 
-        public ScriptItem(int typeShip, int typeSquadron, float velocity, int number, boolean powerUp, boolean displayBonus, int bonus, int rateShoot, float velocityBullet, Object... params) {
+        ScriptItem(int typeShip, int typeSquadron, float velocity, int number, boolean powerUp, boolean displayBonus, int bonus, int rateShoot, float velocityBullet, Object... params) {
             this.typeShip = typeShip;
             this.rateShoot = rateShoot;
             this.typeSquadron = typeSquadron;
@@ -489,11 +489,11 @@ public abstract class LevelScreen extends ScreenAdapter {
             this.bulletVelocity = velocityBullet;
         }
 
-        public ScriptItem(int typeShip, int typeSquadron, float velocity, int number, boolean powerUp, boolean displayBonus, int bonus, float velocityBullet, Object... params) {
+        ScriptItem(int typeShip, int typeSquadron, float velocity, int number, boolean powerUp, boolean displayBonus, int bonus, float velocityBullet, Object... params) {
             this(typeShip, typeSquadron, velocity, number, powerUp, displayBonus, bonus, STANDARD_RATE_SHOOT, velocityBullet, params);
         }
 
-        public void execute() {
+        void execute() {
             squadronFactory.createSquadron(typeShip, typeSquadron, velocity, number, powerUp, displayBonus, bonus, bulletVelocity, rateShoot, params);
             if (Mappers.levelFinished.get(player) == null) {
                 Mappers.player.get(player).enemiesCountLevel += number;
@@ -502,7 +502,7 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     }
 
-    protected List<ScriptItem> randomSpawnEnemies(int nbSpawns, float velocity, int rateShoot, float bulletVelocity, int bonus, int minEnemies, int maxEnemies, Boolean comingFromLeft) {
+    List<ScriptItem> randomSpawnEnemies(int nbSpawns, float velocity, int rateShoot, float bulletVelocity, int bonus, int minEnemies, int maxEnemies, Boolean comingFromLeft) {
         List<ScriptItem> list = new ArrayList<ScriptItem>(nbSpawns);
         for (int i = 0; i < nbSpawns; ++i) {
             int randomMoveType = getRandomMoveType();
@@ -569,15 +569,15 @@ public abstract class LevelScreen extends ScreenAdapter {
         return null;
     }
 
-    public int getRandomShipType() {
+    int getRandomShipType() {
         return random.nextInt(6);
     }
 
-    protected int getRandomMoveType() {
+    int getRandomMoveType() {
         return random.nextInt(8);
     }
 
-    protected void startLevel(float time) {
+    void startLevel(float time) {
         this.time = time;
         initSpawns();
     }

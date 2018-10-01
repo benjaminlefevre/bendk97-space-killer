@@ -28,7 +28,7 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 
 public class Level2Screen extends LevelScreen {
 
-    private com.bendk97.entities.SoloEnemyFactory soloEnemyFactory;
+    private final com.bendk97.entities.SoloEnemyFactory soloEnemyFactory;
 
     private LinkedList<ScriptItem> scriptItemsEasy;
     private LinkedList<ScriptItem> scriptItemsMediumLeft;
@@ -38,7 +38,7 @@ public class Level2Screen extends LevelScreen {
     private ScriptItem boss;
 
 
-    private Array<Entity> backgrounds = new Array<Entity>();
+    private final Array<Entity> backgrounds = new Array<Entity>();
 
 
     public Level2Screen(final Assets assets, SpaceKillerGame game) {
@@ -182,7 +182,7 @@ public class Level2Screen extends LevelScreen {
             switch (second) {
                 case 255:
                     assets.playSound(Assets.SOUND_BOSS_ALERT);
-                    for (Entity background : backgrounds) {
+                    for (Entity background : new Array.ArrayIterator<Entity>(backgrounds)) {
                         Tween.to(Mappers.velocity.get(background), VelocityComponentAccessor.VELOCITY_Y, 4).ease(Quad.IN)
                                 .target(-Mappers.velocity.get(background).y / 10f).start(tweenManager);
                     }
@@ -197,13 +197,13 @@ public class Level2Screen extends LevelScreen {
     }
 
     @Override
-    protected Texture getRandomMist() {
+    Texture getRandomMist() {
         int randomMist = random.nextInt(8);
         return getMist(randomMist);
     }
 
     @Override
-    protected Texture getMist(int mistType) {
+    Texture getMist(int mistType) {
         Texture texture = super.getMist(mistType);
         if (texture == null) {
             texture = assets.get(Assets.GFX_BGD_CLOUDS);

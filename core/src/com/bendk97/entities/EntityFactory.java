@@ -50,14 +50,14 @@ import static com.bendk97.tweens.SpriteComponentAccessor.ALPHA;
 
 public class EntityFactory implements Disposable {
 
-    protected PooledEngine engine;
-    protected Assets assets;
-    protected TweenManager tweenManager;
-    private com.bendk97.screens.ScreenShake screenShake;
-    protected TextureAtlas atlasNoMask;
-    protected TextureAtlas atlasMask;
-    protected RayHandler rayHandler;
-    protected final Pool<PointLight> lightPool = new Pool<PointLight>() {
+    private final PooledEngine engine;
+    private final Assets assets;
+    private final TweenManager tweenManager;
+    private final com.bendk97.screens.ScreenShake screenShake;
+    private final TextureAtlas atlasNoMask;
+    private final TextureAtlas atlasMask;
+    private final RayHandler rayHandler;
+    private final Pool<PointLight> lightPool = new Pool<PointLight>() {
         @Override
         protected PointLight newObject() {
             PointLight light = new PointLight(rayHandler, 5);
@@ -65,8 +65,8 @@ public class EntityFactory implements Disposable {
             return light;
         }
     };
-    protected Random random = new RandomXS128();
-    private SpaceKillerGame game;
+    private final Random random = new RandomXS128();
+    private final SpaceKillerGame game;
 
     public EntityFactory(SpaceKillerGame game, PooledEngine engine, Assets assets, TweenManager tweenManager, RayHandler rayHandler,
                          ScreenShake screenShake, LevelScreen.Level level) {
@@ -239,7 +239,7 @@ public class EntityFactory implements Disposable {
         return bomb;
     }
 
-    public Entity createBombExplosion(Entity bomb) {
+    private Entity createBombExplosion(Entity bomb) {
         final Entity bombExplosion = engine.createEntity();
         PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         bombExplosion.add(positionComponent);
@@ -301,7 +301,7 @@ public class EntityFactory implements Disposable {
     }
 
     public final static int ENEMY_FIRE_CIRCLE = 1;
-    public final static int ENEMY_FIRE_LASER = 2;
+    private final static int ENEMY_FIRE_LASER = 2;
 
     public Entity createEnemyFire(Entity enemy, Entity player) {
         switch (Mappers.enemy.get(enemy).attackType) {
@@ -343,7 +343,7 @@ public class EntityFactory implements Disposable {
     }
 
 
-    public Entity createEnemyFireCircle(Entity enemy, Entity player) {
+    private Entity createEnemyFireCircle(Entity enemy, Entity player) {
         assets.playSound(SOUND_FIRE_ENEMY);
         Entity bullet = engine.createEntity();
         bullet.add(engine.createComponent(EnemyBulletComponent.class));
@@ -429,7 +429,7 @@ public class EntityFactory implements Disposable {
         createEnemyFireLaser(position.x + 342f, position.y + 186f, bossComponent.velocityFire2);
     }
 
-    public Array<Entity> createBossFireCircle(Entity boss, boolean yUp) {
+    private Array<Entity> createBossFireCircle(Entity boss, boolean yUp) {
         Array<Entity> bullets = new Array<Entity>(10);
         assets.playSound(SOUND_FIRE_ENEMY);
         for (int i = 0; i < 12; ++i) {
@@ -610,7 +610,7 @@ public class EntityFactory implements Disposable {
         return createLaserShip(atlasRegion, velocity, bulletVelocity, rateShoot, gaugelife, points, fromLeft);
     }
 
-    public Entity createLaserShip(String atlasRegion, Float velocity, float bulletVelocity, int rateShoot, int gaugelife, int points, boolean fromLeft) {
+    private Entity createLaserShip(String atlasRegion, Float velocity, float bulletVelocity, int rateShoot, int gaugelife, int points, boolean fromLeft) {
         Entity enemy = engine.createEntity();
         engine.addEntity(enemy);
         PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
@@ -688,8 +688,8 @@ public class EntityFactory implements Disposable {
         return entities;
     }
 
-    public Entity createEnemy(Entity squadron, boolean canAttack, int rateShoot, float velocityBullet, String atlasName, int points,
-                              int strength, float frameDuration, PlayMode animationType, int attackCapacity) {
+    private Entity createEnemy(Entity squadron, boolean canAttack, int rateShoot, float velocityBullet, String atlasName, int points,
+                               int strength, float frameDuration, PlayMode animationType, int attackCapacity) {
         Entity enemy = engine.createEntity();
         EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = points;
@@ -806,26 +806,26 @@ public class EntityFactory implements Disposable {
     }
 
     public final static int SOUCOUPE = 0;
-    public final static int SHIP_1 = 1;
-    public final static int SHIP_2 = 2;
-    public final static int SHIP_3 = 3;
-    public final static int SHIP_4 = 4;
-    public final static int SHIP_5 = 5;
+    private final static int SHIP_1 = 1;
+    private final static int SHIP_2 = 2;
+    private final static int SHIP_3 = 3;
+    private final static int SHIP_4 = 4;
+    private final static int SHIP_5 = 5;
 
     public final static int SHIP_LV3_1 = 6;
-    public final static int SHIP_LV3_2 = 7;
-    public final static int SHIP_LV3_3 = 8;
-    public final static int SHIP_LV3_4 = 9;
-    public final static int SHIP_LV3_5 = 10;
-    public final static int SHIP_LV3_6 = 11;
-    public final static int SHIP_LV3_7 = 12;
-    public final static int SHIP_LV3_8 = 13;
+    private final static int SHIP_LV3_2 = 7;
+    private final static int SHIP_LV3_3 = 8;
+    private final static int SHIP_LV3_4 = 9;
+    private final static int SHIP_LV3_5 = 10;
+    private final static int SHIP_LV3_6 = 11;
+    private final static int SHIP_LV3_7 = 12;
+    private final static int SHIP_LV3_8 = 13;
     public final static int NB_SHIP_LV3 = 8;
 
     public final static int SHIP_LV2_LASER_SHIP1 = 50;
-    public final static int SHIP_LV2_LASER_SHIP2 = 51;
-    public final static int SHIP_LV2_LASER_SHIP3 = 52;
-    public final static int SHIP_LV2_LASER_SHIP4 = 53;
+    private final static int SHIP_LV2_LASER_SHIP2 = 51;
+    private final static int SHIP_LV2_LASER_SHIP3 = 52;
+    private final static int SHIP_LV2_LASER_SHIP4 = 53;
     public final static int NB_SHIP_LV2_LASER_SHIP = 4;
 
 

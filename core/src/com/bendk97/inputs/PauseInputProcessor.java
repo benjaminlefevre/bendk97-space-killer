@@ -18,10 +18,10 @@ import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 
 public class PauseInputProcessor implements InputProcessor {
 
-    protected Camera camera;
-    protected LevelScreen screen;
-    protected Rectangle resume;
-    protected Rectangle quit;
+    private final Camera camera;
+    private final LevelScreen screen;
+    private final Rectangle resume;
+    private final Rectangle quit;
 
     public PauseInputProcessor(Camera camera, LevelScreen screen) {
         this.camera = camera;

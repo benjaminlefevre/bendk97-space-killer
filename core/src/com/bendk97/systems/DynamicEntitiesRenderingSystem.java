@@ -22,14 +22,14 @@ import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
 public class DynamicEntitiesRenderingSystem extends SortedIteratingSystem {
-    private SpriteBatch batcher;
+    private final SpriteBatch batcher;
 
     public DynamicEntitiesRenderingSystem(SpriteBatch batcher, int priority) {
         super(Family.all(SpriteComponent.class, PositionComponent.class).exclude(GameOverComponent.class).get(),
                 new Comparator<Entity>() {
                     @Override
                     public int compare(Entity o1, Entity o2) {
-                        return Integer.valueOf(Mappers.sprite.get(o1).zIndex).compareTo(Integer.valueOf(Mappers.sprite.get(o2).zIndex));
+                        return Integer.valueOf(Mappers.sprite.get(o1).zIndex).compareTo(Mappers.sprite.get(o2).zIndex);
                     }
                 },
                 priority);
