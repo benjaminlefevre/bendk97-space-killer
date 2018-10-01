@@ -21,13 +21,13 @@ import com.bendk97.listeners.PlayerListener;
 import static com.bendk97.SpaceKillerGameConstants.*;
 
 public class InputListenerImpl extends EntitySystem implements com.bendk97.listeners.InputListener {
-    public static final float AUTOFIRE_DELAY = 1 / 10f;
-    private Family playerFamily = Family.one(PlayerComponent.class).exclude(GameOverComponent.class).get();
-    private Entity player;
-    private com.bendk97.entities.EntityFactory entityFactory;
-    private Assets assets;
+    private static final float AUTOFIRE_DELAY = 1 / 10f;
+    private final Family playerFamily = Family.one(PlayerComponent.class).exclude(GameOverComponent.class).get();
+    private final Entity player;
+    private final com.bendk97.entities.EntityFactory entityFactory;
+    private final Assets assets;
     private boolean autoFire = true;
-    private com.bendk97.listeners.PlayerListener playerListener;
+    private final com.bendk97.listeners.PlayerListener playerListener;
 
     public InputListenerImpl(Entity player, PlayerListener playerListener, EntityFactory entityFactory,
                              Assets assets,

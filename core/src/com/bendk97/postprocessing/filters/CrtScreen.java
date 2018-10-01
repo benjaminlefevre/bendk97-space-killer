@@ -16,19 +16,19 @@ import com.bendk97.postprocessing.utils.ShaderLoader;
 public final class CrtScreen extends Filter<CrtScreen> {
 	private float elapsedSecs, offset, zoom;
 	private float cdRedCyan, cdBlueYellow;
-	private Vector2 chromaticDispersion;
+	private final Vector2 chromaticDispersion;
 	private final Vector3 vtint;
 	private final Color tint;
 	private float distortion;
-	private boolean dodistortion;
+	private final boolean dodistortion;
 	private RgbMode mode;
 
 	public enum RgbMode {
 		None(0), RgbShift(1), ChromaticAberrations(2);
 
-		public int v;
+		final int v;
 
-		private RgbMode (int value) {
+		RgbMode(int value) {
 			this.v = value;
 		}
 	}
@@ -36,9 +36,9 @@ public final class CrtScreen extends Filter<CrtScreen> {
 	public enum Effect {
 		None(0), TweakContrast(1), Vignette(2), Tint(4), Scanlines(8), PhosphorVibrance(16), ScanDistortion(32);
 
-		public int v;
+		final int v;
 
-		private Effect (int value) {
+		Effect(int value) {
 			this.v = value;
 		}
 	}
@@ -56,9 +56,9 @@ public final class CrtScreen extends Filter<CrtScreen> {
 		// @on
 
 		private final String mnemonic;
-		private int elementSize;
+		private final int elementSize;
 
-		private Param (String m, int elementSize) {
+		Param(String m, int elementSize) {
 			this.mnemonic = m;
 			this.elementSize = elementSize;
 		}

@@ -50,7 +50,7 @@ public final class Zoomer extends PostProcessorEffect {
 	}
 
 	/** Specify the zoom origin, in screen coordinates. */
-	public void setOrigin (float x, float y) {
+    private void setOrigin(float x, float y) {
 		userOriginX = x;
 		userOriginY = y;
 

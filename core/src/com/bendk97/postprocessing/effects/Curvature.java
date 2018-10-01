@@ -11,7 +11,7 @@ import com.bendk97.postprocessing.PostProcessorEffect;
 import com.bendk97.postprocessing.filters.RadialDistortion;
 
 public final class Curvature extends PostProcessorEffect {
-	private RadialDistortion distort;
+	private final RadialDistortion distort;
 
 	public Curvature () {
 		distort = new RadialDistortion();
@@ -47,6 +47,6 @@ public final class Curvature extends PostProcessorEffect {
 	public void render (FrameBuffer src, FrameBuffer dest) {
 		restoreViewport(dest);
 		distort.setInput(src).setOutput(dest).render();
-	};
+	}
 
 }

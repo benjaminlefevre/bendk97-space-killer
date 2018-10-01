@@ -16,7 +16,7 @@ import java.util.Random;
 public class TankComponent implements Component, Pool.Poolable {
 
     public long lastShoot = TimeUtils.millis() - 300;
-    public TankLevel level = TankLevel.EASY;
+    private TankLevel level = TankLevel.EASY;
     public long nbShootsBeforeLastReload = 0;
     public long delayShoot = TankLevel.EASY.delayShoot;
     public int nbShoots = TankLevel.EASY.nbShoots;
@@ -24,10 +24,11 @@ public class TankComponent implements Component, Pool.Poolable {
 
     public enum TankLevel {
         EASY(2, 500, 1500, 300f), MEDIUM(3, 450, 1250, 325f), HARD(4, 400, 1000, 350f);
-        public long delayShoot, delayBetweenRafales;
-        public float bulletVelocity;
-        public int nbShoots;
-        public Random random = new RandomXS128();
+        final long delayShoot;
+        final long delayBetweenRafales;
+        public final float bulletVelocity;
+        final int nbShoots;
+        final Random random = new RandomXS128();
 
         TankLevel(int nbShoots, long delayShoot, long delayBetweenRafales, float bulletVelocity) {
             this.nbShoots = (nbShoots - 1) + random.nextInt(3);

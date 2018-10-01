@@ -16,9 +16,9 @@ import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
 public class FPSDisplayRenderingSystem extends EntitySystem {
 
-    private SpriteBatch batcher;
-    private BitmapFont bitmapFont;
-    private LevelScreen screen;
+    private final SpriteBatch batcher;
+    private final BitmapFont bitmapFont;
+    private final LevelScreen screen;
 
     public FPSDisplayRenderingSystem(LevelScreen screen, SpriteBatch batcher, int priority) {
         super(priority);
@@ -28,8 +28,8 @@ public class FPSDisplayRenderingSystem extends EntitySystem {
         this.bitmapFont.getData().setScale(0.5f);
     }
 
-    float currentTime = 0f;
-    int currentFps = 0;
+    private float currentTime = 0f;
+    private int currentFps = 0;
 
     @Override
     public void update(float deltaTime) {

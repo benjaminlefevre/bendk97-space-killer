@@ -18,11 +18,11 @@ import java.nio.ByteBuffer;
  * on mobile devices!
  * 
  * @author bmanuel */
-public final class PipelineState implements Disposable {
+final class PipelineState implements Disposable {
 
-	private ByteBuffer byteBuffer;
+	private final ByteBuffer byteBuffer;
 
-	protected PipelineState () {
+	PipelineState() {
 		byteBuffer = BufferUtils.newByteBuffer(32);
 	}
 

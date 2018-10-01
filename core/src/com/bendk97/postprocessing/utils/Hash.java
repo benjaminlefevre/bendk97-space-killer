@@ -6,7 +6,7 @@
 
 package com.bendk97.postprocessing.utils;
 
-public final class Hash {
+final class Hash {
 
 	private Hash() {
 	}

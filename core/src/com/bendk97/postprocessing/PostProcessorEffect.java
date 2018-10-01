@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Disposable;
  * 
  * @author bmanuel */
 public abstract class PostProcessorEffect implements Disposable {
-	protected boolean enabled = true;
+	private boolean enabled = true;
 
 	/** Concrete objects shall be responsible to recreate or rebind its own resources whenever its needed, usually when the OpenGL
 	 * context is lost. Eg., framebuffer textures should be updated and shader parameters should be reuploaded/rebound. */

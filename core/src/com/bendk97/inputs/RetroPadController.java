@@ -14,7 +14,7 @@ import com.bendk97.screens.LevelScreen;
 
 public class RetroPadController extends com.bendk97.inputs.TouchInputProcessor {
 
-    private Rectangle fireButton;
+    private final Rectangle fireButton;
 
     public RetroPadController(LevelScreen screen, InputListener inputListener, Camera camera, Rectangle[] squareTouches, Rectangle fireButton,
                               Rectangle bombButton) {

@@ -22,13 +22,13 @@ import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
 public class ScreenShake {
 
-    public static final float STEP_INTERVAL = 0.02f;
+    private static final float STEP_INTERVAL = 0.02f;
 
-    private OrthographicCamera camera;
+    private final OrthographicCamera camera;
 
-    private TweenManager tweenManager;
+    private final TweenManager tweenManager;
 
-    private Random random = new RandomXS128();
+    private final Random random = new RandomXS128();
 
     public ScreenShake(TweenManager tweenManager, OrthographicCamera camera) {
         this.tweenManager = tweenManager;

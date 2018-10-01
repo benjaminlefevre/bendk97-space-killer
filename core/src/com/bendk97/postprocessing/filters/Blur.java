@@ -17,9 +17,9 @@ public final class Blur extends MultipassFilter {
 		// Tap7x7( 3 )
 		;
 
-		public final int radius;
+		final int radius;
 
-		private Tap (int radius) {
+		Tap(int radius) {
 			this.radius = radius;
 		}
 	}
@@ -29,9 +29,9 @@ public final class Blur extends MultipassFilter {
 		Gaussian5x5(Tap.Tap5x5), Gaussian5x5b(Tap.Tap5x5), // R=9 (19x19, policy "higher-then-discard")
 		;
 
-		public final Tap tap;
+		final Tap tap;
 
-		private BlurType (Tap tap) {
+		BlurType(Tap tap) {
 			this.tap = tap;
 		}
 	}
@@ -44,7 +44,8 @@ public final class Blur extends MultipassFilter {
 	private int passes;
 
 	// fbo, textures
-	private float invWidth, invHeight;
+	private final float invWidth;
+	private final float invHeight;
 	private final IntMap<Convolve2D> convolve = new IntMap<Convolve2D>(Tap.values().length);
 
 	public Blur (int width, int height) {
@@ -217,35 +218,30 @@ public final class Blur extends MultipassFilter {
 	}
 
 	private void computeKernel (int blurRadius, float blurAmount, float[] outKernel) {
-		int radius = blurRadius;
 
-		// float sigma = (float)radius / amount;
-		float sigma = blurAmount;
-
-		float twoSigmaSquare = 2.0f * sigma * sigma;
+		float twoSigmaSquare = 2.0f * blurAmount * blurAmount;
 		float sigmaRoot = (float)Math.sqrt(twoSigmaSquare * Math.PI);
 		float total = 0.0f;
 		float distance = 0.0f;
 		int index = 0;
 
-		for (int i = -radius; i <= radius; ++i) {
+		for (int i = -blurRadius; i <= blurRadius; ++i) {
 			distance = i * i;
-			index = i + radius;
+			index = i + blurRadius;
 			outKernel[index] = (float)Math.exp(-distance / twoSigmaSquare) / sigmaRoot;
 			total += outKernel[index];
 		}
 
-		int size = (radius * 2) + 1;
+		int size = (blurRadius * 2) + 1;
 		for (int i = 0; i < size; ++i) {
 			outKernel[i] /= total;
 		}
 	}
 
 	private void computeOffsets (int blurRadius, float dx, float dy, float[] outOffsetH, float[] outOffsetV) {
-		int radius = blurRadius;
 
 		final int X = 0, Y = 1;
-		for (int i = -radius, j = 0; i <= radius; ++i, j += 2) {
+		for (int i = -blurRadius, j = 0; i <= blurRadius; ++i, j += 2) {
 			outOffsetH[j + X] = i * dx;
 			outOffsetH[j + Y] = 0;
 

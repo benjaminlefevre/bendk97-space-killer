@@ -28,17 +28,17 @@ import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
 public class SoloEnemyFactory {
 
-    public final static int FOLLOW_PLAYER = 0;
-    public final static int LINEAR_X = 1;
-    public final static int TRAPEZE = 2;
-    public final static int BEZIER = 3;
+    private final static int FOLLOW_PLAYER = 0;
+    private final static int LINEAR_X = 1;
+    private final static int TRAPEZE = 2;
+    private final static int BEZIER = 3;
 
-    private TweenManager tweenManager;
-    private EntityFactory entityFactory;
-    private Random random = new RandomXS128();
-    private Engine engine;
-    private Level level;
-    private Entity player;
+    private final TweenManager tweenManager;
+    private final EntityFactory entityFactory;
+    private final Random random = new RandomXS128();
+    private final Engine engine;
+    private final Level level;
+    private final Entity player;
 
     public SoloEnemyFactory(Level level, Engine engine, TweenManager tweenManager, EntityFactory entityFactory, Entity player) {
         this.tweenManager = tweenManager;
@@ -129,9 +129,8 @@ public class SoloEnemyFactory {
     }
 
     private Entity createSoloEnemyTrapeze(final float velocity, float bulletVelocity, int rateShoot, int gaugelife, int points, boolean comingFromLeft) {
-        final boolean direction = comingFromLeft;
-        final int directionFactor = direction ? 1 : -1;
-        Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugelife, points, direction);
+        final int directionFactor = comingFromLeft ? 1 : -1;
+        Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugelife, points, comingFromLeft);
         final PositionComponent position = Mappers.position.get(enemy);
         final Sprite sprite = Mappers.sprite.get(enemy).sprite;
         Tween.to(position, PositionComponentAccessor.POSITION_X, sprite.getWidth() / velocity)
@@ -158,9 +157,8 @@ public class SoloEnemyFactory {
     }
 
     private Entity createSoloEnemyLinearX(final float velocity, float bulletVelocity, int rateShoot, int gaugelife, int points, boolean comingFromLeft) {
-        final boolean direction = comingFromLeft;
-        final int directionFactor = direction ? 1 : -1;
-        Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugelife, points, direction);
+        final int directionFactor = comingFromLeft ? 1 : -1;
+        Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugelife, points, comingFromLeft);
         final PositionComponent position = Mappers.position.get(enemy);
         final Sprite sprite = Mappers.sprite.get(enemy).sprite;
         Tween.to(position, PositionComponentAccessor.POSITION_X, SCREEN_WIDTH / velocity)
@@ -182,7 +180,7 @@ public class SoloEnemyFactory {
         return entityFactory.createLaserShip(getRandomStaticEnemy(), velocity, bulletVelocity, rateShoot, gaugelife, points, comingFromLeft);
     }
 
-    public int getRandomStaticEnemy() {
+    private int getRandomStaticEnemy() {
         if (level.equals(Level.Level2)) {
             return random.nextInt(EntityFactory.NB_SHIP_LV2_LASER_SHIP) + EntityFactory.SHIP_LV2_LASER_SHIP1;
         } else if (level.equals(Level.Level3)) {

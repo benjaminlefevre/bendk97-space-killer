@@ -6,6 +6,6 @@
 
 package com.bendk97.postprocessing;
 
-public interface PostProcessorListener {
+interface PostProcessorListener {
 	void beforeRenderToScreen();
 }

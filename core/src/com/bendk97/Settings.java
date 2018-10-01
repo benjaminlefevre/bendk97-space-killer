@@ -17,10 +17,10 @@ public class Settings {
     private static final String CONTROLLER = "controller";
     private static final String VIBRATION = "vibration";
 
-    private Preferences preferences;
+    private final Preferences preferences;
     private int[] highscores;
 
-    public static Settings settings = new Settings();
+    private static final Settings settings = new Settings();
 
     private Settings() {
         preferences = Gdx.app.getPreferences("space-killer");
@@ -32,22 +32,22 @@ public class Settings {
 
     public static void setRetroPad() {
         settings.preferences.putString(CONTROLLER, "retro");
-        save();
+        settings.preferences.flush();
     }
 
     public static void setVirtualPad() {
         settings.preferences.putString(CONTROLLER, "virtual");
-        save();
+        settings.preferences.flush();
     }
 
     public static void setMusicOn() {
         settings.preferences.putBoolean(MUSIC_ON, true);
-        save();
+        settings.preferences.flush();
     }
 
     public static void setMusicOff() {
         settings.preferences.putBoolean(MUSIC_ON, false);
-        save();
+        settings.preferences.flush();
     }
 
     public static boolean isMusicOn() {
@@ -56,12 +56,12 @@ public class Settings {
 
     public static void setSoundOn() {
         settings.preferences.putBoolean(SOUND_ON, true);
-        save();
+        settings.preferences.flush();
     }
 
     public static void setSoundOff() {
         settings.preferences.putBoolean(SOUND_ON, false);
-        save();
+        settings.preferences.flush();
     }
 
     public static boolean isSoundOn() {
@@ -87,7 +87,7 @@ public class Settings {
         return settings.preferences.getBoolean(VIBRATION, true);
     }
 
-    public void loadHighScores() {
+    private void loadHighScores() {
         String scorestr = settings.preferences.getString(HIGHSCORES, "0;0;0;0;0");
         String[] scores = scorestr.split(";");
         settings.highscores = new int[scores.length];
@@ -102,19 +102,18 @@ public class Settings {
         }
         for (int i = 0; i < settings.highscores.length; ++i) {
             if (settings.highscores[i] < score) {
-                for (int j = 4; j > i; j--)
-                    settings.highscores[j] = settings.highscores[j - 1];
+                System.arraycopy(settings.highscores, i, settings.highscores, i + 1, 4 - i);
                 settings.highscores[i] = score;
                 break;
             }
         }
-        String highscoreStr = "";
+        StringBuilder highscoreStr = new StringBuilder();
         for (int i = 0; i < settings.highscores.length; ++i) {
-            highscoreStr += settings.highscores[i];
-            highscoreStr += ";";
+            highscoreStr.append(settings.highscores[i]);
+            highscoreStr.append(";");
         }
-        settings.preferences.putString(HIGHSCORES, highscoreStr);
-        save();
+        settings.preferences.putString(HIGHSCORES, highscoreStr.toString());
+        settings.preferences.flush();
     }
 
     public static int getHighscore() {
@@ -124,18 +123,14 @@ public class Settings {
         return settings.highscores[0];
     }
 
-    public static void save() {
-        settings.preferences.flush();
-    }
-
     public static void changeLightFXEnabled() {
         settings.preferences.putBoolean(LIGHT_FX, !isLightFXEnabled());
-        save();
+        settings.preferences.flush();
     }
 
 
     public static void changeVibrationEnabled() {
         settings.preferences.putBoolean(VIBRATION, !isVibrationEnabled());
-        save();
+        settings.preferences.flush();
     }
 }

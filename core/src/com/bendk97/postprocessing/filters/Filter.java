@@ -26,19 +26,19 @@ public abstract class Filter<T> {
 		int arrayElementSize();
 	}
 
-	protected static final FullscreenQuad quad = new FullscreenQuad();
+	private static final FullscreenQuad quad = new FullscreenQuad();
 
-	protected static final int u_texture0 = 0;
-	protected static final int u_texture1 = 1;
+	static final int u_texture0 = 0;
+	static final int u_texture1 = 1;
 	protected static final int u_texture2 = 2;
 	protected static final int u_texture3 = 3;
 
-	protected Texture inputTexture = null;
-	protected FrameBuffer outputBuffer = null;
-	protected ShaderProgram program = null;
+	Texture inputTexture = null;
+	private FrameBuffer outputBuffer = null;
+	private ShaderProgram program = null;
 	private boolean programBegan = false;
 
-	public Filter (ShaderProgram program) {
+	Filter(ShaderProgram program) {
 		this.program = program;
 	}
 
@@ -69,28 +69,28 @@ public abstract class Filter<T> {
 	 */
 
 	// int
-	protected void setParam (Parameter param, int value) {
+	void setParam(Parameter param, int value) {
 		program.begin();
 		program.setUniformi(param.mnemonic(), value);
 		program.end();
 	}
 
 	// float
-	protected void setParam (Parameter param, float value) {
+	void setParam(Parameter param, float value) {
 		program.begin();
 		program.setUniformf(param.mnemonic(), value);
 		program.end();
 	}
 
 	// vec2
-	protected void setParam (Parameter param, Vector2 value) {
+	void setParam(Parameter param, Vector2 value) {
 		program.begin();
 		program.setUniformf(param.mnemonic(), value);
 		program.end();
 	}
 
 	// vec3
-	protected void setParam (Parameter param, Vector3 value) {
+	void setParam(Parameter param, Vector3 value) {
 		program.begin();
 		program.setUniformf(param.mnemonic(), value);
 		program.end();
@@ -140,7 +140,7 @@ public abstract class Filter<T> {
 	 * invoking endParams(). */
 
 	// float
-	protected T setParams (Parameter param, float value) {
+	T setParams(Parameter param, float value) {
 		if (!programBegan) {
 			programBegan = true;
 			program.begin();
@@ -150,7 +150,7 @@ public abstract class Filter<T> {
 	}
 
 	// int version
-	protected T setParams (Parameter param, int value) {
+	T setParams(Parameter param, int value) {
 		if (!programBegan) {
 			programBegan = true;
 			program.begin();
@@ -160,7 +160,7 @@ public abstract class Filter<T> {
 	}
 
 	// vec2 version
-	protected T setParams (Parameter param, Vector2 value) {
+	T setParams(Parameter param, Vector2 value) {
 		if (!programBegan) {
 			programBegan = true;
 			program.begin();
@@ -170,7 +170,7 @@ public abstract class Filter<T> {
 	}
 
 	// vec3 version
-	protected T setParams (Parameter param, Vector3 value) {
+	T setParams(Parameter param, Vector3 value) {
 		if (!programBegan) {
 			programBegan = true;
 			program.begin();
@@ -190,7 +190,7 @@ public abstract class Filter<T> {
 	}
 
 	// mat4
-	protected T setParams (Parameter param, Matrix4 value) {
+	T setParams(Parameter param, Matrix4 value) {
 		if (!programBegan) {
 			programBegan = true;
 			program.begin();
@@ -200,7 +200,7 @@ public abstract class Filter<T> {
 	}
 
 	// float[], vec2[], vec3[], vec4[]
-	protected T setParamsv (Parameter param, float[] values, int offset, int length) {
+	T setParamsv(Parameter param, float[] values, int offset, int length) {
 		if (!programBegan) {
 			programBegan = true;
 			program.begin();
@@ -226,7 +226,7 @@ public abstract class Filter<T> {
 	}
 
 	/** Should be called after any one or more setParams method calls. */
-	protected void endParams () {
+	void endParams() {
 		if (programBegan) {
 			program.end();
 			programBegan = false;

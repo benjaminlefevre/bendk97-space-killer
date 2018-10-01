@@ -25,10 +25,12 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
  * 
  * @author bmanuel */
 public final class PingPongBuffer {
-	public FrameBuffer buffer1, buffer2;
+	private FrameBuffer buffer1;
+    private FrameBuffer buffer2;
 	public Texture texture1, texture2;
-	public int width, height;
-	public final boolean ownResources;
+	private int width;
+    private int height;
+	private final boolean ownResources;
 
 	// internal state
 	private Texture texResult, texSrc;

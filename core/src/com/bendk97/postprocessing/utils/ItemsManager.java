@@ -14,7 +14,7 @@ import java.util.Iterator;
 public class ItemsManager<T extends Disposable> implements Iterable<T>, Disposable {
 	private static final int ItemNotFound = -1;
 	private final Array<T> items = new Array<T>();
-	protected final Array<Boolean> owned = new Array<Boolean>();
+	private final Array<Boolean> owned = new Array<Boolean>();
 
 	@Override
 	public void dispose() {
@@ -29,7 +29,7 @@ public class ItemsManager<T extends Disposable> implements Iterable<T>, Disposab
 	}
 
 	/** Add an item to the manager, if own is true the manager will manage the resource's lifecycle */
-	public void add( T item, boolean own ) {
+    private void add(T item, boolean own) {
 		if( item == null ) {
 			return;
 		}

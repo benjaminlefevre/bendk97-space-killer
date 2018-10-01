@@ -9,7 +9,6 @@ package com.bendk97.listeners.impl;
 import aurelienribon.tweenengine.*;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.bendk97.Settings;
@@ -32,14 +31,14 @@ import static com.bendk97.tweens.SpriteComponentAccessor.ALPHA;
 
 
 public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
-    private com.bendk97.entities.EntityFactory entityFactory;
+    private final com.bendk97.entities.EntityFactory entityFactory;
     private SnapshotArray<Entity> lives;
     private SnapshotArray<Entity> bombs;
-    private TweenManager tweenManager;
-    private Assets assets;
-    private LevelScreen screen;
-    private SpaceKillerGame game;
-    private com.bendk97.screens.ScreenShake screenShake;
+    private final TweenManager tweenManager;
+    private final Assets assets;
+    private final LevelScreen screen;
+    private final SpaceKillerGame game;
+    private final com.bendk97.screens.ScreenShake screenShake;
 
 
     public PlayerListenerImpl(SpaceKillerGame game, Assets asset, EntityFactory entityFactory, SnapshotArray<Entity> lives,
@@ -95,9 +94,8 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
         if (playerComponent.isGameOver()) {
             assets.playSound(SOUND_GAME_OVER);
             Mappers.player.get(player).secondScript = ((LevelScreen) game.currentScreen).getCurrentTimeScript();
-            player.add(((PooledEngine) getEngine()).createComponent(GameOverComponent.class));
+            player.add(getEngine().createComponent(GameOverComponent.class));
             Settings.addScore(playerComponent.getScoreInt());
-            Settings.save();
             screen.submitScore(playerComponent.getScoreInt());
             PausableTimer.schedule(new PausableTimer.Task() {
                 @Override

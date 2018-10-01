@@ -26,7 +26,7 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 public class Level3Screen extends LevelScreen {
 
 
-    private com.bendk97.entities.SoloEnemyFactory soloEnemyFactory;
+    private final com.bendk97.entities.SoloEnemyFactory soloEnemyFactory;
 
     private LinkedList<ScriptItem> scriptItemsEasy;
     private LinkedList<ScriptItem> scriptItemsMediumLeft;

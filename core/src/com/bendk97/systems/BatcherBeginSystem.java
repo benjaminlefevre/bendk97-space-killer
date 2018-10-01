@@ -12,8 +12,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class BatcherBeginSystem extends EntitySystem {
 
-    private SpriteBatch batcher;
-    private Viewport viewport;
+    private final SpriteBatch batcher;
+    private final Viewport viewport;
 
     public BatcherBeginSystem(Viewport viewport, SpriteBatch batcher, int priority) {
         super(priority);

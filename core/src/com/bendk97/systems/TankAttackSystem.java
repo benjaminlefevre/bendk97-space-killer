@@ -21,7 +21,7 @@ import java.util.Random;
 
 public class TankAttackSystem extends IteratingSystem {
 
-    private Family player = Family.one(PlayerComponent.class).exclude(PauseComponent.class).get();
+    private final Family player = Family.one(PlayerComponent.class).exclude(PauseComponent.class).get();
     private Random random = new RandomXS128();
 
     public TankAttackSystem(int priority) {

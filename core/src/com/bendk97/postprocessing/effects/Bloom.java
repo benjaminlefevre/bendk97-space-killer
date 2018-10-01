@@ -20,20 +20,20 @@ import com.bendk97.postprocessing.utils.PingPongBuffer;
 
 public final class Bloom extends PostProcessorEffect {
 	public static class Settings {
-		public final String name;
+		final String name;
 
-		public final BlurType blurType;
-		public final int blurPasses; // simple blur
-		public final float blurAmount; // normal blur (1 pass)
-		public final float bloomThreshold;
+		final BlurType blurType;
+		final int blurPasses; // simple blur
+		final float blurAmount; // normal blur (1 pass)
+		final float bloomThreshold;
 
-		public final float bloomIntensity;
-		public final float bloomSaturation;
-		public final float baseIntensity;
-		public final float baseSaturation;
+		final float bloomIntensity;
+		final float bloomSaturation;
+		final float baseIntensity;
+		final float baseSaturation;
 
-		public Settings (String name, BlurType blurType, int blurPasses, float blurAmount, float bloomThreshold,
-						 float baseIntensity, float baseSaturation, float bloomIntensity, float bloomSaturation) {
+		Settings(String name, BlurType blurType, int blurPasses, float blurAmount, float bloomThreshold,
+                 float baseIntensity, float baseSaturation, float bloomIntensity, float bloomSaturation) {
 			this.name = name;
 			this.blurType = blurType;
 			this.blurPasses = blurPasses;
@@ -47,8 +47,8 @@ public final class Bloom extends PostProcessorEffect {
 		}
 
 		// simple blur
-		public Settings (String name, int blurPasses, float bloomThreshold, float baseIntensity, float baseSaturation,
-			float bloomIntensity, float bloomSaturation) {
+        Settings(String name, int blurPasses, float bloomThreshold, float baseIntensity, float baseSaturation,
+                 float bloomIntensity, float bloomSaturation) {
 			this(name, BlurType.Gaussian5x5b, blurPasses, 0, bloomThreshold, baseIntensity, baseSaturation, bloomIntensity,
 				bloomSaturation);
 		}
@@ -67,11 +67,11 @@ public final class Bloom extends PostProcessorEffect {
 		}
 	}
 
-	private PingPongBuffer pingPongBuffer;
+	private final PingPongBuffer pingPongBuffer;
 
-	private Blur blur;
-	private Threshold threshold;
-	private Combine combine;
+	private final Blur blur;
+	private final Threshold threshold;
+	private final Combine combine;
 
 	private Settings settings;
 
@@ -96,23 +96,23 @@ public final class Bloom extends PostProcessorEffect {
 		pingPongBuffer.dispose();
 	}
 
-	public void setBaseIntesity (float intensity) {
+	private void setBaseIntesity(float intensity) {
 		combine.setSource1Intensity(intensity);
 	}
 
-	public void setBaseSaturation (float saturation) {
+	private void setBaseSaturation(float saturation) {
 		combine.setSource1Saturation(saturation);
 	}
 
-	public void setBloomIntesity (float intensity) {
+	private void setBloomIntesity(float intensity) {
 		combine.setSource2Intensity(intensity);
 	}
 
-	public void setBloomSaturation (float saturation) {
+	private void setBloomSaturation(float saturation) {
 		combine.setSource2Saturation(saturation);
 	}
 
-	public void setThreshold (float gamma) {
+	private void setThreshold(float gamma) {
 		threshold.setTreshold(gamma);
 	}
 
@@ -126,11 +126,11 @@ public final class Bloom extends PostProcessorEffect {
 		this.blending = false;
 	}
 
-	public void setBlurType (BlurType type) {
+	private void setBlurType(BlurType type) {
 		blur.setType(type);
 	}
 
-	public void setSettings (Settings settings) {
+	private void setSettings(Settings settings) {
 		this.settings = settings;
 
 		// setup threshold filter
@@ -148,11 +148,11 @@ public final class Bloom extends PostProcessorEffect {
 		setBlurType(settings.blurType);
 	}
 
-	public void setBlurPasses (int passes) {
+	private void setBlurPasses(int passes) {
 		blur.setPasses(passes);
 	}
 
-	public void setBlurAmount (float amount) {
+	private void setBlurAmount(float amount) {
 		blur.setAmount(amount);
 	}
 

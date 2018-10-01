@@ -15,15 +15,15 @@ package com.bendk97.inputs;
     import com.bendk97.screens.LevelScreen;
 
 
-    public abstract class TouchInputProcessor extends InputAdapter {
-    protected com.bendk97.listeners.InputListener listener;
+    abstract class TouchInputProcessor extends InputAdapter {
+    final com.bendk97.listeners.InputListener listener;
 
-    protected Camera camera;
-    protected Rectangle[] squareTouches;
-    protected Rectangle bombButton;
-    protected LevelScreen screen;
+    final Camera camera;
+    Rectangle[] squareTouches;
+    final Rectangle bombButton;
+    private final LevelScreen screen;
 
-    public TouchInputProcessor(LevelScreen screen, InputListener inputListener, Camera camera, Rectangle bombButton) {
+    TouchInputProcessor(LevelScreen screen, InputListener inputListener, Camera camera, Rectangle bombButton) {
         this.listener = inputListener;
         this.screen = screen;
         this.camera = camera;
@@ -39,7 +39,7 @@ package com.bendk97.inputs;
         return false;
     }
 
-    protected void moveShip(Vector3 worldTouch) {
+    void moveShip(Vector3 worldTouch) {
         if (squareTouches[0].contains(worldTouch.x, worldTouch.y)) {
             listener.goLeftTop();
         } else if (squareTouches[1].contains(worldTouch.x, worldTouch.y)) {

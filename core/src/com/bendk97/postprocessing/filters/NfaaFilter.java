@@ -27,17 +27,17 @@ import com.bendk97.postprocessing.utils.ShaderLoader;
 /** Normal filtered anti-aliasing filter.
  * @author Toni Sagrista */
 public final class NfaaFilter extends Filter<NfaaFilter> {
-	private Vector2 viewportInverse;
+	private final Vector2 viewportInverse;
 
 	public enum Param implements Parameter {
 		// @formatter:off
 		Texture("u_texture0", 0), ViewportInverse("u_viewportInverse", 2);
 		// @formatter:on
 
-		private String mnemonic;
-		private int elementSize;
+		private final String mnemonic;
+		private final int elementSize;
 
-		private Param (String mnemonic, int arrayElementSize) {
+		Param(String mnemonic, int arrayElementSize) {
 			this.mnemonic = mnemonic;
 			this.elementSize = arrayElementSize;
 		}
@@ -57,7 +57,7 @@ public final class NfaaFilter extends Filter<NfaaFilter> {
 		this(new Vector2(viewportWidth, viewportHeight));
 	}
 
-	public NfaaFilter (Vector2 viewportSize) {
+	private NfaaFilter(Vector2 viewportSize) {
 		super(ShaderLoader.fromFile("screenspace", "nfaa"));
 		this.viewportInverse = viewportSize;
 		this.viewportInverse.x = 1f / this.viewportInverse.x;
