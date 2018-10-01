@@ -24,8 +24,8 @@ public class PlayerData {
     public int bombs = BOMBS;
     public PlayerComponent.PowerLevel powerLevel = NORMAL;
     public int numberOfContinue = 0;
-    public Level level;
-    public float secondScript;
+    public final Level level;
+    private final float secondScript;
 
     public PlayerData(Level level, float secondScript, int numberOfContinue, long fireDelay, long fireDelaySide,
                       int enemiesKilled, int laserShipKilled, int howManyLifesLosed, int score,

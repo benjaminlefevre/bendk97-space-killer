@@ -14,7 +14,7 @@ import com.bendk97.components.*;
 
 public class FollowPlayerSystem extends IteratingSystem {
 
-    private Family player = Family.one(PlayerComponent.class).get();
+    private final Family player = Family.one(PlayerComponent.class).get();
 
     public FollowPlayerSystem(int priority) {
         super(Family.all(FollowPlayerComponent.class).get(), priority);

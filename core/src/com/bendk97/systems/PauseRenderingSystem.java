@@ -23,13 +23,13 @@ import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
 public class PauseRenderingSystem extends IteratingSystem {
-    public static final String RESUME = "resume";
-    public static final String QUIT = "quit";
-    private SpriteBatch batcher;
-    private BitmapFont mediumFont;
+    private static final String RESUME = "resume";
+    private static final String QUIT = "quit";
+    private final SpriteBatch batcher;
+    private final BitmapFont mediumFont;
 
-    private ShapeRenderer shapeRenderer;
-    private Camera camera;
+    private final ShapeRenderer shapeRenderer;
+    private final Camera camera;
 
     public PauseRenderingSystem(SpriteBatch batcher, Camera camera, Assets assets, int priority) {
         super(Family.all(PauseComponent.class).get(), priority);

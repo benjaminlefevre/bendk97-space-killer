@@ -26,13 +26,13 @@ public class SplashScreen extends HDScreen {
 
     private static final int FRAME_COLS = 6, FRAME_ROWS = 5;
     // A variable for tracking elapsed time for the animation
-    float stateTime;
+    private float stateTime;
     // Objects used
-    Animation<TextureRegion> walkAnimation; // Must declare frame type (TextureRegion)
-    Texture logo;
-    SpriteBatch spriteBatch;
-    SpriteBatch logoBatcher;
-    Actor fader = new Actor();
+    private Animation<TextureRegion> walkAnimation; // Must declare frame type (TextureRegion)
+    private Texture logo;
+    private SpriteBatch spriteBatch;
+    private SpriteBatch logoBatcher;
+    private final Actor fader = new Actor();
 
 
     public SplashScreen(Assets assets, SpaceKillerGame game) {
@@ -42,7 +42,7 @@ public class SplashScreen extends HDScreen {
         initFader();
     }
 
-    public void initGraphics() {
+    private void initGraphics() {
         TextureAtlas atlas = assets.get(Assets.SPASH_ATLAS);
         // Initialize the Animation with the frame interval and array of frames
         walkAnimation = new Animation<TextureRegion>(0.025f, atlas.findRegions("human_running"), LOOP);
@@ -106,8 +106,4 @@ public class SplashScreen extends HDScreen {
         assets.unloadResources(this.getClass());
     }
 
-    @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
-    }
 }

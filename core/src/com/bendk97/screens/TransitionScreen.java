@@ -21,13 +21,13 @@ import com.bendk97.SpaceKillerGame;
 import com.bendk97.tweens.SpriteTween;
 
 public class TransitionScreen extends ScreenAdapter {
-    public final static float screenWidth = Gdx.graphics.getWidth();
-    public final static float screenHeight = Gdx.graphics.getHeight();
+    private final static float screenWidth = Gdx.graphics.getWidth();
+    private final static float screenHeight = Gdx.graphics.getHeight();
 
-    private SpaceKillerGame game;
-    private Screen next;
+    private final SpaceKillerGame game;
+    private final Screen next;
 
-    private FrameBuffer currentBuffer;
+    private final FrameBuffer currentBuffer;
     private FrameBuffer nextBuffer;
 
     private SpriteBatch spriteBatch;

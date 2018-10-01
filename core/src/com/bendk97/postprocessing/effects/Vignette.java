@@ -12,9 +12,10 @@ import com.bendk97.postprocessing.PostProcessorEffect;
 import com.bendk97.postprocessing.filters.Vignetting;
 
 public final class Vignette extends PostProcessorEffect {
-	private Vignetting vignetting;
-	private boolean controlSaturation;
-	private float oneOnW, oneOnH;
+	private final Vignetting vignetting;
+	private final boolean controlSaturation;
+	private final float oneOnW;
+	private final float oneOnH;
 
 	public Vignette (int viewportWidth, int viewportHeight, boolean controlSaturation) {
 		this.controlSaturation = controlSaturation;
@@ -130,5 +131,5 @@ public final class Vignette extends PostProcessorEffect {
 	public void render (FrameBuffer src, FrameBuffer dest) {
 		restoreViewport(dest);
 		vignetting.setInput(src).setOutput(dest).render();
-	};
+	}
 }

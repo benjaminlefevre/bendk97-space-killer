@@ -19,20 +19,20 @@ import com.bendk97.mask.SpriteMaskFactory;
 
 public class CollisionSystem extends EntitySystem {
 
-    private Family playerBullet = Family.one(PlayerBulletComponent.class).get();
-    private Family enemyBullet = Family.one(EnemyBulletComponent.class).get();
-    private Family shieldUp = Family.one(ShieldUpComponent.class).get();
-    private Family powerUp = Family.one(PowerUpComponent.class).get();
-    private Family bombUp = Family.one(BombUpComponent.class).get();
-    private Family enemyBodies = Family.all(EnemyComponent.class).exclude(GroundEnemyComponent.class).get();
-    private Family enemies = Family.all(EnemyComponent.class).get();
-    private Family playerVulnerable = Family.one(PlayerComponent.class).exclude(InvulnerableComponent.class, GameOverComponent.class).get();
-    private Family player = Family.one(PlayerComponent.class).exclude(GameOverComponent.class).get();
-    private Family shield = Family.one(ShieldComponent.class).get();
+    private final Family playerBullet = Family.one(PlayerBulletComponent.class).get();
+    private final Family enemyBullet = Family.one(EnemyBulletComponent.class).get();
+    private final Family shieldUp = Family.one(ShieldUpComponent.class).get();
+    private final Family powerUp = Family.one(PowerUpComponent.class).get();
+    private final Family bombUp = Family.one(BombUpComponent.class).get();
+    private final Family enemyBodies = Family.all(EnemyComponent.class).exclude(GroundEnemyComponent.class).get();
+    private final Family enemies = Family.all(EnemyComponent.class).get();
+    private final Family playerVulnerable = Family.one(PlayerComponent.class).exclude(InvulnerableComponent.class, GameOverComponent.class).get();
+    private final Family player = Family.one(PlayerComponent.class).exclude(GameOverComponent.class).get();
+    private final Family shield = Family.one(ShieldComponent.class).get();
 
 
-    private CollisionListener collisionListener;
-    private SpriteMaskFactory spriteMaskFactory;
+    private final CollisionListener collisionListener;
+    private final SpriteMaskFactory spriteMaskFactory;
 
     public CollisionSystem(CollisionListener collisionListener, SpriteMaskFactory spriteMaskFactory, int priority) {
         super(priority);
@@ -116,7 +116,7 @@ public class CollisionSystem extends EntitySystem {
         }
     }
 
-    public boolean isCollisionBetween(Sprite sprite1, Sprite sprite2) {
+    private boolean isCollisionBetween(Sprite sprite1, Sprite sprite2) {
         Rectangle collision = new Rectangle();
         if (Intersector.intersectRectangles(sprite1.getBoundingRectangle(), sprite2.getBoundingRectangle(), collision)) {
             Array<Array<Boolean>> mask1 = spriteMaskFactory.getMask(sprite1.getTexture());

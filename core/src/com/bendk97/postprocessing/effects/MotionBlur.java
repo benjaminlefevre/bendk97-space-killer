@@ -18,7 +18,7 @@ import com.bendk97.postprocessing.filters.MotionFilter;
  * @author Toni Sagrista */
 public class MotionBlur extends PostProcessorEffect {
 	private MotionFilter motionFilter;
-	private Copy copyFilter;
+	private final Copy copyFilter;
 	private FrameBuffer fbo;
 
 	public MotionBlur () {

@@ -23,7 +23,12 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoa
 import com.bendk97.Settings;
 import com.bendk97.screens.*;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.Collections.EMPTY_LIST;
 
 public class Assets {
 
@@ -157,14 +162,14 @@ public class Assets {
             new AssetDescriptor<BitmapFont>("font4.ttf", BitmapFont.class,
                     getFontParameters("fonts/regular.ttf", 20));
 
-    public static FreeTypeFontLoaderParameter getFontParameters(String filename, int size) {
+    private static FreeTypeFontLoaderParameter getFontParameters(String filename, int size) {
         FreeTypeFontLoaderParameter parameter = new FreeTypeFontLoaderParameter();
         parameter.fontFileName = filename;
         parameter.fontParameters.size = size;
         return parameter;
     }
 
-    public static Map<Class<? extends Screen>, List<AssetDescriptor>> assetsNeededByScreen = new HashMap<Class<? extends Screen>, List<AssetDescriptor>>() {{
+    private static final Map<Class<? extends Screen>, List<AssetDescriptor>> assetsNeededByScreen = new HashMap<Class<? extends Screen>, List<AssetDescriptor>>() {{
         put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
                 SPLASH_MUSIC, SPASH_ATLAS, SPLASH_TXT_LOGO
         ));
@@ -225,8 +230,8 @@ public class Assets {
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALLEST
         ));
 
-        put(TransitionScreen.class, Collections.EMPTY_LIST);
-        put(SocialScoreScreen.class, Collections.EMPTY_LIST);
+        put(TransitionScreen.class, EMPTY_LIST);
+        put(SocialScoreScreen.class, EMPTY_LIST);
 
     }};
 
@@ -237,7 +242,7 @@ public class Assets {
         return manager.get(descriptor.fileName);
     }
 
-    public AssetManager getAssetManager() {
+    private AssetManager getAssetManager() {
         if (manager != null) {
             manager.dispose();
         }

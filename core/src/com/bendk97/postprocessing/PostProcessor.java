@@ -26,7 +26,7 @@ import com.bendk97.postprocessing.utils.PingPongBuffer;
  * @author bmanuel */
 public final class PostProcessor implements Disposable {
 	/** Enable pipeline state queries: beware the pipeline can stall! */
-	public static boolean EnableQueryStates = false;
+	private static final boolean EnableQueryStates = false;
 
 	private static PipelineState pipelineState = null;
 	private static Format fbFormat;
@@ -38,7 +38,7 @@ public final class PostProcessor implements Disposable {
 	private final Color clearColor = Color.CLEAR;
 	private int clearBits = GL20.GL_COLOR_BUFFER_BIT;
 	private float clearDepth = 1f;
-	private static Rectangle viewport = new Rectangle();
+	private static final Rectangle viewport = new Rectangle();
 	private static boolean hasViewport = false;
 
 	private boolean enabled = true;
@@ -49,7 +49,7 @@ public final class PostProcessor implements Disposable {
 	private PostProcessorListener listener = null;
 
 	// maintains a per-frame updated list of enabled effects
-	private Array<PostProcessorEffect> enabledEffects = new Array<PostProcessorEffect>(5);
+	private final Array<PostProcessorEffect> enabledEffects = new Array<PostProcessorEffect>(5);
 
 	/** Construct a new PostProcessor with FBO dimensions set to the size of the screen */
 	public PostProcessor (boolean useDepth, boolean useAlphaChannel, boolean use32Bits) {
@@ -57,7 +57,7 @@ public final class PostProcessor implements Disposable {
 	}
 
 	/** Construct a new PostProcessor with the given parameters, defaulting to <em>TextureWrap.ClampToEdge</em> as texture wrap mode */
-	public PostProcessor (int fboWidth, int fboHeight, boolean useDepth, boolean useAlphaChannel, boolean use32Bits) {
+    private PostProcessor(int fboWidth, int fboHeight, boolean useDepth, boolean useAlphaChannel, boolean use32Bits) {
 		this(fboWidth, fboHeight, useDepth, useAlphaChannel, use32Bits, TextureWrap.ClampToEdge, TextureWrap.ClampToEdge);
 	}
 
@@ -77,8 +77,8 @@ public final class PostProcessor implements Disposable {
 	}
 
 	/** Construct a new PostProcessor with the given parameters and the specified texture wrap mode */
-	public PostProcessor (int fboWidth, int fboHeight, boolean useDepth, boolean useAlphaChannel, boolean use32Bits,
-		TextureWrap u, TextureWrap v) {
+    private PostProcessor(int fboWidth, int fboHeight, boolean useDepth, boolean useAlphaChannel, boolean use32Bits,
+                          TextureWrap u, TextureWrap v) {
 		if (use32Bits) {
 			if (useAlphaChannel) {
 				fbFormat = Format.RGBA8888;
@@ -134,7 +134,7 @@ public final class PostProcessor implements Disposable {
 	 *
 	 * The predefined effects will restore the viewport settings at the final blitting stage (render to screen) by invoking the
 	 * restoreViewport static method. */
-	public void setViewport (Rectangle viewport) {
+    private void setViewport(Rectangle viewport) {
 		PostProcessor.hasViewport = (viewport != null);
 		if (hasViewport) {
 			PostProcessor.viewport.set(viewport);
@@ -232,7 +232,7 @@ public final class PostProcessor implements Disposable {
 		clearDepth = depth;
 	}
 
-	public void setBufferTextureWrap (TextureWrap u, TextureWrap v) {
+	private void setBufferTextureWrap(TextureWrap u, TextureWrap v) {
 		compositeWrapU = u;
 		compositeWrapV = v;
 
@@ -296,7 +296,7 @@ public final class PostProcessor implements Disposable {
 	}
 
 	/** Stops capturing the scene and returns the result, or null if nothing was captured. */
-	public FrameBuffer captureEnd () {
+    private FrameBuffer captureEnd() {
 		if (enabled && capturing) {
 			capturing = false;
 			hasCaptured = true;
@@ -336,7 +336,7 @@ public final class PostProcessor implements Disposable {
 
 	/** Stops capturing the scene and apply the effect chain, if there is one. If the specified output framebuffer is NULL, then the
 	 * rendering will be performed to screen. */
-	public void render (FrameBuffer dest) {
+    private void render(FrameBuffer dest) {
 		captureEnd();
 
 		if (!hasCaptured) {
@@ -398,7 +398,7 @@ public final class PostProcessor implements Disposable {
 	}
 
 	/** Restores the previously set viewport if one was specified earlier and the destination buffer is the screen */
-	protected static void restoreViewport (FrameBuffer dest) {
+	static void restoreViewport(FrameBuffer dest) {
 		if (hasViewport && dest == null) {
 			Gdx.gl.glViewport((int)viewport.x, (int)viewport.y, (int)viewport.width, (int)viewport.height);
 		}

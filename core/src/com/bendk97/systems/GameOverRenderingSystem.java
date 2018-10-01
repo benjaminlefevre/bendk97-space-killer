@@ -26,17 +26,20 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.*;
 
 public class GameOverRenderingSystem extends IteratingSystem {
-    public static final String GAME_OVER = "GAME\nOVER";
-    public static final String SCORE = "score\n\n";
-    public static final String HIGHSCORE = "highscore\n\n";
-    private SpriteBatch batcher;
-    private BitmapFont largeFont;
-    private BitmapFont mediumFont;
+    private static final String GAME_OVER = "GAME\nOVER";
+    private static final String SCORE = "score\n\n";
+    private static final String HIGHSCORE = "highscore\n\n";
+    private final SpriteBatch batcher;
+    private final BitmapFont largeFont;
+    private final BitmapFont mediumFont;
 
-    private ShapeRenderer shapeRenderer;
-    private Camera camera;
+    private final ShapeRenderer shapeRenderer;
+    private final Camera camera;
 
-    private Sprite extraLife, playAgain, home, share;
+    private final Sprite extraLife;
+    private final Sprite playAgain;
+    private final Sprite home;
+    private final Sprite share;
 
     public GameOverRenderingSystem(SpriteBatch batcher, Camera camera, Assets assets, int priority) {
         super(Family.all(PlayerComponent.class, GameOverComponent.class).get(), priority);

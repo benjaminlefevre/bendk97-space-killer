@@ -25,11 +25,11 @@ import static com.bendk97.SpaceKillerGameConstants.SKIP_SPLASH;
 import static com.bendk97.screens.SocialScoreScreen.TEMP_DIRECTORY;
 
 public class SpaceKillerGame extends Game {
-    private Assets assets = new Assets();
-    public PlayServices playServices;
+    private final Assets assets = new Assets();
+    public final PlayServices playServices;
     public Screen currentScreen;
     public PlayerData playerData;
-    public IntentShare intentShare;
+    public final IntentShare intentShare;
 
     public SpaceKillerGame(PlayServices playServices, IntentShare intentShare) {
         this.playServices = playServices;
@@ -91,11 +91,6 @@ public class SpaceKillerGame extends Game {
         }
     }
 
-
-    @Override
-    public void render() {
-        super.render();
-    }
 
     @Override
     public void dispose() {

@@ -15,7 +15,7 @@ import com.bendk97.components.PositionComponent;
 import com.bendk97.components.SpriteComponent;
 
 public class StaticEntitiesRenderingSystem extends IteratingSystem {
-    private SpriteBatch batcher;
+    private final SpriteBatch batcher;
 
     public StaticEntitiesRenderingSystem(SpriteBatch batcher, int priority) {
         super(Family.all(SpriteComponent.class).exclude(PositionComponent.class).get(), priority);

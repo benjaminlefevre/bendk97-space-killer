@@ -32,7 +32,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
     private SpaceKillerGame game = null;
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
+    private static final String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
@@ -206,7 +206,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
         return gameHelper.isSignedIn();
     }
 
-    public static final int INTENT_ACTIVITY = 666;
+    private static final int INTENT_ACTIVITY = 666;
 
     @Override
     public void shareScore(final String filePath) {

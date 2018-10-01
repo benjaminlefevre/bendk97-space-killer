@@ -20,7 +20,7 @@ import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
 public class VirtualPadController extends com.bendk97.inputs.TouchInputProcessor {
 
-    private Entity player;
+    private final Entity player;
 
 
     public VirtualPadController(LevelScreen screen, InputListener inputListener, Camera camera, Entity player, Rectangle bombButton) {

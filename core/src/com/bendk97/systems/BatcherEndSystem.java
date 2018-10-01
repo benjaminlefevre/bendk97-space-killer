@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class BatcherEndSystem extends EntitySystem {
 
-    private SpriteBatch batcher;
+    private final SpriteBatch batcher;
     public BatcherEndSystem(SpriteBatch batcher, int priority) {
         super(priority);
         this.batcher = batcher;

@@ -25,21 +25,21 @@ import java.util.UUID;
 public class SocialScoreScreen extends ScreenAdapter {
 
     public static final String TEMP_DIRECTORY = "temp/spacekiller";
-    public static final String TEMP_SPACEKILLER_SCORE_PNG = TEMP_DIRECTORY + "/score-";
-    private com.bendk97.SpaceKillerGame game;
-    private OrthographicCamera camera;
-    private SpriteBatch batcher;
+    private static final String TEMP_SPACEKILLER_SCORE_PNG = TEMP_DIRECTORY + "/score-";
+    private final com.bendk97.SpaceKillerGame game;
+    private final OrthographicCamera camera;
+    private final SpriteBatch batcher;
     private int score = 0;
-    private NumberFormat numberFormatter;
+    private final NumberFormat numberFormatter;
     private final static String SPACE_KILLER = "space killer";
     private final static String SCORE = "score";
     private final static int screen_width = 900;
     private final static int screen_height = 300;
 
-    private Sprite iconGame;
-    private Sprite google;
-    private BitmapFont font;
-    private BitmapFont fontSmall;
+    private final Sprite iconGame;
+    private final Sprite google;
+    private final BitmapFont font;
+    private final BitmapFont fontSmall;
 
     public SocialScoreScreen(Assets assets, SpaceKillerGame game, int score) {
         this.game = game;

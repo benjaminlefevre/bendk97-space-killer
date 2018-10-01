@@ -18,15 +18,15 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
  * @author Nathan Sweet
  */
 public class PausableTimer {
-    static final Array<PausableTimer> instances = new Array(1);
-    public static TimerThread thread;
+    private static final Array<PausableTimer> instances = new Array<PausableTimer>(1);
+    private static TimerThread thread;
     static private final int CANCELLED = -1;
     static private final int FOREVER = -2;
 
     /**
      * Timer instance for general application wide usage. Static methods on {@link PausableTimer} make convenient use of this instance.
      */
-    static PausableTimer instance = new PausableTimer();
+    private static PausableTimer instance = new PausableTimer();
 
     static public PausableTimer instance() {
         if (instance == null) {
@@ -35,30 +35,30 @@ public class PausableTimer {
         return instance;
     }
 
-    private final Array<Task> tasks = new Array(false, 8);
+    private final Array<Task> tasks = new Array<Task>(false, 8);
 
-    public PausableTimer() {
+    private PausableTimer() {
         start();
     }
 
     /**
      * Schedules a task to occur once as soon as possible, but not sooner than the start of the next frame.
      */
-    public Task postTask(Task task) {
+    private Task postTask(Task task) {
         return scheduleTask(task, 0, 0, 0);
     }
 
     /**
      * Schedules a task to occur once after the specified delay.
      */
-    public Task scheduleTask(Task task, float delaySeconds) {
+    private Task scheduleTask(Task task, float delaySeconds) {
         return scheduleTask(task, delaySeconds, 0, 0);
     }
 
     /**
      * Schedules a task to occur once after the specified delay and then repeatedly at the specified interval until cancelled.
      */
-    public Task scheduleTask(Task task, float delaySeconds, float intervalSeconds) {
+    private Task scheduleTask(Task task, float delaySeconds, float intervalSeconds) {
         return scheduleTask(task, delaySeconds, intervalSeconds, FOREVER);
     }
 
@@ -66,7 +66,7 @@ public class PausableTimer {
      * Schedules a task to occur once after the specified delay and then a number of additional times at the specified
      * interval.
      */
-    public Task scheduleTask(Task task, float delaySeconds, float intervalSeconds, int repeatCount) {
+    private Task scheduleTask(Task task, float delaySeconds, float intervalSeconds, int repeatCount) {
         synchronized (task) {
             if (task.repeatCount != CANCELLED)
                 throw new IllegalArgumentException("The same task may not be scheduled twice.");
@@ -142,7 +142,7 @@ public class PausableTimer {
         }
     }
 
-    long update(long timeMillis, long waitMillis) {
+    private long update(long timeMillis, long waitMillis) {
         synchronized (this) {
             for (int i = 0, n = tasks.size; i < n; i++) {
                 Task task = tasks.get(i);
@@ -173,7 +173,7 @@ public class PausableTimer {
     /**
      * Adds the specified delay to all tasks.
      */
-    public void delay(long delayMillis) {
+    private void delay(long delayMillis) {
         synchronized (this) {
             for (int i = 0, n = tasks.size; i < n; i++) {
                 Task task = tasks.get(i);
@@ -184,7 +184,7 @@ public class PausableTimer {
         }
     }
 
-    static void wake() {
+    private static void wake() {
         synchronized (instances) {
             instances.notifyAll();
         }
@@ -236,7 +236,7 @@ public class PausableTimer {
         long executeTimeMillis;
         long intervalMillis;
         int repeatCount = CANCELLED;
-        Application app;
+        final Application app;
 
         public Task() {
             app = Gdx.app; // Need to store the app when the task was created for multiple LwjglAWTCanvas.
@@ -252,7 +252,7 @@ public class PausableTimer {
         /**
          * Cancels the task. It will not be executed until it is scheduled again. This method can be called at any time.
          */
-        public synchronized void cancel() {
+        synchronized void cancel() {
             executeTimeMillis = 0;
             repeatCount = CANCELLED;
         }
@@ -285,11 +285,11 @@ public class PausableTimer {
      *
      * @author Nathan Sweet
      */
-    public static class TimerThread implements Runnable {
+    static class TimerThread implements Runnable {
         Files files;
         private long pauseMillis;
 
-        public TimerThread() {
+        TimerThread() {
             resume();
         }
 
@@ -318,7 +318,7 @@ public class PausableTimer {
             }
         }
 
-        public void resume() {
+        void resume() {
             long delayMillis = System.nanoTime() / 1000000 - pauseMillis;
             synchronized (instances) {
                 for (int i = 0, n = instances.size; i < n; i++) {
@@ -331,7 +331,7 @@ public class PausableTimer {
             t.start();
         }
 
-        public void pause() {
+        void pause() {
             pauseMillis = System.nanoTime() / 1000000;
             synchronized (instances) {
                 files = null;
@@ -339,7 +339,7 @@ public class PausableTimer {
             }
         }
 
-        public void dispose() {
+        void dispose() {
             pause();
             instances.clear();
             instance = null;

@@ -21,7 +21,7 @@ import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
 public class BackgroundRenderingSystem extends SortedIteratingSystem {
 
-    private SpriteBatch batcher;
+    private final SpriteBatch batcher;
 
     public BackgroundRenderingSystem(SpriteBatch batcher, int priority) {
         super(Family.all(BackgroundComponent.class, PositionComponent.class).get(),

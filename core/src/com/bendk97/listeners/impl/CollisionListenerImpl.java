@@ -24,12 +24,12 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 
 public class CollisionListenerImpl extends EntitySystem implements com.bendk97.listeners.CollisionListener {
 
-    private Assets assets;
-    private com.bendk97.entities.EntityFactory entityFactory;
-    private com.bendk97.listeners.PlayerListener playerListener;
-    private TweenManager tweenManager;
-    private LevelScreen screen;
-    private com.bendk97.screens.ScreenShake screenShake;
+    private final Assets assets;
+    private final com.bendk97.entities.EntityFactory entityFactory;
+    private final com.bendk97.listeners.PlayerListener playerListener;
+    private final TweenManager tweenManager;
+    private final LevelScreen screen;
+    private final com.bendk97.screens.ScreenShake screenShake;
 
     public CollisionListenerImpl(TweenManager tweenManager, ScreenShake screenShake, Assets assets,
                                  EntityFactory entityFactory, PlayerListener playerListener,

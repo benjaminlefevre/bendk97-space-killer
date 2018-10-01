@@ -25,23 +25,23 @@ import com.bendk97.postprocessing.utils.PingPongBuffer;
  * @author Toni Sagrista */
 public final class LensFlare2 extends PostProcessorEffect {
 	public static class Settings {
-		public final String name;
+		final String name;
 
-		public final BlurType blurType;
-		public final int blurPasses; // simple blur
-		public final float blurAmount; // normal blur (1 pass)
-		public final float flareBias;
+		final BlurType blurType;
+		final int blurPasses; // simple blur
+		final float blurAmount; // normal blur (1 pass)
+		final float flareBias;
 
-		public final float flareIntensity;
-		public final float flareSaturation;
-		public final float baseIntensity;
-		public final float baseSaturation;
+		final float flareIntensity;
+		final float flareSaturation;
+		final float baseIntensity;
+		final float baseSaturation;
 
-		public final int ghosts;
-		public final float haloWidth;
+		final int ghosts;
+		final float haloWidth;
 
-		public Settings (String name, BlurType blurType, int blurPasses, float blurAmount, float flareBias, float baseIntensity,
-			float baseSaturation, float flareIntensity, float flareSaturation, int ghosts, float haloWidth) {
+		Settings(String name, BlurType blurType, int blurPasses, float blurAmount, float flareBias, float baseIntensity,
+                 float baseSaturation, float flareIntensity, float flareSaturation, int ghosts, float haloWidth) {
 			this.name = name;
 			this.blurType = blurType;
 			this.blurPasses = blurPasses;
@@ -58,8 +58,8 @@ public final class LensFlare2 extends PostProcessorEffect {
 		}
 
 		// simple blur
-		public Settings (String name, int blurPasses, float flareBias, float baseIntensity, float baseSaturation,
-			float flareIntensity, float flareSaturation, int ghosts, float haloWidth) {
+        Settings(String name, int blurPasses, float flareBias, float baseIntensity, float baseSaturation,
+                 float flareIntensity, float flareSaturation, int ghosts, float haloWidth) {
 			this(name, BlurType.Gaussian5x5b, blurPasses, 0, flareBias, baseIntensity, baseSaturation, flareIntensity,
 				flareSaturation, ghosts, haloWidth);
 		}
@@ -82,12 +82,12 @@ public final class LensFlare2 extends PostProcessorEffect {
 		}
 	}
 
-	private PingPongBuffer pingPongBuffer;
+	private final PingPongBuffer pingPongBuffer;
 
-	private Lens2 lens;
-	private Blur blur;
-	private Bias bias;
-	private Combine combine;
+	private final Lens2 lens;
+	private final Blur blur;
+	private final Bias bias;
+	private final Combine combine;
 
 	private Settings settings;
 
@@ -113,27 +113,27 @@ public final class LensFlare2 extends PostProcessorEffect {
 		pingPongBuffer.dispose();
 	}
 
-	public void setBaseIntesity (float intensity) {
+	private void setBaseIntesity(float intensity) {
 		combine.setSource1Intensity(intensity);
 	}
 
-	public void setBaseSaturation (float saturation) {
+	private void setBaseSaturation(float saturation) {
 		combine.setSource1Saturation(saturation);
 	}
 
-	public void setFlareIntesity (float intensity) {
+	private void setFlareIntesity(float intensity) {
 		combine.setSource2Intensity(intensity);
 	}
 
-	public void setFlareSaturation (float saturation) {
+	private void setFlareSaturation(float saturation) {
 		combine.setSource2Saturation(saturation);
 	}
 
-	public void setBias (float b) {
+	private void setBias(float b) {
 		bias.setBias(b);
 	}
 
-	public void setGhosts (int ghosts) {
+	private void setGhosts(int ghosts) {
 		lens.setGhosts(ghosts);
 	}
 
@@ -155,11 +155,11 @@ public final class LensFlare2 extends PostProcessorEffect {
 		this.blending = false;
 	}
 
-	public void setBlurType (BlurType type) {
+	private void setBlurType(BlurType type) {
 		blur.setType(type);
 	}
 
-	public void setSettings (Settings settings) {
+	private void setSettings(Settings settings) {
 		this.settings = settings;
 
 		// setup threshold filter
@@ -179,11 +179,11 @@ public final class LensFlare2 extends PostProcessorEffect {
 		setGhosts(settings.ghosts);
 	}
 
-	public void setBlurPasses (int passes) {
+	private void setBlurPasses(int passes) {
 		blur.setPasses(passes);
 	}
 
-	public void setBlurAmount (float amount) {
+	private void setBlurAmount(float amount) {
 		blur.setAmount(amount);
 	}
 

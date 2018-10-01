@@ -22,8 +22,8 @@ import java.util.Random;
 
 public class ScoreSquadronSystem extends IteratingSystem {
 
-    private BitmapFont font;
-    private SpriteBatch batcher;
+    private final BitmapFont font;
+    private final SpriteBatch batcher;
 
     public ScoreSquadronSystem(int priority, Assets assets, SpriteBatch batcher) {
         super(Family.all(ScoreSquadronComponent.class).get(), priority);
