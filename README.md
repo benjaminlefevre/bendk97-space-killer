@@ -24,8 +24,8 @@ But as libgdx is cross-platform, it should be easy to compile for HTML5, iOS...a
 ![alt dependencies](dependency-graph.svg)
 
 # LICENSE
-License
-This project is licenced underthe MIT license.
+
+This project is licenced under the MIT license.
 
 For more details check the [LICENCE](LICENSE) file
 
