@@ -182,7 +182,7 @@ public class Level2Screen extends LevelScreen {
             switch (second) {
                 case 255:
                     assets.playSound(Assets.SOUND_BOSS_ALERT);
-                    for (Entity background : backgrounds) {
+                    for (Entity background : new Array.ArrayIterator<Entity>(backgrounds)) {
                         Tween.to(Mappers.velocity.get(background), VelocityComponentAccessor.VELOCITY_Y, 4).ease(Quad.IN)
                                 .target(-Mappers.velocity.get(background).y / 10f).start(tweenManager);
                     }

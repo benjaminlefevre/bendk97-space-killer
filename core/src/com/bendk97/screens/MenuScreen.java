@@ -499,23 +499,19 @@ public class MenuScreen extends HDScreen {
     }
 
     public void signInSucceeded() {
-        stage.addActor(gplay);
-        stage.addActor(leaderboard);
-        stage.addActor(achievements);
-        gplayOff.remove();
-        achievements_off.remove();
-        leaderboard_off.remove();
-
+        dispayGoogleIcons(true);
     }
 
     public void signInFailed() {
-        stage.addActor(gplayOff);
-        stage.addActor(leaderboard_off);
-        stage.addActor(achievements_off);
-        achievements.remove();
-        leaderboard.remove();
-        gplay.remove();
+        dispayGoogleIcons(false);
     }
 
-
+    private void dispayGoogleIcons(boolean success) {
+        stage.addActor(success ? gplay : gplayOff);
+        stage.addActor(success ? leaderboard : leaderboard_off);
+        stage.addActor(success ? achievements : achievements_off);
+        (success ? gplayOff : gplay).remove();
+        (success ? achievements_off : achievements).remove();
+        (success ? leaderboard_off : leaderboard).remove();
+    }
 }

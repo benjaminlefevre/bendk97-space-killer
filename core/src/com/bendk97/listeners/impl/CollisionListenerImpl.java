@@ -10,7 +10,6 @@ import aurelienribon.tweenengine.*;
 import aurelienribon.tweenengine.equations.Linear;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.PooledEngine;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.*;
 import com.bendk97.entities.EntityFactory;
@@ -136,7 +135,7 @@ public class CollisionListenerImpl extends EntitySystem implements com.bendk97.l
                                 com.bendk97.timer.PausableTimer.schedule(new com.bendk97.timer.PausableTimer.Task() {
                                     @Override
                                     public void run() {
-                                        player.add(((PooledEngine) getEngine()).createComponent(LeveLFinishedComponent.class));
+                                        player.add(getEngine().createComponent(LeveLFinishedComponent.class));
                                         com.bendk97.timer.PausableTimer.schedule(new com.bendk97.timer.PausableTimer.Task() {
                                             @Override
                                             public void run() {
