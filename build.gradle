@@ -1,6 +1,4 @@
 buildscript {
-
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -17,7 +15,6 @@ apply plugin: "com.vanniktech.dependency.graph.generator"
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
-
     version = '1.0'
     ext {
         appName = "space-killer"

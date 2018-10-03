@@ -20,14 +20,11 @@ android {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
     defaultConfig {
-        applicationId "com.benk97.space.killer"
-        // use this appId to install under another id without conflict with official version
-//      applicationId "com.benk97.space.killer.test"
-
+        applicationId project.property('space.killer.app.id')
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 101
-        versionName "1.2.1"
+        versionCode project.property('space.killer.version.code') as Integer
+        versionName project.property('space.killer.version')
     }
     buildTypes {
         release {
