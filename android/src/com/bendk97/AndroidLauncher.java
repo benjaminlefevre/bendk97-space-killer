@@ -19,6 +19,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.bendk97.google.Achievement;
 import com.bendk97.google.PlayServices;
 import com.bendk97.share.IntentShare;
+import com.bendk97.space.killer.BuildConfig;
 import com.bendk97.space.killer.R;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.GameHelper;
@@ -50,7 +51,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
         config.useAccelerometer = false;
         config.useCompass = false;
         config.useWakelock = true;
-        game = new com.bendk97.SpaceKillerGame(this, this);
+        game = new SpaceKillerGame(this, this, BuildConfig.VERSION_NAME);
         initialize(game, config);
     }
 
