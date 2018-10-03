@@ -30,9 +30,11 @@ public class SpaceKillerGame extends Game {
     public Screen currentScreen;
     public PlayerData playerData;
     public final IntentShare intentShare;
+    public final String gameVersion;
 
-    public SpaceKillerGame(PlayServices playServices, IntentShare intentShare) {
+    public SpaceKillerGame(PlayServices playServices, IntentShare intentShare, String version) {
         this.playServices = playServices;
+        this.gameVersion = version;
         this.intentShare = intentShare;
         if (SpaceKillerGameConstants.DEBUG) {
             GLProfiler profiler = new GLProfiler(Gdx.graphics);

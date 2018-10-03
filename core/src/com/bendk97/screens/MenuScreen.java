@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.bendk97.Settings;
-import com.bendk97.SpaceKillerGameConstants;
+import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
@@ -31,6 +31,7 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 public class MenuScreen extends HDScreen {
 
     private final SpriteBatch batcher;
+    private final String gameVersion;
     private final Image image;
     private final TextButton playButton;
     private final TextButtonStyle buttonStyle;
@@ -63,8 +64,9 @@ public class MenuScreen extends HDScreen {
     private ImageButton creditsScreen;
 
 
-    public MenuScreen(final Assets assets, final com.bendk97.SpaceKillerGame game) {
+    public MenuScreen(final Assets assets, final SpaceKillerGame game) {
         super(game, assets);
+        this.gameVersion = game.gameVersion;
         if (!NO_GOOGLE && !game.signInFailed && !game.playServices.isSignedIn()) {
             game.playServices.signIn();
         }
@@ -483,7 +485,7 @@ public class MenuScreen extends HDScreen {
         batcher.begin();
         font.draw(batcher, "SPACE", SCREEN_WIDTH / 5f - 15f, SCREEN_HEIGHT * 3 / 4 + 100f);
         font.draw(batcher, "KILLER", SCREEN_WIDTH / 5f - 40f, SCREEN_HEIGHT * 3 / 4 + 50f);
-        fontVersion.draw(batcher, SpaceKillerGameConstants.GAME_VERSION, 10f, 20f);
+        fontVersion.draw(batcher, gameVersion, 10f, 20f);
         if (!game.playServices.isSignedIn()) {
             fontVersion.draw(batcher, " Google Play\nPlease sign in", 90f, 60f);
         }
