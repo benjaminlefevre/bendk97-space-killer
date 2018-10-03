@@ -26,8 +26,8 @@ android {
 
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 100
-        versionName "1.2"
+        versionCode 101
+        versionName "1.2.1"
     }
     buildTypes {
         release {
