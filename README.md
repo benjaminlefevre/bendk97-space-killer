@@ -11,7 +11,8 @@ Several libraries are used:
 | libgdx | 1.9.8 | https://libgdx.badlogicgames.com/<br />https://github.com/libgdx/libgdx |
 | ashley (ECS design pattern) | 1.7.3 | https://github.com/libgdx/ashley |
 | box2DLights | 1.4 | https://github.com/libgdx/box2dlights |
-| Tween Universal Engine | | https://github.com/AurelienRibon/universal-tween-engine |
+| Tween Universal Engine | 6.3.3 | https://github.com/AurelienRibon/universal-tween-engine |
+| gdx-postprocessing | 1.0.8 | https://github.com/Anuken/gdx-postprocessing |
 
 The game is only tested and compiled for android platforms :
 ```

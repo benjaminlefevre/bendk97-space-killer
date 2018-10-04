@@ -8,7 +8,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.bendk97.space.killer">
 
-    <uses-sdk android:minSdkVersion="15" android:targetSdkVersion="26"/>
+    <uses-sdk/>
     <uses-feature android:glEsVersion="0x00020000"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
