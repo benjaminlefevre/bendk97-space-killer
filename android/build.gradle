@@ -21,7 +21,7 @@ android {
     }
     defaultConfig {
         applicationId project.property('space.killer.app.id')
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode project.property('space.killer.version.code') as Integer
         versionName project.property('space.killer.version')
