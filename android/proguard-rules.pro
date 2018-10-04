@@ -56,8 +56,3 @@
 -keep class android.webkit.JavascriptInterface {
    *;
 }
-
-# Keep all classes in Unity Ads package
--keep class com.unity3d.ads.** {
-   *;
-}
