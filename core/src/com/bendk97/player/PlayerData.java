@@ -25,14 +25,12 @@ public class PlayerData {
     public PlayerComponent.PowerLevel powerLevel = NORMAL;
     public int numberOfContinue = 0;
     public final Level level;
-    private final float secondScript;
 
-    public PlayerData(Level level, float secondScript, int numberOfContinue, long fireDelay, long fireDelaySide,
+    public PlayerData(Level level, int numberOfContinue, long fireDelay, long fireDelaySide,
                       int enemiesKilled, int laserShipKilled, int howManyLifesLosed, int score,
                       int lives, int bombs, PlayerComponent.PowerLevel powerLevel) {
         this.fireDelay = fireDelay;
         this.fireDelaySide = fireDelaySide;
-        this.secondScript = secondScript;
         this.numberOfContinue = numberOfContinue;
         this.level = level;
         this.enemiesKilled = enemiesKilled;

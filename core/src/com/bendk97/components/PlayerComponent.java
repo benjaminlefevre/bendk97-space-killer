@@ -67,7 +67,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
     public float secondScript = -3;
 
     public PlayerData copyPlayerData() {
-        return new PlayerData(level, secondScript, numberOfContinue, fireDelay, fireDelaySide, enemiesKilled, laserShipKilled, howManyLifesLosed, score, lives, bombs, powerLevel);
+        return new PlayerData(level, numberOfContinue, fireDelay, fireDelaySide, enemiesKilled, laserShipKilled, howManyLifesLosed, score, lives, bombs, powerLevel);
     }
 
     @Override

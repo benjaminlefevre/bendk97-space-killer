@@ -21,14 +21,13 @@ abstract class HDScreen extends ScreenAdapter {
 
 
     final Viewport viewport;
-    private final OrthographicCamera camera;
     final SpaceKillerGame game;
     final Assets assets;
 
     HDScreen(SpaceKillerGame game, Assets assets, float width, float height) {
         this.game = game;
         this.assets = assets;
-        this.camera = new OrthographicCamera();
+        OrthographicCamera camera = new OrthographicCamera();
         viewport = new StretchViewport(width, height, camera);
         camera.setToOrtho(false, width, height);
     }
