@@ -32,7 +32,6 @@ public class MenuScreen extends HDScreen {
 
     private final SpriteBatch batcher;
     private final String gameVersion;
-    private final Image image;
     private final TextButton playButton;
     private final TextButtonStyle buttonStyle;
     private final TextButton highscoresButton;
@@ -72,7 +71,7 @@ public class MenuScreen extends HDScreen {
         }
         batcher = new SpriteBatch();
         stage = new Stage(viewport, batcher);
-        image = new Image(assets.get(Assets.MENU_BGD));
+        Image image = new Image(assets.get(Assets.MENU_BGD));
         image.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         stage.addActor(image);
         buttonStyle = new TextButtonStyle();

@@ -23,12 +23,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoa
 import com.bendk97.Settings;
 import com.bendk97.screens.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static java.util.Collections.EMPTY_LIST;
+import java.util.*;
 
 public class Assets {
 
@@ -230,8 +225,8 @@ public class Assets {
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALLEST
         ));
 
-        put(TransitionScreen.class, EMPTY_LIST);
-        put(SocialScoreScreen.class, EMPTY_LIST);
+        put(TransitionScreen.class, Collections.<AssetDescriptor>emptyList());
+        put(SocialScoreScreen.class, Collections.<AssetDescriptor>emptyList());
 
     }};
 
