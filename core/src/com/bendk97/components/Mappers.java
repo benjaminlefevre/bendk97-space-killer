@@ -20,7 +20,6 @@ public class Mappers {
     public static final ComponentMapper<PlayerComponent> player = ComponentMapper.getFor(PlayerComponent.class);
     public static final ComponentMapper<SquadronComponent> squadron = ComponentMapper.getFor(SquadronComponent.class);
     public static final ComponentMapper<ScoreSquadronComponent> scoreSquadron = ComponentMapper.getFor(ScoreSquadronComponent.class);
-    public static ComponentMapper<GameOverComponent> gameover = ComponentMapper.getFor(GameOverComponent.class);
     public static final ComponentMapper<BossComponent> boss = ComponentMapper.getFor(BossComponent.class);
     public static final ComponentMapper<TankComponent> tank = ComponentMapper.getFor(TankComponent.class);
     public static final ComponentMapper<FollowPlayerComponent> follow = ComponentMapper.getFor(FollowPlayerComponent.class);

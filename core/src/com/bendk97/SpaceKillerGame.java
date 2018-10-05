@@ -17,6 +17,7 @@ import com.bendk97.player.PlayerData;
 import com.bendk97.screens.LevelScreen;
 import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SplashScreen;
+import com.bendk97.screens.TransitionScreen;
 import com.bendk97.share.IntentShare;
 
 import java.io.File;
@@ -71,17 +72,17 @@ public class SpaceKillerGame extends Game {
         }
     }
 
-    public void goToScreen(Class screen) {
+    public void goToScreen(Class<? extends Screen> screen) {
         goToScreen(screen, null, null);
     }
 
-    public void goToScreen(Class screen, PlayerData playerData, FrameBuffer screenshot) {
+    public void goToScreen(Class<? extends Screen> screen, PlayerData playerData, FrameBuffer screenshot) {
         try {
             assets.loadResources(screen);
             this.playerData = playerData;
-            currentScreen = (Screen) screen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this);
+            currentScreen = screen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this);
             if (screenshot != null) {
-                this.setScreen(new com.bendk97.screens.TransitionScreen(screenshot, currentScreen, this));
+                this.setScreen(new TransitionScreen(screenshot, currentScreen, this));
             } else {
                 this.setScreen(currentScreen);
             }

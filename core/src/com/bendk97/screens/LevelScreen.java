@@ -46,8 +46,7 @@ import com.bendk97.listeners.impl.InputListenerImpl;
 import com.bendk97.listeners.impl.PlayerListenerImpl;
 import com.bendk97.mask.SpriteMaskFactory;
 import com.bendk97.player.PlayerData;
-import com.bendk97.systems.DynamicEntitiesRenderingSystem;
-import com.bendk97.systems.FPSDisplayRenderingSystem;
+import com.bendk97.systems.*;
 import com.bendk97.timer.PausableTimer;
 import com.bendk97.tweens.CameraTween;
 import com.bendk97.tweens.PositionComponentAccessor;
@@ -155,7 +154,6 @@ public abstract class LevelScreen extends ScreenAdapter {
     }
 
     private final Viewport viewport;
-    private final OrthographicCamera camera;
     private final SpriteBatch batcher;
     private final Viewport viewportHUD;
     private final OrthographicCamera cameraHUD;
@@ -168,7 +166,6 @@ public abstract class LevelScreen extends ScreenAdapter {
     private final SpaceKillerGame game;
     final Entity player;
     final SpriteMaskFactory spriteMaskFactory;
-    private final com.bendk97.screens.ScreenShake screenShake;
 
     private World world;
     private RayHandler rayHandler;
@@ -184,7 +181,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         this.game = game;
         this.fxLightEnabled = Settings.isLightFXEnabled();
         this.spriteMaskFactory = new SpriteMaskFactory();
-        this.camera = new OrthographicCamera();
+        OrthographicCamera camera = new OrthographicCamera();
         viewport = new ExtendViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
         camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
         this.batcher = new SpriteBatch();
@@ -194,7 +191,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         this.batcherHUD = new SpriteBatch();
         this.assets = assets;
         this.tweenManager = new TweenManager();
-        screenShake = new com.bendk97.screens.ScreenShake(tweenManager, camera);
+        ScreenShake screenShake = new ScreenShake(tweenManager, camera);
         engine = new PooledEngine(50, 150, 50, 150);
         engine.addEntityListener(new EntityListener() {
             @Override
@@ -249,34 +246,34 @@ public abstract class LevelScreen extends ScreenAdapter {
         engine.addSystem(createInputHandlerSystem(player, playerListener));
         CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, screenShake, assets, entityFactory, playerListener, this);
         engine.addSystem(collisionListener);
-        engine.addSystem(new com.bendk97.systems.AnimationSystem(0));
-        engine.addSystem(new com.bendk97.systems.BombExplosionSystem(0, collisionListener, player));
-        engine.addSystem(new com.bendk97.systems.StateSystem(1));
-        engine.addSystem(new com.bendk97.systems.MovementSystem(2));
-        engine.addSystem(new com.bendk97.systems.ShieldSystem(3, player));
+        engine.addSystem(new AnimationSystem(0));
+        engine.addSystem(new BombExplosionSystem(0, collisionListener, player));
+        engine.addSystem(new StateSystem(1));
+        engine.addSystem(new MovementSystem(2));
+        engine.addSystem(new ShieldSystem(3, player));
         // RENDERING
-        engine.addSystem(new com.bendk97.systems.BatcherBeginSystem(viewport, batcher, 4));
-        engine.addSystem(new com.bendk97.systems.BackgroundRenderingSystem(batcher, 5));
+        engine.addSystem(new BatcherBeginSystem(viewport, batcher, 4));
+        engine.addSystem(new BackgroundRenderingSystem(batcher, 5));
         engine.addSystem(new DynamicEntitiesRenderingSystem(batcher, 6));
-        engine.addSystem(new com.bendk97.systems.ScoreSquadronSystem(6, assets, batcher));
-        engine.addSystem(new com.bendk97.systems.BatcherEndSystem(batcher, 7));
-        engine.addSystem(new com.bendk97.systems.BatcherHUDBeginSystem(viewportHUD, batcherHUD, 8));
-        engine.addSystem(new com.bendk97.systems.StaticEntitiesRenderingSystem(batcherHUD, 9));
-        engine.addSystem(new com.bendk97.systems.ScoresRenderingSystem(batcherHUD, assets, 11));
-        engine.addSystem(new com.bendk97.systems.GameOverRenderingSystem(batcherHUD, cameraHUD, assets, 10));
-        engine.addSystem(new com.bendk97.systems.PauseRenderingSystem(batcherHUD, cameraHUD, assets, 10));
-        engine.addSystem(new com.bendk97.systems.LevelFinishedRenderingSystem(batcherHUD, assets, level, 10));
+        engine.addSystem(new ScoreSquadronSystem(6, assets, batcher));
+        engine.addSystem(new BatcherEndSystem(batcher, 7));
+        engine.addSystem(new BatcherHUDBeginSystem(viewportHUD, batcherHUD, 8));
+        engine.addSystem(new StaticEntitiesRenderingSystem(batcherHUD, 9));
+        engine.addSystem(new ScoresRenderingSystem(batcherHUD, assets, 11));
+        engine.addSystem(new GameOverRenderingSystem(batcherHUD, cameraHUD, assets, 10));
+        engine.addSystem(new PauseRenderingSystem(batcherHUD, cameraHUD, assets, 10));
+        engine.addSystem(new LevelFinishedRenderingSystem(batcherHUD, assets, level, 10));
         if (DEBUG) {
             engine.addSystem(new FPSDisplayRenderingSystem(this, batcherHUD, 11));
         }
-        engine.addSystem(new com.bendk97.systems.BatcherHUDEndSystem(batcherHUD, 12));
+        engine.addSystem(new BatcherHUDEndSystem(batcherHUD, 12));
         // END RENDERING
-        engine.addSystem(new com.bendk97.systems.CollisionSystem(collisionListener, spriteMaskFactory, 13));
-        engine.addSystem(new com.bendk97.systems.TankAttackSystem(13));
-        engine.addSystem(new com.bendk97.systems.EnemyAttackSystem(14, entityFactory));
-        engine.addSystem(new com.bendk97.systems.BossAttackSystem(14, entityFactory));
-        engine.addSystem(new com.bendk97.systems.SquadronSystem(level, 15, entityFactory, player, playerListener));
-        engine.addSystem(new com.bendk97.systems.RemovableSystem(16));
+        engine.addSystem(new CollisionSystem(collisionListener, spriteMaskFactory, 13));
+        engine.addSystem(new TankAttackSystem(13));
+        engine.addSystem(new EnemyAttackSystem(14, entityFactory));
+        engine.addSystem(new BossAttackSystem(14, entityFactory));
+        engine.addSystem(new SquadronSystem(level, 15, entityFactory, player, playerListener));
+        engine.addSystem(new RemovableSystem(16));
     }
 
 
