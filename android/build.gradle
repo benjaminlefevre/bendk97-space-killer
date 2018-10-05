@@ -25,12 +25,13 @@ android {
         targetSdkVersion 26
         versionCode project.property('space.killer.version.code') as Integer
         versionName project.property('space.killer.version')
+        resConfigs "xhdpi"
     }
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles 'proguard-rules.pro', getDefaultProguardFile('proguard-android-optimize.txt')
         }
     }
     splits {
