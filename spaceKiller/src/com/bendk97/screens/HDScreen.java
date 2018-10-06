@@ -36,10 +36,6 @@ abstract class HDScreen extends ScreenAdapter {
         this(game, assets, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
-    public SpaceKillerGame getGame() {
-        return game;
-    }
-
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);

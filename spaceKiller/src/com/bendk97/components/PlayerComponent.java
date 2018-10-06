@@ -56,9 +56,9 @@ public class PlayerComponent implements Component, Pool.Poolable {
     public long fireDelaySide = FIRE_DELAY_SIDE;
     public int enemiesKilled = 0;
     public int laserShipKilled = 0;
-    public int howManyLifesLosed = 0;
+    public int howManyLivesLost = 0;
     private int score = 0;
-    private int highscore = 0;
+    private int high_score = 0;
     public int lives = LIVES;
     public int bombs = BOMBS;
     public PowerLevel powerLevel = NORMAL;
@@ -67,7 +67,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
     public float secondScript = -3;
 
     public PlayerData copyPlayerData() {
-        return new PlayerData(level, numberOfContinue, fireDelay, fireDelaySide, enemiesKilled, laserShipKilled, howManyLifesLosed, score, lives, bombs, powerLevel);
+        return new PlayerData(level, numberOfContinue, fireDelay, fireDelaySide, enemiesKilled, laserShipKilled, howManyLivesLost, score, lives, bombs, powerLevel);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
         secondScript = -3;
         level = Level.Level1;
         numberOfContinue = NUMBER_OF_CONTINUE;
-        howManyLifesLosed = 0;
+        howManyLivesLost = 0;
         score = 0;
         enemiesKilled = 0;
         laserShipKilled = 0;
@@ -92,8 +92,8 @@ public class PlayerComponent implements Component, Pool.Poolable {
         return String.format("%7s", String.valueOf(score)).replace(' ', '0');
     }
 
-    public String getHighscore() {
-        return String.format("%7s", String.valueOf(highscore)).replace(' ', '0');
+    public String getHighScoreFormatted() {
+        return String.format("%7s", String.valueOf(high_score)).replace(' ', '0');
     }
 
     public void resetScore() {
@@ -103,8 +103,8 @@ public class PlayerComponent implements Component, Pool.Poolable {
     public boolean updateScore(int points) {
         int oldScore = score;
         score += points;
-        if (score > highscore) {
-            highscore = score;
+        if (score > high_score) {
+            high_score = score;
         }
         if (Math.floor(oldScore / NEW_LIFE) < Math.floor(score / NEW_LIFE)) {
             lives++;
@@ -116,7 +116,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
 
     public void loseLife() {
         lives--;
-        howManyLifesLosed++;
+        howManyLivesLost++;
         powerLevel = NORMAL;
         fireDelaySide = FIRE_DELAY_SIDE;
         fireDelay = FIRE_DELAY;
@@ -168,11 +168,11 @@ public class PlayerComponent implements Component, Pool.Poolable {
         return score;
     }
 
-    public boolean isHighscore() {
-        return score == highscore;
+    public boolean isHighScore() {
+        return score == high_score;
     }
 
     public void setHighScore(int highScore) {
-        this.highscore = highScore;
+        this.high_score = highScore;
     }
 }

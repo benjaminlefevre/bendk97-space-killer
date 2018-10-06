@@ -20,27 +20,27 @@ public class TankComponent implements Component, Pool.Poolable {
     public long nbShootsBeforeLastReload = 0;
     public long delayShoot = TankLevel.EASY.delayShoot;
     public int nbShoots = TankLevel.EASY.nbShoots;
-    public long delayBetweenRafales = TankLevel.EASY.delayBetweenRafales;
+    public long delayBetweenBursts = TankLevel.EASY.delayBetweenBursts;
 
     public enum TankLevel {
         EASY(2, 500, 1500, 300f), MEDIUM(3, 450, 1250, 325f), HARD(4, 400, 1000, 350f);
         final long delayShoot;
-        final long delayBetweenRafales;
+        final long delayBetweenBursts;
         public final float bulletVelocity;
         final int nbShoots;
         final Random random = new RandomXS128();
 
-        TankLevel(int nbShoots, long delayShoot, long delayBetweenRafales, float bulletVelocity) {
+        TankLevel(int nbShoots, long delayShoot, long delayBetweenBursts, float bulletVelocity) {
             this.nbShoots = (nbShoots - 1) + random.nextInt(3);
             this.delayShoot = (delayShoot - 100) + (long) random.nextFloat() * 200;
             this.bulletVelocity = bulletVelocity;
-            this.delayBetweenRafales = (delayBetweenRafales - 100) + (long) random.nextFloat() * 200;
+            this.delayBetweenBursts = (delayBetweenBursts - 100) + (long) random.nextFloat() * 200;
         }
     }
 
     public void setLevel(TankLevel level) {
         delayShoot = level.delayShoot;
-        delayBetweenRafales = level.delayBetweenRafales;
+        delayBetweenBursts = level.delayBetweenBursts;
         nbShoots = level.nbShoots;
         this.level = level;
     }
@@ -51,7 +51,7 @@ public class TankComponent implements Component, Pool.Poolable {
         level = TankLevel.EASY;
         delayShoot = TankLevel.EASY.delayShoot;
         nbShoots = TankLevel.EASY.nbShoots;
-        delayBetweenRafales = TankLevel.EASY.delayBetweenRafales;
+        delayBetweenBursts = TankLevel.EASY.delayBetweenBursts;
         nbShootsBeforeLastReload = 0;
     }
 

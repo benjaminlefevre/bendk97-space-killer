@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.bendk97.assets.Assets;
-import com.bendk97.components.LeveLFinishedComponent;
+import com.bendk97.components.LevelFinishedComponent;
 import com.bendk97.components.Mappers;
 import com.bendk97.components.PauseComponent;
 import com.bendk97.components.PlayerComponent;
@@ -26,7 +26,7 @@ public class LevelFinishedRenderingSystem extends IteratingSystem {
     private static final String LEVEL_2_FINISHED = "lvl 2 completed";
     private static final String LEVEL_3_FINISHED = "lvl 3 completed";
     private static final String ENEMIES_KILLED = "enemies killed";
-    private static final String NEXT_NOT_IMPLEMNTED = "no level 4 yet";
+    private static final String NEXT_NOT_IMPLEMENTED = "no level 4 yet";
     private static final String START_AGAIN = "start again";
     private static final String GO_NEXT = "go next level";
     private final SpriteBatch batcher;
@@ -34,7 +34,7 @@ public class LevelFinishedRenderingSystem extends IteratingSystem {
     private final Level level;
 
     public LevelFinishedRenderingSystem(SpriteBatch batcher, Assets assets, Level level, int priority) {
-        super(Family.all(PlayerComponent.class, LeveLFinishedComponent.class).exclude(PauseComponent.class).get(), priority);
+        super(Family.all(PlayerComponent.class, LevelFinishedComponent.class).exclude(PauseComponent.class).get(), priority);
         this.level = level;
         this.batcher = batcher;
         this.mediumFont = assets.get(Assets.FONT_SPACE_KILLER_SMALLEST);
@@ -52,7 +52,7 @@ public class LevelFinishedRenderingSystem extends IteratingSystem {
         if (!level.equals(Level.Level3)) {
             mediumFont.draw(batcher, GO_NEXT, 10f, 4 * SCREEN_HEIGHT / 5f - 250f);
         } else {
-            mediumFont.draw(batcher, NEXT_NOT_IMPLEMNTED, 10f, 4 * SCREEN_HEIGHT / 5f - 250f);
+            mediumFont.draw(batcher, NEXT_NOT_IMPLEMENTED, 10f, 4 * SCREEN_HEIGHT / 5f - 250f);
             mediumFont.draw(batcher, START_AGAIN, 10f, 4 * SCREEN_HEIGHT / 5f - 300f);
 
         }

@@ -55,14 +55,14 @@ public class CollisionListenerImpl extends EntitySystem implements com.bendk97.l
         }
         // create explosion
         assets.playSound(Assets.SOUND_EXPLOSION);
-        PositionComponent explosePosition;
+        PositionComponent explodePosition;
         if (enemyComponent.isBoss && bullet != null) {
-            explosePosition = Mappers.position.get(bullet);
+            explodePosition = Mappers.position.get(bullet);
 
         } else {
-            explosePosition = Mappers.position.get(enemy);
+            explodePosition = Mappers.position.get(enemy);
         }
-        Entity explosion = entityFactory.createEntityExploding(explosePosition.x, explosePosition.y);
+        Entity explosion = entityFactory.createEntityExploding(explodePosition.x, explodePosition.y);
         if (enemyComponent.isBoss) {
             if (bullet != null) {
                 Mappers.position.get(explosion).x -= Mappers.sprite.get(explosion).sprite.getWidth() / 2f;
@@ -77,7 +77,7 @@ public class CollisionListenerImpl extends EntitySystem implements com.bendk97.l
         // update score
         int nbHits = bullet != null ? 1 : HIT_EXPLOSION;
         playerListener.updateScore(player, enemy, nbHits);
-        // check health of ennemy
+        // check health of enemy
         float percentLifeBefore = enemyComponent.getRemainingLifeInPercent();
         enemyComponent.hit(bullet != null ? 1 : HIT_EXPLOSION);
         float percentLifeAfter = enemyComponent.getRemainingLifeInPercent();
@@ -135,11 +135,11 @@ public class CollisionListenerImpl extends EntitySystem implements com.bendk97.l
                                 com.bendk97.timer.PausableTimer.schedule(new com.bendk97.timer.PausableTimer.Task() {
                                     @Override
                                     public void run() {
-                                        player.add(getEngine().createComponent(LeveLFinishedComponent.class));
+                                        player.add(getEngine().createComponent(LevelFinishedComponent.class));
                                         com.bendk97.timer.PausableTimer.schedule(new com.bendk97.timer.PausableTimer.Task() {
                                             @Override
                                             public void run() {
-                                                player.remove(LeveLFinishedComponent.class);
+                                                player.remove(LevelFinishedComponent.class);
                                                 screen.nextLevel();
                                             }
                                         }, 5f);
@@ -155,7 +155,7 @@ public class CollisionListenerImpl extends EntitySystem implements com.bendk97.l
     }
 
     @Override
-    public void playerHitByEnnemyBody(Entity player, Entity ennemy) {
+    public void playerHitByEnemyBody(Entity player) {
         assets.playSound(Assets.SOUND_EXPLOSION);
         PositionComponent playerPosition = Mappers.position.get(player);
         entityFactory.createEntityExploding(playerPosition.x, playerPosition.y);
@@ -163,7 +163,7 @@ public class CollisionListenerImpl extends EntitySystem implements com.bendk97.l
     }
 
     @Override
-    public void playerHitByEnnemyBullet(Entity player, Entity bullet) {
+    public void playerHitByEnemyBullet(Entity player, Entity bullet) {
         assets.playSound(Assets.SOUND_EXPLOSION);
         PositionComponent playerPosition = Mappers.position.get(player);
         entityFactory.createEntityExploding(playerPosition.x, playerPosition.y);
@@ -211,10 +211,10 @@ public class CollisionListenerImpl extends EntitySystem implements com.bendk97.l
     }
 
     @Override
-    public void enemyShootByShield(Entity enemy, Entity shield) {
+    public void enemyShootByShield(Entity enemy) {
         assets.playSound(Assets.SOUND_EXPLOSION);
-        PositionComponent ennemyPosition = Mappers.position.get(enemy);
-        entityFactory.createEntityExploding(ennemyPosition.x, ennemyPosition.y);
+        PositionComponent enemyPosition = Mappers.position.get(enemy);
+        entityFactory.createEntityExploding(enemyPosition.x, enemyPosition.y);
         tweenManager.killTarget(Mappers.position.get(enemy));
         if (Mappers.enemy.get(enemy).squadron != null) {
             Mappers.squadron.get(Mappers.enemy.get(enemy).squadron).removeEntity(enemy);

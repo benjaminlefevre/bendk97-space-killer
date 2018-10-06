@@ -48,26 +48,29 @@ public class SoloEnemyFactory {
         this.player = player;
     }
 
-    public Entity createSoloEnemy(float velocity, float bulletVelocity,
-                                  int rateShoot, int gaugelife, int points) {
-        return createSoloEnemy(velocity, bulletVelocity, rateShoot, gaugelife, points, random.nextBoolean());
+    public void createSoloEnemy(float velocity, float bulletVelocity,
+                                int rateShoot, int gaugeLife, int points) {
+        createSoloEnemy(velocity, bulletVelocity, rateShoot, gaugeLife, points, random.nextBoolean());
     }
 
-    public Entity createSoloEnemy(float velocity, float bulletVelocity,
-                                  int rateShoot, int gaugelife, int points, boolean comingFromLeft) {
+    public void createSoloEnemy(float velocity, float bulletVelocity,
+                                int rateShoot, int gaugeLife, int points, boolean comingFromLeft) {
         Mappers.player.get(player).enemiesCountLevel++;
         int soloType = random.nextInt(4);
         switch (soloType) {
             case FOLLOW_PLAYER:
-                return createSoloEnemyFollowingPlayerOnAxisX(velocity, bulletVelocity, rateShoot, gaugelife, points, comingFromLeft);
+                createSoloEnemyFollowingPlayerOnAxisX(velocity, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
+                return;
             case LINEAR_X:
-                return createSoloEnemyLinearX(velocity, bulletVelocity, rateShoot, gaugelife, points, comingFromLeft);
+                createSoloEnemyLinearX(velocity, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
+                return;
             case TRAPEZE:
-                return createSoloEnemyTrapeze(velocity, bulletVelocity, rateShoot, gaugelife, points, comingFromLeft);
+                createSoloEnemyTrapeze(velocity, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
+                return;
             case BEZIER:
-                return createSoloEnemyBezier(velocity, bulletVelocity, rateShoot, gaugelife, points, comingFromLeft);
+                createSoloEnemyBezier(velocity, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
+                return;
             default:
-                return null;
         }
     }
 
@@ -91,10 +94,10 @@ public class SoloEnemyFactory {
         }
     }
 
-    private Entity createSoloEnemyBezier(final float velocity, float bulletVelocity, int rateShoot, int gaugelife, int points, boolean comingFromLeft) {
+    private void createSoloEnemyBezier(final float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points, boolean comingFromLeft) {
         final boolean direction = comingFromLeft;
         final int directionFactor = direction ? 1 : -1;
-        Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugelife, points, direction);
+        Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugeLife, points, direction);
         final PositionComponent position = Mappers.position.get(enemy);
         Sprite sprite = Mappers.sprite.get(enemy).sprite;
         final int k = 100;
@@ -125,12 +128,11 @@ public class SoloEnemyFactory {
 
                     }
                 }).start(tweenManager);
-        return enemy;
     }
 
-    private Entity createSoloEnemyTrapeze(final float velocity, float bulletVelocity, int rateShoot, int gaugelife, int points, boolean comingFromLeft) {
+    private void createSoloEnemyTrapeze(final float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points, boolean comingFromLeft) {
         final int directionFactor = comingFromLeft ? 1 : -1;
-        Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugelife, points, comingFromLeft);
+        Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
         final PositionComponent position = Mappers.position.get(enemy);
         final Sprite sprite = Mappers.sprite.get(enemy).sprite;
         Tween.to(position, PositionComponentAccessor.POSITION_X, sprite.getWidth() / velocity)
@@ -153,12 +155,11 @@ public class SoloEnemyFactory {
                         }
                     }
                 }).start(tweenManager);
-        return enemy;
     }
 
-    private Entity createSoloEnemyLinearX(final float velocity, float bulletVelocity, int rateShoot, int gaugelife, int points, boolean comingFromLeft) {
+    private void createSoloEnemyLinearX(final float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points, boolean comingFromLeft) {
         final int directionFactor = comingFromLeft ? 1 : -1;
-        Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugelife, points, comingFromLeft);
+        Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
         final PositionComponent position = Mappers.position.get(enemy);
         final Sprite sprite = Mappers.sprite.get(enemy).sprite;
         Tween.to(position, PositionComponentAccessor.POSITION_X, SCREEN_WIDTH / velocity)
@@ -173,11 +174,10 @@ public class SoloEnemyFactory {
                         }
                     }
                 }).start(tweenManager);
-        return enemy;
     }
 
-    private Entity createSoloEnemyFollowingPlayerOnAxisX(float velocity, float bulletVelocity, int rateShoot, int gaugelife, int points, boolean comingFromLeft) {
-        return entityFactory.createLaserShip(getRandomStaticEnemy(), velocity, bulletVelocity, rateShoot, gaugelife, points, comingFromLeft);
+    private void createSoloEnemyFollowingPlayerOnAxisX(float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points, boolean comingFromLeft) {
+        entityFactory.createLaserShip(getRandomStaticEnemy(), velocity, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
     }
 
     private int getRandomStaticEnemy() {
@@ -186,7 +186,7 @@ public class SoloEnemyFactory {
         } else if (level.equals(Level.Level3)) {
             return EntityFactory.SHIP_LV3_1 + random.nextInt(EntityFactory.NB_SHIP_LV3);
         }
-        throw new IllegalArgumentException("Unexpecte Exception");
+        throw new IllegalArgumentException("Unexpected Exception");
     }
 
 

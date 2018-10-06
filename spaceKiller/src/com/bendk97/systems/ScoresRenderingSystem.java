@@ -39,6 +39,6 @@ public class ScoresRenderingSystem extends IteratingSystem {
         bitmapFont.draw(batcher, Mappers.player.get(player).getScore(), SCORE_X - 10f, SCORE_Y - 20f);
         bitmapFont.draw(batcher, LIVES, LIVES_X, LIVES_Y);
         bitmapFont.draw(batcher, HIGH, HIGH_X, HIGH_Y);
-        bitmapFont.draw(batcher, Mappers.player.get(player).getHighscore(), HIGH_X - 10f, HIGH_Y - 20f);
+        bitmapFont.draw(batcher, Mappers.player.get(player).getHighScoreFormatted(), HIGH_X - 10f, HIGH_Y - 20f);
     }
 }
