@@ -1,4 +1,5 @@
-# space-killer 
+# space-killer [![Build Status](https://travis-ci.org/benjaminlefevre/space-killer.svg?branch=master)](https://travis-ci.org/benjaminlefevre/space-killer) [![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](LICENSE)
+
 ![alt logo](https://lh3.googleusercontent.com/_Oum51HCcglCmq1Y8qDrqSOT5ne2dnq28ZcJN4HG5MLE2ORDeF27ypSZHNohbHSzyA=s180-rw)
 
 Space Killer is a shmup game (shoot'em up) developed with libgdx, a cross-platform java game development.
@@ -31,4 +32,5 @@ This project is licenced under the MIT license.
 For more details check the [LICENCE](LICENSE) file
 
 # CI
-Travis CI is installed to build every Pull Requests and the master on a daily basis.
+Travis CI is installed to build every Pull Requests and the master on a daily basis : 
+[![Build Status](https://travis-ci.org/benjaminlefevre/space-killer.svg?branch=master)](https://travis-ci.org/benjaminlefevre/space-killer)
