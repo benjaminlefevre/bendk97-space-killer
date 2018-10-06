@@ -87,13 +87,13 @@ public class SpaceKillerGameConstants {
     public final static float BGD_PARALLAX_VELOCITY = 100.0f;
     public final static float BGD_VELOCITY = 500.0f;
     public final static float BGD_VELOCITY_FORE = 300.0f;
-    public static final float BGD_VELOCIY_LEVEL3 = 150f;
+    public static final float BGD_VELOCITY_LEVEL3 = 150f;
     // animated sprites
     public static final float FRAME_DURATION = 0.05f;
     public static final float FRAME_DURATION_ENEMY_3 = 0.07f;
     public static final float FRAME_DURATION_EXPLOSION = 0.01f;
     public static final float FRAME_DURATION_BOMB_EXPLOSION = 0.1f;
-    public static final float FRAME_DURATION_POWERUP = 0.5f;
+    public static final float FRAME_DURATION_POWER_UP = 0.5f;
     public static final int GO_LEFT = 1;
     public static final int GO_RIGHT = 2;
     public static final int ANIMATION_MAIN = 0;

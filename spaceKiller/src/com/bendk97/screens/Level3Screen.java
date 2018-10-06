@@ -40,7 +40,7 @@ public class Level3Screen extends LevelScreen {
         super(assets, game, Level.Level3);
         soloEnemyFactory = new SoloEnemyFactory(Level.Level3, engine, tweenManager, entityFactory, player);
         Array<Entity> backgrounds = new Array<Entity>();
-        backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_LEVEL3), 0, -BGD_VELOCIY_LEVEL3));
+        backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_LEVEL3), 0, -BGD_VELOCITY_LEVEL3));
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -99,7 +99,7 @@ public class Level3Screen extends LevelScreen {
         super.script(second);
         if (second % 2 == 0 || second % 5 == 0 || second % 7 == 0) {
             new ScriptItem(getRandomHouseType(), SquadronFactory.LINEAR_Y_SAME_POS,
-                    BGD_VELOCIY_LEVEL3,
+                    BGD_VELOCITY_LEVEL3,
                     1, random.nextInt() % 5 == 0, false, 0, 0f,
                     random.nextFloat() * (SCREEN_WIDTH - 64f),
                     SCREEN_HEIGHT).execute();
@@ -114,12 +114,12 @@ public class Level3Screen extends LevelScreen {
             return;
         }
         if (second < 15 && second % 5 == 0) {
-            soloEnemyFactory.createTank(BGD_VELOCIY_LEVEL3, TankComponent.TankLevel.EASY, 5, 200);
+            soloEnemyFactory.createTank(BGD_VELOCITY_LEVEL3, TankComponent.TankLevel.EASY, 5, 200);
         }
 
         if (second >= 15 && second <= 80) {
             if (second % 10 == 0) {
-                soloEnemyFactory.createTank(BGD_VELOCIY_LEVEL3, TankComponent.TankLevel.EASY, 5, 200);
+                soloEnemyFactory.createTank(BGD_VELOCITY_LEVEL3, TankComponent.TankLevel.EASY, 5, 200);
             }
             if (second % 25 == 0) {
                 soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_LEVEL3_VELOCITY, STATIC_ENEMY_LEVEL3_BULLET_VELOCITY, STATIC_ENEMY_LEVEL3_RATE_SHOOT, 10, 200);
@@ -133,7 +133,7 @@ public class Level3Screen extends LevelScreen {
                 assets.playSound(Assets.SOUND_GO);
             }
             if (second % 10 == 0) {
-                soloEnemyFactory.createTank(BGD_VELOCIY_LEVEL3, TankComponent.TankLevel.MEDIUM, 5, 300);
+                soloEnemyFactory.createTank(BGD_VELOCITY_LEVEL3, TankComponent.TankLevel.MEDIUM, 5, 300);
             }
             if (second % 25 == 0) {
                 soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_LEVEL3_VELOCITY, STATIC_ENEMY_LEVEL3_BULLET_VELOCITY, STATIC_ENEMY_LEVEL3_RATE_SHOOT, 10, 200);
@@ -154,7 +154,7 @@ public class Level3Screen extends LevelScreen {
                 assets.playSound(Assets.SOUND_GO);
             }
             if (second % 10 == 0) {
-                soloEnemyFactory.createTank(BGD_VELOCIY_LEVEL3, TankComponent.TankLevel.HARD, 5, 400);
+                soloEnemyFactory.createTank(BGD_VELOCITY_LEVEL3, TankComponent.TankLevel.HARD, 5, 400);
             }
             if (second == 180 || second == 190 || second == 200) {
                 soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_LEVEL3_VELOCITY, STATIC_ENEMY_LEVEL3_BULLET_VELOCITY, STATIC_ENEMY_LEVEL3_RATE_SHOOT_WHEN_TWICE, 10, 200, false);

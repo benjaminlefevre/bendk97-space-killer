@@ -85,7 +85,7 @@ public class CollisionSystem extends EntitySystem {
         for (Entity player : getEngine().getEntitiesFor(playerVulnerable)) {
             for (Entity enemy : getEngine().getEntitiesFor(enemyBodies)) {
                 if (isCollisionBetween(Mappers.sprite.get(enemy).sprite, Mappers.sprite.get(player).sprite)) {
-                    collisionListener.playerHitByEnnemyBody(player, enemy);
+                    collisionListener.playerHitByEnemyBody(player);
                     return;
                 }
 
@@ -93,7 +93,7 @@ public class CollisionSystem extends EntitySystem {
             for (Entity bullet : getEngine().getEntitiesFor(enemyBullet)) {
                 SpriteComponent enemyBullet = Mappers.sprite.get(bullet);
                 if (isCollisionBetween(enemyBullet.sprite, Mappers.sprite.get(player).sprite)) {
-                    collisionListener.playerHitByEnnemyBullet(player, bullet);
+                    collisionListener.playerHitByEnemyBullet(player, bullet);
                     return;
                 }
             }
@@ -115,7 +115,7 @@ public class CollisionSystem extends EntitySystem {
                 }
                 SpriteComponent enemySprite = Mappers.sprite.get(enemy);
                 if (isCollisionBetween(enemySprite.sprite, Mappers.sprite.get(shield).sprite)) {
-                    collisionListener.enemyShootByShield(enemy, shield);
+                    collisionListener.enemyShootByShield(enemy);
                     return;
                 }
             }

@@ -85,7 +85,7 @@ public class EntityFactory implements Disposable {
         }
         this.assets = assets;
         this.tweenManager = tweenManager;
-        this.atlasNoMask = assets.get(GFX_LEVEL_ALL_ATLAS_NOMASK);
+        this.atlasNoMask = assets.get(GFX_LEVEL_ALL_ATLAS_NO_MASK);
         this.atlasMask = assets.get(level.getSprites());
     }
 
@@ -107,7 +107,7 @@ public class EntityFactory implements Disposable {
         return background;
     }
 
-    public Entity createForeground(Texture texture, float velocity) {
+    public void createForeground(Texture texture, float velocity) {
         Entity foreground = engine.createEntity();
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.setTexture(new Sprite(texture), 1.0f, 0, 1.0f);
@@ -119,11 +119,10 @@ public class EntityFactory implements Disposable {
         foreground.getComponent(PositionComponent.class).setPosition(0f, SCREEN_HEIGHT + 20f);
         foreground.getComponent(VelocityComponent.class).y = -velocity;
         engine.addEntity(foreground);
-        return foreground;
     }
 
 
-    public Entity createPlayerFire(Entity player) {
+    public void createPlayerFire(Entity player) {
         Entity bullet = engine.createEntity();
         bullet.add(engine.createComponent(PlayerBulletComponent.class));
         PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
@@ -143,7 +142,6 @@ public class EntityFactory implements Disposable {
         if (rayHandler != null) {
             createLight(bullet, playerComponent.powerLevel.color, spriteComponent.sprite.getWidth() * 7f);
         }
-        return bullet;
     }
 
     public void createPlayerFireSide(Entity player) {
@@ -151,7 +149,7 @@ public class EntityFactory implements Disposable {
         createPlayerRightFire(player);
     }
 
-    private Entity createPlayerLeftFire(Entity player) {
+    private void createPlayerLeftFire(Entity player) {
         Entity bullet = engine.createEntity();
         bullet.add(engine.createComponent(PlayerBulletComponent.class));
         PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
@@ -176,11 +174,10 @@ public class EntityFactory implements Disposable {
         if (rayHandler != null) {
             createLight(bullet, playerComponent.powerLevel.color, spriteComponent.sprite.getWidth() * 7f);
         }
-        return bullet;
     }
 
 
-    private Entity createPlayerRightFire(Entity player) {
+    private void createPlayerRightFire(Entity player) {
         Entity bullet = engine.createEntity();
         bullet.add(engine.createComponent(PlayerBulletComponent.class));
         PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
@@ -205,10 +202,9 @@ public class EntityFactory implements Disposable {
         if (rayHandler != null) {
             createLight(bullet, playerComponent.powerLevel.color, spriteComponent.sprite.getWidth() * 7f);
         }
-        return bullet;
     }
 
-    public Entity createPlayerBomb(Entity player) {
+    public void createPlayerBomb(Entity player) {
         final Entity bomb = engine.createEntity();
         PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         bomb.add(positionComponent);
@@ -236,10 +232,9 @@ public class EntityFactory implements Disposable {
                     }
                 })
                 .start(tweenManager);
-        return bomb;
     }
 
-    private Entity createBombExplosion(Entity bomb) {
+    private void createBombExplosion(Entity bomb) {
         final Entity bombExplosion = engine.createEntity();
         PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
         bombExplosion.add(positionComponent);
@@ -277,7 +272,6 @@ public class EntityFactory implements Disposable {
                 }
             }
         }, 0.6f);
-        return bomb;
     }
 
     private void createLight(Entity entity) {
@@ -303,23 +297,23 @@ public class EntityFactory implements Disposable {
     public final static int ENEMY_FIRE_CIRCLE = 1;
     private final static int ENEMY_FIRE_LASER = 2;
 
-    public Entity createEnemyFire(Entity enemy, Entity player) {
+    public void createEnemyFire(Entity enemy, Entity player) {
         switch (Mappers.enemy.get(enemy).attackType) {
             case ENEMY_FIRE_CIRCLE:
-                return createEnemyFireCircle(enemy, player);
+                createEnemyFireCircle(enemy, player);
+                return;
             case ENEMY_FIRE_LASER:
-                return createEnemyFireLaser(enemy);
+                createEnemyFireLaser(enemy);
         }
-        return null;
     }
 
-    private Entity createEnemyFireLaser(Entity enemy) {
+    private void createEnemyFireLaser(Entity enemy) {
         PositionComponent position = Mappers.position.get(enemy);
         Sprite sprite = Mappers.sprite.get(enemy).sprite;
-        return createEnemyFireLaser(position.x + sprite.getWidth() / 2f, position.y, Mappers.enemy.get(enemy).bulletVelocity);
+        createEnemyFireLaser(position.x + sprite.getWidth() / 2f, position.y, Mappers.enemy.get(enemy).bulletVelocity);
     }
 
-    private Entity createEnemyFireLaser(float posX, float posY, float velocity) {
+    private void createEnemyFireLaser(float posX, float posY, float velocity) {
         assets.playSound(SOUND_FIRE_ENEMY);
         Entity bullet = engine.createEntity();
         bullet.add(engine.createComponent(EnemyBulletComponent.class));
@@ -339,11 +333,10 @@ public class EntityFactory implements Disposable {
         directionBullet.scl(velocity);
         velocityComponent.x = 0;
         velocityComponent.y = directionBullet.y;
-        return bullet;
     }
 
 
-    private Entity createEnemyFireCircle(Entity enemy, Entity player) {
+    private void createEnemyFireCircle(Entity enemy, Entity player) {
         assets.playSound(SOUND_FIRE_ENEMY);
         Entity bullet = engine.createEntity();
         bullet.add(engine.createComponent(EnemyBulletComponent.class));
@@ -352,7 +345,7 @@ public class EntityFactory implements Disposable {
         VelocityComponent velocityComponent = engine.createComponent(VelocityComponent.class);
         bullet.add(velocityComponent);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
-        spriteComponent.sprite = new Sprite(atlasMask.findRegion("bulletEnnemy"));
+        spriteComponent.sprite = new Sprite(atlasMask.findRegion("bulletEnemy"));
         bullet.add(spriteComponent);
         bullet.add(engine.createComponent(RemovableComponent.class));
         engine.addEntity(bullet);
@@ -386,7 +379,6 @@ public class EntityFactory implements Disposable {
         directionBullet.scl(Mappers.enemy.get(enemy).bulletVelocity);
         velocityComponent.x = directionBullet.x;
         velocityComponent.y = directionBullet.y;
-        return bullet;
     }
 
     public void createBossFire(final Entity boss, final Entity player) {
@@ -429,7 +421,7 @@ public class EntityFactory implements Disposable {
         createEnemyFireLaser(position.x + 342f, position.y + 186f, bossComponent.velocityFire2);
     }
 
-    private Array<Entity> createBossFireCircle(Entity boss, boolean yUp) {
+    private void createBossFireCircle(Entity boss, boolean yUp) {
         Array<Entity> bullets = new Array<Entity>(10);
         assets.playSound(SOUND_FIRE_ENEMY);
         for (int i = 0; i < 12; ++i) {
@@ -444,7 +436,7 @@ public class EntityFactory implements Disposable {
             bullet.add(velocityComponent);
 
             SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
-            spriteComponent.sprite = new Sprite(atlasMask.findRegion("bulletEnnemy"));
+            spriteComponent.sprite = new Sprite(atlasMask.findRegion("bulletEnemy"));
             bullet.add(spriteComponent);
 
             bullet.add(engine.createComponent(RemovableComponent.class));
@@ -466,11 +458,10 @@ public class EntityFactory implements Disposable {
             velocityComponent.x = directionBullet.x;
             velocityComponent.y = directionBullet.y;
         }
-        return bullets;
     }
 
 
-    public Entity createPowerUp(Entity squadron) {
+    public void createPowerUp(Entity squadron) {
         final Entity powerUp = engine.createEntity();
         powerUp.add(engine.createComponent(PowerUpComponent.class));
         PositionComponent position = engine.createComponent(PositionComponent.class);
@@ -478,7 +469,7 @@ public class EntityFactory implements Disposable {
         powerUp.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites("power-up");
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_POWERUP, sprites, LOOP));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_POWER_UP, sprites, LOOP));
         powerUp.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
@@ -501,10 +492,9 @@ public class EntityFactory implements Disposable {
                 })
                 .start(tweenManager);
         engine.addEntity(powerUp);
-        return powerUp;
     }
 
-    public Entity createShieldUp(Entity squadron) {
+    public void createShieldUp(Entity squadron) {
         final Entity shieldUp = engine.createEntity();
         shieldUp.add(engine.createComponent(ShieldUpComponent.class));
         PositionComponent position = engine.createComponent(PositionComponent.class);
@@ -512,7 +502,7 @@ public class EntityFactory implements Disposable {
         shieldUp.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites("shieldup");
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_POWERUP, sprites, LOOP));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_POWER_UP, sprites, LOOP));
         shieldUp.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
@@ -535,10 +525,9 @@ public class EntityFactory implements Disposable {
                 })
                 .start(tweenManager);
         engine.addEntity(shieldUp);
-        return shieldUp;
     }
 
-    public Entity createBombUp(Entity squadron) {
+    public void createBombUp(Entity squadron) {
         final Entity bombUp = engine.createEntity();
         bombUp.add(engine.createComponent(BombUpComponent.class));
         PositionComponent position = engine.createComponent(PositionComponent.class);
@@ -564,10 +553,9 @@ public class EntityFactory implements Disposable {
                 })
                 .start(tweenManager);
         engine.addEntity(bombUp);
-        return bombUp;
     }
 
-    public Entity createLaserShip(int type, Float velocity, float bulletVelocity, int rateShoot, int gaugelife, int points, boolean fromLeft) {
+    public Entity createLaserShip(int type, Float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points, boolean fromLeft) {
         String atlasRegion = null;
         switch (type) {
             case SHIP_LV2_LASER_SHIP1:
@@ -607,10 +595,10 @@ public class EntityFactory implements Disposable {
                 atlasRegion = "podfish";
                 break;
         }
-        return createLaserShip(atlasRegion, velocity, bulletVelocity, rateShoot, gaugelife, points, fromLeft);
+        return createLaserShip(atlasRegion, velocity, bulletVelocity, rateShoot, gaugeLife, points, fromLeft);
     }
 
-    private Entity createLaserShip(String atlasRegion, Float velocity, float bulletVelocity, int rateShoot, int gaugelife, int points, boolean fromLeft) {
+    private Entity createLaserShip(String atlasRegion, Float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points, boolean fromLeft) {
         Entity enemy = engine.createEntity();
         engine.addEntity(enemy);
         PositionComponent positionComponent = engine.createComponent(PositionComponent.class);
@@ -635,7 +623,7 @@ public class EntityFactory implements Disposable {
         positionComponent.x = fromLeft ? -spriteComponent.sprite.getWidth() : SCREEN_WIDTH;
         positionComponent.y = SCREEN_HEIGHT - spriteComponent.sprite.getHeight();
         EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
-        enemyComponent.initLifeGauge(gaugelife);
+        enemyComponent.initLifeGauge(gaugeLife);
         enemyComponent.points = points;
         enemyComponent.bulletVelocity = bulletVelocity;
         enemyComponent.attackCapacity = Integer.MAX_VALUE;
@@ -844,8 +832,6 @@ public class EntityFactory implements Disposable {
     public final static int HOUSE_8 = 1507;
     public final static int HOUSE_9 = 1508;
 
-    public final static int TANK = 2000;
-
 
     public Entity createBoss(Entity squadron, float velocityBullet, float velocityCircle) {
         final Entity enemy = engine.createEntity();
@@ -1025,7 +1011,7 @@ public class EntityFactory implements Disposable {
         playerComponent.setHighScore(Settings.getHighscore());
         if (game.playerData != null) {
             playerComponent.bombs = game.playerData.bombs;
-            playerComponent.howManyLifesLosed = game.playerData.howManyLifesLosed;
+            playerComponent.howManyLivesLost = game.playerData.howManyLivesLost;
             playerComponent.enemiesKilled = game.playerData.enemiesKilled;
             playerComponent.laserShipKilled = game.playerData.laserShipKilled;
             playerComponent.fireDelay = game.playerData.fireDelay;
@@ -1068,7 +1054,7 @@ public class EntityFactory implements Disposable {
         return player;
     }
 
-    public Entity createShield(final Entity player) {
+    public void createShield(final Entity player) {
         final Entity shield = engine.createEntity();
         PositionComponent playerPosition = Mappers.position.get(player);
         addInvulnerableComponent(player);
@@ -1098,7 +1084,6 @@ public class EntityFactory implements Disposable {
                     }
                 })
                 .start(tweenManager);
-        return shield;
     }
 
     public SnapshotArray<Entity> createEntityPlayerLives(Entity player) {
@@ -1142,7 +1127,6 @@ public class EntityFactory implements Disposable {
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasNoMask.createSprites("explosion");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_EXPLOSION, sprites, PlayMode.NORMAL));
-        animationComponent.playMode = PlayMode.NORMAL;
         explosion.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = animationComponent.animations.get(ANIMATION_MAIN).getKeyFrame(0);

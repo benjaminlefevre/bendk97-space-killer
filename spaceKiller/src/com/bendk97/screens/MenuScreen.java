@@ -53,9 +53,9 @@ public class MenuScreen extends HDScreen {
     private final TextButton vibration;
     private final TextButton back;
 
-    private final ImageButton leaderboard;
+    private final ImageButton leaderBoard;
     private final ImageButton achievements;
-    private final ImageButton leaderboard_off;
+    private final ImageButton leaderBoard_off;
     private final ImageButton achievements_off;
     private final ImageButton gplay;
     private final ImageButton gplayOff;
@@ -152,7 +152,7 @@ public class MenuScreen extends HDScreen {
                 controllerButton.remove();
                 helpButton.remove();
                 creditsButton.remove();
-                displayScores = new TextButton(Settings.getHighscoreString(), buttonStyle);
+                displayScores = new TextButton(Settings.getHighScoreString(), buttonStyle);
                 displayScores.setSize(300f, 375f);
                 displayScores.setPosition(SCREEN_WIDTH / 7f, 75f);
                 displayScores.addListener(new InputListener() {
@@ -290,12 +290,12 @@ public class MenuScreen extends HDScreen {
         gplayOff = new ImageButton(new TextureRegionDrawable(atlas.findRegion("gplay_off")));
         achievements = new ImageButton(new TextureRegionDrawable(atlas.findRegion("achievements")));
         achievements_off = new ImageButton(new TextureRegionDrawable(atlas.findRegion("achievements_off")));
-        leaderboard = new ImageButton((new TextureRegionDrawable(atlas.findRegion("leaderboard"))));
-        leaderboard_off = new ImageButton((new TextureRegionDrawable(atlas.findRegion("leaderboard_off"))));
+        leaderBoard = new ImageButton((new TextureRegionDrawable(atlas.findRegion("leaderboard"))));
+        leaderBoard_off = new ImageButton((new TextureRegionDrawable(atlas.findRegion("leaderboard_off"))));
         achievements.setPosition(150f, 10f);
-        leaderboard.setPosition(200f, 10f);
+        leaderBoard.setPosition(200f, 10f);
         achievements_off.setPosition(150f, 10f);
-        leaderboard_off.setPosition(200f, 10f);
+        leaderBoard_off.setPosition(200f, 10f);
         gplay.setPosition(90f, 0f);
         gplayOff.setPosition(90f, 0f);
         gplayOff.addListener(new
@@ -331,7 +331,7 @@ public class MenuScreen extends HDScreen {
                                              }
 
                                          });
-        leaderboard.addListener(new
+        leaderBoard.addListener(new
 
                                         InputListener() {
                                             @Override
@@ -345,11 +345,11 @@ public class MenuScreen extends HDScreen {
         if (game.playServices.isSignedIn()) {
             stage.addActor(gplay);
             stage.addActor(achievements);
-            stage.addActor(leaderboard);
+            stage.addActor(leaderBoard);
         } else {
             stage.addActor(gplayOff);
             stage.addActor(achievements_off);
-            stage.addActor(leaderboard_off);
+            stage.addActor(leaderBoard_off);
         }
 
         table = new Table();
@@ -500,19 +500,19 @@ public class MenuScreen extends HDScreen {
     }
 
     public void signInSucceeded() {
-        dispayGoogleIcons(true);
+        displayGoogleIcons(true);
     }
 
     public void signInFailed() {
-        dispayGoogleIcons(false);
+        displayGoogleIcons(false);
     }
 
-    private void dispayGoogleIcons(boolean success) {
+    private void displayGoogleIcons(boolean success) {
         stage.addActor(success ? gplay : gplayOff);
-        stage.addActor(success ? leaderboard : leaderboard_off);
+        stage.addActor(success ? leaderBoard : leaderBoard_off);
         stage.addActor(success ? achievements : achievements_off);
         (success ? gplayOff : gplay).remove();
         (success ? achievements_off : achievements).remove();
-        (success ? leaderboard_off : leaderboard).remove();
+        (success ? leaderBoard_off : leaderBoard).remove();
     }
 }

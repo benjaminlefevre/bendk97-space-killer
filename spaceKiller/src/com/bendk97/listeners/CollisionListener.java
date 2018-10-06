@@ -11,17 +11,17 @@ import com.badlogic.ashley.core.Entity;
 
 public interface CollisionListener {
 
-    void enemyShoot(Entity ennemy, Entity player, Entity bullet);
+    void enemyShoot(Entity enemy, Entity player, Entity bullet);
 
-    void playerHitByEnnemyBody(Entity player, Entity ennemy);
+    void playerHitByEnemyBody(Entity player);
 
-    void playerHitByEnnemyBullet(Entity player, Entity bullet);
+    void playerHitByEnemyBullet(Entity player, Entity bullet);
 
     void playerPowerUp(Entity player, Entity powerUp);
 
     void bulletStoppedByShield(Entity bullet);
 
-    void enemyShootByShield(Entity enemy, Entity shield);
+    void enemyShootByShield(Entity enemy);
 
     void playerShieldUp(Entity player, Entity shieldUp);
 

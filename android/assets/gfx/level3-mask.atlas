@@ -333,7 +333,7 @@ bullet5
   orig: 25, 31
   offset: 0, 0
   index: -1
-bulletEnnemy
+bulletEnemy
   rotate: false
   xy: 206, 2
   size: 14, 14

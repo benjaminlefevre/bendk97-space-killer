@@ -21,9 +21,9 @@ import java.util.Random;
 
 public class SquadronSystem extends IteratingSystem {
 
-    private static final int THRESHOLD_POWERUP_DEFAULT = 17;
+    private static final int THRESHOLD_POWER_UP_DEFAULT = 17;
     private static final int THRESHOLD_SHIELD_DEFAULT = 21;
-    private int threshold_powerup = THRESHOLD_POWERUP_DEFAULT;
+    private int threshold_power_up = THRESHOLD_POWER_UP_DEFAULT;
     private int threshold_shield = THRESHOLD_SHIELD_DEFAULT;
 
     private final com.bendk97.entities.EntityFactory entityFactory;
@@ -36,10 +36,10 @@ public class SquadronSystem extends IteratingSystem {
         this.player = player;
         this.playerListener = playerListener;
         if (level.equals(LevelScreen.Level.Level3)) {
-            threshold_powerup = 14;
+            threshold_power_up = 14;
             threshold_shield = 20;
         } else if(level.equals(LevelScreen.Level.Level2)){
-            threshold_powerup = 17;
+            threshold_power_up = 17;
             threshold_shield = 21;
         }
     }
@@ -54,7 +54,7 @@ public class SquadronSystem extends IteratingSystem {
             if (squadron.toShoot == 0) {
                 if (squadron.powerUpAfterDestruction) {
                     int type = random.nextInt(22);
-                    if (type < threshold_powerup) {
+                    if (type < threshold_power_up) {
                         entityFactory.createPowerUp(entity);
                     } else if (type < threshold_shield) {
                         entityFactory.createShieldUp(entity);

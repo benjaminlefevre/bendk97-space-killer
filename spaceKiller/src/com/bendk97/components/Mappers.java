@@ -24,6 +24,6 @@ public class Mappers {
     public static final ComponentMapper<TankComponent> tank = ComponentMapper.getFor(TankComponent.class);
     public static final ComponentMapper<FollowPlayerComponent> follow = ComponentMapper.getFor(FollowPlayerComponent.class);
     public static final ComponentMapper<InvulnerableComponent> invulnerable = ComponentMapper.getFor(InvulnerableComponent.class);
-    public static final ComponentMapper<LeveLFinishedComponent> levelFinished = ComponentMapper.getFor(LeveLFinishedComponent.class);
+    public static final ComponentMapper<LevelFinishedComponent> levelFinished = ComponentMapper.getFor(LevelFinishedComponent.class);
     public static final ComponentMapper<LightComponent> light = ComponentMapper.getFor(LightComponent.class);
 }

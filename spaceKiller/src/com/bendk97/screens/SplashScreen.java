@@ -24,7 +24,6 @@ import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
 
 public class SplashScreen extends HDScreen {
 
-    private static final int FRAME_COLS = 6, FRAME_ROWS = 5;
     // A variable for tracking elapsed time for the animation
     private float stateTime;
     // Objects used
@@ -43,7 +42,7 @@ public class SplashScreen extends HDScreen {
     }
 
     private void initGraphics() {
-        TextureAtlas atlas = assets.get(Assets.SPASH_ATLAS);
+        TextureAtlas atlas = assets.get(Assets.SPLASH_ATLAS);
         // Initialize the Animation with the frame interval and array of frames
         walkAnimation = new Animation<TextureRegion>(0.025f, atlas.findRegions("human_running"), LOOP);
 

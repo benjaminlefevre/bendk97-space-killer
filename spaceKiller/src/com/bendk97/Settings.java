@@ -68,7 +68,7 @@ public class Settings {
         return settings.preferences.getBoolean(SOUND_ON, true);
     }
 
-    public static String getHighscoreString() {
+    public static String getHighScoreString() {
         if (settings.highscores == null) {
             settings.loadHighScores();
         }
@@ -88,8 +88,8 @@ public class Settings {
     }
 
     private void loadHighScores() {
-        String scorestr = settings.preferences.getString(HIGHSCORES, "0;0;0;0;0");
-        String[] scores = scorestr.split(";");
+        String scoreString = settings.preferences.getString(HIGHSCORES, "0;0;0;0;0");
+        String[] scores = scoreString.split(";");
         settings.highscores = new int[scores.length];
         for (int i = 0; i < scores.length; ++i) {
             settings.highscores[i] = Integer.valueOf(scores[i]);
@@ -107,12 +107,12 @@ public class Settings {
                 break;
             }
         }
-        StringBuilder highscoreStr = new StringBuilder();
+        StringBuilder highScoreStr = new StringBuilder();
         for (int i = 0; i < settings.highscores.length; ++i) {
-            highscoreStr.append(settings.highscores[i]);
-            highscoreStr.append(";");
+            highScoreStr.append(settings.highscores[i]);
+            highScoreStr.append(";");
         }
-        settings.preferences.putString(HIGHSCORES, highscoreStr.toString());
+        settings.preferences.putString(HIGHSCORES, highScoreStr.toString());
         settings.preferences.flush();
     }
 
