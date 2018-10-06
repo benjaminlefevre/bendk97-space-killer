@@ -1,6 +1,4 @@
-# space-killer [![Build Status](https://travis-ci.org/benjaminlefevre/space-killer.svg?branch=master)](https://travis-ci.org/benjaminlefevre/space-killer)
-![alt logo](https://lh3.googleusercontent.com/_Oum51HCcglCmq1Y8qDrqSOT5ne2dnq28ZcJN4HG5MLE2ORDeF27ypSZHNohbHSzyA=s180-rw)
-
+# space-killer [![Build Status](https://travis-ci.org/benjaminlefevre/space-killer.svg?branch=master)](https://travis-ci.org/benjaminlefevre/space-killer) [![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](LICENSE)
 Space Killer is a shmup game (shoot'em up) developed with libgdx, a cross-platform java game development.
 The game is currently published in the google playstore here: https://play.google.com/store/apps/details?id=com.benk97.space.killer&hl=en_US
 
