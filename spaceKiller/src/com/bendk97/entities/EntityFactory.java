@@ -1251,7 +1251,7 @@ public class EntityFactory implements Disposable {
     }
 
     public void addInvulnerableComponent(Entity player) {
-        com.bendk97.components.InvulnerableComponent invulnerableComponent = Mappers.invulnerable.get(player);
+        InvulnerableComponent invulnerableComponent = Mappers.invulnerable.get(player);
         if (invulnerableComponent != null) {
             invulnerableComponent.nbItems++;
         } else {

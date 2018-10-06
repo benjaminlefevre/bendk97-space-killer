@@ -42,47 +42,12 @@ public class CollisionSystem extends EntitySystem {
 
     @Override
     public void update(float delta) {
-        addedToEngine(getEngine());
-        boolean thereIsAShield = false;
-        for (Entity shield : getEngine().getEntitiesFor(shield)) {
-            thereIsAShield = true;
-            for (Entity bullet : getEngine().getEntitiesFor(enemyBullet)) {
-                SpriteComponent enemyBullet = Mappers.sprite.get(bullet);
-                if (isCollisionBetween(enemyBullet.sprite, Mappers.sprite.get(shield).sprite)) {
-                    collisionListener.bulletStoppedByShield(bullet);
-                    return;
-                }
-            }
-            for (Entity enemy : getEngine().getEntitiesFor(enemyBodies)) {
-                if (Mappers.boss.get(enemy) != null || Mappers.enemy.get(enemy).isLaserShip) {
-                    break;
-                }
-                SpriteComponent enemySprite = Mappers.sprite.get(enemy);
-                if (isCollisionBetween(enemySprite.sprite, Mappers.sprite.get(shield).sprite)) {
-                    collisionListener.enemyShootByShield(enemy, shield);
-                    return;
-                }
-            }
-        }
-        for (Entity player : getEngine().getEntitiesFor(playerVulnerable)) {
-            for (Entity enemy : getEngine().getEntitiesFor(enemyBodies)) {
-                if (thereIsAShield && Mappers.boss.get(enemy) != null) {
-                    break;
-                }
-                if (isCollisionBetween(Mappers.sprite.get(enemy).sprite, Mappers.sprite.get(player).sprite)) {
-                    collisionListener.playerHitByEnnemyBody(player, enemy);
-                    return;
-                }
+        detectCollisionWithPlayer();
+        detectCollisionWithShields();
+        detectCollisionWithPlayerVulnerable();
+    }
 
-            }
-            for (Entity bullet : getEngine().getEntitiesFor(enemyBullet)) {
-                SpriteComponent enemyBullet = Mappers.sprite.get(bullet);
-                if (isCollisionBetween(enemyBullet.sprite, Mappers.sprite.get(player).sprite)) {
-                    collisionListener.playerHitByEnnemyBullet(player, bullet);
-                    return;
-                }
-            }
-        }
+    private void detectCollisionWithPlayer() {
         for (Entity player : getEngine().getEntitiesFor(player)) {
             for (Entity bullet : getEngine().getEntitiesFor(playerBullet)) {
                 for (Entity enemy : getEngine().getEntitiesFor(enemies)) {
@@ -110,6 +75,47 @@ public class CollisionSystem extends EntitySystem {
             for (Entity bombUp : getEngine().getEntitiesFor(bombUp)) {
                 if (isCollisionBetween(Mappers.sprite.get(player).sprite, Mappers.sprite.get(bombUp).sprite)) {
                     collisionListener.playerBombUp(player, bombUp);
+                    return;
+                }
+            }
+        }
+    }
+
+    private void detectCollisionWithPlayerVulnerable() {
+        for (Entity player : getEngine().getEntitiesFor(playerVulnerable)) {
+            for (Entity enemy : getEngine().getEntitiesFor(enemyBodies)) {
+                if (isCollisionBetween(Mappers.sprite.get(enemy).sprite, Mappers.sprite.get(player).sprite)) {
+                    collisionListener.playerHitByEnnemyBody(player, enemy);
+                    return;
+                }
+
+            }
+            for (Entity bullet : getEngine().getEntitiesFor(enemyBullet)) {
+                SpriteComponent enemyBullet = Mappers.sprite.get(bullet);
+                if (isCollisionBetween(enemyBullet.sprite, Mappers.sprite.get(player).sprite)) {
+                    collisionListener.playerHitByEnnemyBullet(player, bullet);
+                    return;
+                }
+            }
+        }
+    }
+
+    private void detectCollisionWithShields() {
+        for (Entity shield : getEngine().getEntitiesFor(shield)) {
+            for (Entity bullet : getEngine().getEntitiesFor(enemyBullet)) {
+                SpriteComponent enemyBullet = Mappers.sprite.get(bullet);
+                if (isCollisionBetween(enemyBullet.sprite, Mappers.sprite.get(shield).sprite)) {
+                    collisionListener.bulletStoppedByShield(bullet);
+                    return;
+                }
+            }
+            for (Entity enemy : getEngine().getEntitiesFor(enemyBodies)) {
+                if (Mappers.boss.get(enemy) != null || Mappers.enemy.get(enemy).isLaserShip) {
+                    break;
+                }
+                SpriteComponent enemySprite = Mappers.sprite.get(enemy);
+                if (isCollisionBetween(enemySprite.sprite, Mappers.sprite.get(shield).sprite)) {
+                    collisionListener.enemyShootByShield(enemy, shield);
                     return;
                 }
             }

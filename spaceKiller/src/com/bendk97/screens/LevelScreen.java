@@ -170,7 +170,7 @@ public abstract class LevelScreen extends ScreenAdapter {
     private World world;
     private RayHandler rayHandler;
     private boolean fxLightEnabled = false;
-    private final PostProcessor postProcessor;
+    private PostProcessor postProcessor;
 
     private final Level level;
 
@@ -223,6 +223,10 @@ public abstract class LevelScreen extends ScreenAdapter {
         createSystems(player, lives, bombs, batcher, screenShake);
         registerTweensAccessor();
 
+        registerPostProcessingEffects();
+    }
+
+    private void registerPostProcessingEffects() {
         ShaderLoader.BasePath = "data/shaders/";
         postProcessor = new PostProcessor( false, false, isDesktop );
         MotionBlur motionBlur = new MotionBlur();
