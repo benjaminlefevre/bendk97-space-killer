@@ -31,4 +31,4 @@ This project is licenced under the MIT license.
 For more details check the [LICENCE](LICENSE) file
 
 # CI
-Travis CI is installed to build every Pull Requests and the master on a daily basis.
+Travis CI is installed to build every Pull Requests and the master on a daily basis : https://travis-ci.org/benjaminlefevre/space-killer/
