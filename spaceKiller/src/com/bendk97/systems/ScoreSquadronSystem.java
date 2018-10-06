@@ -12,13 +12,10 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.RandomXS128;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.ScoreSquadronComponent;
-
-import java.util.Random;
 
 public class ScoreSquadronSystem extends IteratingSystem {
 
@@ -30,8 +27,6 @@ public class ScoreSquadronSystem extends IteratingSystem {
         this.font = assets.get(Assets.FONT_SPACE_KILLER);
         this.batcher = batcher;
     }
-
-    private Random random = new RandomXS128();
 
     @Override
     public void processEntity(final Entity entity, float deltaTime) {

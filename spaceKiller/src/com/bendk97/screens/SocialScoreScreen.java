@@ -58,10 +58,6 @@ public class SocialScoreScreen extends ScreenAdapter {
         numberFormatter = NumberFormat.getNumberInstance(Locale.US);
     }
 
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(1f, 1f, 1f, 1);

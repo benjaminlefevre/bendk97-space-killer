@@ -51,8 +51,8 @@ public class PausableTimer {
     /**
      * Schedules a task to occur once after the specified delay.
      */
-    private Task scheduleTask(Task task, float delaySeconds) {
-        return scheduleTask(task, delaySeconds, 0, 0);
+    private void scheduleTask(Task task, float delaySeconds) {
+        scheduleTask(task, delaySeconds, 0, 0);
     }
 
     /**
@@ -67,13 +67,11 @@ public class PausableTimer {
      * interval.
      */
     private Task scheduleTask(Task task, float delaySeconds, float intervalSeconds, int repeatCount) {
-        synchronized (task) {
-            if (task.repeatCount != CANCELLED)
-                throw new IllegalArgumentException("The same task may not be scheduled twice.");
-            task.executeTimeMillis = System.nanoTime() / 1000000 + (long) (delaySeconds * 1000);
-            task.intervalMillis = (long) (intervalSeconds * 1000);
-            task.repeatCount = repeatCount;
-        }
+        if (task.repeatCount != CANCELLED)
+            throw new IllegalArgumentException("The same task may not be scheduled twice.");
+        task.executeTimeMillis = System.nanoTime() / 1000000 + (long) (delaySeconds * 1000);
+        task.intervalMillis = (long) (intervalSeconds * 1000);
+        task.repeatCount = repeatCount;
         synchronized (this) {
             tasks.add(task);
         }
@@ -146,24 +144,22 @@ public class PausableTimer {
         synchronized (this) {
             for (int i = 0, n = tasks.size; i < n; i++) {
                 Task task = tasks.get(i);
-                synchronized (task) {
-                    if (task.executeTimeMillis > timeMillis) {
-                        waitMillis = Math.min(waitMillis, task.executeTimeMillis - timeMillis);
-                        continue;
-                    }
-                    if (task.repeatCount != CANCELLED) {
-                        if (task.repeatCount == 0) task.repeatCount = CANCELLED;
-                        task.app.postRunnable(task);
-                    }
-                    if (task.repeatCount == CANCELLED) {
-                        tasks.removeIndex(i);
-                        i--;
-                        n--;
-                    } else {
-                        task.executeTimeMillis = timeMillis + task.intervalMillis;
-                        waitMillis = Math.min(waitMillis, task.intervalMillis);
-                        if (task.repeatCount > 0) task.repeatCount--;
-                    }
+                if (task.executeTimeMillis > timeMillis) {
+                    waitMillis = Math.min(waitMillis, task.executeTimeMillis - timeMillis);
+                    continue;
+                }
+                if (task.repeatCount != CANCELLED) {
+                    if (task.repeatCount == 0) task.repeatCount = CANCELLED;
+                    task.app.postRunnable(task);
+                }
+                if (task.repeatCount == CANCELLED) {
+                    tasks.removeIndex(i);
+                    i--;
+                    n--;
+                } else {
+                    task.executeTimeMillis = timeMillis + task.intervalMillis;
+                    waitMillis = Math.min(waitMillis, task.intervalMillis);
+                    if (task.repeatCount > 0) task.repeatCount--;
                 }
             }
         }
@@ -177,9 +173,7 @@ public class PausableTimer {
         synchronized (this) {
             for (int i = 0, n = tasks.size; i < n; i++) {
                 Task task = tasks.get(i);
-                synchronized (task) {
-                    task.executeTimeMillis += delayMillis;
-                }
+                task.executeTimeMillis += delayMillis;
             }
         }
     }
@@ -204,8 +198,8 @@ public class PausableTimer {
      *
      * @see #scheduleTask(Task, float)
      */
-    static public Task schedule(Task task, float delaySeconds) {
-        return instance().scheduleTask(task, delaySeconds);
+    static public void schedule(Task task, float delaySeconds) {
+        instance().scheduleTask(task, delaySeconds);
     }
 
     /**

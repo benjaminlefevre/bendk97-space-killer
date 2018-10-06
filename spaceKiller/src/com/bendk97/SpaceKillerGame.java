@@ -10,7 +10,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.bendk97.assets.Assets;
 import com.bendk97.google.PlayServices;
 import com.bendk97.player.PlayerData;
@@ -26,6 +25,8 @@ import static com.bendk97.SpaceKillerGameConstants.SKIP_SPLASH;
 import static com.bendk97.screens.SocialScoreScreen.TEMP_DIRECTORY;
 
 public class SpaceKillerGame extends Game {
+    private static final String INTENT_FILES = "intent files";
+    private static final String WAS_UNABLE_TO_CLEAN_TEMP_DIRECTORY = "was unable to clean temp directory";
     private final Assets assets = new Assets();
     public final PlayServices playServices;
     public Screen currentScreen;
@@ -37,27 +38,28 @@ public class SpaceKillerGame extends Game {
         this.playServices = playServices;
         this.gameVersion = version;
         this.intentShare = intentShare;
-        if (SpaceKillerGameConstants.DEBUG) {
-            GLProfiler profiler = new GLProfiler(Gdx.graphics);
-            profiler.enable();
-        }
     }
 
     private void cleanTempDirectory() {
         if (Gdx.files.isExternalStorageAvailable()) {
-            final File directory = Gdx.files.external(TEMP_DIRECTORY).file();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        for (File file : directory.listFiles()) {
+            final File[] tempDirectoryFiles = Gdx.files.external(TEMP_DIRECTORY).file().listFiles();
+            if (tempDirectoryFiles != null) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            for (File file : tempDirectoryFiles) {
+                                if(!file.delete()) {
+                                    Gdx.app.log(INTENT_FILES, WAS_UNABLE_TO_CLEAN_TEMP_DIRECTORY);
+                                }
+                            }
 
-                            file.delete();
+                        } catch (Exception e) {
+                            Gdx.app.log(INTENT_FILES, WAS_UNABLE_TO_CLEAN_TEMP_DIRECTORY);
                         }
-                    } catch (Exception e) {
                     }
-                }
-            }).start();
+                }).start();
+            }
         }
     }
 
@@ -80,6 +82,7 @@ public class SpaceKillerGame extends Game {
         try {
             assets.loadResources(screen);
             this.playerData = playerData;
+            //noinspection JavaReflectionMemberAccess
             currentScreen = screen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this);
             if (screenshot != null) {
                 this.setScreen(new TransitionScreen(screenshot, currentScreen, this));

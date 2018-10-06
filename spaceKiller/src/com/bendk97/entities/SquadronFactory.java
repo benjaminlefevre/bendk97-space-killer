@@ -153,6 +153,7 @@ public class SquadronFactory {
 
     private Vector2[] convertObjectArrayToVector2Array(Object[] params) {
         Vector2[] vectors = new Vector2[params.length];
+        //noinspection SuspiciousSystemArraycopy
         System.arraycopy(params, 0, vectors, 0, params.length);
         return vectors;
     }

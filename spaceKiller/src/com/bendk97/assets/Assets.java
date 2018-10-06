@@ -28,7 +28,7 @@ import java.util.*;
 public class Assets {
 
     // SPLASH SCREEN
-    public static final AssetDescriptor<TextureAtlas> SPASH_ATLAS =
+    public static final AssetDescriptor<TextureAtlas> SPLASH_ATLAS =
             new AssetDescriptor<TextureAtlas>("gfx/splashscreen.atlas", TextureAtlas.class);
     public static final AssetDescriptor<Texture> SPLASH_TXT_LOGO =
             new AssetDescriptor<Texture>("gfx/backgrounds/bendk97.png", Texture.class);
@@ -88,7 +88,7 @@ public class Assets {
             new AssetDescriptor<Texture>("gfx/backgrounds/level3.jpg", Texture.class);
 
     // GFX
-    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL_ALL_ATLAS_NOMASK = new AssetDescriptor<TextureAtlas>("gfx/level-all-nomask.atlas", TextureAtlas.class);
+    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL_ALL_ATLAS_NO_MASK = new AssetDescriptor<TextureAtlas>("gfx/level-all-no-mask.atlas", TextureAtlas.class);
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level1-mask.atlas", TextureAtlas.class);
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL2_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level2-mask.atlas", TextureAtlas.class);
     public static final AssetDescriptor<TextureAtlas> GFX_LEVEL3_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level3-mask.atlas", TextureAtlas.class);
@@ -136,8 +136,8 @@ public class Assets {
             new AssetDescriptor<Sound>("sounds/powerUpVoice.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_FIRE_ENEMY =
             new AssetDescriptor<Sound>("sounds/enemyFire.ogg", Sound.class);
-    public static final AssetDescriptor<Sound> SOUND_NEW_HIGHSCORE =
-            new AssetDescriptor<Sound>("sounds/new_highscore.ogg", Sound.class);
+    public static final AssetDescriptor<Sound> SOUND_NEW_HIGH_SCORE =
+            new AssetDescriptor<Sound>("sounds/new_high_score.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_GO =
             new AssetDescriptor<Sound>("sounds/go.ogg", Sound.class);
     // FONTS
@@ -166,7 +166,7 @@ public class Assets {
 
     private static final Map<Class<? extends Screen>, List<AssetDescriptor>> assetsNeededByScreen = new HashMap<Class<? extends Screen>, List<AssetDescriptor>>() {{
         put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
-                SPLASH_MUSIC, SPASH_ATLAS, SPLASH_TXT_LOGO
+                SPLASH_MUSIC, SPLASH_ATLAS, SPLASH_TXT_LOGO
         ));
         put(MenuScreen.class, Arrays.<AssetDescriptor>asList(
                 MENU_BGD, FONT_SPACE_KILLER_LARGE, MENU_MUSIC, FONT_SPACE_KILLER_MEDIUM, MENU_CLICK,
@@ -178,12 +178,12 @@ public class Assets {
                 // SOUNDS
                 SOUND_READY, SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
                 SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
-                SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, SOUND_BOSS_ALERT,
+                SOUND_NEW_LIFE, SOUND_NEW_HIGH_SCORE, SOUND_GO, SOUND_BOSS_ALERT,
                 SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION,
                 SOUND_POWER_UP_VOICE,
                 // GFX
                 GFX_BGD_MIST1, GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7,
-                GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL_ALL_ATLAS_NOMASK,
+                GFX_LEVEL1_ATLAS_MASK, GFX_LEVEL_ALL_ATLAS_NO_MASK,
                 ICON_GAME, ICON_GOOGLE,
                 GFX_BGD_LEVEL1, GFX_BGD_STARS,
                 // FONTS
@@ -195,12 +195,12 @@ public class Assets {
                 // SOUNDS
                 SOUND_READY, SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
                 SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
-                SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, SOUND_BOSS_ALERT,
+                SOUND_NEW_LIFE, SOUND_NEW_HIGH_SCORE, SOUND_GO, SOUND_BOSS_ALERT,
                 SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION,
                 SOUND_POWER_UP_VOICE,
                 // GFX
                 GFX_BGD_MIST1, GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7, GFX_BGD_CLOUDS,
-                GFX_LEVEL_ALL_ATLAS_NOMASK, GFX_LEVEL2_ATLAS_MASK,
+                GFX_LEVEL_ALL_ATLAS_NO_MASK, GFX_LEVEL2_ATLAS_MASK,
                 ICON_GAME, ICON_GOOGLE,
                 GFX_BGD_LEVEL2, GFX_BGD_BIG_PLANET, GFX_BGD_FAR_PLANETS, GFX_BGD_RISING_PLANETS, GFX_BGD_STARS_LEVEL2,
                 // FONTS
@@ -213,12 +213,12 @@ public class Assets {
                 // SOUNDS
                 SOUND_READY, SOUND_FIRE, SOUND_EXPLOSION, SOUND_POWER_UP, SOUND_FIRE_ENEMY,
                 SOUND_SHIELD_BULLET, SOUND_SHIELD_UP, SOUND_GAME_OVER, SOUND_LOSE_LIFE,
-                SOUND_NEW_LIFE, SOUND_NEW_HIGHSCORE, SOUND_GO, SOUND_BOSS_ALERT,
+                SOUND_NEW_LIFE, SOUND_NEW_HIGH_SCORE, SOUND_GO, SOUND_BOSS_ALERT,
                 SOUND_BOSS_FINISHED, SOUND_BOMB_DROP, SOUND_BOMB_EXPLOSION,
                 SOUND_POWER_UP_VOICE,
                 // GFX
                 GFX_BGD_MIST1, GFX_BGD_MIST2, GFX_BGD_MIST3, GFX_BGD_MIST4, GFX_BGD_MIST5, GFX_BGD_MIST6, GFX_BGD_MIST7,
-                GFX_LEVEL_ALL_ATLAS_NOMASK, GFX_LEVEL3_ATLAS_MASK,
+                GFX_LEVEL_ALL_ATLAS_NO_MASK, GFX_LEVEL3_ATLAS_MASK,
                 ICON_GAME, ICON_GOOGLE,
                 GFX_BGD_LEVEL3,
                 // FONTS
@@ -284,8 +284,8 @@ public class Assets {
         }
     }
 
-    public Music playMusic(AssetDescriptor<Music> musicDescriptor) {
-        return playMusic(musicDescriptor, 1.0f);
+    public void playMusic(AssetDescriptor<Music> musicDescriptor) {
+        playMusic(musicDescriptor, 1.0f);
     }
 
     public Music playMusic(AssetDescriptor<Music> musicDescriptor, float volume) {

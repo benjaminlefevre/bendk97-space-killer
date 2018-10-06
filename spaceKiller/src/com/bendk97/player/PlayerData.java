@@ -18,7 +18,7 @@ public class PlayerData {
     public long fireDelaySide = FIRE_DELAY_SIDE;
     public int enemiesKilled = 0;
     public int laserShipKilled = 0;
-    public int howManyLifesLosed = 0;
+    public int howManyLivesLost = 0;
     public int score = 0;
     public int lives = LIVES;
     public int bombs = BOMBS;
@@ -27,7 +27,7 @@ public class PlayerData {
     public final Level level;
 
     public PlayerData(Level level, int numberOfContinue, long fireDelay, long fireDelaySide,
-                      int enemiesKilled, int laserShipKilled, int howManyLifesLosed, int score,
+                      int enemiesKilled, int laserShipKilled, int howManyLivesLost, int score,
                       int lives, int bombs, PlayerComponent.PowerLevel powerLevel) {
         this.fireDelay = fireDelay;
         this.fireDelaySide = fireDelaySide;
@@ -35,7 +35,7 @@ public class PlayerData {
         this.level = level;
         this.enemiesKilled = enemiesKilled;
         this.laserShipKilled = laserShipKilled;
-        this.howManyLifesLosed = howManyLifesLosed;
+        this.howManyLivesLost = howManyLivesLost;
         this.score = score;
         this.lives = lives;
         this.bombs = bombs;

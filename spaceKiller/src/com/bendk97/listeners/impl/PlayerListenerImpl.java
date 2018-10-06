@@ -128,21 +128,21 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     }
 
     @Override
-    public void updateScore(Entity player, Entity ennemy, int nbHits) {
-        EnemyComponent enemyComponent = Mappers.enemy.get(ennemy);
+    public void updateScore(Entity player, Entity enemy, int nbHits) {
+        EnemyComponent enemyComponent = Mappers.enemy.get(enemy);
         int gauge = enemyComponent.getLifeGauge();
-        int nbPoints = Math.min(nbHits, gauge) * Mappers.enemy.get(ennemy).points;
+        int nbPoints = Math.min(nbHits, gauge) * Mappers.enemy.get(enemy).points;
         updateScore(player, nbPoints);
     }
 
     @Override
     public void updateScore(Entity player, int score) {
         PlayerComponent playerComponent = Mappers.player.get(player);
-        boolean notHighScoreOld = !playerComponent.isHighscore();
+        boolean notHighScoreOld = !playerComponent.isHighScore();
         boolean newLife = playerComponent.updateScore(score);
-        boolean highscoreNew = playerComponent.isHighscore();
-        if (notHighScoreOld && highscoreNew) {
-            assets.playSound(SOUND_NEW_HIGHSCORE);
+        boolean highScoreNew = playerComponent.isHighScore();
+        if (notHighScoreOld && highScoreNew) {
+            assets.playSound(SOUND_NEW_HIGH_SCORE);
         }
         if (newLife) {
             assets.playSound(SOUND_NEW_LIFE);
