@@ -21,6 +21,10 @@ before_install:
 
 script:
   ./gradlew assembleRelease
+  
+script: "sbt clean coverage test"
+
+after_success: "sbt coveralls"
 
 # Cache gradle dependencies (should be faster to download them from cache)
 cache:
