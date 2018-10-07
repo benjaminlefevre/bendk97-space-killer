@@ -20,6 +20,9 @@ public class FPSDisplayRenderingSystem extends EntitySystem {
     private final BitmapFont bitmapFont;
     private final LevelScreen screen;
 
+    private float currentTime = 0f;
+    private int currentFps = 0;
+
     public FPSDisplayRenderingSystem(LevelScreen screen, SpriteBatch batcher, int priority) {
         super(priority);
         this.screen = screen;
@@ -27,9 +30,6 @@ public class FPSDisplayRenderingSystem extends EntitySystem {
         this.bitmapFont = new BitmapFont();
         this.bitmapFont.getData().setScale(0.5f);
     }
-
-    private float currentTime = 0f;
-    private int currentFps = 0;
 
     @Override
     public void update(float deltaTime) {

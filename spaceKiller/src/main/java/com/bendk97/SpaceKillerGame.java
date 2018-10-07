@@ -33,6 +33,8 @@ public class SpaceKillerGame extends Game {
     public PlayerData playerData;
     public final IntentShare intentShare;
     public final String gameVersion;
+    public boolean signInFailed = false;
+
 
     public SpaceKillerGame(PlayServices playServices, IntentShare intentShare, String version) {
         this.playServices = playServices;
@@ -98,6 +100,9 @@ public class SpaceKillerGame extends Game {
     }
 
 
+    /**
+     * nothing to dispose here
+     */
     @Override
     public void dispose() {
     }
@@ -108,8 +113,6 @@ public class SpaceKillerGame extends Game {
             ((MenuScreen) currentScreen).signInSucceeded();
         }
     }
-
-    public boolean signInFailed = false;
 
     public void signInFailed() {
         if (currentScreen instanceof MenuScreen) {

@@ -192,6 +192,8 @@ public class Level2Screen extends LevelScreen {
                     playMusic(Assets.MUSIC_LEVEL_2_BOSS, 1f);
                     boss.execute();
                     break;
+                default:
+                    break;
             }
         }
     }

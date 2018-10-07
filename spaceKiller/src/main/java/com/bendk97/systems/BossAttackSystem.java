@@ -21,7 +21,7 @@ import java.util.Random;
 
 public class BossAttackSystem extends IteratingSystem {
 
-    private final com.bendk97.entities.EntityFactory entityFactory;
+    private final EntityFactory entityFactory;
     private final Family player = Family.one(PlayerComponent.class).exclude(PauseComponent.class).get();
     private final Random random = new RandomXS128();
 

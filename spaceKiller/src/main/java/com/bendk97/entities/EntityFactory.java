@@ -50,10 +50,49 @@ import static com.bendk97.tweens.SpriteComponentAccessor.ALPHA;
 
 public class EntityFactory implements Disposable {
 
+    final static int SOUCOUPE = 0;
+    private final static int SHIP_1 = 1;
+    private final static int SHIP_2 = 2;
+    private final static int SHIP_3 = 3;
+    private final static int SHIP_4 = 4;
+    private final static int SHIP_5 = 5;
+
+    public final static int SHIP_LV3_1 = 6;
+    private final static int SHIP_LV3_2 = 7;
+    private final static int SHIP_LV3_3 = 8;
+    private final static int SHIP_LV3_4 = 9;
+    private final static int SHIP_LV3_5 = 10;
+    private final static int SHIP_LV3_6 = 11;
+    private final static int SHIP_LV3_7 = 12;
+    private final static int SHIP_LV3_8 = 13;
+    public final static int NB_SHIP_LV3 = 8;
+
+    final static int SHIP_LV2_LASER_SHIP1 = 50;
+    private final static int SHIP_LV2_LASER_SHIP2 = 51;
+    private final static int SHIP_LV2_LASER_SHIP3 = 52;
+    private final static int SHIP_LV2_LASER_SHIP4 = 53;
+    final static int NB_SHIP_LV2_LASER_SHIP = 4;
+
+
+    public final static int BOSS_LEVEL_1 = 100;
+    public final static int BOSS_LEVEL_2 = 101;
+    public final static int BOSS_LEVEL_3 = 102;
+    final static int ASTEROID_1 = 999;
+    final static int ASTEROID_2 = 1000;
+    final static int HOUSE_1 = 1500;
+    final static int HOUSE_2 = 1501;
+    final static int HOUSE_3 = 1502;
+    final static int HOUSE_4 = 1503;
+    final static int HOUSE_5 = 1504;
+    final static int HOUSE_6 = 1505;
+    final static int HOUSE_7 = 1506;
+    final static int HOUSE_8 = 1507;
+    final static int HOUSE_9 = 1508;
+
     private final PooledEngine engine;
     private final Assets assets;
     private final TweenManager tweenManager;
-    private final com.bendk97.screens.ScreenShake screenShake;
+    private final ScreenShake screenShake;
     private final TextureAtlas atlasNoMask;
     private final TextureAtlas atlasMask;
     private final RayHandler rayHandler;
@@ -67,6 +106,7 @@ public class EntityFactory implements Disposable {
     };
     private final Random random = new RandomXS128();
     private final SpaceKillerGame game;
+
 
     public EntityFactory(SpaceKillerGame game, PooledEngine engine, Assets assets, TweenManager tweenManager, RayHandler rayHandler,
                          ScreenShake screenShake, LevelScreen.Level level) {
@@ -299,11 +339,13 @@ public class EntityFactory implements Disposable {
 
     public void createEnemyFire(Entity enemy, Entity player) {
         switch (Mappers.enemy.get(enemy).attackType) {
-            case ENEMY_FIRE_CIRCLE:
-                createEnemyFireCircle(enemy, player);
-                return;
             case ENEMY_FIRE_LASER:
                 createEnemyFireLaser(enemy);
+                break;
+            case ENEMY_FIRE_CIRCLE:
+            default:
+            createEnemyFireCircle(enemy, player);
+            break;
         }
     }
 
@@ -592,6 +634,7 @@ public class EntityFactory implements Disposable {
                 atlasRegion = "fish";
                 break;
             case SHIP_LV3_8:
+            default:
                 atlasRegion = "podfish";
                 break;
         }
@@ -708,14 +751,14 @@ public class EntityFactory implements Disposable {
     }
 
 
-    public Entity createEnemyShip(Entity squadron, boolean canAttack, float velocityBullet, int rateShoot, int enemyTYpe) {
+    public Entity createEnemyShip(Entity squadron, boolean canAttack, float velocityBullet, int rateShoot, int enemyType) {
         String atlasRegion = "enemy";
         int points = 200;
         int strength = 1;
         int attackCapacity = 1;
         PlayMode playMode = LOOP;
         float frameDuration = FRAME_DURATION;
-        switch (enemyTYpe) {
+        switch (enemyType) {
             case SHIP_1:
                 atlasRegion = "enemy";
                 break;
@@ -783,6 +826,7 @@ public class EntityFactory implements Disposable {
                 points = 250;
                 break;
             case SHIP_LV3_8:
+            default:
                 atlasRegion = "podfish";
                 playMode = LOOP_PINGPONG;
                 attackCapacity = 2;
@@ -792,45 +836,6 @@ public class EntityFactory implements Disposable {
         }
         return createEnemy(squadron, canAttack, rateShoot, velocityBullet, atlasRegion, points, strength, frameDuration, playMode, attackCapacity);
     }
-
-    public final static int SOUCOUPE = 0;
-    private final static int SHIP_1 = 1;
-    private final static int SHIP_2 = 2;
-    private final static int SHIP_3 = 3;
-    private final static int SHIP_4 = 4;
-    private final static int SHIP_5 = 5;
-
-    public final static int SHIP_LV3_1 = 6;
-    private final static int SHIP_LV3_2 = 7;
-    private final static int SHIP_LV3_3 = 8;
-    private final static int SHIP_LV3_4 = 9;
-    private final static int SHIP_LV3_5 = 10;
-    private final static int SHIP_LV3_6 = 11;
-    private final static int SHIP_LV3_7 = 12;
-    private final static int SHIP_LV3_8 = 13;
-    public final static int NB_SHIP_LV3 = 8;
-
-    public final static int SHIP_LV2_LASER_SHIP1 = 50;
-    private final static int SHIP_LV2_LASER_SHIP2 = 51;
-    private final static int SHIP_LV2_LASER_SHIP3 = 52;
-    private final static int SHIP_LV2_LASER_SHIP4 = 53;
-    public final static int NB_SHIP_LV2_LASER_SHIP = 4;
-
-
-    public final static int BOSS_LEVEL_1 = 100;
-    public final static int BOSS_LEVEL_2 = 101;
-    public final static int BOSS_LEVEL_3 = 102;
-    public final static int ASTEROID_1 = 999;
-    public final static int ASTEROID_2 = 1000;
-    public final static int HOUSE_1 = 1500;
-    public final static int HOUSE_2 = 1501;
-    public final static int HOUSE_3 = 1502;
-    public final static int HOUSE_4 = 1503;
-    public final static int HOUSE_5 = 1504;
-    public final static int HOUSE_6 = 1505;
-    public final static int HOUSE_7 = 1506;
-    public final static int HOUSE_8 = 1507;
-    public final static int HOUSE_9 = 1508;
 
 
     public Entity createBoss(Entity squadron, float velocityBullet, float velocityCircle) {

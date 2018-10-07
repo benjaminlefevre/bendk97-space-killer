@@ -21,7 +21,6 @@ public class PausableTimer {
     private static final Array<PausableTimer> instances = new Array<PausableTimer>(1);
     private static TimerThread thread;
     static private final int CANCELLED = -1;
-    static private final int FOREVER = -2;
 
     /**
      * Timer instance for general application wide usage. Static methods on {@link PausableTimer} make convenient use of this instance.
@@ -53,13 +52,6 @@ public class PausableTimer {
      */
     private void scheduleTask(Task task, float delaySeconds) {
         scheduleTask(task, delaySeconds, 0, 0);
-    }
-
-    /**
-     * Schedules a task to occur once after the specified delay and then repeatedly at the specified interval until cancelled.
-     */
-    private Task scheduleTask(Task task, float delaySeconds, float intervalSeconds) {
-        return scheduleTask(task, delaySeconds, intervalSeconds, FOREVER);
     }
 
     /**
@@ -140,7 +132,8 @@ public class PausableTimer {
         }
     }
 
-    private long update(long timeMillis, long waitMillis) {
+    private long update(long timeMillis, long waitMillisecond) {
+        long waitMillis = waitMillisecond;
         synchronized (this) {
             for (int i = 0, n = tasks.size; i < n; i++) {
                 Task task = tasks.get(i);
@@ -203,24 +196,6 @@ public class PausableTimer {
     }
 
     /**
-     * Schedules a task on {@link #instance}.
-     *
-     * @see #scheduleTask(Task, float, float)
-     */
-    static public Task schedule(Task task, float delaySeconds, float intervalSeconds) {
-        return instance().scheduleTask(task, delaySeconds, intervalSeconds);
-    }
-
-    /**
-     * Schedules a task on {@link #instance}.
-     *
-     * @see #scheduleTask(Task, float, float, int)
-     */
-    static public Task schedule(Task task, float delaySeconds, float intervalSeconds, int repeatCount) {
-        return instance().scheduleTask(task, delaySeconds, intervalSeconds, repeatCount);
-    }
-
-    /**
      * Runnable with a cancel method.
      *
      * @author Nathan Sweet
@@ -246,32 +221,11 @@ public class PausableTimer {
         /**
          * Cancels the task. It will not be executed until it is scheduled again. This method can be called at any time.
          */
-        synchronized void cancel() {
+        private synchronized void cancel() {
             executeTimeMillis = 0;
             repeatCount = CANCELLED;
         }
 
-        /**
-         * Returns true if this task is scheduled to be executed in the future by a timer. The execution time may be reached after
-         * calling this method which may change the scheduled state. To prevent the scheduled state from changing, synchronize on
-         * this task object, eg:
-         * <p>
-         * <pre>
-         * synchronized (task) {
-         * 	if (!task.isScheduled()) { ... }
-         * }
-         * </pre>
-         */
-        public synchronized boolean isScheduled() {
-            return repeatCount != CANCELLED;
-        }
-
-        /**
-         * Returns the time when this task will be executed in milliseconds
-         */
-        public synchronized long getExecuteTimeMillis() {
-            return executeTimeMillis;
-        }
     }
 
     /**
@@ -280,7 +234,7 @@ public class PausableTimer {
      * @author Nathan Sweet
      */
     static class TimerThread implements Runnable {
-        Files files;
+        private Files files;
         private long pauseMillis;
 
         TimerThread() {
@@ -325,7 +279,7 @@ public class PausableTimer {
             t.start();
         }
 
-        void pause() {
+        private void pause() {
             pauseMillis = System.nanoTime() / 1000000;
             synchronized (instances) {
                 files = null;
@@ -333,7 +287,7 @@ public class PausableTimer {
             }
         }
 
-        void dispose() {
+        private void dispose() {
             pause();
             instances.clear();
             instance = null;

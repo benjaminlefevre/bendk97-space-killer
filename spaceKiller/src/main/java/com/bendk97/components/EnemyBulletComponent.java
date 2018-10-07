@@ -9,8 +9,10 @@ package com.bendk97.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Pool;
 
-public class EnemyBulletComponent implements Component, Pool.Poolable{
-
+public class EnemyBulletComponent implements Component, Pool.Poolable {
+    /*
+           Nothing to reset, this component is stateless
+     */
     @Override
     public void reset() {
     }

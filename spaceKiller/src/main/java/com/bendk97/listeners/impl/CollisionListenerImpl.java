@@ -13,6 +13,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.*;
 import com.bendk97.entities.EntityFactory;
+import com.bendk97.listeners.CollisionListener;
 import com.bendk97.listeners.PlayerListener;
 import com.bendk97.screens.LevelScreen;
 import com.bendk97.screens.ScreenShake;
@@ -21,14 +22,14 @@ import com.bendk97.tweens.SpriteComponentAccessor;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
 
-public class CollisionListenerImpl extends EntitySystem implements com.bendk97.listeners.CollisionListener {
+public class CollisionListenerImpl extends EntitySystem implements CollisionListener {
 
     private final Assets assets;
-    private final com.bendk97.entities.EntityFactory entityFactory;
-    private final com.bendk97.listeners.PlayerListener playerListener;
+    private final EntityFactory entityFactory;
+    private final PlayerListener playerListener;
     private final TweenManager tweenManager;
     private final LevelScreen screen;
-    private final com.bendk97.screens.ScreenShake screenShake;
+    private final ScreenShake screenShake;
 
     public CollisionListenerImpl(TweenManager tweenManager, ScreenShake screenShake, Assets assets,
                                  EntityFactory entityFactory, PlayerListener playerListener,

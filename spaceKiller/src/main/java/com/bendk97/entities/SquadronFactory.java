@@ -146,6 +146,7 @@ public class SquadronFactory {
                 createArrowUpSquadron(entities, velocity);
                 break;
             case INFINITE_CIRCLE:
+            default:
                 createInfiniteCircle(entities, velocity);
                 break;
         }

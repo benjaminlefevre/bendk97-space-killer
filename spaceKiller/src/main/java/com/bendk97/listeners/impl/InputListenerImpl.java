@@ -24,10 +24,13 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
     private static final float AUTOFIRE_DELAY = 1 / 10f;
     private final Family playerFamily = Family.one(PlayerComponent.class).exclude(GameOverComponent.class).get();
     private final Entity player;
-    private final com.bendk97.entities.EntityFactory entityFactory;
+    private final EntityFactory entityFactory;
     private final Assets assets;
-    private boolean autoFire = true;
-    private final com.bendk97.listeners.PlayerListener playerListener;
+    private boolean autoFire;
+    private final PlayerListener playerListener;
+    private long lastShoot = 0;
+    private long lastShootSide = 0;
+    private float autofireTrigger = 0;
 
     public InputListenerImpl(Entity player, PlayerListener playerListener, EntityFactory entityFactory,
                              Assets assets,
@@ -39,10 +42,6 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
         this.autoFire = autoFire;
     }
 
-    private long lastShoot = 0;
-    private long lastShootSide = 0;
-
-    private float autofireTrigger = 0;
 
     @Override
     public void update(float deltaTime) {

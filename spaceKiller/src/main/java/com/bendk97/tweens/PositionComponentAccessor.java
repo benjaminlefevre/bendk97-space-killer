@@ -9,7 +9,7 @@ package com.bendk97.tweens;
 import aurelienribon.tweenengine.TweenAccessor;
 import com.bendk97.components.PositionComponent;
 
-public class PositionComponentAccessor implements TweenAccessor<com.bendk97.components.PositionComponent> {
+public class PositionComponentAccessor implements TweenAccessor<PositionComponent> {
     public final static int POSITION_X = 0;
     public final static int POSITION_Y = 1;
     public final static int POSITION_XY = 2;

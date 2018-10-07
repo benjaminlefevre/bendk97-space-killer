@@ -35,7 +35,7 @@ public class ScreenShake {
         this.camera = camera;
     }
 
-    public void shake(float strength, final float duration, boolean vibration) {
+    public void shake(final float strength, final float duration, final boolean vibration) {
         final int STEPS = Math.round(duration / STEP_INTERVAL);
         final float STRENGTH_STEP = strength / STEPS;
         tweenManager.killTarget(camera);
@@ -43,14 +43,15 @@ public class ScreenShake {
             Gdx.input.vibrate(new long[]{0, 100, 0, 100, 0, 100, 0, 100, 0}, -1);
         }
         camera.zoom = 1;
+        float currentStrength = strength;
         for (int step = 0; step < STEPS; ++step) {
             double angle = Math.toRadians(random.nextFloat() * 360f);
-            float x = (float) Math.floor(SCREEN_WIDTH / 2f + strength *
+            float x = (float) Math.floor(SCREEN_WIDTH / 2f + currentStrength *
                     Math.cos(angle));
-            float y = (float) Math.floor(SCREEN_HEIGHT / 2f + strength * Math.sin(angle));
+            float y = (float) Math.floor(SCREEN_HEIGHT / 2f + currentStrength * Math.sin(angle));
             Tween.to(camera, CameraTween.X, STEP_INTERVAL).delay(step * STEP_INTERVAL).target(x).ease(Linear.INOUT).start(tweenManager);
             Tween.to(camera, CameraTween.Y, STEP_INTERVAL).delay(step * STEP_INTERVAL).target(y).ease(Linear.INOUT).start(tweenManager);
-            strength -= STRENGTH_STEP;
+            currentStrength -= STRENGTH_STEP;
         }
     }
 }

@@ -10,6 +10,9 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Pool;
 
 public class PauseComponent implements Component, Pool.Poolable {
+    /*
+        Nothing to reset, this component is stateless
+     */
     @Override
     public void reset() {
 

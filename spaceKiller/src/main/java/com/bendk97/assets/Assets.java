@@ -26,6 +26,9 @@ import com.bendk97.screens.*;
 import java.util.*;
 
 public class Assets {
+    private AssetManager manager;
+
+    private static final Map<Class<? extends Screen>, List<AssetDescriptor>> assetsNeededByScreen = initializeAssetsNeededByScreen();
 
     // SPLASH SCREEN
     public static final AssetDescriptor<TextureAtlas> SPLASH_ATLAS =
@@ -164,15 +167,16 @@ public class Assets {
         return parameter;
     }
 
-    private static final Map<Class<? extends Screen>, List<AssetDescriptor>> assetsNeededByScreen = new HashMap<Class<? extends Screen>, List<AssetDescriptor>>() {{
-        put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
+    private static HashMap<Class<? extends Screen>, List<AssetDescriptor>> initializeAssetsNeededByScreen() {
+        HashMap<Class<? extends Screen>, List<AssetDescriptor>> assets = new HashMap();
+        assets.put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
                 SPLASH_MUSIC, SPLASH_ATLAS, SPLASH_TXT_LOGO
         ));
-        put(MenuScreen.class, Arrays.<AssetDescriptor>asList(
+        assets.put(MenuScreen.class, Arrays.<AssetDescriptor>asList(
                 MENU_BGD, FONT_SPACE_KILLER_LARGE, MENU_MUSIC, FONT_SPACE_KILLER_MEDIUM, MENU_CLICK,
                 MENU_ATLAS, FONT_SPACE_KILLER_SMALL
         ));
-        put(Level1Screen.class, Arrays.<AssetDescriptor>asList(
+        assets.put(Level1Screen.class, Arrays.<AssetDescriptor>asList(
                 // MUSIC
                 MUSIC_LEVEL_1, MUSIC_LEVEL_1_BOSS,
                 // SOUNDS
@@ -189,7 +193,7 @@ public class Assets {
                 // FONTS
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_SMALLEST,
                 FONT_SPACE_KILLER_MEDIUM));
-        put(Level2Screen.class, Arrays.<AssetDescriptor>asList(
+        assets.put(Level2Screen.class, Arrays.<AssetDescriptor>asList(
                 // MUSIC
                 MUSIC_LEVEL_2, MUSIC_LEVEL_2_BOSS,
                 // SOUNDS
@@ -207,7 +211,7 @@ public class Assets {
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALLEST
         ));
 
-        put(Level3Screen.class, Arrays.<AssetDescriptor>asList(
+        assets.put(Level3Screen.class, Arrays.<AssetDescriptor>asList(
                 // MUSIC
                 MUSIC_LEVEL_3, MUSIC_LEVEL_3_BOSS,
                 // SOUNDS
@@ -225,13 +229,10 @@ public class Assets {
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALLEST
         ));
 
-        put(TransitionScreen.class, Collections.<AssetDescriptor>emptyList());
-        put(SocialScoreScreen.class, Collections.<AssetDescriptor>emptyList());
-
-    }};
-
-    private AssetManager manager;
-
+        assets.put(TransitionScreen.class, Collections.<AssetDescriptor>emptyList());
+        assets.put(SocialScoreScreen.class, Collections.<AssetDescriptor>emptyList());
+        return assets;
+    }
 
     public <T> T get(AssetDescriptor<T> descriptor) {
         return manager.get(descriptor.fileName);

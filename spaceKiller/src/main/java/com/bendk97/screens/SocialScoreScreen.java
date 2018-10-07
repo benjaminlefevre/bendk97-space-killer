@@ -26,7 +26,7 @@ public class SocialScoreScreen extends ScreenAdapter {
 
     public static final String TEMP_DIRECTORY = "temp/spacekiller";
     private static final String TEMP_SPACEKILLER_SCORE_PNG = TEMP_DIRECTORY + "/score-";
-    private final com.bendk97.SpaceKillerGame game;
+    private final SpaceKillerGame game;
     private final OrthographicCamera camera;
     private final SpriteBatch batcher;
     private int score = 0;
