@@ -1,4 +1,10 @@
-package com.google.example.games.basegameutils;
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 07/10/18 15:07
+ * Copyright (c) 2018. All rights reserved.
+ */
+
+package com.bendk97;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,15 +12,13 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Resources;
 import android.util.Log;
+import com.bendk97.space.killer.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.games.GamesActivityResultCodes;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Created by btco on 2/10/14.
- */
 class GameHelperUtils {
     public static final int R_UNKNOWN_ERROR = 0;
     public static final int R_SIGN_IN_FAILED = 1;

@@ -23,7 +23,7 @@ But as libgdx is cross-platform, it should be easy to compile for HTML5, iOS...a
 
 # Dependency graph
 
-![alt dependencies](dependency-graph.svg)
+![alt dependencies](dependency-graph-main-libraries.svg)
 
 # LICENSE
 
