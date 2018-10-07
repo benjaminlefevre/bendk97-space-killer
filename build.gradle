@@ -3,15 +3,19 @@ buildscript {
         mavenLocal()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url 'https://maven.google.com' }
+        google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
-        classpath "com.vanniktech:gradle-dependency-graph-generator-plugin:0.5.0"
+        classpath 'com.android.tools.build:gradle:3.2.0'
+        classpath 'com.vanniktech:gradle-dependency-graph-generator-plugin:0.5.0'
     }
 }
-apply plugin: "com.vanniktech.dependency.graph.generator"
+plugins {
+    id 'jacoco'
+    id 'com.github.kt3k.coveralls' version '2.6.3'
+}
+
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
@@ -23,6 +27,9 @@ allprojects {
         ashleyVersion = '1.7.3'
         postprocessingVersion = '1.0.8'
         tweenVersion = '6.3.3'
+        appcompat_library_version = '28.0.0'
+        support_library_version = '28.0.0'
+        gms_library_version = '16.0.0'
     }
 
     repositories {
@@ -31,6 +38,8 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven { url 'https://jitpack.io' }
+        google()
+        jcenter()
     }
 }
 
@@ -40,43 +49,93 @@ project(":android") {
     configurations { natives }
 
     dependencies {
-        compile project(":spaceKiller")
-        compile fileTree(dir: '../libs', include: '*.jar')
-        compile project(":BaseGameUtils")
-        compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+        implementation project(":spaceKiller")
+        implementation fileTree(dir: '../libs', include: '*.jar')
+        implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
-        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86_64"
+        implementation "com.android.support:appcompat-v7:${appcompat_library_version}"
+        implementation "com.android.support:support-v4:${support_library_version}"
+        implementation "com.google.android.gms:play-services-games:${gms_library_version}"
+        implementation "com.google.android.gms:play-services-plus:${gms_library_version}"
     }
 }
 
 project(":spaceKiller") {
     apply plugin: "java"
+    apply plugin: 'jacoco'
+    jacocoTestReport {
+        reports {
+            xml.enabled = true // coveralls plugin depends on xml format report
+            html.enabled = true
+        }
+    }
     dependencies {
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
-        compile "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
-        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        compile "com.github.Anuken:gdx-postprocessing:$postprocessingVersion"
-        compile "org.mini2Dx:universal-tween-engine:$tweenVersion"
+        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        implementation "com.badlogicgames.ashley:ashley:$ashleyVersion"
+        implementation "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
+        implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        implementation "com.github.Anuken:gdx-postprocessing:$postprocessingVersion"
+        implementation "org.mini2Dx:universal-tween-engine:$tweenVersion"
+        testImplementation "junit:junit:4.12"
+        testImplementation "org.mockito:mockito-core:2.2.7"
     }
 }
 
 tasks.eclipse.doLast {
     delete ".project"
+}
+
+
+import com.vanniktech.dependency.graph.generator.DependencyGraphGeneratorPlugin
+import com.vanniktech.dependency.graph.generator.DependencyGraphGeneratorExtension.Generator
+import guru.nidi.graphviz.attribute.Color
+import guru.nidi.graphviz.attribute.Style
+
+plugins.apply(DependencyGraphGeneratorPlugin)
+
+
+def mainLibDependenciesGenerator = new Generator(
+        "mainLibraries", // Suffix for our Gradle task.
+        { dependency ->
+
+            (dependency.getModuleGroup().startsWith("com.google.android.gms")
+                    || dependency.getModuleGroup().startsWith("com.badlogic")
+                    || dependency.getModuleGroup().startsWith("box2dlights")
+                    || dependency.getModuleName().startsWith("universal-tween-engine")
+                    || dependency.getModuleGroup().startsWith("com.github.Anuken")
+                    || dependency.getModuleName().startsWith("spaceKiller")
+            )
+
+        },
+        { dependency -> true }, // Include transitive dependencies.
+        { node, dependency ->
+            if (dependency.getModuleName().startsWith("spaceKiller")) {
+                node.add(Style.FILLED, Color.rgb("#FF0000"))
+            } else if (dependency.getModuleGroup().startsWith("com.google.android.gms")) {
+                node.add(Style.FILLED, Color.rgb("#FBFF28"))
+            } else {
+                node.add(Style.FILLED, Color.rgb("#232EFF"))
+            }
+        }
+)
+
+dependencyGraphGenerator {
+    generators = [mainLibDependenciesGenerator]
 }

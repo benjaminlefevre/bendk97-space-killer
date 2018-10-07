@@ -22,7 +22,6 @@ import com.bendk97.share.IntentShare;
 import com.bendk97.space.killer.BuildConfig;
 import com.bendk97.space.killer.R;
 import com.google.android.gms.games.Games;
-import com.google.example.games.basegameutils.GameHelper;
 
 import static com.bendk97.SpaceKillerGameConstants.DEBUG;
 
