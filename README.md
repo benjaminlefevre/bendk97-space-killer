@@ -5,7 +5,7 @@
 Space Killer is a shmup game (shoot'em up) developed with libgdx, a cross-platform java game development.
 The game is currently published in the google playstore here: [Space Killer](https://play.google.com/store/apps/details?id=com.benk97.space.killer&hl=en_US)
 
-Several libraries are used:
+Several libraries are used: TEST
 
 | Library  | Version | Link |
 | ------------- | ------------- | ------------- |
