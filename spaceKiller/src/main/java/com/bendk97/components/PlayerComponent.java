@@ -18,6 +18,22 @@ import static com.bendk97.components.PlayerComponent.PowerLevel.*;
 
 public class PlayerComponent implements Component, Pool.Poolable {
 
+    public int enemiesCountLevel = 0;
+    public int enemiesKilledLevel = 0;
+    public long fireDelay = FIRE_DELAY;
+    public long fireDelaySide = FIRE_DELAY_SIDE;
+    public int enemiesKilled = 0;
+    public int laserShipKilled = 0;
+    public int howManyLivesLost = 0;
+    private int score = 0;
+    private int high_score = 0;
+    public int lives = LIVES;
+    public int bombs = BOMBS;
+    public PowerLevel powerLevel = NORMAL;
+    public int numberOfContinue = NUMBER_OF_CONTINUE;
+    public Level level = Level.Level1;
+    public float secondScript = -3;
+
     public void enemyKilled() {
         enemiesKilledLevel++;
         enemiesKilled++;
@@ -48,23 +64,6 @@ public class PlayerComponent implements Component, Pool.Poolable {
         }
 
     }
-
-    public int enemiesCountLevel = 0;
-    public int enemiesKilledLevel = 0;
-
-    public long fireDelay = FIRE_DELAY;
-    public long fireDelaySide = FIRE_DELAY_SIDE;
-    public int enemiesKilled = 0;
-    public int laserShipKilled = 0;
-    public int howManyLivesLost = 0;
-    private int score = 0;
-    private int high_score = 0;
-    public int lives = LIVES;
-    public int bombs = BOMBS;
-    public PowerLevel powerLevel = NORMAL;
-    public int numberOfContinue = NUMBER_OF_CONTINUE;
-    public Level level = Level.Level1;
-    public float secondScript = -3;
 
     public PlayerData copyPlayerData() {
         return new PlayerData(level, numberOfContinue, fireDelay, fireDelaySide, enemiesKilled, laserShipKilled, howManyLivesLost, score, lives, bombs, powerLevel);
@@ -155,6 +154,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
                 powerLevel = TRIPLE_VERY_FAST;
                 break;
             case TRIPLE_VERY_FAST:
+            default:
                 updateScore(100);
                 break;
         }

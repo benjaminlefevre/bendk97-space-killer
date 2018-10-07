@@ -16,7 +16,7 @@ package com.bendk97.inputs;
 
 
     abstract class TouchInputProcessor extends InputAdapter {
-    final com.bendk97.listeners.InputListener listener;
+    final InputListener listener;
 
     final Camera camera;
     Rectangle[] squareTouches;

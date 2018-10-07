@@ -473,7 +473,7 @@ public class MenuScreen extends HDScreen {
 
     @Override
     public void show() {
-
+        // Nothing to show lol
     }
 
     @Override
@@ -500,19 +500,24 @@ public class MenuScreen extends HDScreen {
     }
 
     public void signInSucceeded() {
-        displayGoogleIcons(true);
+        displayImageButtons(gplay, leaderBoard, achievements);
+        hideImageButtons(gplayOff, leaderBoard_off, achievements_off);
     }
 
     public void signInFailed() {
-        displayGoogleIcons(false);
+        displayImageButtons(gplayOff, leaderBoard_off, achievements_off);
+        hideImageButtons(gplay, leaderBoard, achievements);
     }
 
-    private void displayGoogleIcons(boolean success) {
-        stage.addActor(success ? gplay : gplayOff);
-        stage.addActor(success ? leaderBoard : leaderBoard_off);
-        stage.addActor(success ? achievements : achievements_off);
-        (success ? gplayOff : gplay).remove();
-        (success ? achievements_off : achievements).remove();
-        (success ? leaderBoard_off : leaderBoard).remove();
+    private void displayImageButtons(ImageButton ... imageButtons) {
+        for(ImageButton imageButton : imageButtons){
+            stage.addActor(imageButton);
+        }
+    }
+
+    private void hideImageButtons(ImageButton ... imageButtons) {
+        for(ImageButton imageButton : imageButtons){
+            imageButton.remove();
+        }
     }
 }

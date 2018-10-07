@@ -38,6 +38,9 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+
+    private static final int INTENT_ACTIVITY = 666;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,6 +174,8 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
             case KILL_BOSS_3:
                 r = getString(R.string.achievement_kill_the_boss_of_the_level_3);
                 break;
+            default:
+                return;
         }
 
         Games.Achievements.unlock(gameHelper.getApiClient(), r);
@@ -208,8 +213,6 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
     public boolean isSignedIn() {
         return gameHelper.isSignedIn();
     }
-
-    private static final int INTENT_ACTIVITY = 666;
 
     @Override
     public void shareScore(final String filePath) {

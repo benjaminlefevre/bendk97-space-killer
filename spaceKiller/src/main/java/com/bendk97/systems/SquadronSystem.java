@@ -26,9 +26,10 @@ public class SquadronSystem extends IteratingSystem {
     private int threshold_power_up = THRESHOLD_POWER_UP_DEFAULT;
     private int threshold_shield = THRESHOLD_SHIELD_DEFAULT;
 
-    private final com.bendk97.entities.EntityFactory entityFactory;
+    private final EntityFactory entityFactory;
     private final Entity player;
     private final PlayerListener playerListener;
+    private final Random random = new RandomXS128();
 
     public SquadronSystem(LevelScreen.Level level, int priority, EntityFactory entityFactory, Entity player, PlayerListener playerListener) {
         super(Family.all(SquadronComponent.class).get(), priority);
@@ -38,13 +39,11 @@ public class SquadronSystem extends IteratingSystem {
         if (level.equals(LevelScreen.Level.Level3)) {
             threshold_power_up = 14;
             threshold_shield = 20;
-        } else if(level.equals(LevelScreen.Level.Level2)){
+        } else if (level.equals(LevelScreen.Level.Level2)) {
             threshold_power_up = 17;
             threshold_shield = 21;
         }
     }
-
-    private final Random random = new RandomXS128();
 
     @Override
     public void processEntity(final Entity entity, float deltaTime) {

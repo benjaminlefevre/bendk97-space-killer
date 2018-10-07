@@ -31,14 +31,14 @@ import static com.bendk97.tweens.SpriteComponentAccessor.ALPHA;
 
 
 public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
-    private final com.bendk97.entities.EntityFactory entityFactory;
+    private final EntityFactory entityFactory;
     private SnapshotArray<Entity> lives;
     private SnapshotArray<Entity> bombs;
     private final TweenManager tweenManager;
     private final Assets assets;
     private final LevelScreen screen;
     private final SpaceKillerGame game;
-    private final com.bendk97.screens.ScreenShake screenShake;
+    private final ScreenShake screenShake;
 
 
     public PlayerListenerImpl(SpaceKillerGame game, Assets asset, EntityFactory entityFactory, SnapshotArray<Entity> lives,

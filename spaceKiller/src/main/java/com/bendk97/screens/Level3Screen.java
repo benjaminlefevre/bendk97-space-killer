@@ -26,7 +26,7 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 public class Level3Screen extends LevelScreen {
 
 
-    private final com.bendk97.entities.SoloEnemyFactory soloEnemyFactory;
+    private final SoloEnemyFactory soloEnemyFactory;
 
     private LinkedList<ScriptItem> scriptItemsEasy;
     private LinkedList<ScriptItem> scriptItemsMediumLeft;
@@ -180,6 +180,8 @@ public class Level3Screen extends LevelScreen {
                     assets.stopMusic(Assets.MUSIC_LEVEL_3);
                     playMusic(Assets.MUSIC_LEVEL_3_BOSS, 1f);
                     boss.execute();
+                    break;
+                default:
                     break;
             }
         }

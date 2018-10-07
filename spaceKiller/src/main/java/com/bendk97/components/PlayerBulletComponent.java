@@ -12,6 +12,6 @@ import com.badlogic.gdx.utils.Pool;
 public class PlayerBulletComponent implements Component, Pool.Poolable{
     @Override
     public void reset() {
-
+        // Nothing to reset, this component is stateless
     }
 }

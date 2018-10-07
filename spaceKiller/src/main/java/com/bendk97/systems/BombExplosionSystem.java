@@ -18,7 +18,7 @@ public class BombExplosionSystem extends IteratingSystem {
 
     private final Family enemies = Family.one(EnemyComponent.class).get();
     private final Family bullets = Family.one(EnemyBulletComponent.class).get();
-    private final com.bendk97.listeners.CollisionListener collisionListener;
+    private final CollisionListener collisionListener;
     private final Entity player;
 
     public BombExplosionSystem(int priority, CollisionListener collisionListener, Entity player) {

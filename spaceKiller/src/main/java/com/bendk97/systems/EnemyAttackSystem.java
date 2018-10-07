@@ -21,7 +21,7 @@ import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
 public class EnemyAttackSystem extends IteratingSystem {
 
-    private final com.bendk97.entities.EntityFactory entityFactory;
+    private final EntityFactory entityFactory;
     private final Random random = new RandomXS128();
     private final Family player = Family.one(PlayerComponent.class).exclude(PauseComponent.class).get();
 

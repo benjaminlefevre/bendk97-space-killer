@@ -114,12 +114,13 @@ public class Level1Screen extends LevelScreen {
                             .target(50f).start(tweenManager);
                     Tween.to(Mappers.velocity.get(background2), VELOCITY_Y, 4).ease(Quad.IN)
                             .target(20f).start(tweenManager);
-
                     break;
                 case 189:
                     assets.stopMusic(MUSIC_LEVEL_1);
                     playMusic(MUSIC_LEVEL_1_BOSS, 1f);
                     boss.execute();
+                    break;
+                default:
                     break;
             }
         }

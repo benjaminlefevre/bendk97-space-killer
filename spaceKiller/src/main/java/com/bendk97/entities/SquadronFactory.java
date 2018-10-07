@@ -100,6 +100,7 @@ public class SquadronFactory {
                     break;
                 default:
                     entitiesSquadron.add(entityFactory.createEnemyShip(squadron, random.nextBoolean(), bulletVelocity, rateShoot, shipType));
+                    break;
             }
         }
         allEntities.addAll(entitiesSquadron);
@@ -146,6 +147,7 @@ public class SquadronFactory {
                 createArrowUpSquadron(entities, velocity);
                 break;
             case INFINITE_CIRCLE:
+            default:
                 createInfiniteCircle(entities, velocity);
                 break;
         }

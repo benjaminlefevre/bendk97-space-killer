@@ -20,10 +20,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 class GameHelperUtils {
-    public static final int R_UNKNOWN_ERROR = 0;
-    public static final int R_SIGN_IN_FAILED = 1;
-    public static final int R_APP_MISCONFIGURED = 2;
-    public static final int R_LICENSE_FAILED = 3;
+    static final int R_UNKNOWN_ERROR = 0;
+    static final int R_SIGN_IN_FAILED = 1;
+    static final int R_APP_MISCONFIGURED = 2;
+    static final int R_LICENSE_FAILED = 3;
 
     private final static String[] FALLBACK_STRINGS = {
             "*Unknown error.",
@@ -120,7 +120,7 @@ class GameHelperUtils {
         Log.w("GameHelper", "****   http://developers.google.com/games/services/android/troubleshooting");
     }
 
-    static String getAppIdFromResource(Context ctx) {
+    private static String getAppIdFromResource(Context ctx) {
         try {
             Resources res = ctx.getResources();
             String pkgName = ctx.getPackageName();
@@ -132,7 +132,7 @@ class GameHelperUtils {
         }
     }
 
-    static String getSHA1CertFingerprint(Context ctx) {
+    private static String getSHA1CertFingerprint(Context ctx) {
         try {
             Signature[] sigs = ctx.getPackageManager().getPackageInfo(
                     ctx.getPackageName(), PackageManager.GET_SIGNATURES).signatures;
@@ -169,8 +169,8 @@ class GameHelperUtils {
     }
 
     static String getString(Context ctx, int whichString) {
-        whichString = whichString >= 0 && whichString < RES_IDS.length ? whichString : 0;
-        int resId = RES_IDS[whichString];
+        int whichStringValue = whichString >= 0 && whichString < RES_IDS.length ? whichString : 0;
+        int resId = RES_IDS[whichStringValue];
         try {
             return ctx.getString(resId);
         } catch (Exception ex) {
@@ -179,7 +179,7 @@ class GameHelperUtils {
                 "This probably happened because you included it as a stand-alone JAR. " +
                 "BaseGameUtils should be compiled as a LIBRARY PROJECT, so that it can access " +
                 "its resources. Using a fallback string.");
-            return FALLBACK_STRINGS[whichString];
+            return FALLBACK_STRINGS[whichStringValue];
         }
     }
 }

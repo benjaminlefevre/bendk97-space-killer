@@ -51,11 +51,10 @@ public class CollisionSystem extends EntitySystem {
         for (Entity player : getEngine().getEntitiesFor(player)) {
             for (Entity bullet : getEngine().getEntitiesFor(playerBullet)) {
                 for (Entity enemy : getEngine().getEntitiesFor(enemies)) {
-                    if (!Mappers.enemy.get(enemy).isDead()) {
-                        if (isCollisionBetween(Mappers.sprite.get(enemy).sprite, Mappers.sprite.get(bullet).sprite)) {
-                            collisionListener.enemyShoot(enemy, player, bullet);
-                            return;
-                        }
+                    if (!Mappers.enemy.get(enemy).isDead()
+                            && isCollisionBetween(Mappers.sprite.get(enemy).sprite, Mappers.sprite.get(bullet).sprite)) {
+                        collisionListener.enemyShoot(enemy, player, bullet);
+                        return;
                     }
                 }
             }

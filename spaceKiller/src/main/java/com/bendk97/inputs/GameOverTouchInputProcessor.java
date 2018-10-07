@@ -25,7 +25,7 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 public class GameOverTouchInputProcessor implements InputProcessor {
 
     private final Camera camera;
-    private final com.bendk97.SpaceKillerGame game;
+    private final SpaceKillerGame game;
     private final Rectangle playAgain;
     private final Rectangle home;
     private final Rectangle share;
