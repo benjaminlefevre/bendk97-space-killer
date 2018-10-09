@@ -1,10 +1,10 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 29/09/18 21:09
+ * Last modified 07/10/18 18:34
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97.screens;
+package com.bendk97.screens.levels.utils;
 
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;

@@ -14,10 +14,13 @@ import com.bendk97.components.Mappers;
 import com.bendk97.components.SquadronComponent;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.listeners.PlayerListener;
-import com.bendk97.screens.LevelScreen;
+import com.bendk97.screens.levels.Levels;
 import com.bendk97.timer.PausableTimer;
 
 import java.util.Random;
+
+import static com.bendk97.screens.levels.Levels.Level2;
+import static com.bendk97.screens.levels.Levels.Level3;
 
 public class SquadronSystem extends IteratingSystem {
 
@@ -31,15 +34,15 @@ public class SquadronSystem extends IteratingSystem {
     private final PlayerListener playerListener;
     private final Random random = new RandomXS128();
 
-    public SquadronSystem(LevelScreen.Level level, int priority, EntityFactory entityFactory, Entity player, PlayerListener playerListener) {
+    public SquadronSystem(Levels level, int priority, EntityFactory entityFactory, Entity player, PlayerListener playerListener) {
         super(Family.all(SquadronComponent.class).get(), priority);
         this.entityFactory = entityFactory;
         this.player = player;
         this.playerListener = playerListener;
-        if (level.equals(LevelScreen.Level.Level3)) {
+        if (level.equals(Level3)) {
             threshold_power_up = 14;
             threshold_shield = 20;
-        } else if (level.equals(LevelScreen.Level.Level2)) {
+        } else if (level.equals(Level2)) {
             threshold_power_up = 17;
             threshold_shield = 21;
         }

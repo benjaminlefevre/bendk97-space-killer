@@ -17,7 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.TankComponent.TankLevel;
-import com.bendk97.screens.LevelScreen.Level;
+import com.bendk97.screens.levels.Levels;
 import com.bendk97.tweens.PositionComponentAccessor;
 
 import java.util.List;
@@ -25,6 +25,8 @@ import java.util.Random;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.bendk97.screens.levels.Levels.Level2;
+import static com.bendk97.screens.levels.Levels.Level3;
 
 public class SoloEnemyFactory {
 
@@ -37,10 +39,10 @@ public class SoloEnemyFactory {
     private final EntityFactory entityFactory;
     private final Random random = new RandomXS128();
     private final Engine engine;
-    private final Level level;
+    private final Levels level;
     private final Entity player;
 
-    public SoloEnemyFactory(Level level, Engine engine, TweenManager tweenManager, EntityFactory entityFactory, Entity player) {
+    public SoloEnemyFactory(Levels level, Engine engine, TweenManager tweenManager, EntityFactory entityFactory, Entity player) {
         this.tweenManager = tweenManager;
         this.engine = engine;
         this.level = level;
@@ -181,9 +183,9 @@ public class SoloEnemyFactory {
     }
 
     private int getRandomStaticEnemy() {
-        if (level.equals(Level.Level2)) {
+        if (level.equals(Level2)) {
             return random.nextInt(EntityFactory.NB_SHIP_LV2_LASER_SHIP) + EntityFactory.SHIP_LV2_LASER_SHIP1;
-        } else if (level.equals(Level.Level3)) {
+        } else if (level.equals(Level3)) {
             return EntityFactory.SHIP_LV3_1 + random.nextInt(EntityFactory.NB_SHIP_LV3);
         }
         throw new IllegalArgumentException("Unexpected Exception");

@@ -17,9 +17,11 @@ import com.bendk97.components.LevelFinishedComponent;
 import com.bendk97.components.Mappers;
 import com.bendk97.components.PauseComponent;
 import com.bendk97.components.PlayerComponent;
-import com.bendk97.screens.LevelScreen.Level;
+import com.bendk97.screens.levels.Levels;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
+import static com.bendk97.screens.levels.Levels.Level2;
+import static com.bendk97.screens.levels.Levels.Level3;
 
 public class LevelFinishedRenderingSystem extends IteratingSystem {
     private static final String LEVEL_1_FINISHED = "lvl 1 completed";
@@ -31,9 +33,9 @@ public class LevelFinishedRenderingSystem extends IteratingSystem {
     private static final String GO_NEXT = "go next level";
     private final SpriteBatch batcher;
     private final BitmapFont mediumFont;
-    private final Level level;
+    private final Levels level;
 
-    public LevelFinishedRenderingSystem(SpriteBatch batcher, Assets assets, Level level, int priority) {
+    public LevelFinishedRenderingSystem(SpriteBatch batcher, Assets assets, Levels level, int priority) {
         super(Family.all(PlayerComponent.class, LevelFinishedComponent.class).exclude(PauseComponent.class).get(), priority);
         this.level = level;
         this.batcher = batcher;
@@ -44,12 +46,12 @@ public class LevelFinishedRenderingSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         mediumFont.draw(batcher,
-                level.equals(Level.Level3) ? LEVEL_3_FINISHED :
-                        level.equals(Level.Level2) ? LEVEL_2_FINISHED : LEVEL_1_FINISHED, 10f, 4 * SCREEN_HEIGHT / 5f);
+                level.equals(Level3) ? LEVEL_3_FINISHED :
+                        level.equals(Level2) ? LEVEL_2_FINISHED : LEVEL_1_FINISHED, 10f, 4 * SCREEN_HEIGHT / 5f);
         PlayerComponent player = Mappers.player.get(entity);
         mediumFont.draw(batcher, ENEMIES_KILLED, 10f, 4 * SCREEN_HEIGHT / 5f - 100f);
         mediumFont.draw(batcher, player.enemiesKilledLevel + " out of " + player.enemiesCountLevel, 40f, 4 * SCREEN_HEIGHT / 5f - 150f);
-        if (!level.equals(Level.Level3)) {
+        if (!level.equals(Level3)) {
             mediumFont.draw(batcher, GO_NEXT, 10f, 4 * SCREEN_HEIGHT / 5f - 250f);
         } else {
             mediumFont.draw(batcher, NEXT_NOT_IMPLEMENTED, 10f, 4 * SCREEN_HEIGHT / 5f - 250f);

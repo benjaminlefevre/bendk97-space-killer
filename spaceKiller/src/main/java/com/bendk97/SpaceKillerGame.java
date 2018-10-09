@@ -13,10 +13,11 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.bendk97.assets.Assets;
 import com.bendk97.google.PlayServices;
 import com.bendk97.player.PlayerData;
-import com.bendk97.screens.LevelScreen;
 import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SplashScreen;
-import com.bendk97.screens.TransitionScreen;
+import com.bendk97.screens.levels.LevelScreen;
+import com.bendk97.screens.levels.Levels;
+import com.bendk97.screens.levels.utils.TransitionScreen;
 import com.bendk97.share.IntentShare;
 
 import java.io.File;
@@ -51,7 +52,7 @@ public class SpaceKillerGame extends Game {
                     public void run() {
                         try {
                             for (File file : tempDirectoryFiles) {
-                                if(!file.delete()) {
+                                if (!file.delete()) {
                                     Gdx.app.log(INTENT_FILES, WAS_UNABLE_TO_CLEAN_TEMP_DIRECTORY);
                                 }
                             }
@@ -77,15 +78,29 @@ public class SpaceKillerGame extends Game {
     }
 
     public void goToScreen(Class<? extends Screen> screen) {
-        goToScreen(screen, null, null);
-    }
-
-    public void goToScreen(Class<? extends Screen> screen, PlayerData playerData, FrameBuffer screenshot) {
         try {
             assets.loadResources(screen);
-            this.playerData = playerData;
             //noinspection JavaReflectionMemberAccess
             currentScreen = screen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this);
+            this.setScreen(currentScreen);
+        } catch (Exception e) {
+            Gdx.app.log("Guru Meditation", "error: " + e.getMessage());
+            Gdx.app.exit();
+        } finally {
+            Runtime.getRuntime().gc();
+        }
+    }
+
+    public void goToLevelScreen(Levels level) {
+        goToLevelScreen(level, null, null);
+    }
+
+    public void goToLevelScreen(Levels level, PlayerData playerData, FrameBuffer screenshot) {
+        try {
+            assets.loadResources(level);
+            this.playerData = playerData;
+            //noinspection JavaReflectionMemberAccess
+            currentScreen = new LevelScreen(assets, this, level);
             if (screenshot != null) {
                 this.setScreen(new TransitionScreen(screenshot, currentScreen, this));
             } else {
@@ -98,6 +113,7 @@ public class SpaceKillerGame extends Game {
             Runtime.getRuntime().gc();
         }
     }
+
 
     @Override
     public void dispose() {

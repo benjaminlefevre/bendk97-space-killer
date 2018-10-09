@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.bendk97.listeners.InputListener;
-import com.bendk97.screens.LevelScreen;
+import com.bendk97.screens.levels.LevelScreen;
 
 public class RetroPadController extends com.bendk97.inputs.TouchInputProcessor {
 

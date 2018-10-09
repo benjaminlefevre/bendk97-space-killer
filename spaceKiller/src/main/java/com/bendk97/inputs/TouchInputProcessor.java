@@ -12,7 +12,7 @@ package com.bendk97.inputs;
     import com.badlogic.gdx.math.Rectangle;
     import com.badlogic.gdx.math.Vector3;
     import com.bendk97.listeners.InputListener;
-    import com.bendk97.screens.LevelScreen;
+    import com.bendk97.screens.levels.LevelScreen;
 
 
     abstract class TouchInputProcessor extends InputAdapter {

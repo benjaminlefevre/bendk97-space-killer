@@ -27,7 +27,7 @@ public class Settings {
     }
 
     public static boolean isVirtualPad() {
-        return settings.preferences.getString(CONTROLLER).equals("virtual");
+        return settings.preferences.getString(CONTROLLER, "virtual").equals("virtual");
     }
 
     public static void setRetroPad() {

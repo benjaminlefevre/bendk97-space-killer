@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.SpriteComponent;
+import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.tweens.CameraTween;
 import com.bendk97.tweens.PositionComponentAccessor;
 
@@ -58,31 +59,29 @@ public class SquadronFactory {
         this.camera = camera;
     }
 
-    public void createSquadron(int shipType, int squadronType, float velocity, int number, boolean powerUp,
-                               boolean displayBonus, int bonus, float bulletVelocity, int rateShoot,
-                               Object... params) {
-        Entity squadron = entityFactory.createSquadron(powerUp, displayBonus, bonus);
+    public void createSquadron(ScriptItem scriptItem) {
+        Entity squadron = entityFactory.createSquadron(scriptItem.powerUp, scriptItem.displayBonus, scriptItem.bonus);
 
         Array<Entity> entitiesSquadron = new Array<Entity>(Entity.class);
         Array<Entity> allEntities = new Array<Entity>(Entity.class);
 
-        for (int i = 0; i < number; ++i) {
-            switch (shipType) {
+        for (int i = 0; i < scriptItem.number; ++i) {
+            switch (scriptItem.typeShip) {
                 case EntityFactory.BOSS_LEVEL_1:
-                    entitiesSquadron.add(entityFactory.createBoss(squadron, bulletVelocity, bulletVelocity));
+                    entitiesSquadron.add(entityFactory.createBoss(squadron, scriptItem.bulletVelocity, scriptItem.bulletVelocity));
                     break;
                 case EntityFactory.BOSS_LEVEL_2:
-                    entitiesSquadron.add(entityFactory.createBoss2(squadron, bulletVelocity, bulletVelocity, 800f));
+                    entitiesSquadron.add(entityFactory.createBoss2(squadron, scriptItem.bulletVelocity, scriptItem.bulletVelocity, 800f));
                     break;
                 case EntityFactory.BOSS_LEVEL_3:
-                    entitiesSquadron.add(entityFactory.createBoss3(squadron, bulletVelocity, 250f, 800f));
+                    entitiesSquadron.add(entityFactory.createBoss3(squadron, scriptItem.bulletVelocity, 250f, 800f));
                     break;
                 case EntityFactory.SOUCOUPE:
-                    entitiesSquadron.add(entityFactory.createEnemySoucoupe(squadron, random.nextBoolean(), bulletVelocity));
+                    entitiesSquadron.add(entityFactory.createEnemySoucoupe(squadron, random.nextBoolean(), scriptItem.bulletVelocity));
                     break;
                 case EntityFactory.ASTEROID_1:
                 case EntityFactory.ASTEROID_2:
-                    entitiesSquadron.add(entityFactory.createAsteroid(squadron, shipType));
+                    entitiesSquadron.add(entityFactory.createAsteroid(squadron, scriptItem.typeShip));
                     break;
                 case EntityFactory.HOUSE_1:
                 case EntityFactory.HOUSE_2:
@@ -93,18 +92,18 @@ public class SquadronFactory {
                 case EntityFactory.HOUSE_7:
                 case EntityFactory.HOUSE_8:
                 case EntityFactory.HOUSE_9:
-                    Array<Entity> house = entityFactory.createHouse(squadron, shipType);
+                    Array<Entity> house = entityFactory.createHouse(squadron, scriptItem.typeShip);
                     allEntities.add(house.get(1));
                     entitiesSquadron.add(house.get(0));
 
                     break;
                 default:
-                    entitiesSquadron.add(entityFactory.createEnemyShip(squadron, random.nextBoolean(), bulletVelocity, rateShoot, shipType));
+                    entitiesSquadron.add(entityFactory.createEnemyShip(squadron, random.nextBoolean(), scriptItem.bulletVelocity, scriptItem.rateShoot, scriptItem.typeShip));
                     break;
             }
         }
         allEntities.addAll(entitiesSquadron);
-        formSquadron(allEntities.toArray(), squadronType, velocity, params);
+        formSquadron(allEntities.toArray(), scriptItem.typeSquadron, scriptItem.velocity, scriptItem.params);
         Mappers.squadron.get(squadron).addEntities(entitiesSquadron.toArray());
     }
 

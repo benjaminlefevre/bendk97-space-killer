@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.listeners.InputListener;
-import com.bendk97.screens.LevelScreen;
+import com.bendk97.screens.levels.LevelScreen;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
