@@ -30,8 +30,8 @@ import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.*;
 import com.bendk97.components.TankComponent.TankLevel;
-import com.bendk97.screens.LevelScreen;
-import com.bendk97.screens.ScreenShake;
+import com.bendk97.screens.levels.Levels;
+import com.bendk97.screens.levels.utils.ScreenShake;
 import com.bendk97.timer.PausableTimer;
 
 import java.util.ArrayList;
@@ -44,6 +44,8 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.*;
 import static com.bendk97.components.Mappers.position;
 import static com.bendk97.components.Mappers.sprite;
+import static com.bendk97.screens.levels.Levels.Level1;
+import static com.bendk97.screens.levels.Levels.Level3;
 import static com.bendk97.tweens.PositionComponentAccessor.POSITION_XY;
 import static com.bendk97.tweens.PositionComponentAccessor.POSITION_Y;
 import static com.bendk97.tweens.SpriteComponentAccessor.ALPHA;
@@ -113,7 +115,7 @@ public class EntityFactory implements Disposable {
 
 
     public EntityFactory(SpaceKillerGame game, PooledEngine engine, Assets assets, TweenManager tweenManager, RayHandler rayHandler,
-                         ScreenShake screenShake, LevelScreen.Level level) {
+                         ScreenShake screenShake, Levels level) {
         this.engine = engine;
         this.screenShake = screenShake;
         this.game = game;
@@ -426,10 +428,10 @@ public class EntityFactory implements Disposable {
 
     public void createBossFire(final Entity boss, final Entity player) {
         int type = random.nextInt(3);
-        LevelScreen.Level level = Mappers.player.get(player).level;
+        Levels level = Mappers.player.get(player).level;
         if (type == 0) {
-            final int bullets = level.equals(LevelScreen.Level.Level3) ? 20 : 10;
-            float delay = level.equals(LevelScreen.Level.Level3) ? 0.1f : 0.2f;
+            final int bullets = level.equals(Level3) ? 20 : 10;
+            float delay = level.equals(Level3) ? 0.1f : 0.2f;
             for (int i = 0; i < bullets; ++i) {
                 PausableTimer.schedule(new PausableTimer.Task() {
                     @Override
@@ -438,10 +440,10 @@ public class EntityFactory implements Disposable {
                     }
                 }, 0f + delay * i);
             }
-        } else if (type == 1 || level.equals(LevelScreen.Level.Level1)
+        } else if (type == 1 || level.equals(Level1)
                 || Mappers.position.get(boss).x < 0 || Mappers.position.get(boss).x > SCREEN_WIDTH * 3f / 4f) {
             createBossFireCircle(boss, false);
-            if (level.equals(LevelScreen.Level.Level3)) {
+            if (level.equals(Level3)) {
                 createBossFireCircle(boss, true);
             }
         } else {
@@ -449,7 +451,7 @@ public class EntityFactory implements Disposable {
             BossComponent bossComponent = Mappers.boss.get(boss);
             createEnemyFireLaser(position.x + 160f, position.y + 170f, bossComponent.velocityFire2);
             createEnemyFireLaser(position.x + 195f, position.y + 170f, bossComponent.velocityFire2);
-            if (level.equals(LevelScreen.Level.Level3)) {
+            if (level.equals(Level3)) {
                 createEnemyFireLaser(position.x + 160f, position.y + 170f, -bossComponent.velocityFire2);
                 createEnemyFireLaser(position.x + 195f, position.y + 170f, -bossComponent.velocityFire2);
 
@@ -1008,7 +1010,7 @@ public class EntityFactory implements Disposable {
     }
 
 
-    public Entity createEntityPlayer(LevelScreen.Level level) {
+    public Entity createEntityPlayer(Levels level) {
         Entity player = engine.createEntity();
         if (engine.getEntitiesFor(Family.one(PlayerComponent.class).get()).size() > 0) {
             throw new IllegalArgumentException("A player entity already exists!");

@@ -27,6 +27,7 @@ import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
+import static com.bendk97.screens.levels.Levels.Level1;
 
 public class MenuScreen extends HDScreen {
 
@@ -139,7 +140,7 @@ public class MenuScreen extends HDScreen {
                 assets.playSound(Assets.MENU_CLICK);
                 assets.get(Assets.MENU_MUSIC).stop();
                 dispose();
-                game.goToScreen(Level1Screen.class);
+                game.goToLevelScreen(Level1);
                 return true;
             }
         });

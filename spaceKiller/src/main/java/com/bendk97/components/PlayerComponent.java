@@ -10,10 +10,12 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Pool;
 import com.bendk97.player.PlayerData;
-import com.bendk97.screens.LevelScreen.Level;
+import com.bendk97.player.PlayerDataBuilder;
+import com.bendk97.screens.levels.Levels;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.components.PlayerComponent.PowerLevel.*;
+import static com.bendk97.screens.levels.Levels.Level1;
 
 
 public class PlayerComponent implements Component, Pool.Poolable {
@@ -31,7 +33,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
     public int bombs = BOMBS;
     public PowerLevel powerLevel = NORMAL;
     public int numberOfContinue = NUMBER_OF_CONTINUE;
-    public Level level = Level.Level1;
+    public Levels level = Level1;
     public float secondScript = -3;
 
     public void enemyKilled() {
@@ -40,12 +42,12 @@ public class PlayerComponent implements Component, Pool.Poolable {
     }
 
     public enum PowerLevel {
-        NORMAL(new Color(43f/255f, 197f/255f, 205f/255f, 0.6f), "bullet"),
-        DOUBLE(new Color(43f/255f, 197f/255f, 205f/255f, 0.6f), "bullet2"),
-        TRIPLE(new Color(43f/255f, 197f/255f, 205f/255f, 0.6f), "bullet3"),
-        TRIPLE_SIDE(new Color(43f/255f, 197f/255f, 205f/255f, 0.6f), "bullet3", "bulletLeft1", "bulletRight1"),
-        TRIPLE_FAST(new Color(3f/255f, 255f/255f, 136f/255f, 0.6f), "bullet4", "bulletLeft2", "bulletRight2"),
-        TRIPLE_VERY_FAST(new Color(255f/255f, 120f/255f, 0f, 0.6f),"bullet5", "bulletLeft3", "bulletRight3");
+        NORMAL(new Color(43f / 255f, 197f / 255f, 205f / 255f, 0.6f), "bullet"),
+        DOUBLE(new Color(43f / 255f, 197f / 255f, 205f / 255f, 0.6f), "bullet2"),
+        TRIPLE(new Color(43f / 255f, 197f / 255f, 205f / 255f, 0.6f), "bullet3"),
+        TRIPLE_SIDE(new Color(43f / 255f, 197f / 255f, 205f / 255f, 0.6f), "bullet3", "bulletLeft1", "bulletRight1"),
+        TRIPLE_FAST(new Color(3f / 255f, 255f / 255f, 136f / 255f, 0.6f), "bullet4", "bulletLeft2", "bulletRight2"),
+        TRIPLE_VERY_FAST(new Color(255f / 255f, 120f / 255f, 0f, 0.6f), "bullet5", "bulletLeft3", "bulletRight3");
 
         public final Color color;
         public final String regionName;
@@ -56,6 +58,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
             this.color = color;
             this.regionName = regionName;
         }
+
         PowerLevel(Color color, String regionName, String left, String right) {
             this.color = color;
             this.regionName = regionName;
@@ -66,13 +69,19 @@ public class PlayerComponent implements Component, Pool.Poolable {
     }
 
     public PlayerData copyPlayerData() {
-        return new PlayerData(level, numberOfContinue, fireDelay, fireDelaySide, enemiesKilled, laserShipKilled, howManyLivesLost, score, lives, bombs, powerLevel);
+        return new PlayerDataBuilder()
+                .atLevel(level)
+                .withNumberOfContinue(numberOfContinue)
+                .withWeaponPower(powerLevel, fireDelay, fireDelaySide)
+                .enemiesKilled(enemiesKilled, laserShipKilled)
+                .gameStats(lives, bombs, score, howManyLivesLost)
+                .createPlayerData();
     }
 
     @Override
     public void reset() {
         secondScript = -3;
-        level = Level.Level1;
+        level = Level1;
         numberOfContinue = NUMBER_OF_CONTINUE;
         howManyLivesLost = 0;
         score = 0;

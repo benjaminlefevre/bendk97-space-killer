@@ -1,10 +1,10 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 29/09/18 22:06
+ * Last modified 08/10/18 08:06
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97.screens;
+package com.bendk97.screens.levels;
 
 import aurelienribon.tweenengine.*;
 import box2dLight.RayHandler;
@@ -12,18 +12,14 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -35,7 +31,6 @@ import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.*;
 import com.bendk97.entities.EntityFactory;
-import com.bendk97.entities.SquadronFactory;
 import com.bendk97.inputs.GestureHandler;
 import com.bendk97.inputs.RetroPadController;
 import com.bendk97.inputs.VirtualPadController;
@@ -45,6 +40,8 @@ import com.bendk97.listeners.impl.InputListenerImpl;
 import com.bendk97.listeners.impl.PlayerListenerImpl;
 import com.bendk97.mask.SpriteMaskFactory;
 import com.bendk97.player.PlayerData;
+import com.bendk97.screens.MenuScreen;
+import com.bendk97.screens.levels.utils.ScreenShake;
 import com.bendk97.systems.*;
 import com.bendk97.timer.PausableTimer;
 import com.bendk97.tweens.CameraTween;
@@ -55,37 +52,29 @@ import com.bitfire.postprocessing.PostProcessor;
 import com.bitfire.postprocessing.effects.MotionBlur;
 import com.bitfire.utils.ShaderLoader;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import static com.bendk97.SpaceKillerGameConstants.*;
-import static com.bendk97.assets.Assets.*;
-import static com.bendk97.entities.SquadronFactory.*;
 import static com.bendk97.google.Achievement.*;
-import static com.bendk97.screens.LevelScreen.Level.*;
+import static com.bendk97.screens.levels.Levels.*;
 import static com.bendk97.tweens.SpriteComponentAccessor.ALPHA;
 
-public abstract class LevelScreen extends ScreenAdapter {
+public final class LevelScreen extends ScreenAdapter {
 
-    private float time = -1000f;
-    final Random random = new RandomXS128();
+    private float time;
     private InputMultiplexer inputProcessor = null;
     private Music music = null;
-    private static final boolean isDesktop = (Gdx.app.getType() == Application.ApplicationType.Desktop);
+    private final LevelScript levelScript;
     private final Viewport viewport;
     private final SpriteBatch batcher;
     private final Viewport viewportHUD;
     private final OrthographicCamera cameraHUD;
     private final SpriteBatch batcherHUD;
-    final PooledEngine engine;
-    final EntityFactory entityFactory;
-    private final SquadronFactory squadronFactory;
-    final TweenManager tweenManager;
-    final Assets assets;
+    private final PooledEngine engine;
+    private final EntityFactory entityFactory;
+    private final TweenManager tweenManager;
+    private final Assets assets;
     private final SpaceKillerGame game;
-    final Entity player;
-    final SpriteMaskFactory spriteMaskFactory;
+    private final Entity player;
+    private final SpriteMaskFactory spriteMaskFactory;
 
     private World world;
     private RayHandler rayHandler;
@@ -94,7 +83,7 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     private PlayerListenerImpl playerListener;
 
-    private final Level level;
+    private final Levels level;
     private State state = State.RUNNING;
 
     public enum State {
@@ -102,13 +91,20 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     }
 
-    LevelScreen(Assets assets, SpaceKillerGame game, Level level) {
+    public LevelScreen(final Assets assets, final SpaceKillerGame game, final Levels level) {
         PausableTimer.instance().stop();
         PausableTimer.instance().start();
         this.level = level;
+        this.spriteMaskFactory = new SpriteMaskFactory();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                spriteMaskFactory.addMask(assets.get(level.getSprites()).getTextures().first());
+            }
+        }).start();
+
         this.game = game;
         this.fxLightEnabled = Settings.isLightFXEnabled();
-        this.spriteMaskFactory = new SpriteMaskFactory();
         OrthographicCamera camera = new OrthographicCamera();
         viewport = new ExtendViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
         camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -144,14 +140,14 @@ public abstract class LevelScreen extends ScreenAdapter {
             rayHandler.setCombinedMatrix(camera);
         }
         entityFactory = new EntityFactory(game, engine, assets, tweenManager, rayHandler, screenShake, level);
-        squadronFactory = new SquadronFactory(tweenManager, entityFactory, camera, engine);
         player = entityFactory.createEntityPlayer(level);
         SnapshotArray<Entity> lives = entityFactory.createEntityPlayerLives(player);
         SnapshotArray<Entity> bombs = entityFactory.createEntityPlayerBombs(player);
         createSystems(player, lives, bombs, batcher, screenShake);
         registerTweensAccessor();
-
         registerPostProcessingEffects();
+        this.levelScript = getLevelScript(level, assets, entityFactory, tweenManager, player, engine, camera);
+        time = -3;
     }
 
 
@@ -161,22 +157,22 @@ public abstract class LevelScreen extends ScreenAdapter {
         screenshot.begin();
         this.render(Gdx.graphics.getDeltaTime());
         screenshot.end();
-        playerComponent.level = playerComponent.level.equals(Level1) ? Level2 : (playerComponent.level.equals(Level2) ? Level3 : Level1);
+        playerComponent.level = nextLevelAfter(playerComponent.level);
         PlayerData playerData = playerComponent.copyPlayerData();
         this.dispose();
         switch (level) {
             case Level2:
                 game.playServices.unlockAchievement(KILL_BOSS_2);
-                game.goToScreen(Level3Screen.class, playerData, screenshot);
+                game.goToLevelScreen(Level3, playerData, screenshot);
                 break;
             case Level3:
                 game.playServices.unlockAchievement(KILL_BOSS_3);
-                game.goToScreen(Level1Screen.class, playerData, screenshot);
+                game.goToLevelScreen(Level1, playerData, screenshot);
                 break;
             case Level1:
             default:
                 game.playServices.unlockAchievement(KILL_BOSS);
-                game.goToScreen(Level2Screen.class, playerData, screenshot);
+                game.goToLevelScreen(Level2, playerData, screenshot);
                 break;
         }
     }
@@ -192,7 +188,8 @@ public abstract class LevelScreen extends ScreenAdapter {
     public void continueWithExtraLife() {
         final PlayerComponent playerComponent = Mappers.player.get(player);
         player.remove(GameOverComponent.class);
-        ((LevelScreen) game.currentScreen).startLevel(playerComponent.secondScript);
+        this.time = playerComponent.secondScript;
+        this.levelScript.initSpawns();
         playerComponent.lives = LIVES;
         playerComponent.bombs = BOMBS;
         playerComponent.resetScore();
@@ -221,22 +218,10 @@ public abstract class LevelScreen extends ScreenAdapter {
         return time;
     }
 
-    public enum Level {
-        Level1(GFX_LEVEL1_ATLAS_MASK), Level2(GFX_LEVEL2_ATLAS_MASK), Level3(GFX_LEVEL3_ATLAS_MASK);
-        final AssetDescriptor<TextureAtlas> sprites;
-
-        Level(AssetDescriptor<TextureAtlas> sprites) {
-            this.sprites = sprites;
-        }
-
-        public AssetDescriptor<TextureAtlas> getSprites() {
-            return sprites;
-        }
-    }
 
     private void registerPostProcessingEffects() {
         ShaderLoader.BasePath = "data/shaders/";
-        postProcessor = new PostProcessor(false, false, isDesktop);
+        postProcessor = new PostProcessor(false, false, Gdx.app.getType() == Application.ApplicationType.Desktop);
         MotionBlur motionBlur = new MotionBlur();
         motionBlur.setBlurOpacity(0.5f);
         postProcessor.addEffect(motionBlur);
@@ -345,25 +330,14 @@ public abstract class LevelScreen extends ScreenAdapter {
         time += delta;
         int newTime = (int) Math.floor(time);
         if (newTime > timeBefore) {
-            script(newTime);
+            levelScript.script(newTime);
         }
     }
-
-    void script(int second) {
-        if (second == 0) {
-            assets.playSound(SOUND_READY);
-        }
-    }
-
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
         viewportHUD.update(width, height, true);
-    }
-
-    void playMusic(AssetDescriptor<Music> musicDesc, float volume) {
-        music = assets.playMusic(musicDesc, volume);
     }
 
     @Override
@@ -407,7 +381,7 @@ public abstract class LevelScreen extends ScreenAdapter {
             rayHandler.dispose();
             world.dispose();
         }
-        assets.unloadResources(this.getClass());
+        assets.unloadResources(this.level);
         engine.clearPools();
         engine.removeAllEntities();
         postProcessor.dispose();
@@ -432,159 +406,4 @@ public abstract class LevelScreen extends ScreenAdapter {
             game.playServices.unlockAchievement(KILL_5_LASER_SHIPS);
         }
     }
-
-    Texture getRandomMist() {
-        int randomMist = random.nextInt(7);
-        return getMist(randomMist);
-    }
-
-    Texture getMist(int mistType) {
-        switch (mistType) {
-            case 0:
-                return assets.get(GFX_BGD_MIST7);
-            case 1:
-                return assets.get(GFX_BGD_MIST1);
-            case 2:
-                return assets.get(GFX_BGD_MIST2);
-            case 3:
-                return assets.get(GFX_BGD_MIST3);
-            case 4:
-                return assets.get(GFX_BGD_MIST4);
-            case 5:
-                return assets.get(GFX_BGD_MIST5);
-            case 6:
-            default:
-                return assets.get(GFX_BGD_MIST6);
-        }
-    }
-
-    int getRandomAsteroidType() {
-        return 999 + random.nextInt(2);
-    }
-
-    int getRandomHouseType() {
-        return 1500 + random.nextInt(9);
-    }
-
-    class ScriptItem {
-        private final int typeShip;
-        private final int typeSquadron;
-        private final float velocity;
-        private final int number;
-        private final Object[] params;
-        private final boolean powerUp;
-        private final boolean displayBonus;
-        private final int bonus;
-        private final int rateShoot;
-        private final float bulletVelocity;
-
-        ScriptItem(int typeShip, int typeSquadron, float velocity, int number, boolean powerUp, boolean displayBonus, int bonus, int rateShoot, float velocityBullet, Object... params) {
-            this.typeShip = typeShip;
-            this.rateShoot = rateShoot;
-            this.typeSquadron = typeSquadron;
-            this.velocity = velocity;
-            this.number = number;
-            this.params = params;
-            this.powerUp = powerUp;
-            this.bonus = bonus;
-            this.displayBonus = displayBonus;
-            this.bulletVelocity = velocityBullet;
-        }
-
-        ScriptItem(int typeShip, int typeSquadron, float velocity, int number, boolean powerUp, boolean displayBonus, int bonus, float velocityBullet, Object... params) {
-            this(typeShip, typeSquadron, velocity, number, powerUp, displayBonus, bonus, STANDARD_RATE_SHOOT, velocityBullet, params);
-        }
-
-        void execute() {
-            squadronFactory.createSquadron(typeShip, typeSquadron, velocity, number, powerUp, displayBonus, bonus, bulletVelocity, rateShoot, params);
-            if (Mappers.levelFinished.get(player) == null) {
-                Mappers.player.get(player).enemiesCountLevel += number;
-            }
-        }
-
-    }
-
-    List<ScriptItem> randomSpawnEnemies(int nbSpawns, float velocity, int rateShoot, float bulletVelocity, int bonus, int minEnemies, int maxEnemies, Boolean comingFromLeft) {
-        List<ScriptItem> list = new ArrayList<ScriptItem>(nbSpawns);
-        for (int i = 0; i < nbSpawns; ++i) {
-            int randomMoveType = getRandomMoveType();
-            int number = randomMoveType == ARROW_DOWN || randomMoveType == ARROW_UP ? 7 : minEnemies + random.nextInt(maxEnemies - minEnemies + 1);
-            list.add(
-                    new ScriptItem(
-                            getRandomShipType(),
-                            randomMoveType,
-                            velocity,
-                            number,
-                            false, true,
-                            number * bonus,
-                            rateShoot,
-                            bulletVelocity,
-                            getRandomMoveParams(randomMoveType, comingFromLeft == null ? random.nextBoolean() : comingFromLeft)
-                    ));
-        }
-        return list;
-    }
-
-    private Object[] getRandomMoveParams(int randomMoveType, boolean comingFromLeft) {
-        float direction = comingFromLeft ? 1f : -1f;
-        int leftOrRight = comingFromLeft ? 0 : 1;
-        switch (randomMoveType) {
-            case INFINITE_CIRCLE:
-                return null;
-            case ARROW_DOWN:
-            case ARROW_UP:
-                return null;
-            case LINEAR_X:
-                return new Object[]{-direction * SHIP_WIDTH + leftOrRight * SCREEN_WIDTH, 2f / 3f * SCREEN_HEIGHT + random.nextFloat() * SCREEN_HEIGHT / 12f, direction};
-            case LINEAR_Y:
-                return new Object[]{1f / 5f * SCREEN_WIDTH + random.nextFloat() * 3 * SCREEN_WIDTH / 5f, SCREEN_HEIGHT};
-            case LINEAR_XY:
-                return new Object[]{0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f};
-            case SEMI_CIRCLE:
-                return new Object[]{0f, SCREEN_HEIGHT};
-            case BEZIER_SPLINE:
-                if (random.nextBoolean()) {
-                    return new Object[]{
-                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f),
-                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, 0f)};
-                } else {
-                    return new Object[]{
-                            new Vector2(-11 * SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + 11 * SHIP_WIDTH), SCREEN_HEIGHT / 2f),
-                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 2 * SHIP_WIDTH), SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 6 * SHIP_WIDTH), SCREEN_HEIGHT / 2f)};
-                }
-            case CATMULL_ROM_SPLINE:
-            default:
-                return new Object[]{
-                        new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), 3 * SCREEN_HEIGHT / 4f),
-                        new Vector2(SCREEN_WIDTH * (0.2f + leftOrRight * 0.6f), 2 * SCREEN_HEIGHT / 4f),
-                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), SCREEN_HEIGHT / 4f),
-                        new Vector2(SCREEN_WIDTH * (0.2f + leftOrRight * 0.6f), -SCREEN_HEIGHT / 4f),
-                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), -2 * SCREEN_HEIGHT / 4f)
-                };
-
-
-        }
-    }
-
-    int getRandomShipType() {
-        return random.nextInt(6);
-    }
-
-    int getRandomMoveType() {
-        return random.nextInt(8);
-    }
-
-    void startLevel(float time) {
-        this.time = time;
-        initSpawns();
-    }
-
-    protected abstract void initSpawns();
-
-
 }

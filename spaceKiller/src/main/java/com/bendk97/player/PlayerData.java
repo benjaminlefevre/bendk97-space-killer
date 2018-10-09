@@ -7,38 +7,23 @@
 package com.bendk97.player;
 
 import com.bendk97.components.PlayerComponent;
-import com.bendk97.screens.LevelScreen.Level;
-
-import static com.bendk97.SpaceKillerGameConstants.*;
-import static com.bendk97.components.PlayerComponent.PowerLevel.NORMAL;
+import com.bendk97.screens.levels.Levels;
 
 /* use to pass player data between screens*/
-public class PlayerData {
-    public long fireDelay = FIRE_DELAY;
-    public long fireDelaySide = FIRE_DELAY_SIDE;
-    public int enemiesKilled = 0;
-    public int laserShipKilled = 0;
-    public int howManyLivesLost = 0;
-    public int score = 0;
-    public int lives = LIVES;
-    public int bombs = BOMBS;
-    public PlayerComponent.PowerLevel powerLevel = NORMAL;
-    public int numberOfContinue = 0;
-    public final Level level;
+public final class PlayerData {
+    public  long fireDelay;
+    public  long fireDelaySide;
+    public  int enemiesKilled;
+    public  int laserShipKilled;
+    public  int howManyLivesLost;
+    public  int score;
+    public  int lives;
+    public  int bombs;
+    public  PlayerComponent.PowerLevel powerLevel;
+    public  int numberOfContinue;
+    public  Levels level;
 
-    public PlayerData(Level level, int numberOfContinue, long fireDelay, long fireDelaySide,
-                      int enemiesKilled, int laserShipKilled, int howManyLivesLost, int score,
-                      int lives, int bombs, PlayerComponent.PowerLevel powerLevel) {
-        this.fireDelay = fireDelay;
-        this.fireDelaySide = fireDelaySide;
-        this.numberOfContinue = numberOfContinue;
-        this.level = level;
-        this.enemiesKilled = enemiesKilled;
-        this.laserShipKilled = laserShipKilled;
-        this.howManyLivesLost = howManyLivesLost;
-        this.score = score;
-        this.lives = lives;
-        this.bombs = bombs;
-        this.powerLevel = powerLevel;
+    protected PlayerData() {
+
     }
 }

@@ -15,8 +15,8 @@ import com.bendk97.components.*;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.listeners.CollisionListener;
 import com.bendk97.listeners.PlayerListener;
-import com.bendk97.screens.LevelScreen;
-import com.bendk97.screens.ScreenShake;
+import com.bendk97.screens.levels.LevelScreen;
+import com.bendk97.screens.levels.utils.ScreenShake;
 import com.bendk97.tweens.PositionComponentAccessor;
 import com.bendk97.tweens.SpriteComponentAccessor;
 

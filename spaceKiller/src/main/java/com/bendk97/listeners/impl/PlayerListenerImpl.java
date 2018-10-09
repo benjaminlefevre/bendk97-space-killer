@@ -20,8 +20,8 @@ import com.bendk97.components.Mappers;
 import com.bendk97.components.PlayerComponent;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.listeners.PlayerListener;
-import com.bendk97.screens.LevelScreen;
-import com.bendk97.screens.ScreenShake;
+import com.bendk97.screens.levels.LevelScreen;
+import com.bendk97.screens.levels.utils.ScreenShake;
 import com.bendk97.timer.PausableTimer;
 
 import static com.bendk97.SpaceKillerGameConstants.PLAYER_ORIGIN_X;

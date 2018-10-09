@@ -15,11 +15,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.Mappers;
-import com.bendk97.screens.Level1Screen;
 import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SocialScoreScreen;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
+import static com.bendk97.screens.levels.Levels.Level1;
 
 
 public class GameOverTouchInputProcessor implements InputProcessor {
@@ -63,7 +63,7 @@ public class GameOverTouchInputProcessor implements InputProcessor {
         Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
         if (playAgain.contains(worldTouch.x, worldTouch.y)) {
             game.currentScreen.dispose();
-            game.goToScreen(Level1Screen.class);
+            game.goToLevelScreen(Level1);
         } else if (home.contains(worldTouch.x, worldTouch.y)) {
             game.currentScreen.dispose();
             game.goToScreen(MenuScreen.class);

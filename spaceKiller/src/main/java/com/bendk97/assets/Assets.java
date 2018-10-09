@@ -21,14 +21,18 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.bendk97.Settings;
-import com.bendk97.screens.*;
+import com.bendk97.screens.MenuScreen;
+import com.bendk97.screens.SocialScoreScreen;
+import com.bendk97.screens.SplashScreen;
+import com.bendk97.screens.levels.Levels;
+import com.bendk97.screens.levels.utils.TransitionScreen;
 
 import java.util.*;
 
+import static com.bendk97.screens.levels.Levels.*;
+
 public class Assets {
     private AssetManager manager;
-
-    private static final Map<Class<? extends Screen>, List<AssetDescriptor>> assetsNeededByScreen = initializeAssetsNeededByScreen();
 
     // SPLASH SCREEN
     public static final AssetDescriptor<TextureAtlas> SPLASH_ATLAS =
@@ -160,6 +164,9 @@ public class Assets {
             new AssetDescriptor<BitmapFont>("font4.ttf", BitmapFont.class,
                     getFontParameters("fonts/regular.ttf", 20));
 
+    private static final Map<Class<? extends Screen>, List<AssetDescriptor>> assetsNeededByScreen = initializeAssetsNeededByScreen();
+    private static final Map<Levels, List<AssetDescriptor>> assetsNeededByLevelScreen = initializeAssetsNeededByLevelScreen();
+
     private static FreeTypeFontLoaderParameter getFontParameters(String filename, int size) {
         FreeTypeFontLoaderParameter parameter = new FreeTypeFontLoaderParameter();
         parameter.fontFileName = filename;
@@ -167,8 +174,8 @@ public class Assets {
         return parameter;
     }
 
-    private static HashMap<Class<? extends Screen>, List<AssetDescriptor>> initializeAssetsNeededByScreen() {
-        HashMap<Class<? extends Screen>, List<AssetDescriptor>> assets = new HashMap();
+    private static Map<Class<? extends Screen>, List<AssetDescriptor>> initializeAssetsNeededByScreen() {
+        Map<Class<? extends Screen>, List<AssetDescriptor>> assets = new HashMap<Class<? extends Screen>, List<AssetDescriptor>>();
         assets.put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
                 SPLASH_MUSIC, SPLASH_ATLAS, SPLASH_TXT_LOGO
         ));
@@ -176,7 +183,14 @@ public class Assets {
                 MENU_BGD, FONT_SPACE_KILLER_LARGE, MENU_MUSIC, FONT_SPACE_KILLER_MEDIUM, MENU_CLICK,
                 MENU_ATLAS, FONT_SPACE_KILLER_SMALL
         ));
-        assets.put(Level1Screen.class, Arrays.<AssetDescriptor>asList(
+        assets.put(TransitionScreen.class, Collections.<AssetDescriptor>emptyList());
+        assets.put(SocialScoreScreen.class, Collections.<AssetDescriptor>emptyList());
+        return assets;
+    }
+
+    private static Map<Levels, List<AssetDescriptor>> initializeAssetsNeededByLevelScreen() {
+        Map<Levels, List<AssetDescriptor>> assets = new HashMap<Levels, List<AssetDescriptor>>();
+        assets.put(Level1, Arrays.<AssetDescriptor>asList(
                 // MUSIC
                 MUSIC_LEVEL_1, MUSIC_LEVEL_1_BOSS,
                 // SOUNDS
@@ -193,7 +207,7 @@ public class Assets {
                 // FONTS
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_SMALLEST,
                 FONT_SPACE_KILLER_MEDIUM));
-        assets.put(Level2Screen.class, Arrays.<AssetDescriptor>asList(
+        assets.put(Level2, Arrays.<AssetDescriptor>asList(
                 // MUSIC
                 MUSIC_LEVEL_2, MUSIC_LEVEL_2_BOSS,
                 // SOUNDS
@@ -211,7 +225,7 @@ public class Assets {
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALLEST
         ));
 
-        assets.put(Level3Screen.class, Arrays.<AssetDescriptor>asList(
+        assets.put(Level3, Arrays.<AssetDescriptor>asList(
                 // MUSIC
                 MUSIC_LEVEL_3, MUSIC_LEVEL_3_BOSS,
                 // SOUNDS
@@ -228,9 +242,6 @@ public class Assets {
                 // FONTS
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALLEST
         ));
-
-        assets.put(TransitionScreen.class, Collections.<AssetDescriptor>emptyList());
-        assets.put(SocialScoreScreen.class, Collections.<AssetDescriptor>emptyList());
         return assets;
     }
 
@@ -250,10 +261,18 @@ public class Assets {
     }
 
     public void loadResources(Class<? extends Screen> screen) {
+        loadResources(assetsNeededByScreen.get(screen));
+    }
+
+    public void loadResources(Levels level) {
+        loadResources(assetsNeededByLevelScreen.get(level));
+    }
+
+    private void loadResources(List<AssetDescriptor> assetDescriptors) {
         manager = getAssetManager();
         Texture.setAssetManager(manager);
 
-        for (AssetDescriptor assetDescriptor : assetsNeededByScreen.get(screen)) {
+        for (AssetDescriptor assetDescriptor : assetDescriptors) {
             manager.load(assetDescriptor);
         }
         manager.finishLoading();
@@ -261,6 +280,12 @@ public class Assets {
 
     public void unloadResources(Class<? extends Screen> screen) {
         for (AssetDescriptor assetDescriptor : assetsNeededByScreen.get(screen)) {
+            manager.unload(assetDescriptor.fileName);
+        }
+    }
+
+    public void unloadResources(Levels level) {
+        for (AssetDescriptor assetDescriptor : assetsNeededByLevelScreen.get(level)) {
             manager.unload(assetDescriptor.fileName);
         }
     }
