@@ -22,6 +22,7 @@ import com.bendk97.entities.SoloEnemyFactory;
 import com.bendk97.entities.SquadronFactory;
 import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
+import com.bendk97.screens.levels.utils.ScriptItemExecutor;
 import com.bendk97.systems.FollowPlayerSystem;
 import com.bendk97.tweens.VelocityComponentAccessor;
 
@@ -58,6 +59,22 @@ public class Level2Script extends LevelScript {
         engine.addSystem(new FollowPlayerSystem(2));
     }
 
+    /*
+      for test purposes only
+    */
+    protected Level2Script(Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
+                           SquadronFactory squadronFactory, SoloEnemyFactory soloEnemyFactory, ScriptItemExecutor scriptItemExecutor, PooledEngine engine) {
+        super(assets, entityFactory, tweenManager, player, squadronFactory, scriptItemExecutor);
+        this.soloEnemyFactory = soloEnemyFactory;
+        backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_LEVEL2), 0, -500f));
+        backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_STARS_LEVEL2), 1, -300f));
+        backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_BIG_PLANET), 4, -250f));
+        backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_FAR_PLANETS), 2, -275f));
+        backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_RISING_PLANETS), 3, -325f));
+        assets.playMusic(Assets.MUSIC_LEVEL_2, 0.3f);
+        engine.addSystem(new FollowPlayerSystem(2));
+    }
+
 
     @Override
     public void initSpawns() {
@@ -76,7 +93,7 @@ public class Level2Script extends LevelScript {
         }
         super.script(second);
         scriptAsteroids(second);
-        scriprMists(second);
+        scriptMists(second);
         scriptFirstSoloEnemies(second);
 
         if(second < 20) {
@@ -107,7 +124,7 @@ public class Level2Script extends LevelScript {
         }
     }
 
-    private void scriprMists(int second) {
+    private void scriptMists(int second) {
         if (second % 10 == 0) {
             entityFactory.createForeground(getRandomMist(), 350f);
         }

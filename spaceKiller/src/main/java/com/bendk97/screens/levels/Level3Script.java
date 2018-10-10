@@ -19,6 +19,8 @@ import com.bendk97.entities.SoloEnemyFactory;
 import com.bendk97.entities.SquadronFactory;
 import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
+import com.bendk97.screens.levels.utils.ScriptItemExecutor;
+import com.bendk97.systems.FollowPlayerSystem;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -46,7 +48,20 @@ public class Level3Script extends LevelScript {
         Array<Entity> backgrounds = new Array<Entity>();
         backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_LEVEL3), 0, -BGD_VELOCITY_LEVEL3));
         assets.playMusic(Assets.MUSIC_LEVEL_3, 0.6f);
-        engine.addSystem(new com.bendk97.systems.FollowPlayerSystem(2));
+        engine.addSystem(new FollowPlayerSystem(2));
+    }
+
+    /*
+     for test purposes only
+   */
+    protected Level3Script(Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
+                           SquadronFactory squadronFactory, SoloEnemyFactory soloEnemyFactory, ScriptItemExecutor scriptItemExecutor, PooledEngine engine) {
+        super(assets, entityFactory, tweenManager, player, squadronFactory, scriptItemExecutor);
+        this.soloEnemyFactory = soloEnemyFactory;
+        Array<Entity> backgrounds = new Array<Entity>();
+        backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_LEVEL3), 0, -BGD_VELOCITY_LEVEL3));
+        assets.playMusic(Assets.MUSIC_LEVEL_3, 0.6f);
+        engine.addSystem(new FollowPlayerSystem(2));
     }
 
 

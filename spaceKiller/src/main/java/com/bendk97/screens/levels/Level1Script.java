@@ -49,6 +49,7 @@ public final class Level1Script extends LevelScript {
         super(assets, entityFactory, tweenManager, player, squadronFactory, scriptItemExecutor);
         background = entityFactory.createBackground(assets.get(GFX_BGD_LEVEL1), -BGD_VELOCITY);
         background2 = entityFactory.createBackground(assets.get(GFX_BGD_STARS), -BGD_PARALLAX_VELOCITY);
+        assets.playMusic(MUSIC_LEVEL_1, 0.3f);
     }
 
     public Level1Script(final Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
@@ -84,7 +85,7 @@ public final class Level1Script extends LevelScript {
             return;
         }
         if (second <= 120) {
-            scritMediumPart(second);
+            scriptMediumPart(second);
             return;
         }
         if (second <= 180) {
@@ -116,7 +117,7 @@ public final class Level1Script extends LevelScript {
         }
     }
 
-    private void scritMediumPart(int second) {
+    private void scriptMediumPart(int second) {
         if (second == 65) {
             assets.playSound(SOUND_GO);
         }
