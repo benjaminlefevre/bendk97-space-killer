@@ -79,7 +79,6 @@ public abstract class LevelScript {
         }
     }
 
-
     protected Texture getRandomMist() {
         int randomMist = random.nextInt(7);
         return getMist(randomMist);
