@@ -1,17 +1,15 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 29/09/18 21:09
+ * Last modified 11/10/18 23:02
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97.entities;
+package com.bendk97.entities.enemies;
 
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
-import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Linear;
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Bezier;
@@ -20,6 +18,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.TankComponent.TankLevel;
+import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.Level;
 import com.bendk97.tweens.PositionComponentAccessor;
 
@@ -28,6 +27,7 @@ import java.util.Random;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.bendk97.entities.EntityFactoryIds.*;
 import static com.bendk97.screens.levels.Level.Level2;
 import static com.bendk97.screens.levels.Level.Level3;
 
@@ -38,19 +38,14 @@ public class SoloEnemyFactory {
     private final static int TRAPEZE = 2;
     private final static int BEZIER = 3;
 
-    private final TweenManager tweenManager;
-    private final EntityFactory entityFactory;
     private final Random random = new RandomXS128();
-    private final Engine engine;
+    private final EntityFactory entityFactory;
+    private Entity player;
     private final Level level;
-    private final Entity player;
 
-    public SoloEnemyFactory(Level level, Engine engine, TweenManager tweenManager, EntityFactory entityFactory, Entity player) {
-        this.tweenManager = tweenManager;
-        this.engine = engine;
-        this.level = level;
+    protected SoloEnemyFactory(EntityFactory entityFactory, Level level) {
         this.entityFactory = entityFactory;
-        this.player = player;
+        this.level = level;
     }
 
     public void createSoloEnemy(float velocity, float bulletVelocity,
@@ -60,7 +55,9 @@ public class SoloEnemyFactory {
 
     public void createSoloEnemy(float velocity, float bulletVelocity,
                                 int rateShoot, int gaugeLife, int points, boolean comingFromLeft) {
-        Mappers.player.get(player).enemiesCountLevel++;
+        if (player != null) {
+            Mappers.player.get(player).enemiesCountLevel++;
+        }
         int soloType = random.nextInt(4);
         switch (soloType) {
             case FOLLOW_PLAYER:
@@ -80,7 +77,7 @@ public class SoloEnemyFactory {
     }
 
     public void createTank(float velocity, TankLevel level, int gaugeLife, int points) {
-        List<Entity> entities = entityFactory.createTank(level, gaugeLife, points);
+        List<Entity> entities = entityFactory.enemyEntityFactory.createTank(level, gaugeLife, points);
         Mappers.player.get(player).enemiesCountLevel++;
         float posX = random.nextFloat() * (SCREEN_WIDTH - 64f);
         for (final Entity entity : entities) {
@@ -90,16 +87,16 @@ public class SoloEnemyFactory {
                     .ease(Linear.INOUT).targetRelative(-SCREEN_HEIGHT - 100f)
                     .setCallback((i, baseTween) -> {
                         if (i == TweenCallback.COMPLETE) {
-                            engine.removeEntity(entity);
+                            entityFactory.engine.removeEntity(entity);
                         }
-                    }).start(tweenManager);
+                    }).start(entityFactory.tweenManager);
         }
     }
 
     private void createSoloEnemyBezier(final float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points, boolean comingFromLeft) {
         final boolean direction = comingFromLeft;
         final int directionFactor = direction ? 1 : -1;
-        Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugeLife, points, direction);
+        Entity enemy = entityFactory.enemyEntityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugeLife, points, direction);
         final PositionComponent position = Mappers.position.get(enemy);
         Sprite sprite = Mappers.sprite.get(enemy).sprite;
         final int k = 100;
@@ -124,14 +121,14 @@ public class SoloEnemyFactory {
                                 .target(vPoints[jx].x, vPoints[jx].y));
                     }
                     timeline.repeatYoyo(Tween.INFINITY, 1f)
-                            .start(tweenManager);
+                            .start(entityFactory.tweenManager);
 
-                }).start(tweenManager);
+                }).start(entityFactory.tweenManager);
     }
 
     private void createSoloEnemyTrapeze(final float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points, boolean comingFromLeft) {
         final int directionFactor = comingFromLeft ? 1 : -1;
-        Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
+        Entity enemy = entityFactory.enemyEntityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
         final PositionComponent position = Mappers.position.get(enemy);
         final Sprite sprite = Mappers.sprite.get(enemy).sprite;
         Tween.to(position, PositionComponentAccessor.POSITION_X, sprite.getWidth() / velocity)
@@ -148,14 +145,14 @@ public class SoloEnemyFactory {
                                         .delay(2.0f).ease(Linear.INOUT).targetRelative(75f * directionFactor, 75f))
                                 .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH - sprite.getWidth()) / velocity)
                                         .ease(Linear.INOUT).targetRelative(-directionFactor * (SCREEN_WIDTH - sprite.getWidth())))
-                                .repeat(Tween.INFINITY, 0f).start(tweenManager);
+                                .repeat(Tween.INFINITY, 0f).start(entityFactory.tweenManager);
                     }
-                }).start(tweenManager);
+                }).start(entityFactory.tweenManager);
     }
 
     private void createSoloEnemyLinearX(final float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points, boolean comingFromLeft) {
         final int directionFactor = comingFromLeft ? 1 : -1;
-        Entity enemy = entityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
+        Entity enemy = entityFactory.enemyEntityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
         final PositionComponent position = Mappers.position.get(enemy);
         final Sprite sprite = Mappers.sprite.get(enemy).sprite;
         Tween.to(position, PositionComponentAccessor.POSITION_X, SCREEN_WIDTH / velocity)
@@ -164,23 +161,26 @@ public class SoloEnemyFactory {
                     if (i == TweenCallback.COMPLETE) {
                         Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH - sprite.getWidth()) / velocity)
                                 .ease(Linear.INOUT).targetRelative(-directionFactor * (SCREEN_WIDTH - sprite.getWidth()))
-                                .repeatYoyo(Tween.INFINITY, 0f).start(tweenManager);
+                                .repeatYoyo(Tween.INFINITY, 0f).start(entityFactory.tweenManager);
                     }
-                }).start(tweenManager);
+                }).start(entityFactory.tweenManager);
     }
 
     private void createSoloEnemyFollowingPlayerOnAxisX(float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points, boolean comingFromLeft) {
-        entityFactory.createLaserShip(getRandomStaticEnemy(), velocity, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
+        entityFactory.enemyEntityFactory.createLaserShip(getRandomStaticEnemy(), velocity, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
     }
 
     private int getRandomStaticEnemy() {
         if (level.equals(Level2)) {
-            return random.nextInt(EntityFactory.NB_SHIP_LV2_LASER_SHIP) + EntityFactory.SHIP_LV2_LASER_SHIP1;
+            return random.nextInt(NB_SHIP_LV2_LASER_SHIP) + SHIP_LV2_LASER_SHIP1;
         } else if (level.equals(Level3)) {
-            return EntityFactory.SHIP_LV3_1 + random.nextInt(EntityFactory.NB_SHIP_LV3);
+            return SHIP_LV3_1 + random.nextInt(NB_SHIP_LV3);
         }
         throw new IllegalArgumentException("Unexpected Exception");
     }
 
 
+    public void setPlayer(Entity player) {
+        this.player = player;
+    }
 }

@@ -138,14 +138,14 @@ public final class LevelScreen extends ScreenAdapter {
             rayHandler.setShadows(false);
             rayHandler.setCombinedMatrix(camera);
         }
-        entityFactory = new EntityFactory(game, engine, assets, tweenManager, rayHandler, screenShake, level);
-        player = entityFactory.createEntityPlayer(level);
-        SnapshotArray<Entity> lives = entityFactory.createEntityPlayerLives(player);
-        SnapshotArray<Entity> bombs = entityFactory.createEntityPlayerBombs(player);
+        entityFactory = new EntityFactory(game, engine, assets, tweenManager, rayHandler, screenShake, level, camera);
+        player = entityFactory.playerEntityFactory.createEntityPlayer(level);
+        SnapshotArray<Entity> lives = entityFactory.playerEntityFactory.createEntityPlayerLives(player);
+        SnapshotArray<Entity> bombs = entityFactory.playerEntityFactory.createEntityPlayerBombs(player);
         createSystems(player, lives, bombs, batcher, screenShake);
         registerTweensAccessor();
         registerPostProcessingEffects();
-        this.levelScript = getLevelScript(level, this, assets, entityFactory, tweenManager, player, engine, camera);
+        this.levelScript = getLevelScript(level, this, assets, entityFactory, tweenManager, player, engine);
         time = -3;
     }
 
@@ -200,7 +200,7 @@ public final class LevelScreen extends ScreenAdapter {
         playerComponent.numberOfContinue--;
         Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
-        entityFactory.addInvulnerableComponent(player);
+        entityFactory.playerEntityFactory.addInvulnerableComponent(player);
         Gdx.input.setInputProcessor(inputProcessor);
         Timeline.createSequence()
                 .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
@@ -208,7 +208,7 @@ public final class LevelScreen extends ScreenAdapter {
                 .repeat(10, 0f)
                 .setCallback((i, baseTween) -> {
                     if (i == TweenCallback.COMPLETE) {
-                        entityFactory.removeInvulnerableComponent(player);
+                        entityFactory.playerEntityFactory.removeInvulnerableComponent(player);
                     }
                 })
                 .start(tweenManager);
@@ -278,10 +278,10 @@ public final class LevelScreen extends ScreenAdapter {
         inputProcessor.addProcessor(new GestureDetector(new GestureHandler(this, cameraHUD)));
 
         InputListenerImpl inputListener = new InputListenerImpl(player, playerListener, entityFactory, assets, Settings.isVirtualPad());
-        Entity bombButton = entityFactory.createEntityBombButton(0.2f, BOMB_X, BOMB_Y);
+        Entity bombButton = entityFactory.playerEntityFactory.createEntityBombButton(0.2f, BOMB_X, BOMB_Y);
         if (!Settings.isVirtualPad()) {
-            Entity fireButton = entityFactory.createEntityFireButton(0.2f, FIRE_X, FIRE_Y);
-            Entity padController = entityFactory.createEntitiesPadController(0.2f, 1.4f, PAD_X, PAD_Y);
+            Entity fireButton = entityFactory.playerEntityFactory.createEntityFireButton(0.2f, FIRE_X, FIRE_Y);
+            Entity padController = entityFactory.playerEntityFactory.createEntitiesPadController(0.2f, 1.4f, PAD_X, PAD_Y);
             // define touch area as rectangles
             Sprite padSprite = Mappers.sprite.get(padController).sprite;
             float heightTouch = padSprite.getHeight() * 1.2f / 3f;

@@ -8,7 +8,7 @@ package com.bendk97.screens.levels.utils;
 
 import com.badlogic.ashley.core.Entity;
 import com.bendk97.components.Mappers;
-import com.bendk97.entities.SquadronFactory;
+import com.bendk97.entities.enemies.SquadronFactory;
 
 public class ScriptItemExecutor {
     private final SquadronFactory squadronFactory;

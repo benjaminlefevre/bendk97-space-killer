@@ -13,7 +13,6 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.bendk97.assets.Assets;
 import com.bendk97.entities.EntityFactory;
@@ -58,15 +57,15 @@ public enum Level {
 
     public static LevelScript getLevelScript(Level level, LevelScreen screen, Assets assets, EntityFactory entityFactory,
                                              TweenManager tweenManager, Entity player,
-                                             PooledEngine engine, OrthographicCamera camera) {
+                                             PooledEngine engine) {
         switch (level) {
             case Level3:
-                return new Level3Script(screen, assets, entityFactory, tweenManager, player, engine, camera);
+                return new Level3Script(screen, assets, entityFactory, tweenManager, player, engine);
             case Level2:
-                return new Level2Script(screen, assets, entityFactory, tweenManager, player, engine, camera);
+                return new Level2Script(screen, assets, entityFactory, tweenManager, player, engine);
             case Level1:
             default:
-                return new Level1Script(screen, assets, entityFactory, tweenManager, player, engine, camera);
+                return new Level1Script(screen, assets, entityFactory, tweenManager, player);
         }
     }
 

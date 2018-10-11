@@ -9,14 +9,15 @@ package com.bendk97.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Pool;
-import com.bendk97.entities.EntityFactory;
+
+import static com.bendk97.entities.EntityFactoryIds.ENEMY_FIRE_CIRCLE;
 
 public class EnemyComponent implements Component, Pool.Poolable {
     public int points = 0;
     private int lifeGauge = 1;
     private int lifeMax = 1;
     public int attackCapacity = 0;
-    public int attackType = EntityFactory.ENEMY_FIRE_CIRCLE;
+    public int attackType = ENEMY_FIRE_CIRCLE;
     public boolean isLaserShip = false;
     public int probabilityAttack = 150;
     public boolean isBoss = false;
@@ -28,7 +29,7 @@ public class EnemyComponent implements Component, Pool.Poolable {
     public void reset() {
         isLaserShip = false;
         probabilityAttack = 150;
-        attackType = EntityFactory.ENEMY_FIRE_CIRCLE;
+        attackType = ENEMY_FIRE_CIRCLE;
         points = 0;
         isBoss = false;
         isTank = false;

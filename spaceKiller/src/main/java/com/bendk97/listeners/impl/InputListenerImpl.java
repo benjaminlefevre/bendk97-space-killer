@@ -61,12 +61,12 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
             PlayerComponent playerComponent = Mappers.player.get(player);
             if (TimeUtils.timeSinceMillis(lastShoot) > playerComponent.fireDelay) {
                 assets.playSound(Assets.SOUND_FIRE, 0.5f);
-                entityFactory.createPlayerFire(player);
+                entityFactory.playerActionsEntityFactory.createPlayerFire(player);
                 lastShoot = TimeUtils.millis();
             }
             if (playerComponent.powerLevel.compareTo(PlayerComponent.PowerLevel.TRIPLE_SIDE) >= 0
                     && TimeUtils.timeSinceMillis(lastShootSide) > Mappers.player.get(player).fireDelaySide) {
-                entityFactory.createPlayerFireSide(player);
+                entityFactory.playerActionsEntityFactory.createPlayerFireSide(player);
                 lastShootSide = TimeUtils.millis();
             }
         }
@@ -78,7 +78,7 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
         if (playerFamily.matches(player) && playerComponent.hasBombs()) {
             assets.playSound(Assets.SOUND_BOMB_DROP);
             playerComponent.useBomb();
-            entityFactory.createPlayerBomb(player);
+            entityFactory.playerActionsEntityFactory.createPlayerBomb(player);
             playerListener.dropBomb();
         }
     }

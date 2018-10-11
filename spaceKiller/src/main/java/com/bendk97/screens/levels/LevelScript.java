@@ -8,14 +8,11 @@ package com.bendk97.screens.levels;
 
 import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
 import com.bendk97.assets.Assets;
 import com.bendk97.entities.EntityFactory;
-import com.bendk97.entities.SquadronFactory;
 import com.bendk97.screens.levels.Level.MusicTrack;
 import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
@@ -28,7 +25,7 @@ import java.util.Random;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.*;
-import static com.bendk97.entities.SquadronFactory.*;
+import static com.bendk97.entities.enemies.SquadronFactory.*;
 import static com.bendk97.screens.levels.Level.MusicTrack.LEVEL;
 
 public abstract class LevelScript {
@@ -38,7 +35,6 @@ public abstract class LevelScript {
     protected final TweenManager tweenManager;
     protected final Entity player;
     protected final Random random = new RandomXS128();
-    protected SquadronFactory squadronFactory;
     protected ScriptItemExecutor scriptItemExecutor;
     protected final Level level;
     private final LevelScreen levelScreen;
@@ -47,20 +43,12 @@ public abstract class LevelScript {
      for test purposes only
       */
     protected LevelScript(final LevelScreen levelScreen, Level level, Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
-                          SquadronFactory squadronFactory, ScriptItemExecutor scriptItemExecutor) {
+                          ScriptItemExecutor scriptItemExecutor) {
         this(levelScreen, level, assets, entityFactory, tweenManager, player);
-        this.squadronFactory = squadronFactory;
         this.scriptItemExecutor = scriptItemExecutor;
     }
 
-    protected LevelScript(final LevelScreen levelScreen, Level level, Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
-                          PooledEngine engine, OrthographicCamera camera) {
-        this(levelScreen, level, assets, entityFactory, tweenManager, player);
-        this.squadronFactory = new SquadronFactory(tweenManager, entityFactory, camera, engine);
-        this.scriptItemExecutor = new ScriptItemExecutor(squadronFactory, player);
-    }
-
-    private LevelScript(final LevelScreen levelScreen, Level level, Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player) {
+    protected LevelScript(final LevelScreen levelScreen, Level level, Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player) {
         this.level = level;
         this.levelScreen = levelScreen;
         this.assets = assets;
@@ -69,7 +57,9 @@ public abstract class LevelScript {
         this.player = player;
         this.initSpawns();
         this.playMusic(LEVEL, level.volume);
+        this.scriptItemExecutor = new ScriptItemExecutor(entityFactory.enemyEntityFactory.squadronFactory, player);
     }
+
 
     protected abstract void initSpawns();
 
