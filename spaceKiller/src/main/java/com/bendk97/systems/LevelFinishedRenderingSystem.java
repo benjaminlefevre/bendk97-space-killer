@@ -17,11 +17,11 @@ import com.bendk97.components.LevelFinishedComponent;
 import com.bendk97.components.Mappers;
 import com.bendk97.components.PauseComponent;
 import com.bendk97.components.PlayerComponent;
-import com.bendk97.screens.levels.Levels;
+import com.bendk97.screens.levels.Level;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
-import static com.bendk97.screens.levels.Levels.Level2;
-import static com.bendk97.screens.levels.Levels.Level3;
+import static com.bendk97.screens.levels.Level.Level2;
+import static com.bendk97.screens.levels.Level.Level3;
 
 public class LevelFinishedRenderingSystem extends IteratingSystem {
     private static final String LEVEL_1_FINISHED = "lvl 1 completed";
@@ -33,9 +33,9 @@ public class LevelFinishedRenderingSystem extends IteratingSystem {
     private static final String GO_NEXT = "go next level";
     private final SpriteBatch batcher;
     private final BitmapFont mediumFont;
-    private final Levels level;
+    private final Level level;
 
-    public LevelFinishedRenderingSystem(SpriteBatch batcher, Assets assets, Levels level, int priority) {
+    public LevelFinishedRenderingSystem(SpriteBatch batcher, Assets assets, Level level, int priority) {
         super(Family.all(PlayerComponent.class, LevelFinishedComponent.class).exclude(PauseComponent.class).get(), priority);
         this.level = level;
         this.batcher = batcher;

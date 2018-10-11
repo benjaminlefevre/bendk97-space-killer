@@ -26,7 +26,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
-import static com.bendk97.screens.levels.Levels.Level3;
+import static com.bendk97.screens.levels.Level.Level3;
+import static com.bendk97.screens.levels.Level.MusicTrack.BOSS;
+import static com.bendk97.screens.levels.Level.MusicTrack.LEVEL;
+import static com.bendk97.screens.levels.Level.SoundEffect.BOSS_ALERT;
+import static com.bendk97.screens.levels.Level.SoundEffect.GO;
 
 public class Level3Script extends LevelScript {
 
@@ -41,37 +45,37 @@ public class Level3Script extends LevelScript {
     private ScriptItem boss;
 
 
-    public Level3Script(final Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
+    public Level3Script(final LevelScreen levelScreen, final Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
                         PooledEngine engine, OrthographicCamera camera) {
-        super(assets, entityFactory, tweenManager, player, engine, camera);
+        super(levelScreen, Level3, assets, entityFactory, tweenManager, player, engine, camera);
         soloEnemyFactory = new SoloEnemyFactory(Level3, engine, tweenManager, entityFactory, player);
-        Array<Entity> backgrounds = new Array<Entity>();
-        backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_LEVEL3), 0, -BGD_VELOCITY_LEVEL3));
-        assets.playMusic(Assets.MUSIC_LEVEL_3, 0.6f);
-        engine.addSystem(new FollowPlayerSystem(2));
+        initLevel3(assets, entityFactory, engine);
     }
 
     /*
      for test purposes only
    */
-    protected Level3Script(Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
+    protected Level3Script(final LevelScreen levelScreen, Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
                            SquadronFactory squadronFactory, SoloEnemyFactory soloEnemyFactory, ScriptItemExecutor scriptItemExecutor, PooledEngine engine) {
-        super(assets, entityFactory, tweenManager, player, squadronFactory, scriptItemExecutor);
+        super(levelScreen, Level3, assets, entityFactory, tweenManager, player, squadronFactory, scriptItemExecutor);
         this.soloEnemyFactory = soloEnemyFactory;
-        Array<Entity> backgrounds = new Array<Entity>();
+        initLevel3(assets, entityFactory, engine);
+    }
+
+    private void initLevel3(Assets assets, EntityFactory entityFactory, PooledEngine engine) {
+        Array<Entity> backgrounds = new Array<>();
         backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_LEVEL3), 0, -BGD_VELOCITY_LEVEL3));
-        assets.playMusic(Assets.MUSIC_LEVEL_3, 0.6f);
         engine.addSystem(new FollowPlayerSystem(2));
     }
 
 
     @Override
     public void initSpawns() {
-        scriptItemsEasy = new LinkedList<ScriptItem>(randomEasySpawnEnemies(30));
-        scriptItemsMediumLeft = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromLeft(30));
-        scriptItemsMediumRight = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromRight(30));
-        scriptItemsHardLeft = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromLeft(30));
-        scriptItemsHardRight = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromRight(30));
+        scriptItemsEasy = new LinkedList<>(randomEasySpawnEnemies(30));
+        scriptItemsMediumLeft = new LinkedList<>(randomMediumSpawnEnemiesComingFromLeft(30));
+        scriptItemsMediumRight = new LinkedList<>(randomMediumSpawnEnemiesComingFromRight(30));
+        scriptItemsHardLeft = new LinkedList<>(randomHardSpawnEnemiesComingFromLeft(30));
+        scriptItemsHardRight = new LinkedList<>(randomHardSpawnEnemiesComingFromRight(30));
         boss = new ScriptItemBuilder().typeShip(EntityFactory.BOSS_LEVEL_3).typeSquadron(SquadronFactory.BOSS_LEVEL3_MOVE).velocity(150f).number(1).powerUp(false).displayBonus(true).withBonus(20000).bulletVelocity(ENEMY_BULLET_HARD_VELOCITY).createScriptItem();
     }
 
@@ -105,7 +109,6 @@ public class Level3Script extends LevelScript {
         }
         if (second >= 215) {
             scriptBoss(second);
-            return;
         }
     }
 
@@ -141,7 +144,7 @@ public class Level3Script extends LevelScript {
 
     private void scriptMediumPart(int second) {
         if (second == 85) {
-            assets.playSound(Assets.SOUND_GO);
+            playSound(GO);
         }
         if (second % 10 == 0) {
             soloEnemyFactory.createTank(BGD_VELOCITY_LEVEL3, TankComponent.TankLevel.MEDIUM, 5, 300);
@@ -160,7 +163,7 @@ public class Level3Script extends LevelScript {
 
     private void scriptHardPart(int second) {
         if (second == 150) {
-            assets.playSound(Assets.SOUND_GO);
+            playSound(GO);
         }
         if (second % 10 == 0) {
             soloEnemyFactory.createTank(BGD_VELOCITY_LEVEL3, TankComponent.TankLevel.HARD, 5, 400);
@@ -182,14 +185,13 @@ public class Level3Script extends LevelScript {
             return;
         }
         if (second == 215) {
-            assets.playSound(Assets.SOUND_BOSS_ALERT);
+            playSound(BOSS_ALERT);
             return;
         }
         if (second == 219) {
-            assets.stopMusic(Assets.MUSIC_LEVEL_3);
-            assets.playMusic(Assets.MUSIC_LEVEL_3_BOSS, 1f);
+            stopMusic(LEVEL);
+            playMusic(BOSS);
             scriptItemExecutor.execute(boss);
-            return;
         }
     }
 

@@ -6,7 +6,10 @@
 
 package com.bendk97.listeners.impl;
 
-import aurelienribon.tweenengine.*;
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
@@ -115,12 +118,9 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
                     .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
                     .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(1f))
                     .repeat(10, 0f)
-                    .setCallback(new TweenCallback() {
-                        @Override
-                        public void onEvent(int i, BaseTween<?> baseTween) {
-                            if (i == TweenCallback.COMPLETE) {
-                                entityFactory.removeInvulnerableComponent(player);
-                            }
+                    .setCallback((i, baseTween) -> {
+                        if (i == TweenCallback.COMPLETE) {
+                            entityFactory.removeInvulnerableComponent(player);
                         }
                     })
                     .start(tweenManager);

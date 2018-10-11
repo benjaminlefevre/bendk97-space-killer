@@ -15,8 +15,8 @@ import com.bendk97.google.PlayServices;
 import com.bendk97.player.PlayerData;
 import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SplashScreen;
+import com.bendk97.screens.levels.Level;
 import com.bendk97.screens.levels.LevelScreen;
-import com.bendk97.screens.levels.Levels;
 import com.bendk97.screens.levels.utils.TransitionScreen;
 import com.bendk97.share.IntentShare;
 
@@ -47,19 +47,16 @@ public class SpaceKillerGame extends Game {
         if (Gdx.files.isExternalStorageAvailable()) {
             final File[] tempDirectoryFiles = Gdx.files.external(TEMP_DIRECTORY).file().listFiles();
             if (tempDirectoryFiles != null) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            for (File file : tempDirectoryFiles) {
-                                if (!file.delete()) {
-                                    Gdx.app.log(INTENT_FILES, WAS_UNABLE_TO_CLEAN_TEMP_DIRECTORY);
-                                }
+                new Thread(() -> {
+                    try {
+                        for (File file : tempDirectoryFiles) {
+                            if (!file.delete()) {
+                                Gdx.app.log(INTENT_FILES, WAS_UNABLE_TO_CLEAN_TEMP_DIRECTORY);
                             }
-
-                        } catch (Exception e) {
-                            Gdx.app.log(INTENT_FILES, WAS_UNABLE_TO_CLEAN_TEMP_DIRECTORY);
                         }
+
+                    } catch (Exception e) {
+                        Gdx.app.log(INTENT_FILES, WAS_UNABLE_TO_CLEAN_TEMP_DIRECTORY);
                     }
                 }).start();
             }
@@ -91,11 +88,11 @@ public class SpaceKillerGame extends Game {
         }
     }
 
-    public void goToLevelScreen(Levels level) {
+    public void goToLevelScreen(Level level) {
         goToLevelScreen(level, null, null);
     }
 
-    public void goToLevelScreen(Levels level, PlayerData playerData, FrameBuffer screenshot) {
+    public void goToLevelScreen(Level level, PlayerData playerData, FrameBuffer screenshot) {
         try {
             assets.loadResources(level);
             this.playerData = playerData;

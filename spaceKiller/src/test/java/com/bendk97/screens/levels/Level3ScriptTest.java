@@ -14,17 +14,12 @@ import com.bendk97.components.TankComponent.TankLevel;
 import com.bendk97.components.VelocityComponent;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.entities.SoloEnemyFactory;
-import com.bendk97.screens.levels.utils.ScriptItem;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 
 import java.util.LinkedList;
 
-import static com.bendk97.assets.Assets.MUSIC_LEVEL_3;
-import static com.bendk97.assets.Assets.SOUND_BOSS_ALERT;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyFloat;
+import static com.bendk97.assets.Assets.*;
 import static org.mockito.Mockito.*;
 
 public class Level3ScriptTest extends LevelScriptTest {
@@ -43,7 +38,13 @@ public class Level3ScriptTest extends LevelScriptTest {
 
     @Override
     public void initLevelScript() {
-        this.scripting = new Level3Script(assets, entityFactory, tweenManager, player, squadronFactory, soloEnemyFactory, scriptItemExecutor, engine);
+        this.scripting = new Level3Script(screen, assets, entityFactory, tweenManager, player, squadronFactory, soloEnemyFactory, scriptItemExecutor, engine);
+    }
+
+
+    @Test
+    public void music_level_is_played() {
+        verify(assets).playMusic(MUSIC_LEVEL_3, 0.6f);
     }
 
     @Test
@@ -133,12 +134,9 @@ public class Level3ScriptTest extends LevelScriptTest {
     public void boss_happens_end_of_level() {
         launchScriptTimer(215, 300);
         verify(assets).playSound(SOUND_BOSS_ALERT);
-        verify(scriptItemExecutor).execute(argThat(new ArgumentMatcher<ScriptItem>() {
-            @Override
-            public boolean matches(ScriptItem script) {
-                return script.typeShip == EntityFactory.BOSS_LEVEL_3;
-            }
-        }));
+        verify(assets).stopMusic(MUSIC_LEVEL_3);
+        verify(assets).playMusic(MUSIC_LEVEL_3_BOSS, 1f);
+        verify(scriptItemExecutor).execute(argThat(script -> script.typeShip == EntityFactory.BOSS_LEVEL_3));
     }
 
     @Test
@@ -146,12 +144,9 @@ public class Level3ScriptTest extends LevelScriptTest {
         player.add(engine.createComponent(GameOverComponent.class));
         launchScriptTimer(215, 300);
         verify(assets, never()).playSound(SOUND_BOSS_ALERT);
-        verify(scriptItemExecutor, never()).execute(argThat(new ArgumentMatcher<ScriptItem>() {
-            @Override
-            public boolean matches(ScriptItem script) {
-                return script.typeShip == EntityFactory.BOSS_LEVEL_3;
-            }
-        }));
+        verify(assets, never()).stopMusic(MUSIC_LEVEL_3);
+        verify(assets, never()).playMusic(MUSIC_LEVEL_3_BOSS, 1f);
+        verify(scriptItemExecutor, never()).execute(argThat(script -> script.typeShip == EntityFactory.BOSS_LEVEL_3));
     }
 
     @Test

@@ -6,7 +6,10 @@
 
 package com.bendk97.listeners.impl;
 
-import aurelienribon.tweenengine.*;
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Linear;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
@@ -127,26 +130,23 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
                         .push(Tween.to(Mappers.sprite.get(enemy), SpriteComponentAccessor.ALPHA, 0.2f).ease(Linear.INOUT)
                                 .target(0.2f).repeatYoyo(25, 0f))
                         .end()
-                        .setCallback(new TweenCallback() {
-                            @Override
-                            public void onEvent(int i, BaseTween<?> baseTween) {
-                                if (i == TweenCallback.COMPLETE) {
-                                    getEngine().removeEntity(enemy);
-                                }
-                                com.bendk97.timer.PausableTimer.schedule(new com.bendk97.timer.PausableTimer.Task() {
-                                    @Override
-                                    public void run() {
-                                        player.add(getEngine().createComponent(LevelFinishedComponent.class));
-                                        com.bendk97.timer.PausableTimer.schedule(new com.bendk97.timer.PausableTimer.Task() {
-                                            @Override
-                                            public void run() {
-                                                player.remove(LevelFinishedComponent.class);
-                                                screen.nextLevel();
-                                            }
-                                        }, 5f);
-                                    }
-                                }, 2f);
+                        .setCallback((i, baseTween) -> {
+                            if (i == TweenCallback.COMPLETE) {
+                                getEngine().removeEntity(enemy);
                             }
+                            com.bendk97.timer.PausableTimer.schedule(new com.bendk97.timer.PausableTimer.Task() {
+                                @Override
+                                public void run() {
+                                    player.add(getEngine().createComponent(LevelFinishedComponent.class));
+                                    com.bendk97.timer.PausableTimer.schedule(new com.bendk97.timer.PausableTimer.Task() {
+                                        @Override
+                                        public void run() {
+                                            player.remove(LevelFinishedComponent.class);
+                                            screen.nextLevel();
+                                        }
+                                    }, 5f);
+                                }
+                            }, 2f);
                         })
                         .start(tweenManager);
             } else {

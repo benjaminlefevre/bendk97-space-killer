@@ -27,7 +27,7 @@ import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
-import static com.bendk97.screens.levels.Levels.Level1;
+import static com.bendk97.screens.levels.Level.Level1;
 
 public class MenuScreen extends HDScreen {
 

@@ -14,8 +14,6 @@ import com.bendk97.components.BackgroundComponent;
 import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
 
-import java.util.Comparator;
-
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
@@ -25,12 +23,7 @@ public class BackgroundRenderingSystem extends SortedIteratingSystem {
 
     public BackgroundRenderingSystem(SpriteBatch batcher, int priority) {
         super(Family.all(BackgroundComponent.class, PositionComponent.class).get(),
-                new Comparator<Entity>() {
-                    @Override
-                    public int compare(Entity o1, Entity o2) {
-                        return Integer.valueOf(Mappers.background.get(o1).zIndex).compareTo(Mappers.background.get(o2).zIndex);
-                    }
-                },
+                (o1, o2) -> Integer.compare(Mappers.background.get(o1).zIndex, Mappers.background.get(o2).zIndex),
                 priority);
         this.batcher = batcher;
     }

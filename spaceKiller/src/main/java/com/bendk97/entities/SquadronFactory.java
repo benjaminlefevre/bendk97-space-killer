@@ -6,7 +6,10 @@
 
 package com.bendk97.entities;
 
-import aurelienribon.tweenengine.*;
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Linear;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -62,8 +65,8 @@ public class SquadronFactory {
     public void createSquadron(ScriptItem scriptItem) {
         Entity squadron = entityFactory.createSquadron(scriptItem.powerUp, scriptItem.displayBonus, scriptItem.bonus);
 
-        Array<Entity> entitiesSquadron = new Array<Entity>(Entity.class);
-        Array<Entity> allEntities = new Array<Entity>(Entity.class);
+        Array<Entity> entitiesSquadron = new Array<>(Entity.class);
+        Array<Entity> allEntities = new Array<>(Entity.class);
 
         for (int i = 0; i < scriptItem.number; ++i) {
             switch (scriptItem.typeShip) {
@@ -281,12 +284,9 @@ public class SquadronFactory {
                     .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, 3 * SCREEN_HEIGHT / velocity)
                             .ease(Linear.INOUT)
                             .targetRelative(-3f * SCREEN_HEIGHT))
-                    .setCallback(new TweenCallback() {
-                        @Override
-                        public void onEvent(int i, BaseTween<?> baseTween) {
-                            if (i == TweenCallback.COMPLETE) {
-                                removeEntitySquadron(entity);
-                            }
+                    .setCallback((i, baseTween) -> {
+                        if (i == TweenCallback.COMPLETE) {
+                            removeEntitySquadron(entity);
                         }
                     })
                     .start(tweenManager);
@@ -315,12 +315,9 @@ public class SquadronFactory {
                     .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, 3 * SCREEN_HEIGHT / velocity)
                             .ease(Linear.INOUT)
                             .targetRelative(-3f * SCREEN_HEIGHT))
-                    .setCallback(new TweenCallback() {
-                        @Override
-                        public void onEvent(int i, BaseTween<?> baseTween) {
-                            if (i == TweenCallback.COMPLETE) {
-                                removeEntitySquadron(entity);
-                            }
+                    .setCallback((i, baseTween) -> {
+                        if (i == TweenCallback.COMPLETE) {
+                            removeEntitySquadron(entity);
                         }
                     })
                     .start(tweenManager);
@@ -339,14 +336,14 @@ public class SquadronFactory {
         }
         int k = 50;
         Vector2[] points = new Vector2[2 * k];
-        Bezier<Vector2> bezier = new Bezier<Vector2>(new Vector2(0f, SCREEN_HEIGHT * 3f / 4f),
+        Bezier<Vector2> bezier = new Bezier<>(new Vector2(0f, SCREEN_HEIGHT * 3f / 4f),
                 new Vector2(SCREEN_WIDTH / 2f - spriteWidth / 2f, SCREEN_HEIGHT),
                 new Vector2(SCREEN_WIDTH - spriteWidth, SCREEN_HEIGHT * 3f / 4f));
         for (int i = 0; i < k; ++i) {
             points[i] = new Vector2();
             bezier.valueAt(points[i], ((float) i) / ((float) k - 1));
         }
-        bezier = new Bezier<Vector2>(new Vector2(SCREEN_WIDTH - spriteWidth, SCREEN_HEIGHT * 3f / 4f),
+        bezier = new Bezier<>(new Vector2(SCREEN_WIDTH - spriteWidth, SCREEN_HEIGHT * 3f / 4f),
                 new Vector2(SCREEN_WIDTH / 2f - spriteWidth / 2f, SCREEN_HEIGHT / 2f),
                 new Vector2(0f, SCREEN_HEIGHT * 3f / 4f));
         for (int i = 0; i < k; ++i) {
@@ -358,7 +355,7 @@ public class SquadronFactory {
 
     private void createBezierSplineSquadron(Entity[] entities, float velocity, Vector2... vector2s) {
         int k = 100;
-        Bezier<Vector2> bezier = new Bezier<Vector2>(vector2s);
+        Bezier<Vector2> bezier = new Bezier<>(vector2s);
         Vector2[] points = new Vector2[k];
         for (int i = 0; i < k; ++i) {
             points[i] = new Vector2();
@@ -370,7 +367,7 @@ public class SquadronFactory {
 
     private void createCatmullSplineSquadron(Entity[] entities, float velocity, Vector2... vector2s) {
         int k = 100;
-        CatmullRomSpline<Vector2> catmull = new CatmullRomSpline<Vector2>(vector2s, false);
+        CatmullRomSpline<Vector2> catmull = new CatmullRomSpline<>(vector2s, false);
         Vector2[] points = new Vector2[k];
         for (int i = 0; i < k; ++i) {
             points[i] = new Vector2();
@@ -393,12 +390,9 @@ public class SquadronFactory {
                         .ease(Linear.INOUT)
                         .target(points[j].x, points[j].y));
             }
-            timeline.setCallback(new TweenCallback() {
-                @Override
-                public void onEvent(int i, BaseTween<?> baseTween) {
-                    if (i == TweenCallback.COMPLETE) {
-                        removeEntitySquadron(entity);
-                    }
+            timeline.setCallback((i1, baseTween) -> {
+                if (i1 == TweenCallback.COMPLETE) {
+                    removeEntitySquadron(entity);
                 }
             })
                     .start(tweenManager);
@@ -411,19 +405,16 @@ public class SquadronFactory {
             Tween.to(position, PositionComponentAccessor.POSITION_XY, points[0].dst(position.x, position.y) / velocity)
                     .ease(Linear.INOUT)
                     .target(points[0].x, points[0].y)
-                    .setCallback(new TweenCallback() {
-                        @Override
-                        public void onEvent(int i, BaseTween<?> baseTween) {
-                            if (i == COMPLETE) {
-                                Timeline timeline = Timeline.createSequence();
-                                for (int j = 1; j < points.length; ++j) {
-                                    timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, points[j].dst(points[j - 1].x, points[j - 1].y) / velocity)
-                                            .ease(Linear.INOUT)
-                                            .target(points[j].x, points[j].y));
-                                }
-                                timeline.repeat(Tween.INFINITY, 0f)
-                                        .start(tweenManager);
+                    .setCallback((i, baseTween) -> {
+                        if (i == TweenCallback.COMPLETE) {
+                            Timeline timeline = Timeline.createSequence();
+                            for (int j = 1; j < points.length; ++j) {
+                                timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, points[j].dst(points[j - 1].x, points[j - 1].y) / velocity)
+                                        .ease(Linear.INOUT)
+                                        .target(points[j].x, points[j].y));
                             }
+                            timeline.repeat(Tween.INFINITY, 0f)
+                                    .start(tweenManager);
                         }
                     }).start(tweenManager);
         }
@@ -448,12 +439,9 @@ public class SquadronFactory {
                     .push(Tween.to(position, PositionComponentAccessor.POSITION_X, 3f * SCREEN_WIDTH / velocity)
                             .ease(Linear.INOUT)
                             .targetRelative(direction * 3f * SCREEN_WIDTH))
-                    .setCallback(new TweenCallback() {
-                        @Override
-                        public void onEvent(int i, BaseTween<?> baseTween) {
-                            if (i == TweenCallback.COMPLETE) {
-                                removeEntitySquadron(entity);
-                            }
+                    .setCallback((i1, baseTween) -> {
+                        if (i1 == TweenCallback.COMPLETE) {
+                            removeEntitySquadron(entity);
                         }
                     })
                     .start(tweenManager);
@@ -473,12 +461,9 @@ public class SquadronFactory {
                     .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, 3 * SCREEN_HEIGHT / velocity)
                             .ease(Linear.INOUT)
                             .targetRelative(-3f * SCREEN_HEIGHT))
-                    .setCallback(new TweenCallback() {
-                        @Override
-                        public void onEvent(int i, BaseTween<?> baseTween) {
-                            if (i == TweenCallback.COMPLETE) {
-                                removeEntitySquadron(entity);
-                            }
+                    .setCallback((i1, baseTween) -> {
+                        if (i1 == TweenCallback.COMPLETE) {
+                            removeEntitySquadron(entity);
                         }
                     })
                     .start(tweenManager);
@@ -495,12 +480,9 @@ public class SquadronFactory {
                     .push(Tween.to(position, PositionComponentAccessor.POSITION_XY, (new Vector2(startX, startY)).dst(new Vector2(endX, endY)) / velocity)
                             .ease(Linear.INOUT)
                             .target(endX, endY))
-                    .setCallback(new TweenCallback() {
-                        @Override
-                        public void onEvent(int i, BaseTween<?> baseTween) {
-                            if (i == TweenCallback.COMPLETE) {
-                                removeEntitySquadron(entity);
-                            }
+                    .setCallback((i1, baseTween) -> {
+                        if (i1 == TweenCallback.COMPLETE) {
+                            removeEntitySquadron(entity);
                         }
                     })
                     .start(tweenManager);
@@ -528,12 +510,9 @@ public class SquadronFactory {
                         .ease(Linear.INOUT)
                         .target(array[j].x, array[j].y));
             }
-            timeline.setCallback(new TweenCallback() {
-                @Override
-                public void onEvent(int i, BaseTween<?> baseTween) {
-                    if (i == TweenCallback.COMPLETE) {
-                        removeEntitySquadron(entity);
-                    }
+            timeline.setCallback((i1, baseTween) -> {
+                if (i1 == TweenCallback.COMPLETE) {
+                    removeEntitySquadron(entity);
                 }
             })
                     .start(tweenManager);

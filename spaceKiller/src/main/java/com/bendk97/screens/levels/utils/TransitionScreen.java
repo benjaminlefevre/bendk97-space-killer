@@ -6,7 +6,6 @@
 
 package com.bendk97.screens.levels.utils;
 
-import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
@@ -65,12 +64,9 @@ public class TransitionScreen extends ScreenAdapter {
         manager = new TweenManager();
         Tween.registerAccessor(Sprite.class, new SpriteTween());
 
-        TweenCallback backgroundAnimationTweenComplete = new TweenCallback() {
-            @Override
-            public void onEvent(int type, BaseTween<?> source) {
-                dispose();
-                game.setScreen(next);
-            }
+        TweenCallback backgroundAnimationTweenComplete = (type, source) -> {
+            dispose();
+            game.setScreen(next);
         };
 
         nextBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, (int) screenWidth, (int) screenHeight, false);

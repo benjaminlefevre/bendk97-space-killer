@@ -19,7 +19,7 @@ import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SocialScoreScreen;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
-import static com.bendk97.screens.levels.Levels.Level1;
+import static com.bendk97.screens.levels.Level.Level1;
 
 
 public class GameOverTouchInputProcessor implements InputProcessor {

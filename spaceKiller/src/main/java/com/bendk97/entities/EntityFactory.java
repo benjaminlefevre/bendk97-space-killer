@@ -6,7 +6,10 @@
 
 package com.bendk97.entities;
 
-import aurelienribon.tweenengine.*;
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Linear;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
@@ -30,7 +33,7 @@ import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.*;
 import com.bendk97.components.TankComponent.TankLevel;
-import com.bendk97.screens.levels.Levels;
+import com.bendk97.screens.levels.Level;
 import com.bendk97.screens.levels.utils.ScreenShake;
 import com.bendk97.timer.PausableTimer;
 
@@ -44,8 +47,8 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.*;
 import static com.bendk97.components.Mappers.position;
 import static com.bendk97.components.Mappers.sprite;
-import static com.bendk97.screens.levels.Levels.Level1;
-import static com.bendk97.screens.levels.Levels.Level3;
+import static com.bendk97.screens.levels.Level.Level1;
+import static com.bendk97.screens.levels.Level.Level3;
 import static com.bendk97.tweens.PositionComponentAccessor.POSITION_XY;
 import static com.bendk97.tweens.PositionComponentAccessor.POSITION_Y;
 import static com.bendk97.tweens.SpriteComponentAccessor.ALPHA;
@@ -115,13 +118,13 @@ public class EntityFactory implements Disposable {
 
 
     public EntityFactory(SpaceKillerGame game, PooledEngine engine, Assets assets, TweenManager tweenManager, RayHandler rayHandler,
-                         ScreenShake screenShake, Levels level) {
+                         ScreenShake screenShake, Level level) {
         this.engine = engine;
         this.screenShake = screenShake;
         this.game = game;
         this.rayHandler = rayHandler;
         if (rayHandler != null) {
-            Array<PointLight> poolObjects = new Array<PointLight>(30);
+            Array<PointLight> poolObjects = new Array<>(30);
             for (int i = 0; i < 50; ++i) {
                 PointLight light = lightPool.obtain();
                 light.setActive(false);
@@ -132,7 +135,7 @@ public class EntityFactory implements Disposable {
         this.assets = assets;
         this.tweenManager = tweenManager;
         this.atlasNoMask = assets.get(GFX_LEVEL_ALL_ATLAS_NO_MASK);
-        this.atlasMask = assets.get(level.getSprites());
+        this.atlasMask = assets.get(level.sprites);
     }
 
 
@@ -256,7 +259,7 @@ public class EntityFactory implements Disposable {
         bomb.add(positionComponent);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, atlasNoMask.createSprites("bomb"), LOOP));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION, atlasNoMask.createSprites("bomb"), LOOP));
         spriteComponent.sprite = animationComponent.animations.get(ANIMATION_MAIN).getKeyFrame(0);
         bomb.add(spriteComponent);
         bomb.add(animationComponent);
@@ -268,13 +271,10 @@ public class EntityFactory implements Disposable {
                 playerPosition.y : playerPosition.y + sprite.get(player).sprite.getHeight();
         Tween.to(positionComponent, POSITION_XY, 0.6f).ease(Linear.INOUT)
                 .target(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f, SCREEN_HEIGHT * 3f / 4f)
-                .setCallback(new TweenCallback() {
-                    @Override
-                    public void onEvent(int event, BaseTween<?> baseTween) {
-                        if (event == COMPLETE) {
-                            createBombExplosion(bomb);
-                            engine.removeEntity(bomb);
-                        }
+                .setCallback((event, baseTween) -> {
+                    if (event == TweenCallback.COMPLETE) {
+                        createBombExplosion(bomb);
+                        engine.removeEntity(bomb);
                     }
                 })
                 .start(tweenManager);
@@ -286,7 +286,7 @@ public class EntityFactory implements Disposable {
         bombExplosion.add(positionComponent);
         final SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_BOMB_EXPLOSION,
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION_BOMB_EXPLOSION,
                 atlasNoMask.createSprites("bomb_explosion"), LOOP_PINGPONG));
         spriteComponent.sprite = atlasNoMask.createSprite("bomb_explosion", 6);
         spriteComponent.zIndex = 100;
@@ -300,12 +300,9 @@ public class EntityFactory implements Disposable {
         positionComponent.y = bombPosition.y - spriteComponent.sprite.getHeight() / 2f;
         Tween.to(positionComponent, POSITION_Y, 0.7f).ease(Linear.INOUT)
                 .target(bombPosition.y - spriteComponent.sprite.getHeight() / 2f)
-                .setCallback(new TweenCallback() {
-                    @Override
-                    public void onEvent(int event, BaseTween<?> baseTween) {
-                        if (event == COMPLETE) {
-                            bombExplosion.add(engine.createComponent(BombExplosionComponent.class));
-                        }
+                .setCallback((event, baseTween) -> {
+                    if (event == TweenCallback.COMPLETE) {
+                        bombExplosion.add(engine.createComponent(BombExplosionComponent.class));
                     }
                 })
                 .start(tweenManager);
@@ -428,7 +425,7 @@ public class EntityFactory implements Disposable {
 
     public void createBossFire(final Entity boss, final Entity player) {
         int type = random.nextInt(3);
-        Levels level = Mappers.player.get(player).level;
+        Level level = Mappers.player.get(player).level;
         if (type == 0) {
             final int bullets = level.equals(Level3) ? 20 : 10;
             float delay = level.equals(Level3) ? 0.1f : 0.2f;
@@ -467,7 +464,7 @@ public class EntityFactory implements Disposable {
     }
 
     private void createBossFireCircle(Entity boss, boolean yUp) {
-        Array<Entity> bullets = new Array<Entity>(10);
+        Array<Entity> bullets = new Array<>(10);
         assets.playSound(SOUND_FIRE_ENEMY);
         for (int i = 0; i < 12; ++i) {
             Entity bullet = engine.createEntity();
@@ -514,7 +511,7 @@ public class EntityFactory implements Disposable {
         powerUp.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites("power-up");
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_POWER_UP, sprites, LOOP));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION_POWER_UP, sprites, LOOP));
         powerUp.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
@@ -527,12 +524,9 @@ public class EntityFactory implements Disposable {
                 .push(Tween.to(position, POSITION_Y, 8f).ease(Linear.INOUT).target(50f))
                 .push(Tween.to(component, ALPHA, 0.5f).delay(4f).ease(Linear.INOUT).target(0f).repeat(8, 0f))
                 .end()
-                .setCallback(new TweenCallback() {
-                    @Override
-                    public void onEvent(int i, BaseTween<?> baseTween) {
-                        if (i == TweenCallback.COMPLETE) {
-                            engine.removeEntity(powerUp);
-                        }
+                .setCallback((i, baseTween) -> {
+                    if (i == TweenCallback.COMPLETE) {
+                        engine.removeEntity(powerUp);
                     }
                 })
                 .start(tweenManager);
@@ -547,7 +541,7 @@ public class EntityFactory implements Disposable {
         shieldUp.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites("shieldup");
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_POWER_UP, sprites, LOOP));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION_POWER_UP, sprites, LOOP));
         shieldUp.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
@@ -560,12 +554,9 @@ public class EntityFactory implements Disposable {
                 .push(Tween.to(position, POSITION_Y, 8f).ease(Linear.INOUT).target(50f))
                 .push(Tween.to(component, ALPHA, 0.5f).delay(4f).ease(Linear.INOUT).target(0f).repeat(8, 0f))
                 .end()
-                .setCallback(new TweenCallback() {
-                    @Override
-                    public void onEvent(int i, BaseTween<?> baseTween) {
-                        if (i == TweenCallback.COMPLETE) {
-                            engine.removeEntity(shieldUp);
-                        }
+                .setCallback((i, baseTween) -> {
+                    if (i == TweenCallback.COMPLETE) {
+                        engine.removeEntity(shieldUp);
                     }
                 })
                 .start(tweenManager);
@@ -588,12 +579,9 @@ public class EntityFactory implements Disposable {
                 .push(Tween.to(position, POSITION_Y, 8f).ease(Linear.INOUT).target(50f))
                 .push(Tween.to(component, ALPHA, 0.5f).delay(4f).ease(Linear.INOUT).target(0f).repeat(8, 0f))
                 .end()
-                .setCallback(new TweenCallback() {
-                    @Override
-                    public void onEvent(int i, BaseTween<?> baseTween) {
-                        if (i == TweenCallback.COMPLETE) {
-                            engine.removeEntity(bombUp);
-                        }
+                .setCallback((i, baseTween) -> {
+                    if (i == TweenCallback.COMPLETE) {
+                        engine.removeEntity(bombUp);
                     }
                 })
                 .start(tweenManager);
@@ -601,7 +589,7 @@ public class EntityFactory implements Disposable {
     }
 
     public Entity createLaserShip(int type, Float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points, boolean fromLeft) {
-        String atlasRegion = null;
+        String atlasRegion;
         switch (type) {
             case SHIP_LV2_LASER_SHIP1:
                 atlasRegion = "staticEnemy1";
@@ -660,7 +648,7 @@ public class EntityFactory implements Disposable {
         }
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites(atlasRegion);
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, LOOP_PINGPONG));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION, sprites, LOOP_PINGPONG));
         enemy.add(animationComponent);
         SpriteComponent spriteComponent = engine.createComponent(SpriteComponent.class);
         enemy.add(spriteComponent);
@@ -683,7 +671,7 @@ public class EntityFactory implements Disposable {
 
 
     public List<Entity> createTank(TankLevel level, int gauge, int points) {
-        List<Entity> entities = new ArrayList<Entity>();
+        List<Entity> entities = new ArrayList<>();
         Entity tankCannon = engine.createEntity();
         final EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = points;
@@ -739,7 +727,7 @@ public class EntityFactory implements Disposable {
         enemy.add(position);
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites(atlasName);
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(frameDuration, sprites, animationType));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(frameDuration, sprites, animationType));
         enemy.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
@@ -755,7 +743,7 @@ public class EntityFactory implements Disposable {
 
 
     public Entity createEnemyShip(Entity squadron, boolean canAttack, float velocityBullet, int rateShoot, int enemyType) {
-        String atlasRegion = "enemy";
+        String atlasRegion;
         int points = 200;
         int strength = 1;
         int attackCapacity = 1;
@@ -934,7 +922,7 @@ public class EntityFactory implements Disposable {
 
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasMask.createSprites("boss3");
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(0.075f, (Sprite[]) sprites.toArray(Sprite.class)));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(0.075f, (Sprite[]) sprites.toArray(Sprite.class)));
         animationComponent.animations.get(ANIMATION_MAIN).setPlayMode(LOOP_PINGPONG);
         enemy.add(animationComponent);
 
@@ -966,7 +954,7 @@ public class EntityFactory implements Disposable {
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         String asteroidSprite = asteroid == ASTEROID_1 ? "asteroid" : "asteroid2";
         Array<Sprite> sprites = atlasMask.createSprites(asteroidSprite);
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, sprites, LOOP));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION, sprites, LOOP));
         enemy.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
@@ -979,7 +967,7 @@ public class EntityFactory implements Disposable {
 
 
     public Array<Entity> createHouse(Entity squadron, int houseType) {
-        Array<Entity> entities = new Array<Entity>();
+        Array<Entity> entities = new Array<>();
         Entity house = engine.createEntity();
         EnemyComponent enemyComponent = engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
@@ -1010,7 +998,7 @@ public class EntityFactory implements Disposable {
     }
 
 
-    public Entity createEntityPlayer(Levels level) {
+    public Entity createEntityPlayer(Level level) {
         Entity player = engine.createEntity();
         if (engine.getEntitiesFor(Family.one(PlayerComponent.class).get()).size() > 0) {
             throw new IllegalArgumentException("A player entity already exists!");
@@ -1036,20 +1024,20 @@ public class EntityFactory implements Disposable {
         player.add(engine.createComponent(PositionComponent.class));
         player.add(engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
-        Array<Sprite> spritesMAIN = new Array<Sprite>(2);
+        Array<Sprite> spritesMAIN = new Array<>(2);
         spritesMAIN.add(atlasMask.createSprite("player", 1));
         spritesMAIN.add(atlasMask.createSprite("player", 2));
-        Array<Sprite> spritesLEFT = new Array<Sprite>(2);
+        Array<Sprite> spritesLEFT = new Array<>(2);
         spritesLEFT.add(atlasMask.createSprite("player", 0));
         spritesLEFT.add(atlasMask.createSprite("player", 3));
-        Array<Sprite> spritesRIGHT = new Array<Sprite>(2);
+        Array<Sprite> spritesRIGHT = new Array<>(2);
         spritesRIGHT.add(atlasMask.createSprite("player", 0));
         spritesRIGHT.add(atlasMask.createSprite("player", 3));
         spritesRIGHT.get(0).flip(true, false);
         spritesRIGHT.get(1).flip(true, false);
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION, spritesMAIN, LOOP));
-        animationComponent.animations.put(GO_LEFT, new Animation<Sprite>(FRAME_DURATION, spritesLEFT, LOOP));
-        animationComponent.animations.put(GO_RIGHT, new Animation<Sprite>(FRAME_DURATION, spritesRIGHT, LOOP));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION, spritesMAIN, LOOP));
+        animationComponent.animations.put(GO_LEFT, new Animation<>(FRAME_DURATION, spritesLEFT, LOOP));
+        animationComponent.animations.put(GO_RIGHT, new Animation<>(FRAME_DURATION, spritesRIGHT, LOOP));
         player.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = spritesMAIN.get(0);
@@ -1082,13 +1070,10 @@ public class EntityFactory implements Disposable {
                 .push(Tween.to(spriteComponent, ALPHA, 0.2f).target(0.2f))
                 .push(Tween.to(spriteComponent, ALPHA, 0.2f).target(0.8f))
                 .repeat(5, 0f)
-                .setCallback(new TweenCallback() {
-                    @Override
-                    public void onEvent(int i, BaseTween<?> baseTween) {
-                        if (i == TweenCallback.COMPLETE) {
-                            engine.removeEntity(shield);
-                            removeInvulnerableComponent(player);
-                        }
+                .setCallback((i, baseTween) -> {
+                    if (i == TweenCallback.COMPLETE) {
+                        engine.removeEntity(shield);
+                        removeInvulnerableComponent(player);
                     }
                 })
                 .start(tweenManager);
@@ -1096,7 +1081,7 @@ public class EntityFactory implements Disposable {
 
     public SnapshotArray<Entity> createEntityPlayerLives(Entity player) {
         PlayerComponent playerComponent = Mappers.player.get(player);
-        SnapshotArray<Entity> entities = new SnapshotArray<Entity>(true, playerComponent.lives, Entity.class);
+        SnapshotArray<Entity> entities = new SnapshotArray<>(true, playerComponent.lives, Entity.class);
         for (int i = 0; i < playerComponent.lives - 1; ++i) {
             Entity life = engine.createEntity();
             SpriteComponent component = engine.createComponent(SpriteComponent.class);
@@ -1112,7 +1097,7 @@ public class EntityFactory implements Disposable {
 
     public SnapshotArray<Entity> createEntityPlayerBombs(Entity player) {
         PlayerComponent playerComponent = Mappers.player.get(player);
-        SnapshotArray<Entity> entities = new SnapshotArray<Entity>(true, playerComponent.bombs, Entity.class);
+        SnapshotArray<Entity> entities = new SnapshotArray<>(true, playerComponent.bombs, Entity.class);
         for (int i = 0; i < playerComponent.bombs; ++i) {
             Entity bomb = engine.createEntity();
             SpriteComponent component = engine.createComponent(SpriteComponent.class);
@@ -1134,7 +1119,7 @@ public class EntityFactory implements Disposable {
         position.setPosition(x, y);
         AnimationComponent animationComponent = engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = atlasNoMask.createSprites("explosion");
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<Sprite>(FRAME_DURATION_EXPLOSION, sprites, PlayMode.NORMAL));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION_EXPLOSION, sprites, PlayMode.NORMAL));
         explosion.add(animationComponent);
         SpriteComponent component = engine.createComponent(SpriteComponent.class);
         component.sprite = animationComponent.animations.get(ANIMATION_MAIN).getKeyFrame(0);
