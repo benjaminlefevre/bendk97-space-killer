@@ -7,10 +7,10 @@
 package com.bendk97.player;
 
 import com.bendk97.components.PlayerComponent.PowerLevel;
-import com.bendk97.screens.levels.Levels;
+import com.bendk97.screens.levels.Level;
 
 public class PlayerDataBuilder {
-    private Levels level;
+    private Level level;
     private int numberOfContinue;
     private long fireDelay;
     private long fireDelaySide;
@@ -22,7 +22,7 @@ public class PlayerDataBuilder {
     private int bombs;
     private PowerLevel powerLevel;
 
-    public PlayerDataBuilder atLevel(Levels level) {
+    public PlayerDataBuilder atLevel(Level level) {
         this.level = level;
         return this;
     }

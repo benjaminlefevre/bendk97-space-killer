@@ -18,10 +18,10 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
  * @author Nathan Sweet
  */
 public class PausableTimer {
-    private static final Array<PausableTimer> instances = new Array<PausableTimer>(1);
+    private static final Array<PausableTimer> instances = new Array<>(1);
     private static TimerThread thread;
     static private final int CANCELLED = -1;
-    private final Array<Task> tasks = new Array<Task>(false, 8);
+    private final Array<Task> tasks = new Array<>(false, 8);
 
 
     /**

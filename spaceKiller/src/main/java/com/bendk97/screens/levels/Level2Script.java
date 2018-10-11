@@ -30,7 +30,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
-import static com.bendk97.screens.levels.Levels.Level2;
+import static com.bendk97.screens.levels.Level.Level2;
+import static com.bendk97.screens.levels.Level.MusicTrack.BOSS;
+import static com.bendk97.screens.levels.Level.MusicTrack.LEVEL;
+import static com.bendk97.screens.levels.Level.SoundEffect.BOSS_ALERT;
+import static com.bendk97.screens.levels.Level.SoundEffect.GO;
 
 public class Level2Script extends LevelScript {
 
@@ -44,46 +48,45 @@ public class Level2Script extends LevelScript {
     private ScriptItem boss;
 
 
-    private final Array<Entity> backgrounds = new Array<Entity>();
+    private final Array<Entity> backgrounds = new Array<>();
 
-    public Level2Script(final Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
+    public Level2Script(final LevelScreen levelScreen, final Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
                         PooledEngine engine, OrthographicCamera camera) {
-        super(assets, entityFactory, tweenManager, player, engine, camera);
+        super(levelScreen, Level2, assets, entityFactory, tweenManager, player, engine, camera);
         soloEnemyFactory = new SoloEnemyFactory(Level2, engine, tweenManager, entityFactory, player);
-        backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_LEVEL2), 0, -500f));
-        backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_STARS_LEVEL2), 1, -300f));
-        backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_BIG_PLANET), 4, -250f));
-        backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_FAR_PLANETS), 2, -275f));
-        backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_RISING_PLANETS), 3, -325f));
-        assets.playMusic(Assets.MUSIC_LEVEL_2, 0.3f);
-        engine.addSystem(new FollowPlayerSystem(2));
+        initLevel2(assets, entityFactory, engine);
     }
 
     /*
       for test purposes only
     */
-    protected Level2Script(Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
+    protected Level2Script(final LevelScreen levelScreen, Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
                            SquadronFactory squadronFactory, SoloEnemyFactory soloEnemyFactory, ScriptItemExecutor scriptItemExecutor, PooledEngine engine) {
-        super(assets, entityFactory, tweenManager, player, squadronFactory, scriptItemExecutor);
+        super(levelScreen, Level2, assets, entityFactory, tweenManager, player, squadronFactory, scriptItemExecutor);
         this.soloEnemyFactory = soloEnemyFactory;
+        initLevel2(assets, entityFactory, engine);
+    }
+
+    private void initLevel2(Assets assets, EntityFactory entityFactory, PooledEngine engine) {
         backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_LEVEL2), 0, -500f));
         backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_STARS_LEVEL2), 1, -300f));
         backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_BIG_PLANET), 4, -250f));
         backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_FAR_PLANETS), 2, -275f));
         backgrounds.add(entityFactory.createBackground(assets.get(Assets.GFX_BGD_RISING_PLANETS), 3, -325f));
-        assets.playMusic(Assets.MUSIC_LEVEL_2, 0.3f);
         engine.addSystem(new FollowPlayerSystem(2));
     }
 
 
     @Override
     public void initSpawns() {
-        scriptItemsEasy = new LinkedList<ScriptItem>(randomEasySpawnEnemies(30));
-        scriptItemsMediumLeft = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromLeft(30));
-        scriptItemsMediumRight = new LinkedList<ScriptItem>(randomMediumSpawnEnemiesComingFromRight(30));
-        scriptItemsHardLeft = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromLeft(30));
-        scriptItemsHardRight = new LinkedList<ScriptItem>(randomHardSpawnEnemiesComingFromRight(30));
-        boss = new ScriptItemBuilder().typeShip(EntityFactory.BOSS_LEVEL_2).typeSquadron(SquadronFactory.BOSS_LEVEL2_MOVE).velocity(100f).number(1).powerUp(false).displayBonus(true).withBonus(15000).bulletVelocity(ENEMY_BULLET_EASY_VELOCITY).createScriptItem();
+        scriptItemsEasy = new LinkedList<>(randomEasySpawnEnemies(30));
+        scriptItemsMediumLeft = new LinkedList<>(randomMediumSpawnEnemiesComingFromLeft(30));
+        scriptItemsMediumRight = new LinkedList<>(randomMediumSpawnEnemiesComingFromRight(30));
+        scriptItemsHardLeft = new LinkedList<>(randomHardSpawnEnemiesComingFromLeft(30));
+        scriptItemsHardRight = new LinkedList<>(randomHardSpawnEnemiesComingFromRight(30));
+        boss = new ScriptItemBuilder().typeShip(EntityFactory.BOSS_LEVEL_2).typeSquadron(SquadronFactory.BOSS_LEVEL2_MOVE)
+                .velocity(100f).number(1).powerUp(false).displayBonus(true).withBonus(15000)
+                .bulletVelocity(ENEMY_BULLET_EASY_VELOCITY).createScriptItem();
     }
 
     @Override
@@ -113,7 +116,6 @@ public class Level2Script extends LevelScript {
         }
         if (second >= 255) {
             scriptBoss(second);
-            return;
         }
     }
 
@@ -159,7 +161,7 @@ public class Level2Script extends LevelScript {
 
     private void scriptMediumPart(int second) {
         if (second == 95) {
-            assets.playSound(Assets.SOUND_GO);
+            playSound(GO);
         }
         boolean left = random.nextBoolean();
         if (second % 5 == 0 || second % 7 == 0) {
@@ -175,7 +177,7 @@ public class Level2Script extends LevelScript {
 
     private void scriptDifficultPart(int second) {
         if (second == 165) {
-            assets.playSound(Assets.SOUND_GO);
+            playSound(GO);
         }
         if (second == 190) {
             soloEnemyFactory.createSoloEnemy(STATIC_ENEMY_LEVEL2_VELOCITY, STATIC_ENEMY_LEVEL2_BULLET_VELOCITY, STATIC_ENEMY_LEVEL2_RATE_SHOOT_WHEN_TWICE, 10, 200, false);
@@ -198,18 +200,17 @@ public class Level2Script extends LevelScript {
             return;
         }
         if (second == 255) {
-            assets.playSound(Assets.SOUND_BOSS_ALERT);
-            for (Entity background : new Array.ArrayIterator<Entity>(backgrounds)) {
+            playSound(BOSS_ALERT);
+            for (Entity background : new Array.ArrayIterator<>(backgrounds)) {
                 Tween.to(Mappers.velocity.get(background), VelocityComponentAccessor.VELOCITY_Y, 4).ease(Quad.IN)
                         .target(-Mappers.velocity.get(background).y / 10f).start(tweenManager);
             }
             return;
         }
         if (second == 259) {
-            assets.stopMusic(Assets.MUSIC_LEVEL_2);
-            assets.playMusic(Assets.MUSIC_LEVEL_2_BOSS, 1f);
+            stopMusic(LEVEL);
+            playMusic(BOSS);
             scriptItemExecutor.execute(boss);
-            return;
         }
     }
 

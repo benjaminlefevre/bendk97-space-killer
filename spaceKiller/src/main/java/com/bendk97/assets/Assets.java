@@ -24,148 +24,148 @@ import com.bendk97.Settings;
 import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SocialScoreScreen;
 import com.bendk97.screens.SplashScreen;
-import com.bendk97.screens.levels.Levels;
+import com.bendk97.screens.levels.Level;
 import com.bendk97.screens.levels.utils.TransitionScreen;
 
 import java.util.*;
 
-import static com.bendk97.screens.levels.Levels.*;
+import static com.bendk97.screens.levels.Level.*;
 
 public class Assets {
     private AssetManager manager;
 
     // SPLASH SCREEN
     public static final AssetDescriptor<TextureAtlas> SPLASH_ATLAS =
-            new AssetDescriptor<TextureAtlas>("gfx/splashscreen.atlas", TextureAtlas.class);
+            new AssetDescriptor<>("gfx/splashscreen.atlas", TextureAtlas.class);
     public static final AssetDescriptor<Texture> SPLASH_TXT_LOGO =
-            new AssetDescriptor<Texture>("gfx/backgrounds/bendk97.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/bendk97.png", Texture.class);
     public static final AssetDescriptor<Music> SPLASH_MUSIC =
-            new AssetDescriptor<Music>("sounds/splash.ogg", Music.class);
+            new AssetDescriptor<>("sounds/splash.ogg", Music.class);
     public static final AssetDescriptor<Texture> ICON_GAME =
-            new AssetDescriptor<Texture>("gfx/space_killer.png", Texture.class);
+            new AssetDescriptor<>("gfx/space_killer.png", Texture.class);
     public static final AssetDescriptor<Texture> ICON_GOOGLE =
-            new AssetDescriptor<Texture>("gfx/google.png", Texture.class);
+            new AssetDescriptor<>("gfx/google.png", Texture.class);
 
     // MENU SCREEN
     public static final AssetDescriptor<Texture> MENU_BGD =
-            new AssetDescriptor<Texture>("gfx/backgrounds/menu.jpg", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/menu.jpg", Texture.class);
     public static final AssetDescriptor<Music> MENU_MUSIC =
-            new AssetDescriptor<Music>("sounds/intro.mid", Music.class);
+            new AssetDescriptor<>("sounds/intro.mid", Music.class);
     public static final AssetDescriptor<Sound> MENU_CLICK =
-            new AssetDescriptor<Sound>("sounds/click_menu.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/click_menu.ogg", Sound.class);
     public static final AssetDescriptor<TextureAtlas> MENU_ATLAS =
-            new AssetDescriptor<TextureAtlas>("gfx/menu.atlas", TextureAtlas.class);
+            new AssetDescriptor<>("gfx/menu.atlas", TextureAtlas.class);
 
 
     // BACKGROUNDS
     public static final AssetDescriptor<Texture> GFX_BGD_STARS =
-            new AssetDescriptor<Texture>("gfx/backgrounds/starfield.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/starfield.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_LEVEL1 =
-            new AssetDescriptor<Texture>("gfx/backgrounds/level1.gif", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/level1.gif", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_MIST1 =
-            new AssetDescriptor<Texture>("gfx/backgrounds/mist.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/mist.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_MIST2 =
-            new AssetDescriptor<Texture>("gfx/backgrounds/mist2.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/mist2.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_MIST3 =
-            new AssetDescriptor<Texture>("gfx/backgrounds/mist3.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/mist3.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_MIST4 =
-            new AssetDescriptor<Texture>("gfx/backgrounds/mist4.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/mist4.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_MIST5 =
-            new AssetDescriptor<Texture>("gfx/backgrounds/mist5.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/mist5.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_MIST6 =
-            new AssetDescriptor<Texture>("gfx/backgrounds/mist6.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/mist6.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_MIST7 =
-            new AssetDescriptor<Texture>("gfx/backgrounds/mist7.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/mist7.png", Texture.class);
 
     public static final AssetDescriptor<Texture> GFX_BGD_LEVEL2 =
-            new AssetDescriptor<Texture>("gfx/backgrounds/level2.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/level2.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_BIG_PLANET =
-            new AssetDescriptor<Texture>("gfx/backgrounds/big-planet.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/big-planet.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_FAR_PLANETS =
-            new AssetDescriptor<Texture>("gfx/backgrounds/far-planets.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/far-planets.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_RISING_PLANETS =
-            new AssetDescriptor<Texture>("gfx/backgrounds/rising-planets.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/rising-planets.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_STARS_LEVEL2 =
-            new AssetDescriptor<Texture>("gfx/backgrounds/stars.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/stars.png", Texture.class);
     public static final AssetDescriptor<Texture> GFX_BGD_CLOUDS =
-            new AssetDescriptor<Texture>("gfx/backgrounds/clouds.png", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/clouds.png", Texture.class);
 
 
     public static final AssetDescriptor<Texture> GFX_BGD_LEVEL3 =
-            new AssetDescriptor<Texture>("gfx/backgrounds/level3.jpg", Texture.class);
+            new AssetDescriptor<>("gfx/backgrounds/level3.jpg", Texture.class);
 
     // GFX
-    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL_ALL_ATLAS_NO_MASK = new AssetDescriptor<TextureAtlas>("gfx/level-all-no-mask.atlas", TextureAtlas.class);
-    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level1-mask.atlas", TextureAtlas.class);
-    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL2_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level2-mask.atlas", TextureAtlas.class);
-    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL3_ATLAS_MASK = new AssetDescriptor<TextureAtlas>("gfx/level3-mask.atlas", TextureAtlas.class);
+    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL_ALL_ATLAS_NO_MASK = new AssetDescriptor<>("gfx/level-all-no-mask.atlas", TextureAtlas.class);
+    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL1_ATLAS_MASK = new AssetDescriptor<>("gfx/level1-mask.atlas", TextureAtlas.class);
+    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL2_ATLAS_MASK = new AssetDescriptor<>("gfx/level2-mask.atlas", TextureAtlas.class);
+    public static final AssetDescriptor<TextureAtlas> GFX_LEVEL3_ATLAS_MASK = new AssetDescriptor<>("gfx/level3-mask.atlas", TextureAtlas.class);
 
     // SOUNDS
     public static final AssetDescriptor<Sound> SOUND_LOSE_LIFE =
-            new AssetDescriptor<Sound>("sounds/loseLife.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/loseLife.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_NEW_LIFE =
-            new AssetDescriptor<Sound>("sounds/newLife.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/newLife.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_READY =
-            new AssetDescriptor<Sound>("sounds/ready.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/ready.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_GAME_OVER =
-            new AssetDescriptor<Sound>("sounds/game_over.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/game_over.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_SHIELD_BULLET =
-            new AssetDescriptor<Sound>("sounds/shield.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/shield.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_SHIELD_UP =
-            new AssetDescriptor<Sound>("sounds/shieldUp.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/shieldUp.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_BOMB_DROP =
-            new AssetDescriptor<Sound>("sounds/bombDrop.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/bombDrop.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_BOMB_EXPLOSION =
-            new AssetDescriptor<Sound>("sounds/bombExplosion.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/bombExplosion.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_EXPLOSION =
-            new AssetDescriptor<Sound>("sounds/explosion.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/explosion.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_BOSS_FINISHED =
-            new AssetDescriptor<Sound>("sounds/bossKilled.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/bossKilled.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_FIRE =
-            new AssetDescriptor<Sound>("sounds/fire.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/fire.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_BOSS_ALERT =
-            new AssetDescriptor<Sound>("sounds/boss-alert.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/boss-alert.ogg", Sound.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_1 =
-            new AssetDescriptor<Music>("sounds/level1.ogg", Music.class);
+            new AssetDescriptor<>("sounds/level1.ogg", Music.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_2 =
-            new AssetDescriptor<Music>("sounds/level2.ogg", Music.class);
+            new AssetDescriptor<>("sounds/level2.ogg", Music.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_3 =
-            new AssetDescriptor<Music>("sounds/level3.ogg", Music.class);
+            new AssetDescriptor<>("sounds/level3.ogg", Music.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_1_BOSS =
-            new AssetDescriptor<Music>("sounds/level1-boss.mid", Music.class);
+            new AssetDescriptor<>("sounds/level1-boss.mid", Music.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_2_BOSS =
-            new AssetDescriptor<Music>("sounds/level2-boss.mid", Music.class);
+            new AssetDescriptor<>("sounds/level2-boss.mid", Music.class);
     public static final AssetDescriptor<Music> MUSIC_LEVEL_3_BOSS =
-            new AssetDescriptor<Music>("sounds/level3-boss.mid", Music.class);
+            new AssetDescriptor<>("sounds/level3-boss.mid", Music.class);
     public static final AssetDescriptor<Sound> SOUND_POWER_UP =
-            new AssetDescriptor<Sound>("sounds/powerUp.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/powerUp.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_POWER_UP_VOICE =
-            new AssetDescriptor<Sound>("sounds/powerUpVoice.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/powerUpVoice.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_FIRE_ENEMY =
-            new AssetDescriptor<Sound>("sounds/enemyFire.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/enemyFire.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_NEW_HIGH_SCORE =
-            new AssetDescriptor<Sound>("sounds/new_high_score.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/new_high_score.ogg", Sound.class);
     public static final AssetDescriptor<Sound> SOUND_GO =
-            new AssetDescriptor<Sound>("sounds/go.ogg", Sound.class);
+            new AssetDescriptor<>("sounds/go.ogg", Sound.class);
     // FONTS
     public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER =
-            new AssetDescriptor<BitmapFont>("font1.ttf", BitmapFont.class,
+            new AssetDescriptor<>("font1.ttf", BitmapFont.class,
                     getFontParameters("fonts/arcade.ttf", 28));
     public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER_LARGE =
-            new AssetDescriptor<BitmapFont>("font2.ttf", BitmapFont.class,
+            new AssetDescriptor<>("font2.ttf", BitmapFont.class,
                     getFontParameters("fonts/arcade.ttf", 100));
     public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER_MEDIUM =
-            new AssetDescriptor<BitmapFont>("font3.ttf", BitmapFont.class,
+            new AssetDescriptor<>("font3.ttf", BitmapFont.class,
                     getFontParameters("fonts/regular.ttf", 35));
     public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER_SMALL =
-            new AssetDescriptor<BitmapFont>("font4.ttf", BitmapFont.class,
+            new AssetDescriptor<>("font4.ttf", BitmapFont.class,
                     getFontParameters("fonts/regular.ttf", 25));
     public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER_SMALLEST =
-            new AssetDescriptor<BitmapFont>("font4.ttf", BitmapFont.class,
+            new AssetDescriptor<>("font4.ttf", BitmapFont.class,
                     getFontParameters("fonts/regular.ttf", 20));
 
     private static final Map<Class<? extends Screen>, List<AssetDescriptor>> assetsNeededByScreen = initializeAssetsNeededByScreen();
-    private static final Map<Levels, List<AssetDescriptor>> assetsNeededByLevelScreen = initializeAssetsNeededByLevelScreen();
+    private static final Map<Level, List<AssetDescriptor>> assetsNeededByLevelScreen = initializeAssetsNeededByLevelScreen();
 
     private static FreeTypeFontLoaderParameter getFontParameters(String filename, int size) {
         FreeTypeFontLoaderParameter parameter = new FreeTypeFontLoaderParameter();
@@ -175,22 +175,22 @@ public class Assets {
     }
 
     private static Map<Class<? extends Screen>, List<AssetDescriptor>> initializeAssetsNeededByScreen() {
-        Map<Class<? extends Screen>, List<AssetDescriptor>> assets = new HashMap<Class<? extends Screen>, List<AssetDescriptor>>();
-        assets.put(SplashScreen.class, Arrays.<AssetDescriptor>asList(
+        Map<Class<? extends Screen>, List<AssetDescriptor>> assets = new HashMap<>();
+        assets.put(SplashScreen.class, Arrays.asList(
                 SPLASH_MUSIC, SPLASH_ATLAS, SPLASH_TXT_LOGO
         ));
-        assets.put(MenuScreen.class, Arrays.<AssetDescriptor>asList(
+        assets.put(MenuScreen.class, Arrays.asList(
                 MENU_BGD, FONT_SPACE_KILLER_LARGE, MENU_MUSIC, FONT_SPACE_KILLER_MEDIUM, MENU_CLICK,
                 MENU_ATLAS, FONT_SPACE_KILLER_SMALL
         ));
-        assets.put(TransitionScreen.class, Collections.<AssetDescriptor>emptyList());
-        assets.put(SocialScoreScreen.class, Collections.<AssetDescriptor>emptyList());
+        assets.put(TransitionScreen.class, Collections.emptyList());
+        assets.put(SocialScoreScreen.class, Collections.emptyList());
         return assets;
     }
 
-    private static Map<Levels, List<AssetDescriptor>> initializeAssetsNeededByLevelScreen() {
-        Map<Levels, List<AssetDescriptor>> assets = new HashMap<Levels, List<AssetDescriptor>>();
-        assets.put(Level1, Arrays.<AssetDescriptor>asList(
+    private static Map<Level, List<AssetDescriptor>> initializeAssetsNeededByLevelScreen() {
+        Map<Level, List<AssetDescriptor>> assets = new HashMap<>();
+        assets.put(Level1, Arrays.asList(
                 // MUSIC
                 MUSIC_LEVEL_1, MUSIC_LEVEL_1_BOSS,
                 // SOUNDS
@@ -207,7 +207,7 @@ public class Assets {
                 // FONTS
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_SMALLEST,
                 FONT_SPACE_KILLER_MEDIUM));
-        assets.put(Level2, Arrays.<AssetDescriptor>asList(
+        assets.put(Level2, Arrays.asList(
                 // MUSIC
                 MUSIC_LEVEL_2, MUSIC_LEVEL_2_BOSS,
                 // SOUNDS
@@ -225,7 +225,7 @@ public class Assets {
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALLEST
         ));
 
-        assets.put(Level3, Arrays.<AssetDescriptor>asList(
+        assets.put(Level3, Arrays.asList(
                 // MUSIC
                 MUSIC_LEVEL_3, MUSIC_LEVEL_3_BOSS,
                 // SOUNDS
@@ -264,7 +264,7 @@ public class Assets {
         loadResources(assetsNeededByScreen.get(screen));
     }
 
-    public void loadResources(Levels level) {
+    public void loadResources(Level level) {
         loadResources(assetsNeededByLevelScreen.get(level));
     }
 
@@ -284,7 +284,7 @@ public class Assets {
         }
     }
 
-    public void unloadResources(Levels level) {
+    public void unloadResources(Level level) {
         for (AssetDescriptor assetDescriptor : assetsNeededByLevelScreen.get(level)) {
             manager.unload(assetDescriptor.fileName);
         }

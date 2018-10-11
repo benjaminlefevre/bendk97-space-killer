@@ -6,7 +6,10 @@
 
 package com.bendk97.screens.levels;
 
-import aurelienribon.tweenengine.*;
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenManager;
 import box2dLight.RayHandler;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
@@ -54,7 +57,7 @@ import com.bitfire.utils.ShaderLoader;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.google.Achievement.*;
-import static com.bendk97.screens.levels.Levels.*;
+import static com.bendk97.screens.levels.Level.*;
 import static com.bendk97.tweens.SpriteComponentAccessor.ALPHA;
 
 public final class LevelScreen extends ScreenAdapter {
@@ -83,25 +86,21 @@ public final class LevelScreen extends ScreenAdapter {
 
     private PlayerListenerImpl playerListener;
 
-    private final Levels level;
+    private final Level level;
     private State state = State.RUNNING;
+
+
 
     public enum State {
         PAUSED, RUNNING
 
     }
-
-    public LevelScreen(final Assets assets, final SpaceKillerGame game, final Levels level) {
+    public LevelScreen(final Assets assets, final SpaceKillerGame game, final Level level) {
         PausableTimer.instance().stop();
         PausableTimer.instance().start();
         this.level = level;
         this.spriteMaskFactory = new SpriteMaskFactory();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                spriteMaskFactory.addMask(assets.get(level.getSprites()).getTextures().first());
-            }
-        }).start();
+        new Thread(() -> spriteMaskFactory.addMask(assets.get(level.sprites).getTextures().first())).start();
 
         this.game = game;
         this.fxLightEnabled = Settings.isLightFXEnabled();
@@ -146,10 +145,14 @@ public final class LevelScreen extends ScreenAdapter {
         createSystems(player, lives, bombs, batcher, screenShake);
         registerTweensAccessor();
         registerPostProcessingEffects();
-        this.levelScript = getLevelScript(level, assets, entityFactory, tweenManager, player, engine, camera);
+        this.levelScript = getLevelScript(level, this, assets, entityFactory, tweenManager, player, engine, camera);
         time = -3;
     }
 
+
+    public void currentMusic(Music music) {
+        this.music = music;
+    }
 
     public void nextLevel() {
         PlayerComponent playerComponent = Mappers.player.get(player);
@@ -203,12 +206,9 @@ public final class LevelScreen extends ScreenAdapter {
                 .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
                 .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(1f))
                 .repeat(10, 0f)
-                .setCallback(new TweenCallback() {
-                    @Override
-                    public void onEvent(int i, BaseTween<?> baseTween) {
-                        if (i == TweenCallback.COMPLETE) {
-                            entityFactory.removeInvulnerableComponent(player);
-                        }
+                .setCallback((i, baseTween) -> {
+                    if (i == TweenCallback.COMPLETE) {
+                        entityFactory.removeInvulnerableComponent(player);
                     }
                 })
                 .start(tweenManager);

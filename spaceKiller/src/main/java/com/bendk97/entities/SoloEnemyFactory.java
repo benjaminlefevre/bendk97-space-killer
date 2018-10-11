@@ -6,7 +6,10 @@
 
 package com.bendk97.entities;
 
-import aurelienribon.tweenengine.*;
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Linear;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -17,7 +20,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.TankComponent.TankLevel;
-import com.bendk97.screens.levels.Levels;
+import com.bendk97.screens.levels.Level;
 import com.bendk97.tweens.PositionComponentAccessor;
 
 import java.util.List;
@@ -25,8 +28,8 @@ import java.util.Random;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
-import static com.bendk97.screens.levels.Levels.Level2;
-import static com.bendk97.screens.levels.Levels.Level3;
+import static com.bendk97.screens.levels.Level.Level2;
+import static com.bendk97.screens.levels.Level.Level3;
 
 public class SoloEnemyFactory {
 
@@ -39,10 +42,10 @@ public class SoloEnemyFactory {
     private final EntityFactory entityFactory;
     private final Random random = new RandomXS128();
     private final Engine engine;
-    private final Levels level;
+    private final Level level;
     private final Entity player;
 
-    public SoloEnemyFactory(Levels level, Engine engine, TweenManager tweenManager, EntityFactory entityFactory, Entity player) {
+    public SoloEnemyFactory(Level level, Engine engine, TweenManager tweenManager, EntityFactory entityFactory, Entity player) {
         this.tweenManager = tweenManager;
         this.engine = engine;
         this.level = level;
@@ -85,12 +88,9 @@ public class SoloEnemyFactory {
             position.setPosition(posX, SCREEN_HEIGHT + 20f);
             Tween.to(position, PositionComponentAccessor.POSITION_Y, (SCREEN_HEIGHT + 100f) / velocity)
                     .ease(Linear.INOUT).targetRelative(-SCREEN_HEIGHT - 100f)
-                    .setCallback(new TweenCallback() {
-                        @Override
-                        public void onEvent(int i, BaseTween<?> baseTween) {
-                            if (i == COMPLETE) {
-                                engine.removeEntity(entity);
-                            }
+                    .setCallback((i, baseTween) -> {
+                        if (i == TweenCallback.COMPLETE) {
+                            engine.removeEntity(entity);
                         }
                     }).start(tweenManager);
         }
@@ -103,7 +103,7 @@ public class SoloEnemyFactory {
         final PositionComponent position = Mappers.position.get(enemy);
         Sprite sprite = Mappers.sprite.get(enemy).sprite;
         final int k = 100;
-        Bezier<Vector2> bezier = new Bezier<Vector2>(new Vector2(0f, SCREEN_HEIGHT - sprite.getHeight()), new Vector2(0f, SCREEN_HEIGHT / 2f),
+        Bezier<Vector2> bezier = new Bezier<>(new Vector2(0f, SCREEN_HEIGHT - sprite.getHeight()), new Vector2(0f, SCREEN_HEIGHT / 2f),
                 new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT / 2f), new Vector2(SCREEN_WIDTH - sprite.getWidth(), SCREEN_HEIGHT - sprite.getHeight()));
         final Vector2[] vPoints = new Vector2[k];
         for (int i = 0; i < k; ++i) {
@@ -112,23 +112,20 @@ public class SoloEnemyFactory {
         }
         Tween.to(position, PositionComponentAccessor.POSITION_X, sprite.getWidth() / velocity)
                 .ease(Linear.INOUT).targetRelative(directionFactor * sprite.getWidth())
-                .setCallback(new TweenCallback() {
-                    @Override
-                    public void onEvent(int i, BaseTween<?> baseTween) {
-                        Timeline timeline = Timeline.createSequence();
-                        timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, vPoints[direction ? 0 : k - 1].dst(position.x, position.y) / velocity)
+                .setCallback((i, baseTween) -> {
+                    Timeline timeline = Timeline.createSequence();
+                    timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, vPoints[direction ? 0 : k - 1].dst(position.x, position.y) / velocity)
+                            .ease(Linear.INOUT)
+                            .target(vPoints[direction ? 0 : k - 1].x, vPoints[direction ? 0 : k - 1].y));
+                    for (int j = 1; j < vPoints.length; ++j) {
+                        int jx = direction ? j : k - j;
+                        timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, vPoints[jx].dst(vPoints[jx - 1].x, vPoints[jx - 1].y) / velocity)
                                 .ease(Linear.INOUT)
-                                .target(vPoints[direction ? 0 : k - 1].x, vPoints[direction ? 0 : k - 1].y));
-                        for (int j = 1; j < vPoints.length; ++j) {
-                            int jx = direction ? j : k - j;
-                            timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, vPoints[jx].dst(vPoints[jx - 1].x, vPoints[jx - 1].y) / velocity)
-                                    .ease(Linear.INOUT)
-                                    .target(vPoints[jx].x, vPoints[jx].y));
-                        }
-                        timeline.repeatYoyo(Tween.INFINITY, 1f)
-                                .start(tweenManager);
-
+                                .target(vPoints[jx].x, vPoints[jx].y));
                     }
+                    timeline.repeatYoyo(Tween.INFINITY, 1f)
+                            .start(tweenManager);
+
                 }).start(tweenManager);
     }
 
@@ -139,22 +136,19 @@ public class SoloEnemyFactory {
         final Sprite sprite = Mappers.sprite.get(enemy).sprite;
         Tween.to(position, PositionComponentAccessor.POSITION_X, sprite.getWidth() / velocity)
                 .ease(Linear.INOUT).targetRelative(directionFactor * sprite.getWidth())
-                .setCallback(new TweenCallback() {
-                    @Override
-                    public void onEvent(int i, BaseTween<?> baseTween) {
-                        if (i == COMPLETE) {
-                            float distance = (new Vector2(0f, SCREEN_HEIGHT - sprite.getHeight())).dst(new Vector2(75f, SCREEN_HEIGHT - sprite.getHeight() - 75f));
-                            Timeline.createSequence()
-                                    .push(Tween.to(position, PositionComponentAccessor.POSITION_XY, distance / velocity)
-                                            .ease(Linear.INOUT).targetRelative(75f * directionFactor, -75f))
-                                    .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH - 2 * 75f - sprite.getWidth()) / velocity)
-                                            .delay(2.0f).ease(Linear.INOUT).targetRelative(directionFactor * (SCREEN_WIDTH - 2 * 75f - sprite.getWidth())))
-                                    .push(Tween.to(position, PositionComponentAccessor.POSITION_XY, distance / velocity)
-                                            .delay(2.0f).ease(Linear.INOUT).targetRelative(75f * directionFactor, 75f))
-                                    .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH - sprite.getWidth()) / velocity)
-                                            .ease(Linear.INOUT).targetRelative(-directionFactor * (SCREEN_WIDTH - sprite.getWidth())))
-                                    .repeat(Tween.INFINITY, 0f).start(tweenManager);
-                        }
+                .setCallback((i, baseTween) -> {
+                    if (i == TweenCallback.COMPLETE) {
+                        float distance = (new Vector2(0f, SCREEN_HEIGHT - sprite.getHeight())).dst(new Vector2(75f, SCREEN_HEIGHT - sprite.getHeight() - 75f));
+                        Timeline.createSequence()
+                                .push(Tween.to(position, PositionComponentAccessor.POSITION_XY, distance / velocity)
+                                        .ease(Linear.INOUT).targetRelative(75f * directionFactor, -75f))
+                                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH - 2 * 75f - sprite.getWidth()) / velocity)
+                                        .delay(2.0f).ease(Linear.INOUT).targetRelative(directionFactor * (SCREEN_WIDTH - 2 * 75f - sprite.getWidth())))
+                                .push(Tween.to(position, PositionComponentAccessor.POSITION_XY, distance / velocity)
+                                        .delay(2.0f).ease(Linear.INOUT).targetRelative(75f * directionFactor, 75f))
+                                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH - sprite.getWidth()) / velocity)
+                                        .ease(Linear.INOUT).targetRelative(-directionFactor * (SCREEN_WIDTH - sprite.getWidth())))
+                                .repeat(Tween.INFINITY, 0f).start(tweenManager);
                     }
                 }).start(tweenManager);
     }
@@ -166,14 +160,11 @@ public class SoloEnemyFactory {
         final Sprite sprite = Mappers.sprite.get(enemy).sprite;
         Tween.to(position, PositionComponentAccessor.POSITION_X, SCREEN_WIDTH / velocity)
                 .ease(Linear.INOUT).targetRelative(directionFactor * SCREEN_WIDTH)
-                .setCallback(new TweenCallback() {
-                    @Override
-                    public void onEvent(int i, BaseTween<?> baseTween) {
-                        if (i == COMPLETE) {
-                            Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH - sprite.getWidth()) / velocity)
-                                    .ease(Linear.INOUT).targetRelative(-directionFactor * (SCREEN_WIDTH - sprite.getWidth()))
-                                    .repeatYoyo(Tween.INFINITY, 0f).start(tweenManager);
-                        }
+                .setCallback((i, baseTween) -> {
+                    if (i == TweenCallback.COMPLETE) {
+                        Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH - sprite.getWidth()) / velocity)
+                                .ease(Linear.INOUT).targetRelative(-directionFactor * (SCREEN_WIDTH - sprite.getWidth()))
+                                .repeatYoyo(Tween.INFINITY, 0f).start(tweenManager);
                     }
                 }).start(tweenManager);
     }

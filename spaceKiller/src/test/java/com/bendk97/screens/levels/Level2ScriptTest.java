@@ -13,17 +13,12 @@ import com.bendk97.components.PlayerComponent;
 import com.bendk97.components.VelocityComponent;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.entities.SoloEnemyFactory;
-import com.bendk97.screens.levels.utils.ScriptItem;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 
 import java.util.LinkedList;
 
-import static com.bendk97.assets.Assets.MUSIC_LEVEL_2;
-import static com.bendk97.assets.Assets.SOUND_BOSS_ALERT;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyFloat;
+import static com.bendk97.assets.Assets.*;
 import static org.mockito.Mockito.*;
 
 public class Level2ScriptTest extends LevelScriptTest {
@@ -42,7 +37,13 @@ public class Level2ScriptTest extends LevelScriptTest {
 
     @Override
     public void initLevelScript() {
-        this.scripting = new Level2Script(assets, entityFactory, tweenManager, player, squadronFactory, soloEnemyFactory, scriptItemExecutor, engine);
+        this.scripting = new Level2Script(screen, assets, entityFactory, tweenManager, player, squadronFactory, soloEnemyFactory, scriptItemExecutor, engine);
+    }
+
+
+    @Test
+    public void music_level_is_played() {
+        verify(assets).playMusic(MUSIC_LEVEL_2, 0.3f);
     }
 
     @Test
@@ -111,25 +112,19 @@ public class Level2ScriptTest extends LevelScriptTest {
     public void boss_happens_end_of_level() {
         launchScriptTimer(255, 300);
         verify(assets).playSound(SOUND_BOSS_ALERT);
-        verify(scriptItemExecutor).execute(argThat(new ArgumentMatcher<ScriptItem>() {
-            @Override
-            public boolean matches(ScriptItem script) {
-                return script.typeShip == EntityFactory.BOSS_LEVEL_2;
-            }
-        }));
+        verify(assets).stopMusic(MUSIC_LEVEL_2);
+        verify(assets).playMusic(MUSIC_LEVEL_2_BOSS, 1f);
+        verify(scriptItemExecutor).execute(argThat(script -> script.typeShip == EntityFactory.BOSS_LEVEL_2));
     }
 
     @Test
     public void boss_never_happens_when_game_over() {
         player.add(engine.createComponent(GameOverComponent.class));
         launchScriptTimer(255, 300);
+        verify(assets, never()).stopMusic(MUSIC_LEVEL_2);
+        verify(assets, never()).playMusic(MUSIC_LEVEL_2_BOSS, 1f);
         verify(assets, never()).playSound(SOUND_BOSS_ALERT);
-        verify(scriptItemExecutor, never()).execute(argThat(new ArgumentMatcher<ScriptItem>() {
-            @Override
-            public boolean matches(ScriptItem script) {
-                return script.typeShip == EntityFactory.BOSS_LEVEL_2;
-            }
-        }));
+        verify(scriptItemExecutor, never()).execute(argThat(script -> script.typeShip == EntityFactory.BOSS_LEVEL_2));
     }
 
     @Test

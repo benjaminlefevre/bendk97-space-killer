@@ -26,7 +26,7 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
     private final Entity player;
     private final EntityFactory entityFactory;
     private final Assets assets;
-    private boolean autoFire;
+    private final boolean autoFire;
     private final PlayerListener playerListener;
     private long lastShoot = 0;
     private long lastShootSide = 0;

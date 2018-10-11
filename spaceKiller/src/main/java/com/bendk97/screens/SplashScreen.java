@@ -44,7 +44,7 @@ public class SplashScreen extends HDScreen {
     private void initGraphics() {
         TextureAtlas atlas = assets.get(Assets.SPLASH_ATLAS);
         // Initialize the Animation with the frame interval and array of frames
-        walkAnimation = new Animation<TextureRegion>(0.025f, atlas.findRegions("human_running"), LOOP);
+        walkAnimation = new Animation<>(0.025f, atlas.findRegions("human_running"), LOOP);
 
         // Instantiate a SpriteBatch for drawing and reset the elapsed animation
         // time to 0
@@ -90,8 +90,8 @@ public class SplashScreen extends HDScreen {
         logoBatcher.setColor(fader.getColor());
         logoBatcher.begin();
         logoBatcher.draw(logo,
-                viewport.getWorldWidth() / 2 - logo.getWidth() / 2,
-                viewport.getWorldHeight() / 2 - logo.getHeight() / 2);
+                viewport.getWorldWidth() / 2f - logo.getWidth() / 2f,
+                viewport.getWorldHeight() / 2f - logo.getHeight() / 2f);
         logoBatcher.end();
         if(stateTime>5 && stateTimeBefore <= 5){
             this.dispose();

@@ -16,8 +16,6 @@ import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.SpriteComponent;
 
-import java.util.Comparator;
-
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
@@ -26,12 +24,7 @@ public class DynamicEntitiesRenderingSystem extends SortedIteratingSystem {
 
     public DynamicEntitiesRenderingSystem(SpriteBatch batcher, int priority) {
         super(Family.all(SpriteComponent.class, PositionComponent.class).exclude(GameOverComponent.class).get(),
-                new Comparator<Entity>() {
-                    @Override
-                    public int compare(Entity o1, Entity o2) {
-                        return Integer.valueOf(Mappers.sprite.get(o1).zIndex).compareTo(Mappers.sprite.get(o2).zIndex);
-                    }
-                },
+                (o1, o2) -> Integer.compare(Mappers.sprite.get(o1).zIndex, Mappers.sprite.get(o2).zIndex),
                 priority);
         this.batcher = batcher;
     }

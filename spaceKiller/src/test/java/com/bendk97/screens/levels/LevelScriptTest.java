@@ -44,9 +44,12 @@ public abstract class LevelScriptTest {
     @Mock
     protected ScriptItemExecutor scriptItemExecutor;
 
-    protected Entity player = new Entity();
+    @Mock
+    protected LevelScreen screen;
 
-    protected PooledEngine engine = new PooledEngine();
+    protected final Entity player = new Entity();
+
+    protected final PooledEngine engine = new PooledEngine();
 
     protected LevelScript scripting;
 

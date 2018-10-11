@@ -29,7 +29,7 @@ public class SocialScoreScreen extends ScreenAdapter {
     private final SpaceKillerGame game;
     private final OrthographicCamera camera;
     private final SpriteBatch batcher;
-    private int score = 0;
+    private final int score;
     private final NumberFormat numberFormatter;
     private final static String SPACE_KILLER = "space killer";
     private final static String SCORE = "score";

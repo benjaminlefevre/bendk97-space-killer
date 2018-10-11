@@ -11,11 +11,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Pool;
 import com.bendk97.player.PlayerData;
 import com.bendk97.player.PlayerDataBuilder;
-import com.bendk97.screens.levels.Levels;
+import com.bendk97.screens.levels.Level;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.components.PlayerComponent.PowerLevel.*;
-import static com.bendk97.screens.levels.Levels.Level1;
+import static com.bendk97.screens.levels.Level.Level1;
 
 
 public class PlayerComponent implements Component, Pool.Poolable {
@@ -33,7 +33,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
     public int bombs = BOMBS;
     public PowerLevel powerLevel = NORMAL;
     public int numberOfContinue = NUMBER_OF_CONTINUE;
-    public Levels level = Level1;
+    public Level level = Level1;
     public float secondScript = -3;
 
     public void enemyKilled() {

@@ -11,16 +11,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.bendk97.components.GameOverComponent;
 import com.bendk97.components.VelocityComponent;
 import com.bendk97.entities.EntityFactory;
-import com.bendk97.screens.levels.utils.ScriptItem;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
 
 import java.util.LinkedList;
 
-import static com.bendk97.assets.Assets.MUSIC_LEVEL_1;
-import static com.bendk97.assets.Assets.SOUND_BOSS_ALERT;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyFloat;
+import static com.bendk97.assets.Assets.*;
 import static org.mockito.Mockito.*;
 
 
@@ -35,7 +30,12 @@ public class Level1ScriptTest extends LevelScriptTest{
 
     @Override
     public void initLevelScript() {
-        this.scripting = new Level1Script(assets, entityFactory, tweenManager, player, squadronFactory, scriptItemExecutor);
+        this.scripting = new Level1Script(screen, assets, entityFactory, tweenManager, player, squadronFactory, scriptItemExecutor);
+    }
+
+    @Test
+    public void music_level_is_played() {
+        verify(assets).playMusic(MUSIC_LEVEL_1, 0.3f);
     }
 
     @Test
@@ -59,14 +59,14 @@ public class Level1ScriptTest extends LevelScriptTest{
     }
 
     @Test
-    public void eightteen_enemies_squadrons_happen_during_second_part_of_level() {
+    public void eighteen_enemies_squadrons_happen_during_second_part_of_level() {
         scripting = spy(scripting);
         launchScriptTimer(61, 120);
         verify(scripting, times(18)).executeScriptFromList(any(LinkedList.class));
     }
 
     @Test
-    public void eightteen_enemies_squadrons_happen_during_last_part_of_level() {
+    public void eighteen_enemies_squadrons_happen_during_last_part_of_level() {
         scripting = spy(scripting);
         launchScriptTimer(121, 180);
         verify(scripting, times(18)).executeScriptFromList(any(LinkedList.class));
@@ -76,12 +76,9 @@ public class Level1ScriptTest extends LevelScriptTest{
     public void boss_happens_end_of_level() {
         launchScriptTimer(181, 250);
         verify(assets).playSound(SOUND_BOSS_ALERT);
-        verify(scriptItemExecutor).execute(argThat(new ArgumentMatcher<ScriptItem>() {
-            @Override
-            public boolean matches(ScriptItem script) {
-                return script.typeShip == EntityFactory.BOSS_LEVEL_1;
-            }
-        }));
+        verify(assets).stopMusic(MUSIC_LEVEL_1);
+        verify(assets).playMusic(MUSIC_LEVEL_1_BOSS, 1f);
+        verify(scriptItemExecutor).execute(argThat(script -> script.typeShip == EntityFactory.BOSS_LEVEL_1));
     }
 
     @Test
@@ -89,12 +86,9 @@ public class Level1ScriptTest extends LevelScriptTest{
         player.add(engine.createComponent(GameOverComponent.class));
         launchScriptTimer(181, 250);
         verify(assets, never()).playSound(SOUND_BOSS_ALERT);
-        verify(scriptItemExecutor, never()).execute(argThat(new ArgumentMatcher<ScriptItem>() {
-            @Override
-            public boolean matches(ScriptItem script) {
-                return script.typeShip == EntityFactory.BOSS_LEVEL_1;
-            }
-        }));
+        verify(assets, never()).stopMusic(MUSIC_LEVEL_1);
+        verify(assets, never()).playMusic(MUSIC_LEVEL_1_BOSS, 1f);
+        verify(scriptItemExecutor, never()).execute(argThat(script -> script.typeShip == EntityFactory.BOSS_LEVEL_1));
     }
 
     @Test

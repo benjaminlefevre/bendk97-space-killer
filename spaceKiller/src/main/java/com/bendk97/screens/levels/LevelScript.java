@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.bendk97.assets.Assets;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.entities.SquadronFactory;
+import com.bendk97.screens.levels.Level.MusicTrack;
 import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
 import com.bendk97.screens.levels.utils.ScriptItemExecutor;
@@ -28,6 +29,7 @@ import java.util.Random;
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.*;
 import static com.bendk97.entities.SquadronFactory.*;
+import static com.bendk97.screens.levels.Level.MusicTrack.LEVEL;
 
 public abstract class LevelScript {
 
@@ -36,35 +38,56 @@ public abstract class LevelScript {
     protected final TweenManager tweenManager;
     protected final Entity player;
     protected final Random random = new RandomXS128();
-    protected final SquadronFactory squadronFactory;
-    protected final ScriptItemExecutor scriptItemExecutor;
+    protected SquadronFactory squadronFactory;
+    protected ScriptItemExecutor scriptItemExecutor;
+    protected final Level level;
+    private final LevelScreen levelScreen;
 
     /*
      for test purposes only
       */
-    protected LevelScript(Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
+    protected LevelScript(final LevelScreen levelScreen, Level level, Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
                           SquadronFactory squadronFactory, ScriptItemExecutor scriptItemExecutor) {
-        this.assets = assets;
-        this.entityFactory = entityFactory;
-        this.tweenManager = tweenManager;
-        this.player = player;
+        this(levelScreen, level, assets, entityFactory, tweenManager, player);
         this.squadronFactory = squadronFactory;
         this.scriptItemExecutor = scriptItemExecutor;
-        this.initSpawns();
     }
 
-    protected LevelScript(Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
+    protected LevelScript(final LevelScreen levelScreen, Level level, Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
                           PooledEngine engine, OrthographicCamera camera) {
+        this(levelScreen, level, assets, entityFactory, tweenManager, player);
+        this.squadronFactory = new SquadronFactory(tweenManager, entityFactory, camera, engine);
+        this.scriptItemExecutor = new ScriptItemExecutor(squadronFactory, player);
+    }
+
+    private LevelScript(final LevelScreen levelScreen, Level level, Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player) {
+        this.level = level;
+        this.levelScreen = levelScreen;
         this.assets = assets;
         this.entityFactory = entityFactory;
         this.tweenManager = tweenManager;
         this.player = player;
-        this.squadronFactory = new SquadronFactory(tweenManager, entityFactory, camera, engine);
-        this.scriptItemExecutor = new ScriptItemExecutor(squadronFactory, player);
         this.initSpawns();
+        this.playMusic(LEVEL, level.volume);
     }
 
-    public abstract void initSpawns();
+    protected abstract void initSpawns();
+
+    protected void playMusic(MusicTrack track) {
+        playMusic(track, 1f);
+    }
+
+    protected void playMusic(MusicTrack track, float volume) {
+        levelScreen.currentMusic(assets.playMusic(level.musics.get(track), volume));
+    }
+
+    protected void stopMusic(MusicTrack track) {
+        assets.stopMusic(level.musics.get(track));
+    }
+
+    protected void playSound(Level.SoundEffect sound) {
+        assets.playSound(level.sounds.get(sound));
+    }
 
     public void script(int second) {
         if (second == 0) {
@@ -105,7 +128,7 @@ public abstract class LevelScript {
     }
 
     protected List<ScriptItem> randomSpawnEnemies(int nbSpawns, float velocity, int rateShoot, float bulletVelocity, int bonus, int minEnemies, int maxEnemies, Boolean comingFromLeft) {
-        List<ScriptItem> list = new ArrayList<ScriptItem>(nbSpawns);
+        List<ScriptItem> list = new ArrayList<>(nbSpawns);
         for (int i = 0; i < nbSpawns; ++i) {
             int randomMoveType = getRandomMoveType();
             int number = randomMoveType == ARROW_DOWN || randomMoveType == ARROW_UP ? 7 : minEnemies + random.nextInt(maxEnemies - minEnemies + 1);

@@ -13,11 +13,11 @@ import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Pool;
 
 public class AnimationComponent implements Component, Pool.Poolable {
-    public IntMap<Animation<Sprite>> animations = new IntMap<Animation<Sprite>>();
+    public IntMap<Animation<Sprite>> animations = new IntMap<>();
 
     @Override
     public void reset() {
-        animations = new IntMap<Animation<Sprite>>();
+        animations = new IntMap<>();
     }
 
     public void tintRed(int key, float red) {

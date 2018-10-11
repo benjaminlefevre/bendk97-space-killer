@@ -7,7 +7,7 @@
 package com.bendk97.player;
 
 import com.bendk97.components.PlayerComponent;
-import com.bendk97.screens.levels.Levels;
+import com.bendk97.screens.levels.Level;
 
 /* use to pass player data between screens*/
 public final class PlayerData {
@@ -21,7 +21,7 @@ public final class PlayerData {
     public  int bombs;
     public  PlayerComponent.PowerLevel powerLevel;
     public  int numberOfContinue;
-    public  Levels level;
+    public Level level;
 
     protected PlayerData() {
 

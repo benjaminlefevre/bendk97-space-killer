@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
 public class SquadronComponent implements Component, Pool.Poolable {
-    public Array<Entity> ships = new Array<Entity>();
+    public Array<Entity> ships = new Array<>();
     public int toShoot = 0;
     public boolean powerUpAfterDestruction = false;
     public boolean displayBonusSquadron = false;
@@ -35,7 +35,7 @@ public class SquadronComponent implements Component, Pool.Poolable {
     @Override
     public void reset() {
         powerUpAfterDestruction = false;
-        ships = new Array<Entity>();
+        ships = new Array<>();
         lastKilledPosition = null;
         displayBonusSquadron = false;
         scoreBonus = 1000;

@@ -17,7 +17,6 @@ plugins {
 }
 
 allprojects {
-    apply plugin: "eclipse"
     apply plugin: "idea"
     version = '1.0'
     ext {
@@ -32,6 +31,7 @@ allprojects {
         gms_library_version = '16.0.0'
         mockitoVersion = '2.23.0'
         junitVersion = '4.12'
+        guavaVersion = '26.0-android'
     }
 
     repositories {
@@ -96,20 +96,16 @@ project(":spaceKiller") {
         implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         implementation "com.github.Anuken:gdx-postprocessing:$postprocessingVersion"
         implementation "org.mini2Dx:universal-tween-engine:$tweenVersion"
+        implementation "com.google.guava:guava:$guavaVersion"
         testImplementation "junit:junit:$junitVersion"
         testImplementation "org.mockito:mockito-core:$mockitoVersion"
-        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        testCompile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        testCompile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        testImplementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        testImplementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
     }
 }
-
-tasks.eclipse.doLast {
-    delete ".project"
-}
-
 
 import com.vanniktech.dependency.graph.generator.DependencyGraphGeneratorPlugin
 import com.vanniktech.dependency.graph.generator.DependencyGraphGeneratorExtension.Generator
