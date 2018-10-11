@@ -39,7 +39,7 @@ public class EnemyAttackSystem extends IteratingSystem {
         }
         EnemyComponent enemy = Mappers.enemy.get(entity);
         if (enemy.canAttack() && isVisible(entity) && random.nextInt() % enemy.probabilityAttack == 0) {
-            entityFactory.createEnemyFire(entity, playerEntity.first());
+            entityFactory.enemyActionEntityFactory.createEnemyFire(entity, playerEntity.first());
             enemy.attackCapacity--;
         }
     }

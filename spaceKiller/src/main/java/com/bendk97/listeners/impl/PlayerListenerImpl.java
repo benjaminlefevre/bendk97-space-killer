@@ -70,7 +70,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
             getEngine().removeEntity(bombsArray[i]);
         }
         bombs.end();
-        this.bombs = entityFactory.createEntityPlayerBombs(player);
+        this.bombs = entityFactory.playerEntityFactory.createEntityPlayerBombs(player);
 
     }
 
@@ -85,8 +85,8 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
             getEngine().removeEntity(bombsArray[i]);
         }
         this.bombs.end();
-        this.lives = entityFactory.createEntityPlayerLives(player);
-        this.bombs = entityFactory.createEntityPlayerBombs(player);
+        this.lives = entityFactory.playerEntityFactory.createEntityPlayerLives(player);
+        this.bombs = entityFactory.playerEntityFactory.createEntityPlayerBombs(player);
     }
 
     @Override
@@ -113,14 +113,14 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
             }
             Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
             Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
-            entityFactory.addInvulnerableComponent(player);
+            entityFactory.playerEntityFactory.addInvulnerableComponent(player);
             Timeline.createSequence()
                     .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
                     .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(1f))
                     .repeat(10, 0f)
                     .setCallback((i, baseTween) -> {
                         if (i == TweenCallback.COMPLETE) {
-                            entityFactory.removeInvulnerableComponent(player);
+                            entityFactory.playerEntityFactory.removeInvulnerableComponent(player);
                         }
                     })
                     .start(tweenManager);
@@ -151,7 +151,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
                 getEngine().removeEntity(livesArray[i]);
             }
             lives.end();
-            this.lives = entityFactory.createEntityPlayerLives(player);
+            this.lives = entityFactory.playerEntityFactory.createEntityPlayerLives(player);
         }
     }
 

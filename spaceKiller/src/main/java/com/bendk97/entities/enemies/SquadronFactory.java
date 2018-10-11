@@ -1,17 +1,15 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 29/09/18 21:09
+ * Last modified 11/10/18 23:29
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97.entities;
+package com.bendk97.entities.enemies;
 
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
-import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Linear;
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -23,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.SpriteComponent;
+import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.tweens.CameraTween;
 import com.bendk97.tweens.PositionComponentAccessor;
@@ -31,6 +30,7 @@ import java.util.Random;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.bendk97.entities.EntityFactoryIds.*;
 
 public class SquadronFactory {
 
@@ -49,59 +49,55 @@ public class SquadronFactory {
     public final static int BOSS_LEVEL3_MOVE = 102;
 
 
-    private final TweenManager tweenManager;
     private final EntityFactory entityFactory;
-    private final Engine engine;
-    private final Random random = new RandomXS128();
     private final OrthographicCamera camera;
-
-    public SquadronFactory(TweenManager tweenManager, EntityFactory entityFactory, OrthographicCamera camera, Engine engine) {
-        this.tweenManager = tweenManager;
-        this.entityFactory = entityFactory;
-        this.engine = engine;
-        this.camera = camera;
+    private final Random random = new RandomXS128();
+    
+    protected SquadronFactory(EntityFactory entityFactory, OrthographicCamera camera) {
+         this.entityFactory = entityFactory;
+         this.camera = camera;
     }
 
     public void createSquadron(ScriptItem scriptItem) {
-        Entity squadron = entityFactory.createSquadron(scriptItem.powerUp, scriptItem.displayBonus, scriptItem.bonus);
+        Entity squadron = entityFactory.enemyEntityFactory.createSquadron(scriptItem.powerUp, scriptItem.displayBonus, scriptItem.bonus);
 
         Array<Entity> entitiesSquadron = new Array<>(Entity.class);
         Array<Entity> allEntities = new Array<>(Entity.class);
 
         for (int i = 0; i < scriptItem.number; ++i) {
             switch (scriptItem.typeShip) {
-                case EntityFactory.BOSS_LEVEL_1:
-                    entitiesSquadron.add(entityFactory.createBoss(squadron, scriptItem.bulletVelocity, scriptItem.bulletVelocity));
+                case BOSS_LEVEL_1:
+                    entitiesSquadron.add(entityFactory.enemyEntityFactory.createBoss(squadron, scriptItem.bulletVelocity, scriptItem.bulletVelocity));
                     break;
-                case EntityFactory.BOSS_LEVEL_2:
-                    entitiesSquadron.add(entityFactory.createBoss2(squadron, scriptItem.bulletVelocity, scriptItem.bulletVelocity, 800f));
+                case BOSS_LEVEL_2:
+                    entitiesSquadron.add(entityFactory.enemyEntityFactory.createBoss2(squadron, scriptItem.bulletVelocity, scriptItem.bulletVelocity, 800f));
                     break;
-                case EntityFactory.BOSS_LEVEL_3:
-                    entitiesSquadron.add(entityFactory.createBoss3(squadron, scriptItem.bulletVelocity, 250f, 800f));
+                case BOSS_LEVEL_3:
+                    entitiesSquadron.add(entityFactory.enemyEntityFactory.createBoss3(squadron, scriptItem.bulletVelocity, 250f, 800f));
                     break;
-                case EntityFactory.SOUCOUPE:
-                    entitiesSquadron.add(entityFactory.createEnemySoucoupe(squadron, random.nextBoolean(), scriptItem.bulletVelocity));
+                case SOUCOUPE:
+                    entitiesSquadron.add(entityFactory.enemyEntityFactory.createEnemySoucoupe(squadron, random.nextBoolean(), scriptItem.bulletVelocity));
                     break;
-                case EntityFactory.ASTEROID_1:
-                case EntityFactory.ASTEROID_2:
-                    entitiesSquadron.add(entityFactory.createAsteroid(squadron, scriptItem.typeShip));
+                case ASTEROID_1:
+                case ASTEROID_2:
+                    entitiesSquadron.add(entityFactory.enemyEntityFactory.createAsteroid(squadron, scriptItem.typeShip));
                     break;
-                case EntityFactory.HOUSE_1:
-                case EntityFactory.HOUSE_2:
-                case EntityFactory.HOUSE_3:
-                case EntityFactory.HOUSE_4:
-                case EntityFactory.HOUSE_5:
-                case EntityFactory.HOUSE_6:
-                case EntityFactory.HOUSE_7:
-                case EntityFactory.HOUSE_8:
-                case EntityFactory.HOUSE_9:
-                    Array<Entity> house = entityFactory.createHouse(squadron, scriptItem.typeShip);
+                case HOUSE_1:
+                case HOUSE_2:
+                case HOUSE_3:
+                case HOUSE_4:
+                case HOUSE_5:
+                case HOUSE_6:
+                case HOUSE_7:
+                case HOUSE_8:
+                case HOUSE_9:
+                    Array<Entity> house = entityFactory.enemyEntityFactory.createHouse(squadron, scriptItem.typeShip);
                     allEntities.add(house.get(1));
                     entitiesSquadron.add(house.get(0));
 
                     break;
                 default:
-                    entitiesSquadron.add(entityFactory.createEnemyShip(squadron, random.nextBoolean(), scriptItem.bulletVelocity, scriptItem.rateShoot, scriptItem.typeShip));
+                    entitiesSquadron.add(entityFactory.enemyEntityFactory.createEnemyShip(squadron, random.nextBoolean(), scriptItem.bulletVelocity, scriptItem.rateShoot, scriptItem.typeShip));
                     break;
             }
         }
@@ -171,7 +167,7 @@ public class SquadronFactory {
         PositionComponent position = Mappers.position.get(entity);
         position.setPosition(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f,
                 SCREEN_HEIGHT + 10f);
-        Tween.to(camera, CameraTween.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(tweenManager);
+        Tween.to(camera, CameraTween.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(entityFactory.tweenManager);
         Timeline.createSequence()
                 .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (spriteComponent.sprite.getHeight() + 30f) / velocity)
                         .ease(Linear.INOUT)
@@ -187,7 +183,7 @@ public class SquadronFactory {
                         .target(SCREEN_WIDTH).delay(2f))
 
                 .repeatYoyo(Tween.INFINITY, 1f)
-                .start(tweenManager);
+                .start(entityFactory.tweenManager);
     }
 
     private void createBossMove2(Entity[] entities, float velocity) {
@@ -199,7 +195,7 @@ public class SquadronFactory {
         PositionComponent position = Mappers.position.get(entity);
         position.setPosition(SCREEN_WIDTH / 2f - sprite.getWidth() / 2f,
                 SCREEN_HEIGHT);
-        Tween.to(camera, CameraTween.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(tweenManager);
+        Tween.to(camera, CameraTween.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(entityFactory.tweenManager);
 
         Timeline.createSequence()
                 .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (sprite.getHeight() + 30f) / velocity)
@@ -215,7 +211,7 @@ public class SquadronFactory {
                         .ease(Linear.INOUT)
                         .targetRelative(SCREEN_WIDTH / 2f).delay(2f))
                 .repeatYoyo(Tween.INFINITY, 1f)
-                .start(tweenManager);
+                .start(entityFactory.tweenManager);
     }
 
     private void createBossMove3(Entity[] entities, float velocity) {
@@ -227,7 +223,7 @@ public class SquadronFactory {
         PositionComponent position = Mappers.position.get(entity);
         position.setPosition(SCREEN_WIDTH / 2f - sprite.getWidth() / 2f,
                 SCREEN_HEIGHT);
-        Tween.to(camera, CameraTween.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(tweenManager);
+        Tween.to(camera, CameraTween.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(entityFactory.tweenManager);
 
         float velocityMin = velocity * 0.75f;
         float velocityMax = velocity * 2f;
@@ -258,7 +254,7 @@ public class SquadronFactory {
                         .ease(Linear.INOUT).delay(1f)
                         .targetRelative(2 * SCREEN_WIDTH / 4f))
                 .repeatYoyo(Tween.INFINITY, 1f)
-                .start(tweenManager);
+                .start(entityFactory.tweenManager);
     }
 
 
@@ -289,7 +285,7 @@ public class SquadronFactory {
                             removeEntitySquadron(entity);
                         }
                     })
-                    .start(tweenManager);
+                    .start(entityFactory.tweenManager);
         }
     }
 
@@ -320,7 +316,7 @@ public class SquadronFactory {
                             removeEntitySquadron(entity);
                         }
                     })
-                    .start(tweenManager);
+                    .start(entityFactory.tweenManager);
         }
     }
 
@@ -395,7 +391,7 @@ public class SquadronFactory {
                     removeEntitySquadron(entity);
                 }
             })
-                    .start(tweenManager);
+                    .start(entityFactory.tweenManager);
         }
     }
 
@@ -414,9 +410,9 @@ public class SquadronFactory {
                                         .target(points[j].x, points[j].y));
                             }
                             timeline.repeat(Tween.INFINITY, 0f)
-                                    .start(tweenManager);
+                                    .start(entityFactory.tweenManager);
                         }
-                    }).start(tweenManager);
+                    }).start(entityFactory.tweenManager);
         }
     }
 
@@ -426,7 +422,7 @@ public class SquadronFactory {
             Mappers.squadron.get(enemyComponent.squadron).powerUpAfterDestruction = false;
             Mappers.squadron.get(enemyComponent.squadron).ships.removeValue(entity, true);
         }
-        engine.removeEntity(entity);
+        entityFactory.engine.removeEntity(entity);
     }
 
 
@@ -444,7 +440,7 @@ public class SquadronFactory {
                             removeEntitySquadron(entity);
                         }
                     })
-                    .start(tweenManager);
+                    .start(entityFactory.tweenManager);
         }
     }
 
@@ -466,7 +462,7 @@ public class SquadronFactory {
                             removeEntitySquadron(entity);
                         }
                     })
-                    .start(tweenManager);
+                    .start(entityFactory.tweenManager);
         }
     }
 
@@ -485,7 +481,7 @@ public class SquadronFactory {
                             removeEntitySquadron(entity);
                         }
                     })
-                    .start(tweenManager);
+                    .start(entityFactory.tweenManager);
         }
     }
 
@@ -515,7 +511,7 @@ public class SquadronFactory {
                     removeEntitySquadron(entity);
                 }
             })
-                    .start(tweenManager);
+                    .start(entityFactory.tweenManager);
         }
     }
 }

@@ -42,7 +42,7 @@ public class BossAttackSystem extends IteratingSystem {
             if (Mappers.enemy.get(entity).isDead()) {
                 return;
             }
-            entityFactory.createBossFire(entity, playerEntity.first());
+            entityFactory.enemyActionEntityFactory.createBossFire(entity, playerEntity.first());
             boss.pleaseFire1 = false;
             com.bendk97.timer.PausableTimer.schedule(new com.bendk97.timer.PausableTimer.Task() {
                 @Override
@@ -57,7 +57,7 @@ public class BossAttackSystem extends IteratingSystem {
             if (Mappers.enemy.get(entity).isDead()) {
                 return;
             }
-            entityFactory.createBossFire2(entity);
+            entityFactory.enemyActionEntityFactory.createBossFire2(entity);
             boss.pleaseFire2 = false;
             com.bendk97.timer.PausableTimer.schedule(new com.bendk97.timer.PausableTimer.Task() {
                 @Override

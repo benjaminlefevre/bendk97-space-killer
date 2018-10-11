@@ -53,16 +53,16 @@ public class SquadronSystem extends IteratingSystem {
                 if (squadron.powerUpAfterDestruction) {
                     int type = random.nextInt(22);
                     if (type < threshold_power_up) {
-                        entityFactory.createPowerUp(entity);
+                        entityFactory.bonusEntityFactory.createPowerUp(entity);
                     } else if (type < threshold_shield) {
-                        entityFactory.createShieldUp(entity);
+                        entityFactory.bonusEntityFactory.createShieldUp(entity);
                     } else {
-                        entityFactory.createBombUp(entity);
+                        entityFactory.bonusEntityFactory.createBombUp(entity);
                     }
                 }
                 if (squadron.displayBonusSquadron) {
                     playerListener.updateScore(player, squadron.scoreBonus);
-                    final Entity score = entityFactory.createScoreSquadron(entity);
+                    final Entity score = entityFactory.enemyEntityFactory.createScoreSquadron(entity);
                     PausableTimer.schedule(new PausableTimer.Task() {
                         @Override
                         public void run() {

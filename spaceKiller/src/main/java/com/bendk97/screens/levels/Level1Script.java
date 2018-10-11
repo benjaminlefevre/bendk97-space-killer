@@ -10,13 +10,10 @@ import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Quad;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.GameOverComponent;
 import com.bendk97.components.Mappers;
 import com.bendk97.entities.EntityFactory;
-import com.bendk97.entities.SquadronFactory;
 import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
 import com.bendk97.screens.levels.utils.ScriptItemExecutor;
@@ -27,9 +24,9 @@ import java.util.List;
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.GFX_BGD_LEVEL1;
 import static com.bendk97.assets.Assets.GFX_BGD_STARS;
-import static com.bendk97.entities.EntityFactory.BOSS_LEVEL_1;
-import static com.bendk97.entities.SquadronFactory.BOSS_MOVE;
-import static com.bendk97.entities.SquadronFactory.LINEAR_Y;
+import static com.bendk97.entities.EntityFactoryIds.BOSS_LEVEL_1;
+import static com.bendk97.entities.enemies.SquadronFactory.BOSS_MOVE;
+import static com.bendk97.entities.enemies.SquadronFactory.LINEAR_Y;
 import static com.bendk97.screens.levels.Level.Level1;
 import static com.bendk97.screens.levels.Level.MusicTrack.BOSS;
 import static com.bendk97.screens.levels.Level.MusicTrack.LEVEL;
@@ -51,20 +48,19 @@ public final class Level1Script extends LevelScript {
     for test purposes only
      */
     protected Level1Script(final LevelScreen levelScreen, Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
-                           SquadronFactory squadronFactory, ScriptItemExecutor scriptItemExecutor) {
-        super(levelScreen, Level1, assets, entityFactory, tweenManager, player, squadronFactory, scriptItemExecutor);
+                           ScriptItemExecutor scriptItemExecutor) {
+        super(levelScreen, Level1, assets, entityFactory, tweenManager, player, scriptItemExecutor);
         initLevel1(assets, entityFactory);
     }
 
-    public Level1Script(final LevelScreen levelScreen, final Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
-                        PooledEngine engine, OrthographicCamera camera) {
-        super(levelScreen, Level1, assets, entityFactory, tweenManager, player, engine, camera);
+    public Level1Script(final LevelScreen levelScreen, final Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player) {
+        super(levelScreen, Level1, assets, entityFactory, tweenManager, player);
         initLevel1(assets, entityFactory);
     }
 
     private void initLevel1(Assets assets, EntityFactory entityFactory) {
-        background = entityFactory.createBackground(assets.get(GFX_BGD_LEVEL1), -BGD_VELOCITY);
-        background2 = entityFactory.createBackground(assets.get(GFX_BGD_STARS), -BGD_PARALLAX_VELOCITY);
+        background = entityFactory.stageSetEntityFactory.createBackground(assets.get(GFX_BGD_LEVEL1), -BGD_VELOCITY);
+        background2 = entityFactory.stageSetEntityFactory.createBackground(assets.get(GFX_BGD_STARS), -BGD_PARALLAX_VELOCITY);
     }
 
     @Override
@@ -113,7 +109,7 @@ public final class Level1Script extends LevelScript {
 
     private void scriptMists(int second) {
         if (second % 30 == 0) {
-            entityFactory.createForeground(getRandomMist(), BGD_VELOCITY_FORE);
+            entityFactory.stageSetEntityFactory.createForeground(getRandomMist(), BGD_VELOCITY_FORE);
         }
     }
 

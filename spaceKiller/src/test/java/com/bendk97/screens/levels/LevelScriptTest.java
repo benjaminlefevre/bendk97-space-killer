@@ -14,7 +14,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.PlayerComponent;
 import com.bendk97.entities.EntityFactory;
-import com.bendk97.entities.SquadronFactory;
+import com.bendk97.entities.StageSetEntityFactory;
+import com.bendk97.entities.enemies.SquadronFactory;
 import com.bendk97.runner.GdxTestRunner;
 import com.bendk97.screens.levels.utils.ScriptItemExecutor;
 import org.junit.Before;
@@ -39,7 +40,16 @@ public abstract class LevelScriptTest {
     protected EntityFactory entityFactory;
 
     @Mock
+    protected StageSetEntityFactory stageSetEntityFactory;
+
+    @Mock
+    protected com.bendk97.entities.enemies.EnemyEntityFactory enemyEntityFactory;
+
+    @Mock
     protected SquadronFactory squadronFactory;
+
+    @Mock
+    protected com.bendk97.entities.enemies.SoloEnemyFactory soloEnemyFactory;
 
     @Mock
     protected ScriptItemExecutor scriptItemExecutor;
@@ -56,6 +66,10 @@ public abstract class LevelScriptTest {
     @Before
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
+        entityFactory.stageSetEntityFactory = stageSetEntityFactory;
+        entityFactory.enemyEntityFactory = enemyEntityFactory;
+        entityFactory.enemyEntityFactory.squadronFactory = squadronFactory;
+        entityFactory.enemyEntityFactory.soloEnemyFactory = soloEnemyFactory;
         player.add(engine.createComponent(PlayerComponent.class));
         when(assets.get(any(AssetDescriptor.class))).thenReturn(mock(Texture.class));
         initSpecificMocking();
