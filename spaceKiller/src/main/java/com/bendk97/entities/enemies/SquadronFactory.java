@@ -273,20 +273,7 @@ public class SquadronFactory {
         Mappers.position.get(entities[5]).setPosition(SCREEN_WIDTH / 2f - width / 2f + 2 * width * 1.1f, SCREEN_HEIGHT + 2 * height * 1.1f);
         Mappers.position.get(entities[6]).setPosition(SCREEN_WIDTH / 2f - width / 2f + 3 * width * 1.1f, SCREEN_HEIGHT + 3 * height * 1.1f);
 
-
-        for (final Entity entity : entities) {
-            PositionComponent position = Mappers.position.get(entity);
-            Timeline.createSequence()
-                    .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, 3 * SCREEN_HEIGHT / velocity)
-                            .ease(Linear.INOUT)
-                            .targetRelative(-3f * SCREEN_HEIGHT))
-                    .setCallback((i, baseTween) -> {
-                        if (i == TweenCallback.COMPLETE) {
-                            removeEntitySquadron(entity);
-                        }
-                    })
-                    .start(entityFactory.tweenManager);
-        }
+        arrowTween(entities, velocity);
     }
 
     private void createArrowDownSquadron(Entity[] entities, float velocity) {
@@ -304,7 +291,10 @@ public class SquadronFactory {
         Mappers.position.get(entities[5]).setPosition(SCREEN_WIDTH / 2f - width / 2f + 2 * width * 1.1f, SCREEN_HEIGHT + height * 1.1f);
         Mappers.position.get(entities[6]).setPosition(SCREEN_WIDTH / 2f - width / 2f + 3 * width * 1.1f, SCREEN_HEIGHT);
 
+        arrowTween(entities, velocity);
+    }
 
+    private void arrowTween(Entity[] entities, float velocity) {
         for (final Entity entity : entities) {
             PositionComponent position = Mappers.position.get(entity);
             Timeline.createSequence()

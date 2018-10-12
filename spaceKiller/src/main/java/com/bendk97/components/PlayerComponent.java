@@ -50,20 +50,20 @@ public class PlayerComponent implements Component, Pool.Poolable {
         TRIPLE_VERY_FAST(new Color(255f / 255f, 120f / 255f, 0f, 0.6f), "bullet5", "bulletLeft3", "bulletRight3");
 
         public final Color color;
-        public final String regionName;
-        public String leftRegionName;
-        public String rightRegionName;
+        public final String bulletRegionName;
+        public String bulletLeftSidedRegionName;
+        public String bulletRightSidedRegionName;
 
-        PowerLevel(Color color, String regionName) {
+        PowerLevel(Color color, String bulletRegionName) {
             this.color = color;
-            this.regionName = regionName;
+            this.bulletRegionName = bulletRegionName;
         }
 
-        PowerLevel(Color color, String regionName, String left, String right) {
+        PowerLevel(Color color, String bulletRegionName, String left, String right) {
             this.color = color;
-            this.regionName = regionName;
-            this.leftRegionName = left;
-            this.rightRegionName = right;
+            this.bulletRegionName = bulletRegionName;
+            this.bulletLeftSidedRegionName = left;
+            this.bulletRightSidedRegionName = right;
         }
 
     }
