@@ -21,6 +21,7 @@ import com.bendk97.listeners.CollisionListener;
 import com.bendk97.listeners.PlayerListener;
 import com.bendk97.screens.levels.LevelScreen;
 import com.bendk97.screens.levels.utils.ScreenShake;
+import com.bendk97.timer.PausableTimer;
 import com.bendk97.tweens.PositionComponentAccessor;
 import com.bendk97.tweens.SpriteComponentAccessor;
 
@@ -135,11 +136,11 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
                             if (i == TweenCallback.COMPLETE) {
                                 getEngine().removeEntity(enemy);
                             }
-                            com.bendk97.timer.PausableTimer.schedule(new com.bendk97.timer.PausableTimer.Task() {
+                            PausableTimer.schedule(new PausableTimer.Task() {
                                 @Override
                                 public void run() {
                                     player.add(getEngine().createComponent(LevelFinishedComponent.class));
-                                    com.bendk97.timer.PausableTimer.schedule(new com.bendk97.timer.PausableTimer.Task() {
+                                    PausableTimer.schedule(new PausableTimer.Task() {
                                         @Override
                                         public void run() {
                                             player.remove(LevelFinishedComponent.class);
