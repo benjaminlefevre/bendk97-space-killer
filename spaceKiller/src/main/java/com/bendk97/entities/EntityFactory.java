@@ -14,7 +14,6 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
@@ -31,8 +30,6 @@ import com.bendk97.entities.player.PlayerActionsEntityFactory;
 import com.bendk97.entities.player.PlayerEntityFactory;
 import com.bendk97.screens.levels.Level;
 import com.bendk97.screens.levels.utils.ScreenShake;
-
-import java.util.Random;
 
 import static com.bendk97.assets.Assets.GFX_LEVEL_ALL_ATLAS_NO_MASK;
 
@@ -53,20 +50,17 @@ public class EntityFactory implements Disposable {
             return light;
         }
     };
-    private final Random random = new RandomXS128();
-    private final SpaceKillerGame game;
     public StageSetEntityFactory stageSetEntityFactory;
-    public com.bendk97.entities.player.PlayerEntityFactory playerEntityFactory;
-    public com.bendk97.entities.player.PlayerActionsEntityFactory playerActionsEntityFactory;
-    public com.bendk97.entities.enemies.EnemyEntityFactory enemyEntityFactory;
-    public com.bendk97.entities.enemies.EnemyActionEntityFactory enemyActionEntityFactory;
-    public com.bendk97.entities.player.BonusEntityFactory bonusEntityFactory;
+    public PlayerEntityFactory playerEntityFactory;
+    public PlayerActionsEntityFactory playerActionsEntityFactory;
+    public EnemyEntityFactory enemyEntityFactory;
+    public EnemyActionEntityFactory enemyActionEntityFactory;
+    public BonusEntityFactory bonusEntityFactory;
 
     public EntityFactory(SpaceKillerGame game, PooledEngine engine, Assets assets, TweenManager tweenManager, RayHandler rayHandler,
                          ScreenShake screenShake, Level level, OrthographicCamera camera) {
         this.engine = engine;
         this.screenShake = screenShake;
-        this.game = game;
         this.rayHandler = rayHandler;
         if (rayHandler != null) {
             Array<PointLight> poolObjects = new Array<>(30);

@@ -36,24 +36,17 @@ public class PlayerActionsEntityFactory {
     }
 
     public void createPlayerFire(Entity player) {
-        Entity bullet = entityFactory.engine.createEntity();
-        bullet.add(entityFactory.engine.createComponent(PlayerBulletComponent.class));
-        PositionComponent positionComponent = entityFactory.engine.createComponent(PositionComponent.class);
-        bullet.add(positionComponent);
-        VelocityComponent velocityComponent = entityFactory.engine.createComponent(VelocityComponent.class);
-        bullet.add(velocityComponent);
-        SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         PlayerComponent playerComponent = Mappers.player.get(player);
-        spriteComponent.sprite = new Sprite(entityFactory.atlasMask.findRegion(playerComponent.powerLevel.regionName));
-        bullet.add(spriteComponent);
-        bullet.add(entityFactory.engine.createComponent(RemovableComponent.class));
-        entityFactory.engine.addEntity(bullet);
+        SpriteComponent spriteBulletComponent = entityFactory.engine.createComponent(SpriteComponent.class);
+        VelocityComponent velocityBulletComponent = entityFactory.engine.createComponent(VelocityComponent.class);
+        PositionComponent positionBulletComponent = entityFactory.engine.createComponent(PositionComponent.class);
+        Entity bullet = createBullet(playerComponent.powerLevel.bulletRegionName, spriteBulletComponent, velocityBulletComponent, positionBulletComponent);
         PositionComponent playerPosition = position.get(player);
-        positionComponent.x = playerPosition.x + Mappers.sprite.get(player).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
-        positionComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
-        velocityComponent.y = PLAYER_BULLET_VELOCITY;
+        positionBulletComponent.x = playerPosition.x + Mappers.sprite.get(player).sprite.getWidth() / 2f - spriteBulletComponent.sprite.getWidth() / 2f;
+        positionBulletComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
+        velocityBulletComponent.y = PLAYER_BULLET_VELOCITY;
         if (entityFactory.rayHandler != null) {
-            entityFactory.createLight(bullet, playerComponent.powerLevel.color, spriteComponent.sprite.getWidth() * 7f);
+            entityFactory.createLight(bullet, playerComponent.powerLevel.color, spriteBulletComponent.sprite.getWidth() * 7f);
         }
     }
 
@@ -63,57 +56,43 @@ public class PlayerActionsEntityFactory {
     }
 
     private void createPlayerLeftFire(Entity player) {
-        Entity bullet = entityFactory.engine.createEntity();
-        bullet.add(entityFactory.engine.createComponent(PlayerBulletComponent.class));
-        PositionComponent positionComponent = entityFactory.engine.createComponent(PositionComponent.class);
-        bullet.add(positionComponent);
-        VelocityComponent velocityComponent = entityFactory.engine.createComponent(VelocityComponent.class);
-        bullet.add(velocityComponent);
-        SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         PlayerComponent playerComponent = Mappers.player.get(player);
-        spriteComponent.sprite = new Sprite(entityFactory.atlasMask.findRegion(playerComponent.powerLevel.leftRegionName));
-        bullet.add(spriteComponent);
-        bullet.add(entityFactory.engine.createComponent(RemovableComponent.class));
-        entityFactory.engine.addEntity(bullet);
+        SpriteComponent spriteBulletComponent = entityFactory.engine.createComponent(SpriteComponent.class);
+        VelocityComponent velocityBulletComponent = entityFactory.engine.createComponent(VelocityComponent.class);
+        PositionComponent positionBulletComponent = entityFactory.engine.createComponent(PositionComponent.class);
+        Entity bullet = createBullet(playerComponent.powerLevel.bulletLeftSidedRegionName, spriteBulletComponent, velocityBulletComponent, positionBulletComponent);
         PositionComponent playerPosition = position.get(player);
-        positionComponent.x = playerPosition.x - spriteComponent.sprite.getWidth();
-        positionComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
+        positionBulletComponent.x = playerPosition.x - spriteBulletComponent.sprite.getWidth();
+        positionBulletComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
         Vector2 direction = new Vector2(0, 1);
         direction.rotate(35f);
         direction.nor();
         direction.scl(PLAYER_BULLET_VELOCITY * 1.5f);
-        velocityComponent.y = direction.y;
-        velocityComponent.x = direction.x;
+        velocityBulletComponent.y = direction.y;
+        velocityBulletComponent.x = direction.x;
         if (entityFactory.rayHandler != null) {
-            entityFactory.createLight(bullet, playerComponent.powerLevel.color, spriteComponent.sprite.getWidth() * 7f);
+            entityFactory.createLight(bullet, playerComponent.powerLevel.color, spriteBulletComponent.sprite.getWidth() * 7f);
         }
     }
 
 
     private void createPlayerRightFire(Entity player) {
-        Entity bullet = entityFactory.engine.createEntity();
-        bullet.add(entityFactory.engine.createComponent(PlayerBulletComponent.class));
-        PositionComponent positionComponent = entityFactory.engine.createComponent(PositionComponent.class);
-        bullet.add(positionComponent);
-        VelocityComponent velocityComponent = entityFactory.engine.createComponent(VelocityComponent.class);
-        bullet.add(velocityComponent);
-        SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         PlayerComponent playerComponent = Mappers.player.get(player);
-        spriteComponent.sprite = new Sprite(entityFactory.atlasMask.findRegion(playerComponent.powerLevel.rightRegionName));
-        bullet.add(spriteComponent);
-        bullet.add(entityFactory.engine.createComponent(RemovableComponent.class));
-        entityFactory.engine.addEntity(bullet);
+        SpriteComponent spriteBulletComponent = entityFactory.engine.createComponent(SpriteComponent.class);
+        VelocityComponent velocityBulletComponent = entityFactory.engine.createComponent(VelocityComponent.class);
+        PositionComponent positionBulletComponent = entityFactory.engine.createComponent(PositionComponent.class);
+        Entity bullet = createBullet(playerComponent.powerLevel.bulletRightSidedRegionName, spriteBulletComponent, velocityBulletComponent, positionBulletComponent);
         PositionComponent playerPosition = position.get(player);
-        positionComponent.x = playerPosition.x + sprite.get(player).sprite.getWidth();
-        positionComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
+        positionBulletComponent.x = playerPosition.x + sprite.get(player).sprite.getWidth();
+        positionBulletComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
         Vector2 direction = new Vector2(0, 1);
         direction.rotate(-35f);
         direction.nor();
         direction.scl(PLAYER_BULLET_VELOCITY * 1.5f);
-        velocityComponent.y = direction.y;
-        velocityComponent.x = direction.x;
+        velocityBulletComponent.y = direction.y;
+        velocityBulletComponent.x = direction.x;
         if (entityFactory.rayHandler != null) {
-            entityFactory.createLight(bullet, playerComponent.powerLevel.color, spriteComponent.sprite.getWidth() * 7f);
+            entityFactory.createLight(bullet, playerComponent.powerLevel.color, spriteBulletComponent.sprite.getWidth() * 7f);
         }
     }
 
@@ -179,6 +158,18 @@ public class PlayerActionsEntityFactory {
                 }
             }
         }, 0.6f);
+    }
+
+    private Entity createBullet(String bulletSpriteName, SpriteComponent spritebulletComponent, VelocityComponent velocityBulletComponent, PositionComponent positionBulletComponent) {
+        Entity bullet = entityFactory.engine.createEntity();
+        bullet.add(entityFactory.engine.createComponent(PlayerBulletComponent.class));
+        bullet.add(positionBulletComponent);
+        bullet.add(velocityBulletComponent);
+        spritebulletComponent.sprite = new Sprite(entityFactory.atlasMask.findRegion(bulletSpriteName));
+        bullet.add(spritebulletComponent);
+        bullet.add(entityFactory.engine.createComponent(RemovableComponent.class));
+        entityFactory.engine.addEntity(bullet);
+        return bullet;
     }
 
 }

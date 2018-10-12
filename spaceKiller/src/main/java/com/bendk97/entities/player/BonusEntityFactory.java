@@ -47,19 +47,10 @@ public class BonusEntityFactory {
         position.x = Mappers.squadron.get(squadron).lastKilledPosition.x;
         position.y = Mappers.squadron.get(squadron).lastKilledPosition.y;
         powerUp.add(entityFactory.engine.createComponent(StateComponent.class));
-        Timeline.createSequence()
-                .beginParallel()
-                .push(Tween.to(position, POSITION_Y, 8f).ease(Linear.INOUT).target(50f))
-                .push(Tween.to(component, ALPHA, 0.5f).delay(4f).ease(Linear.INOUT).target(0f).repeat(8, 0f))
-                .end()
-                .setCallback((i, baseTween) -> {
-                    if (i == TweenCallback.COMPLETE) {
-                        entityFactory.engine.removeEntity(powerUp);
-                    }
-                })
-                .start(entityFactory.tweenManager);
+        tweenBonus(powerUp, position, component);
         entityFactory.engine.addEntity(powerUp);
     }
+
 
     public void createShieldUp(Entity squadron) {
         final Entity shieldUp = entityFactory.engine.createEntity();
@@ -77,17 +68,7 @@ public class BonusEntityFactory {
         position.x = Mappers.squadron.get(squadron).lastKilledPosition.x;
         position.y = Mappers.squadron.get(squadron).lastKilledPosition.y;
         shieldUp.add(entityFactory.engine.createComponent(StateComponent.class));
-        Timeline.createSequence()
-                .beginParallel()
-                .push(Tween.to(position, POSITION_Y, 8f).ease(Linear.INOUT).target(50f))
-                .push(Tween.to(component, ALPHA, 0.5f).delay(4f).ease(Linear.INOUT).target(0f).repeat(8, 0f))
-                .end()
-                .setCallback((i, baseTween) -> {
-                    if (i == TweenCallback.COMPLETE) {
-                        entityFactory.engine.removeEntity(shieldUp);
-                    }
-                })
-                .start(entityFactory.tweenManager);
+        tweenBonus(shieldUp, position, component);
         entityFactory.engine.addEntity(shieldUp);
     }
 
@@ -102,6 +83,12 @@ public class BonusEntityFactory {
         bombUp.add(component);
         position.x = Mappers.squadron.get(squadron).lastKilledPosition.x;
         position.y = Mappers.squadron.get(squadron).lastKilledPosition.y;
+        tweenBonus(bombUp, position, component);
+        entityFactory.engine.addEntity(bombUp);
+    }
+
+
+    private void tweenBonus(Entity powerUp, PositionComponent position, SpriteComponent component) {
         Timeline.createSequence()
                 .beginParallel()
                 .push(Tween.to(position, POSITION_Y, 8f).ease(Linear.INOUT).target(50f))
@@ -109,11 +96,10 @@ public class BonusEntityFactory {
                 .end()
                 .setCallback((i, baseTween) -> {
                     if (i == TweenCallback.COMPLETE) {
-                        entityFactory.engine.removeEntity(bombUp);
+                        entityFactory.engine.removeEntity(powerUp);
                     }
                 })
                 .start(entityFactory.tweenManager);
-        entityFactory.engine.addEntity(bombUp);
     }
 
 }

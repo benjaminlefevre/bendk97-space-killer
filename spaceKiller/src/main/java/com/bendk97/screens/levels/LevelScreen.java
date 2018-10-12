@@ -90,11 +90,11 @@ public final class LevelScreen extends ScreenAdapter {
     private State state = State.RUNNING;
 
 
-
     public enum State {
         PAUSED, RUNNING
 
     }
+
     public LevelScreen(final Assets assets, final SpaceKillerGame game, final Level level) {
         PausableTimer.instance().stop();
         PausableTimer.instance().start();
@@ -200,8 +200,12 @@ public final class LevelScreen extends ScreenAdapter {
         playerComponent.numberOfContinue--;
         Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
-        entityFactory.playerEntityFactory.addInvulnerableComponent(player);
         Gdx.input.setInputProcessor(inputProcessor);
+        makePlayerInvulnerable();
+    }
+
+    public void makePlayerInvulnerable() {
+        entityFactory.playerEntityFactory.addInvulnerableComponent(player);
         Timeline.createSequence()
                 .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
                 .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(1f))
@@ -236,7 +240,7 @@ public final class LevelScreen extends ScreenAdapter {
 
     protected void createSystems(Entity player, SnapshotArray<Entity> lives, SnapshotArray<Entity> bombs, SpriteBatch batcher,
                                  ScreenShake screenShake) {
-        playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, tweenManager, screenShake, this);
+        playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, screenShake, this);
         engine.addSystem(playerListener);
         engine.addSystem(createInputHandlerSystem(player, playerListener));
         CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, screenShake, assets, entityFactory, playerListener, this);

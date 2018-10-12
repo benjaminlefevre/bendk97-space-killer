@@ -6,10 +6,6 @@
 
 package com.bendk97.listeners.impl;
 
-import aurelienribon.tweenengine.Timeline;
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenCallback;
-import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
@@ -30,14 +26,12 @@ import com.bendk97.timer.PausableTimer;
 import static com.bendk97.SpaceKillerGameConstants.PLAYER_ORIGIN_X;
 import static com.bendk97.SpaceKillerGameConstants.PLAYER_ORIGIN_Y;
 import static com.bendk97.assets.Assets.*;
-import static com.bendk97.tweens.SpriteComponentAccessor.ALPHA;
 
 
 public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     private final EntityFactory entityFactory;
     private SnapshotArray<Entity> lives;
     private SnapshotArray<Entity> bombs;
-    private final TweenManager tweenManager;
     private final Assets assets;
     private final LevelScreen screen;
     private final SpaceKillerGame game;
@@ -45,13 +39,11 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
 
 
     public PlayerListenerImpl(SpaceKillerGame game, Assets asset, EntityFactory entityFactory, SnapshotArray<Entity> lives,
-                              SnapshotArray<Entity> bombs, TweenManager tweenManager, ScreenShake screenShake,
-                              LevelScreen screen) {
+                              SnapshotArray<Entity> bombs, ScreenShake screenShake, LevelScreen screen) {
         this.entityFactory = entityFactory;
         this.game = game;
         this.lives = lives;
         this.bombs = bombs;
-        this.tweenManager = tweenManager;
         this.assets = asset;
         this.screen = screen;
         this.screenShake = screenShake;
@@ -113,17 +105,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
             }
             Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
             Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
-            entityFactory.playerEntityFactory.addInvulnerableComponent(player);
-            Timeline.createSequence()
-                    .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
-                    .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(1f))
-                    .repeat(10, 0f)
-                    .setCallback((i, baseTween) -> {
-                        if (i == TweenCallback.COMPLETE) {
-                            entityFactory.playerEntityFactory.removeInvulnerableComponent(player);
-                        }
-                    })
-                    .start(tweenManager);
+            screen.makePlayerInvulnerable();
         }
     }
 
