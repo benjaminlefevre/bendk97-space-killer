@@ -15,6 +15,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.*;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.listeners.CollisionListener;
 import com.bendk97.listeners.PlayerListener;
@@ -52,7 +53,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
 
     @Override
     public void enemyShoot(final Entity enemy, final Entity player, Entity bullet) {
-        EnemyComponent enemyComponent = Mappers.enemy.get(enemy);
+        EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(enemy);
         // special case: enemy can be already dead
         if (enemyComponent.isDead()) {
             return;
@@ -61,18 +62,18 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         assets.playSound(Assets.SOUND_EXPLOSION);
         PositionComponent explodePosition;
         if (enemyComponent.isBoss && bullet != null) {
-            explodePosition = Mappers.position.get(bullet);
+            explodePosition = ComponentMapperHelper.position.get(bullet);
 
         } else {
-            explodePosition = Mappers.position.get(enemy);
+            explodePosition = ComponentMapperHelper.position.get(enemy);
         }
         Entity explosion = entityFactory.enemyEntityFactory.createEntityExploding(explodePosition.x, explodePosition.y);
         if (enemyComponent.isBoss) {
             if (bullet != null) {
-                Mappers.position.get(explosion).x -= Mappers.sprite.get(explosion).sprite.getWidth() / 2f;
+                ComponentMapperHelper.position.get(explosion).x -= ComponentMapperHelper.sprite.get(explosion).sprite.getWidth() / 2f;
             } else {
-                Mappers.position.get(explosion).x += Mappers.sprite.get(enemy).sprite.getWidth() / 2f;
-                Mappers.position.get(explosion).y += Mappers.sprite.get(enemy).sprite.getHeight() / 2f;
+                ComponentMapperHelper.position.get(explosion).x += ComponentMapperHelper.sprite.get(enemy).sprite.getWidth() / 2f;
+                ComponentMapperHelper.position.get(explosion).y += ComponentMapperHelper.sprite.get(enemy).sprite.getHeight() / 2f;
             }
         }
         if (bullet != null) {
@@ -86,48 +87,48 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         enemyComponent.hit(bullet != null ? 1 : HIT_EXPLOSION);
         float percentLifeAfter = enemyComponent.getRemainingLifeInPercent();
         if (enemyComponent.isBoss && percentLifeBefore >= 0.25 && percentLifeAfter < 0.25) {
-            AnimationComponent animationComponent = Mappers.animation.get(enemy);
+            AnimationComponent animationComponent = ComponentMapperHelper.animation.get(enemy);
             if (animationComponent != null) {
                 animationComponent.tintRed(ANIMATION_MAIN, 0.99f);
             } else {
-                Mappers.sprite.get(enemy).tintRed(0.99f);
+                ComponentMapperHelper.sprite.get(enemy).tintRed(0.99f);
             }
         }
 
         if (enemyComponent.isDead()) {
-            if (Mappers.levelFinished.get(player) == null) {
-                Mappers.player.get(player).enemyKilled();
+            if (ComponentMapperHelper.levelFinished.get(player) == null) {
+                ComponentMapperHelper.player.get(player).enemyKilled();
             }
             if (enemyComponent.isLaserShip) {
                 screenShake.shake(20, 0.5f, false);
-                Mappers.player.get(player).laserShipKilled++;
+                ComponentMapperHelper.player.get(player).laserShipKilled++;
             }
             if (enemyComponent.isTank) {
                 screenShake.shake(20, 0.5f, false);
             }
             screen.checkAchievements(player);
-            tweenManager.killTarget(Mappers.position.get(enemy));
+            tweenManager.killTarget(ComponentMapperHelper.position.get(enemy));
             if (enemyComponent.belongsToSquadron()) {
-                Mappers.squadron.get(enemyComponent.squadron).removeEntity(enemy);
+                ComponentMapperHelper.squadron.get(enemyComponent.squadron).removeEntity(enemy);
             }
-            SpriteComponent spriteComponent = Mappers.sprite.get(enemy);
-            if (Mappers.boss.get(enemy) != null) {
+            SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(enemy);
+            if (ComponentMapperHelper.boss.get(enemy) != null) {
                 assets.playSound(Assets.SOUND_BOSS_FINISHED);
                 entityFactory.enemyEntityFactory.createBossExploding(enemy);
                 screenShake.shake(20, 2f, true);
                 entityFactory.playerEntityFactory.addInvulnerableComponent(player);
                 Timeline.createSequence()
-                        .push(Tween.to(Mappers.sprite.get(player), SpriteComponentAccessor.ALPHA, 0.2f).target(0f))
-                        .push(Tween.to(Mappers.sprite.get(player), SpriteComponentAccessor.ALPHA, 0.2f).target(1f))
+                        .push(Tween.to(ComponentMapperHelper.sprite.get(player), SpriteComponentAccessor.ALPHA, 0.2f).target(0f))
+                        .push(Tween.to(ComponentMapperHelper.sprite.get(player), SpriteComponentAccessor.ALPHA, 0.2f).target(1f))
                         .repeat(Tween.INFINITY, 0f)
                         .start(tweenManager);
                 Timeline.createSequence()
                         .beginParallel()
-                        .push(Tween.to(Mappers.position.get(enemy), PositionComponentAccessor.POSITION_XY, 5f).ease(Linear.INOUT)
+                        .push(Tween.to(ComponentMapperHelper.position.get(enemy), PositionComponentAccessor.POSITION_XY, 5f).ease(Linear.INOUT)
                                 .target(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f,
                                         SCREEN_HEIGHT - spriteComponent.sprite.getHeight() - 20f))
 
-                        .push(Tween.to(Mappers.sprite.get(enemy), SpriteComponentAccessor.ALPHA, 0.2f).ease(Linear.INOUT)
+                        .push(Tween.to(ComponentMapperHelper.sprite.get(enemy), SpriteComponentAccessor.ALPHA, 0.2f).ease(Linear.INOUT)
                                 .target(0.2f).repeatYoyo(25, 0f))
                         .end()
                         .setCallback((i, baseTween) -> {
@@ -158,7 +159,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     @Override
     public void playerHitByEnemyBody(Entity player) {
         assets.playSound(Assets.SOUND_EXPLOSION);
-        PositionComponent playerPosition = Mappers.position.get(player);
+        PositionComponent playerPosition = ComponentMapperHelper.position.get(player);
         entityFactory.enemyEntityFactory.createEntityExploding(playerPosition.x, playerPosition.y);
         playerListener.loseLive(player);
     }
@@ -166,7 +167,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     @Override
     public void playerHitByEnemyBullet(Entity player, Entity bullet) {
         assets.playSound(Assets.SOUND_EXPLOSION);
-        PositionComponent playerPosition = Mappers.position.get(player);
+        PositionComponent playerPosition = ComponentMapperHelper.position.get(player);
         entityFactory.enemyEntityFactory.createEntityExploding(playerPosition.x, playerPosition.y);
         getEngine().removeEntity(bullet);
         playerListener.loseLive(player);
@@ -175,13 +176,13 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     @Override
     public void playerPowerUp(Entity player, Entity powerUp) {
         assets.playSound(Assets.SOUND_POWER_UP);
-        PlayerComponent playerComponent = Mappers.player.get(player);
+        PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
         if (!playerComponent.powerLevel.equals(PlayerComponent.PowerLevel.TRIPLE_VERY_FAST)) {
             assets.playSound(Assets.SOUND_POWER_UP_VOICE);
         }
         playerComponent.powerUp();
-        tweenManager.killTarget(Mappers.position.get(powerUp));
-        tweenManager.killTarget(Mappers.sprite.get(powerUp));
+        tweenManager.killTarget(ComponentMapperHelper.position.get(powerUp));
+        tweenManager.killTarget(ComponentMapperHelper.sprite.get(powerUp));
         getEngine().removeEntity(powerUp);
     }
 
@@ -190,8 +191,8 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     public void playerShieldUp(Entity player, Entity shieldUp) {
         assets.playSound(Assets.SOUND_SHIELD_UP);
         entityFactory.playerEntityFactory.createShield(player);
-        tweenManager.killTarget(Mappers.position.get(shieldUp));
-        tweenManager.killTarget(Mappers.sprite.get(shieldUp));
+        tweenManager.killTarget(ComponentMapperHelper.position.get(shieldUp));
+        tweenManager.killTarget(ComponentMapperHelper.sprite.get(shieldUp));
         getEngine().removeEntity(shieldUp);
     }
 
@@ -199,8 +200,8 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     public void playerBombUp(Entity player, Entity bombUp) {
         assets.playSound(Assets.SOUND_SHIELD_UP);
         playerListener.newBombObtained(player);
-        tweenManager.killTarget(Mappers.position.get(bombUp));
-        tweenManager.killTarget(Mappers.sprite.get(bombUp));
+        tweenManager.killTarget(ComponentMapperHelper.position.get(bombUp));
+        tweenManager.killTarget(ComponentMapperHelper.sprite.get(bombUp));
         getEngine().removeEntity(bombUp);
     }
 
@@ -214,11 +215,11 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     @Override
     public void enemyShootByShield(Entity enemy) {
         assets.playSound(Assets.SOUND_EXPLOSION);
-        PositionComponent enemyPosition = Mappers.position.get(enemy);
+        PositionComponent enemyPosition = ComponentMapperHelper.position.get(enemy);
         entityFactory.enemyEntityFactory.createEntityExploding(enemyPosition.x, enemyPosition.y);
-        tweenManager.killTarget(Mappers.position.get(enemy));
-        if (Mappers.enemy.get(enemy).squadron != null) {
-            Mappers.squadron.get(Mappers.enemy.get(enemy).squadron).removeEntity(enemy);
+        tweenManager.killTarget(ComponentMapperHelper.position.get(enemy));
+        if (ComponentMapperHelper.enemy.get(enemy).squadron != null) {
+            ComponentMapperHelper.squadron.get(ComponentMapperHelper.enemy.get(enemy).squadron).removeEntity(enemy);
         }
         getEngine().removeEntity(enemy);
     }

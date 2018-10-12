@@ -1,14 +1,15 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 29/09/18 21:09
+ * Last modified 12/10/18 18:23
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97.components;
+package com.bendk97.components.helpers;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.bendk97.components.*;
 
-public class Mappers {
+public class ComponentMapperHelper {
     public static final ComponentMapper<BackgroundComponent> background = ComponentMapper.getFor(BackgroundComponent.class);
     public static final ComponentMapper<AnimationComponent> animation = ComponentMapper.getFor(AnimationComponent.class);
     public static final ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);

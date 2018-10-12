@@ -13,8 +13,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.bendk97.assets.Assets;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.PlayerComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.FONT_SPACE_KILLER;
@@ -36,9 +36,9 @@ public class ScoresRenderingSystem extends IteratingSystem {
     protected void processEntity(Entity player, float deltaTime) {
         bitmapFont.setColor(Color.WHITE);
         bitmapFont.draw(batcher, SCORE, SCORE_X, SCORE_Y);
-        bitmapFont.draw(batcher, Mappers.player.get(player).getScore(), SCORE_X - 10f, SCORE_Y - 20f);
+        bitmapFont.draw(batcher, ComponentMapperHelper.player.get(player).getScore(), SCORE_X - 10f, SCORE_Y - 20f);
         bitmapFont.draw(batcher, LIVES, LIVES_X, LIVES_Y);
         bitmapFont.draw(batcher, HIGH, HIGH_X, HIGH_Y);
-        bitmapFont.draw(batcher, Mappers.player.get(player).getHighScoreFormatted(), HIGH_X - 10f, HIGH_Y - 20f);
+        bitmapFont.draw(batcher, ComponentMapperHelper.player.get(player).getHighScoreFormatted(), HIGH_X - 10f, HIGH_Y - 20f);
     }
 }

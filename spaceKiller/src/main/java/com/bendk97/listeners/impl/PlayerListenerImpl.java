@@ -15,8 +15,8 @@ import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.EnemyComponent;
 import com.bendk97.components.GameOverComponent;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.PlayerComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.listeners.PlayerListener;
 import com.bendk97.screens.levels.LevelScreen;
@@ -56,7 +56,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
 
     @Override
     public void newBombObtained(Entity player) {
-        Mappers.player.get(player).bombs++;
+        ComponentMapperHelper.player.get(player).bombs++;
         Entity[] bombsArray = bombs.begin();
         for (int i = 0; i < bombs.size; ++i) {
             getEngine().removeEntity(bombsArray[i]);
@@ -83,12 +83,12 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
 
     @Override
     public void loseLive(final Entity player) {
-        PlayerComponent playerComponent = Mappers.player.get(player);
+        PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
         playerComponent.loseLife();
         screenShake.shake(20, 0.5f, true);
         if (playerComponent.isGameOver()) {
             assets.playSound(SOUND_GAME_OVER);
-            Mappers.player.get(player).secondScript = ((LevelScreen) game.currentScreen).getCurrentTimeScript();
+            ComponentMapperHelper.player.get(player).secondScript = ((LevelScreen) game.currentScreen).getCurrentTimeScript();
             player.add(getEngine().createComponent(GameOverComponent.class));
             Settings.addScore(playerComponent.getScoreInt());
             screen.submitScore(playerComponent.getScoreInt());
@@ -103,23 +103,23 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
             if (playerComponent.lives > 0) {
                 getEngine().removeEntity(lives.removeIndex(playerComponent.lives - 1));
             }
-            Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
-            Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+            ComponentMapperHelper.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+            ComponentMapperHelper.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
             screen.makePlayerInvulnerable();
         }
     }
 
     @Override
     public void updateScore(Entity player, Entity enemy, int nbHits) {
-        EnemyComponent enemyComponent = Mappers.enemy.get(enemy);
+        EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(enemy);
         int gauge = enemyComponent.getLifeGauge();
-        int nbPoints = Math.min(nbHits, gauge) * Mappers.enemy.get(enemy).points;
+        int nbPoints = Math.min(nbHits, gauge) * ComponentMapperHelper.enemy.get(enemy).points;
         updateScore(player, nbPoints);
     }
 
     @Override
     public void updateScore(Entity player, int score) {
-        PlayerComponent playerComponent = Mappers.player.get(player);
+        PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
         boolean notHighScoreOld = !playerComponent.isHighScore();
         boolean newLife = playerComponent.updateScore(score);
         boolean highScoreNew = playerComponent.isHighScore();

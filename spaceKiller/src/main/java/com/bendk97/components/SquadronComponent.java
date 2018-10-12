@@ -11,6 +11,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 
 public class SquadronComponent implements Component, Pool.Poolable {
     public Array<Entity> ships = new Array<>();
@@ -26,7 +27,7 @@ public class SquadronComponent implements Component, Pool.Poolable {
     }
 
     public void removeEntity(Entity entity){
-        PositionComponent position = Mappers.position.get(entity);
+        PositionComponent position = ComponentMapperHelper.position.get(entity);
         lastKilledPosition = new Vector2(position.x, position.y);
         ships.removeValue(entity, true);
         toShoot--;

@@ -33,6 +33,7 @@ import com.bendk97.Settings;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.*;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.inputs.GestureHandler;
 import com.bendk97.inputs.RetroPadController;
@@ -155,7 +156,7 @@ public final class LevelScreen extends ScreenAdapter {
     }
 
     public void nextLevel() {
-        PlayerComponent playerComponent = Mappers.player.get(player);
+        PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
         FrameBuffer screenshot = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
         screenshot.begin();
         this.render(Gdx.graphics.getDeltaTime());
@@ -189,7 +190,7 @@ public final class LevelScreen extends ScreenAdapter {
     }
 
     public void continueWithExtraLife() {
-        final PlayerComponent playerComponent = Mappers.player.get(player);
+        final PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
         player.remove(GameOverComponent.class);
         this.time = playerComponent.secondScript;
         this.levelScript.initSpawns();
@@ -198,8 +199,8 @@ public final class LevelScreen extends ScreenAdapter {
         playerComponent.resetScore();
         playerListener.updateLivesAndBombsAfterContinue(player);
         playerComponent.numberOfContinue--;
-        Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
-        Mappers.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+        ComponentMapperHelper.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+        ComponentMapperHelper.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         Gdx.input.setInputProcessor(inputProcessor);
         makePlayerInvulnerable();
     }
@@ -207,8 +208,8 @@ public final class LevelScreen extends ScreenAdapter {
     public void makePlayerInvulnerable() {
         entityFactory.playerEntityFactory.addInvulnerableComponent(player);
         Timeline.createSequence()
-                .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(0f))
-                .push(Tween.to(Mappers.sprite.get(player), ALPHA, 0.2f).target(1f))
+                .push(Tween.to(ComponentMapperHelper.sprite.get(player), ALPHA, 0.2f).target(0f))
+                .push(Tween.to(ComponentMapperHelper.sprite.get(player), ALPHA, 0.2f).target(1f))
                 .repeat(10, 0f)
                 .setCallback((i, baseTween) -> {
                     if (i == TweenCallback.COMPLETE) {
@@ -287,7 +288,7 @@ public final class LevelScreen extends ScreenAdapter {
             Entity fireButton = entityFactory.playerEntityFactory.createEntityFireButton(0.2f, FIRE_X, FIRE_Y);
             Entity padController = entityFactory.playerEntityFactory.createEntitiesPadController(0.2f, 1.4f, PAD_X, PAD_Y);
             // define touch area as rectangles
-            Sprite padSprite = Mappers.sprite.get(padController).sprite;
+            Sprite padSprite = ComponentMapperHelper.sprite.get(padController).sprite;
             float heightTouch = padSprite.getHeight() * 1.2f / 3f;
             float widthTouch = padSprite.getWidth() * 1.2f / 3f;
             Rectangle[] squareTouchesDirection = new Rectangle[8];
@@ -301,13 +302,13 @@ public final class LevelScreen extends ScreenAdapter {
             squareTouchesDirection[7] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y, widthTouch, heightTouch);
 
             inputProcessor.addProcessor(new RetroPadController(this, inputListener, cameraHUD, squareTouchesDirection,
-                    Mappers.sprite.get(fireButton).getBounds(),
-                    Mappers.sprite.get(bombButton).getBounds()));
+                    ComponentMapperHelper.sprite.get(fireButton).getBounds(),
+                    ComponentMapperHelper.sprite.get(bombButton).getBounds()));
 
         } else {
-            Mappers.sprite.get(bombButton).sprite.setY(BOMB_Y_VIRTUAL);
+            ComponentMapperHelper.sprite.get(bombButton).sprite.setY(BOMB_Y_VIRTUAL);
             inputProcessor.addProcessor(new VirtualPadController(this, inputListener, cameraHUD, player,
-                    Mappers.sprite.get(bombButton).getBounds()));
+                    ComponentMapperHelper.sprite.get(bombButton).getBounds()));
 
         }
         Gdx.input.setInputProcessor(inputProcessor);
@@ -396,7 +397,7 @@ public final class LevelScreen extends ScreenAdapter {
     }
 
     public void checkAchievements(Entity player) {
-        PlayerComponent playerComponent = Mappers.player.get(player);
+        PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
         if (playerComponent.enemiesKilled == 50) {
             game.playServices.unlockAchievement(KILL_50_ENEMIES);
         } else if (playerComponent.enemiesKilled == 100) {

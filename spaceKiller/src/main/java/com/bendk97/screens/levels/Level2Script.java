@@ -15,7 +15,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.GameOverComponent;
-import com.bendk97.components.Mappers;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.entities.enemies.SquadronFactory;
 import com.bendk97.screens.levels.utils.ScriptItem;
@@ -207,8 +207,8 @@ public class Level2Script extends LevelScript {
         if (second == 255) {
             playSound(BOSS_ALERT);
             for (Entity background : new Array.ArrayIterator<>(backgrounds)) {
-                Tween.to(Mappers.velocity.get(background), VelocityComponentAccessor.VELOCITY_Y, 4).ease(Quad.IN)
-                        .target(-Mappers.velocity.get(background).y / 10f).start(tweenManager);
+                Tween.to(ComponentMapperHelper.velocity.get(background), VelocityComponentAccessor.VELOCITY_Y, 4).ease(Quad.IN)
+                        .target(-ComponentMapperHelper.velocity.get(background).y / 10f).start(tweenManager);
             }
             return;
         }

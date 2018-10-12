@@ -15,9 +15,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Bezier;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.TankComponent.TankLevel;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.Level;
 import com.bendk97.tweens.PositionComponentAccessor;
@@ -56,7 +56,7 @@ public class SoloEnemyFactory {
     public void createSoloEnemy(float velocity, float bulletVelocity,
                                 int rateShoot, int gaugeLife, int points, boolean comingFromLeft) {
         if (player != null) {
-            Mappers.player.get(player).enemiesCountLevel++;
+            ComponentMapperHelper.player.get(player).enemiesCountLevel++;
         }
         int soloType = random.nextInt(4);
         switch (soloType) {
@@ -78,10 +78,10 @@ public class SoloEnemyFactory {
 
     public void createTank(float velocity, TankLevel level, int gaugeLife, int points) {
         List<Entity> entities = entityFactory.enemyEntityFactory.createTank(level, gaugeLife, points);
-        Mappers.player.get(player).enemiesCountLevel++;
+        ComponentMapperHelper.player.get(player).enemiesCountLevel++;
         float posX = random.nextFloat() * (SCREEN_WIDTH - 64f);
         for (final Entity entity : entities) {
-            PositionComponent position = Mappers.position.get(entity);
+            PositionComponent position = ComponentMapperHelper.position.get(entity);
             position.setPosition(posX, SCREEN_HEIGHT + 20f);
             Tween.to(position, PositionComponentAccessor.POSITION_Y, (SCREEN_HEIGHT + 100f) / velocity)
                     .ease(Linear.INOUT).targetRelative(-SCREEN_HEIGHT - 100f)
@@ -97,8 +97,8 @@ public class SoloEnemyFactory {
         final boolean direction = comingFromLeft;
         final int directionFactor = direction ? 1 : -1;
         Entity enemy = entityFactory.enemyEntityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugeLife, points, direction);
-        final PositionComponent position = Mappers.position.get(enemy);
-        Sprite sprite = Mappers.sprite.get(enemy).sprite;
+        final PositionComponent position = ComponentMapperHelper.position.get(enemy);
+        Sprite sprite = ComponentMapperHelper.sprite.get(enemy).sprite;
         final int k = 100;
         Bezier<Vector2> bezier = new Bezier<>(new Vector2(0f, SCREEN_HEIGHT - sprite.getHeight()), new Vector2(0f, SCREEN_HEIGHT / 2f),
                 new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT / 2f), new Vector2(SCREEN_WIDTH - sprite.getWidth(), SCREEN_HEIGHT - sprite.getHeight()));
@@ -129,8 +129,8 @@ public class SoloEnemyFactory {
     private void createSoloEnemyTrapeze(final float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points, boolean comingFromLeft) {
         final int directionFactor = comingFromLeft ? 1 : -1;
         Entity enemy = entityFactory.enemyEntityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
-        final PositionComponent position = Mappers.position.get(enemy);
-        final Sprite sprite = Mappers.sprite.get(enemy).sprite;
+        final PositionComponent position = ComponentMapperHelper.position.get(enemy);
+        final Sprite sprite = ComponentMapperHelper.sprite.get(enemy).sprite;
         Tween.to(position, PositionComponentAccessor.POSITION_X, sprite.getWidth() / velocity)
                 .ease(Linear.INOUT).targetRelative(directionFactor * sprite.getWidth())
                 .setCallback((i, baseTween) -> {
@@ -153,8 +153,8 @@ public class SoloEnemyFactory {
     private void createSoloEnemyLinearX(final float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points, boolean comingFromLeft) {
         final int directionFactor = comingFromLeft ? 1 : -1;
         Entity enemy = entityFactory.enemyEntityFactory.createLaserShip(getRandomStaticEnemy(), null, bulletVelocity, rateShoot, gaugeLife, points, comingFromLeft);
-        final PositionComponent position = Mappers.position.get(enemy);
-        final Sprite sprite = Mappers.sprite.get(enemy).sprite;
+        final PositionComponent position = ComponentMapperHelper.position.get(enemy);
+        final Sprite sprite = ComponentMapperHelper.sprite.get(enemy).sprite;
         Tween.to(position, PositionComponentAccessor.POSITION_X, SCREEN_WIDTH / velocity)
                 .ease(Linear.INOUT).targetRelative(directionFactor * SCREEN_WIDTH)
                 .setCallback((i, baseTween) -> {

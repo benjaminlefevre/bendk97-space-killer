@@ -31,6 +31,7 @@ allprojects {
         gms_library_version = '16.0.0'
         mockitoVersion = '2.23.0'
         junitVersion = '4.12'
+        assertJVersion = '3.11.1'
         guavaVersion = '26.0-android'
     }
 
@@ -98,6 +99,7 @@ project(":spaceKiller") {
         implementation "org.mini2Dx:universal-tween-engine:$tweenVersion"
         implementation "com.google.guava:guava:$guavaVersion"
         testImplementation "junit:junit:$junitVersion"
+        testImplementation "org.assertj:assertj-core:$assertJVersion"
         testImplementation "org.mockito:mockito-core:$mockitoVersion"
         testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"

@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.Array;
 import com.bendk97.components.*;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.Level;
 import com.bendk97.timer.PausableTimer;
@@ -307,7 +308,7 @@ public class EnemyEntityFactory {
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
-                Mappers.boss.get(enemy).pleaseFire1 = true;
+                ComponentMapperHelper.boss.get(enemy).pleaseFire1 = true;
             }
         }, 5f);
         return enemy;
@@ -340,13 +341,13 @@ public class EnemyEntityFactory {
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
-                Mappers.boss.get(enemy).pleaseFire1 = true;
+                ComponentMapperHelper.boss.get(enemy).pleaseFire1 = true;
             }
         }, 5f);
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
-                Mappers.boss.get(enemy).pleaseFire2 = true;
+                ComponentMapperHelper.boss.get(enemy).pleaseFire2 = true;
             }
         }, 2f);
 
@@ -387,7 +388,7 @@ public class EnemyEntityFactory {
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
-                Mappers.boss.get(enemy).pleaseFire1 = true;
+                ComponentMapperHelper.boss.get(enemy).pleaseFire1 = true;
             }
         }, 5f);
         enemy.add(entityFactory.engine.createComponent(StateComponent.class));
@@ -476,13 +477,13 @@ public class EnemyEntityFactory {
     }
 
     public void createBossExploding(final Entity enemy) {
-        final SpriteComponent sprite = Mappers.sprite.get(enemy);
+        final SpriteComponent sprite = ComponentMapperHelper.sprite.get(enemy);
         for (int i = 0; i < 50; ++i) {
             PausableTimer.schedule(new PausableTimer.Task() {
                 @Override
                 public void run() {
                     entityFactory.assets.playSound(SOUND_EXPLOSION);
-                    PositionComponent position = Mappers.position.get(enemy);
+                    PositionComponent position = ComponentMapperHelper.position.get(enemy);
                     if (position != null) {
                         createEntityExploding(position.x + random.nextFloat() * sprite.sprite.getWidth(),
                                 position.y + random.nextFloat() * sprite.sprite.getHeight());
@@ -511,7 +512,7 @@ public class EnemyEntityFactory {
         Entity scoreSquadron = entityFactory.engine.createEntity();
         ScoreSquadronComponent score = entityFactory.engine.createComponent(ScoreSquadronComponent.class);
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
-        SquadronComponent squadronComponent = Mappers.squadron.get(squadron);
+        SquadronComponent squadronComponent = ComponentMapperHelper.squadron.get(squadron);
         score.score = squadronComponent.scoreBonus + "";
         position.x = squadronComponent.lastKilledPosition.x;
         position.y = squadronComponent.lastKilledPosition.y;

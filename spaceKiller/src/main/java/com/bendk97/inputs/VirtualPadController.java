@@ -10,8 +10,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.listeners.InputListener;
 import com.bendk97.screens.levels.LevelScreen;
 
@@ -55,9 +55,9 @@ public class VirtualPadController extends com.bendk97.inputs.TouchInputProcessor
     }
 
     private void computeVirtualButtons() {
-        PositionComponent position = Mappers.position.get(player);
-        float playerWidth = Mappers.sprite.get(player).sprite.getWidth();
-        float playerHeight = Mappers.sprite.get(player).sprite.getHeight();
+        PositionComponent position = ComponentMapperHelper.position.get(player);
+        float playerWidth = ComponentMapperHelper.sprite.get(player).sprite.getWidth();
+        float playerHeight = ComponentMapperHelper.sprite.get(player).sprite.getHeight();
 
         squareTouches[0] = new Rectangle(
                 0f,

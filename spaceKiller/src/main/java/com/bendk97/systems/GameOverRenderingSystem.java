@@ -19,8 +19,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.GameOverComponent;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.PlayerComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.*;
@@ -73,9 +73,9 @@ public class GameOverRenderingSystem extends IteratingSystem {
         Gdx.gl.glDisable(GL20.GL_BLEND);
         batcher.begin();
         largeFont.draw(batcher, GAME_OVER, SCREEN_WIDTH / 4f - 10f, SCREEN_HEIGHT - 100f);
-        mediumFont.draw(batcher, SCORE + Mappers.player.get(entity).getScore(), 20f, SCREEN_HEIGHT / 2f + 30f);
-        mediumFont.draw(batcher, HIGHSCORE + Mappers.player.get(entity).getHighScoreFormatted(), 10f, SCREEN_HEIGHT / 2f - 130f);
-        if (Mappers.player.get(entity).numberOfContinue > 0) {
+        mediumFont.draw(batcher, SCORE + ComponentMapperHelper.player.get(entity).getScore(), 20f, SCREEN_HEIGHT / 2f + 30f);
+        mediumFont.draw(batcher, HIGHSCORE + ComponentMapperHelper.player.get(entity).getHighScoreFormatted(), 10f, SCREEN_HEIGHT / 2f - 130f);
+        if (ComponentMapperHelper.player.get(entity).numberOfContinue > 0) {
             extraLife.draw(batcher);
         }
         playAgain.draw(batcher);

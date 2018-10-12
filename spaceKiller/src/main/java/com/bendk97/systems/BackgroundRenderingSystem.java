@@ -11,8 +11,8 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.bendk97.components.BackgroundComponent;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
@@ -23,15 +23,15 @@ public class BackgroundRenderingSystem extends SortedIteratingSystem {
 
     public BackgroundRenderingSystem(SpriteBatch batcher, int priority) {
         super(Family.all(BackgroundComponent.class, PositionComponent.class).get(),
-                (o1, o2) -> Integer.compare(Mappers.background.get(o1).zIndex, Mappers.background.get(o2).zIndex),
+                (o1, o2) -> Integer.compare(ComponentMapperHelper.background.get(o1).zIndex, ComponentMapperHelper.background.get(o2).zIndex),
                 priority);
         this.batcher = batcher;
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        BackgroundComponent backgroundComponent = Mappers.background.get(entity);
-        PositionComponent positionComponent = Mappers.position.get(entity);
+        BackgroundComponent backgroundComponent = ComponentMapperHelper.background.get(entity);
+        PositionComponent positionComponent = ComponentMapperHelper.position.get(entity);
         batcher.draw(backgroundComponent.texture, 0, -20f,
                 (int) positionComponent.x, ((int) positionComponent.y) % (backgroundComponent.texture.getHeight()),
                 (int) (SCREEN_WIDTH), (int) (SCREEN_HEIGHT * 1.05f));

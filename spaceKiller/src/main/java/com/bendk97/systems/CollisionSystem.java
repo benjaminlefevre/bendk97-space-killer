@@ -8,27 +8,17 @@ package com.bendk97.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.bendk97.components.*;
+import com.bendk97.components.SpriteComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
+import com.bendk97.components.helpers.Families;
 import com.bendk97.listeners.CollisionListener;
 import com.bendk97.mask.SpriteMaskFactory;
 
 public class CollisionSystem extends EntitySystem {
-
-    private final Family playerBullet = Family.one(PlayerBulletComponent.class).get();
-    private final Family enemyBullet = Family.one(EnemyBulletComponent.class).get();
-    private final Family shieldUp = Family.one(ShieldUpComponent.class).get();
-    private final Family powerUp = Family.one(PowerUpComponent.class).get();
-    private final Family bombUp = Family.one(BombUpComponent.class).get();
-    private final Family enemyBodies = Family.all(EnemyComponent.class).exclude(GroundEnemyComponent.class).get();
-    private final Family enemies = Family.all(EnemyComponent.class).get();
-    private final Family playerVulnerable = Family.one(PlayerComponent.class).exclude(InvulnerableComponent.class, GameOverComponent.class).get();
-    private final Family player = Family.one(PlayerComponent.class).exclude(GameOverComponent.class).get();
-    private final Family shield = Family.one(ShieldComponent.class).get();
 
 
     private final CollisionListener collisionListener;
@@ -48,31 +38,31 @@ public class CollisionSystem extends EntitySystem {
     }
 
     private void detectCollisionWithPlayer() {
-        for (Entity player : getEngine().getEntitiesFor(player)) {
-            for (Entity bullet : getEngine().getEntitiesFor(playerBullet)) {
-                for (Entity enemy : getEngine().getEntitiesFor(enemies)) {
-                    if (!Mappers.enemy.get(enemy).isDead()
-                            && isCollisionBetween(Mappers.sprite.get(enemy).sprite, Mappers.sprite.get(bullet).sprite)) {
+        for (Entity player : getEngine().getEntitiesFor(Families.player)) {
+            for (Entity bullet : getEngine().getEntitiesFor(Families.playerBullet)) {
+                for (Entity enemy : getEngine().getEntitiesFor(Families.enemies)) {
+                    if (!ComponentMapperHelper.enemy.get(enemy).isDead()
+                            && isCollisionBetween(ComponentMapperHelper.sprite.get(enemy).sprite, ComponentMapperHelper.sprite.get(bullet).sprite)) {
                         collisionListener.enemyShoot(enemy, player, bullet);
                         return;
                     }
                 }
             }
 
-            for (Entity powerUp : getEngine().getEntitiesFor(powerUp)) {
-                if (isCollisionBetween(Mappers.sprite.get(player).sprite, Mappers.sprite.get(powerUp).sprite)) {
+            for (Entity powerUp : getEngine().getEntitiesFor(Families.powerUp)) {
+                if (isCollisionBetween(ComponentMapperHelper.sprite.get(player).sprite, ComponentMapperHelper.sprite.get(powerUp).sprite)) {
                     collisionListener.playerPowerUp(player, powerUp);
                     return;
                 }
             }
-            for (Entity shieldUp : getEngine().getEntitiesFor(shieldUp)) {
-                if (isCollisionBetween(Mappers.sprite.get(player).sprite, Mappers.sprite.get(shieldUp).sprite)) {
+            for (Entity shieldUp : getEngine().getEntitiesFor(Families.shieldUp)) {
+                if (isCollisionBetween(ComponentMapperHelper.sprite.get(player).sprite, ComponentMapperHelper.sprite.get(shieldUp).sprite)) {
                     collisionListener.playerShieldUp(player, shieldUp);
                     return;
                 }
             }
-            for (Entity bombUp : getEngine().getEntitiesFor(bombUp)) {
-                if (isCollisionBetween(Mappers.sprite.get(player).sprite, Mappers.sprite.get(bombUp).sprite)) {
+            for (Entity bombUp : getEngine().getEntitiesFor(Families.bombUp)) {
+                if (isCollisionBetween(ComponentMapperHelper.sprite.get(player).sprite, ComponentMapperHelper.sprite.get(bombUp).sprite)) {
                     collisionListener.playerBombUp(player, bombUp);
                     return;
                 }
@@ -81,17 +71,17 @@ public class CollisionSystem extends EntitySystem {
     }
 
     private void detectCollisionWithPlayerVulnerable() {
-        for (Entity player : getEngine().getEntitiesFor(playerVulnerable)) {
-            for (Entity enemy : getEngine().getEntitiesFor(enemyBodies)) {
-                if (isCollisionBetween(Mappers.sprite.get(enemy).sprite, Mappers.sprite.get(player).sprite)) {
+        for (Entity player : getEngine().getEntitiesFor(Families.playerVulnerable)) {
+            for (Entity enemy : getEngine().getEntitiesFor(Families.enemyBodies)) {
+                if (isCollisionBetween(ComponentMapperHelper.sprite.get(enemy).sprite, ComponentMapperHelper.sprite.get(player).sprite)) {
                     collisionListener.playerHitByEnemyBody(player);
                     return;
                 }
 
             }
-            for (Entity bullet : getEngine().getEntitiesFor(enemyBullet)) {
-                SpriteComponent enemyBullet = Mappers.sprite.get(bullet);
-                if (isCollisionBetween(enemyBullet.sprite, Mappers.sprite.get(player).sprite)) {
+            for (Entity bullet : getEngine().getEntitiesFor(Families.enemyBullet)) {
+                SpriteComponent enemyBullet = ComponentMapperHelper.sprite.get(bullet);
+                if (isCollisionBetween(enemyBullet.sprite, ComponentMapperHelper.sprite.get(player).sprite)) {
                     collisionListener.playerHitByEnemyBullet(player, bullet);
                     return;
                 }
@@ -100,20 +90,20 @@ public class CollisionSystem extends EntitySystem {
     }
 
     private void detectCollisionWithShields() {
-        for (Entity shield : getEngine().getEntitiesFor(shield)) {
-            for (Entity bullet : getEngine().getEntitiesFor(enemyBullet)) {
-                SpriteComponent enemyBullet = Mappers.sprite.get(bullet);
-                if (isCollisionBetween(enemyBullet.sprite, Mappers.sprite.get(shield).sprite)) {
+        for (Entity shield : getEngine().getEntitiesFor(Families.shield)) {
+            for (Entity bullet : getEngine().getEntitiesFor(Families.enemyBullet)) {
+                SpriteComponent enemyBullet = ComponentMapperHelper.sprite.get(bullet);
+                if (isCollisionBetween(enemyBullet.sprite, ComponentMapperHelper.sprite.get(shield).sprite)) {
                     collisionListener.bulletStoppedByShield(bullet);
                     return;
                 }
             }
-            for (Entity enemy : getEngine().getEntitiesFor(enemyBodies)) {
-                if (Mappers.boss.get(enemy) != null || Mappers.enemy.get(enemy).isLaserShip) {
+            for (Entity enemy : getEngine().getEntitiesFor(Families.enemyBodies)) {
+                if (ComponentMapperHelper.boss.get(enemy) != null || ComponentMapperHelper.enemy.get(enemy).isLaserShip) {
                     break;
                 }
-                SpriteComponent enemySprite = Mappers.sprite.get(enemy);
-                if (isCollisionBetween(enemySprite.sprite, Mappers.sprite.get(shield).sprite)) {
+                SpriteComponent enemySprite = ComponentMapperHelper.sprite.get(enemy);
+                if (isCollisionBetween(enemySprite.sprite, ComponentMapperHelper.sprite.get(shield).sprite)) {
                     collisionListener.enemyShootByShield(enemy);
                     return;
                 }

@@ -14,9 +14,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.LevelFinishedComponent;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.PauseComponent;
 import com.bendk97.components.PlayerComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.screens.levels.Level;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
@@ -48,7 +48,7 @@ public class LevelFinishedRenderingSystem extends IteratingSystem {
         mediumFont.draw(batcher,
                 level.equals(Level3) ? LEVEL_3_FINISHED :
                         level.equals(Level2) ? LEVEL_2_FINISHED : LEVEL_1_FINISHED, 10f, 4 * SCREEN_HEIGHT / 5f);
-        PlayerComponent player = Mappers.player.get(entity);
+        PlayerComponent player = ComponentMapperHelper.player.get(entity);
         mediumFont.draw(batcher, ENEMIES_KILLED, 10f, 4 * SCREEN_HEIGHT / 5f - 100f);
         mediumFont.draw(batcher, player.enemiesKilledLevel + " out of " + player.enemiesCountLevel, 40f, 4 * SCREEN_HEIGHT / 5f - 150f);
         if (!level.equals(Level3)) {

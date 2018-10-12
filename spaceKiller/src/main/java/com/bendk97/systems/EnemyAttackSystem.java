@@ -12,6 +12,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.RandomXS128;
 import com.bendk97.components.*;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 
 import java.util.Random;
@@ -37,7 +38,7 @@ public class EnemyAttackSystem extends IteratingSystem {
         if (playerEntity.size() == 0) {
             return;
         }
-        EnemyComponent enemy = Mappers.enemy.get(entity);
+        EnemyComponent enemy = ComponentMapperHelper.enemy.get(entity);
         if (enemy.canAttack() && isVisible(entity) && random.nextInt() % enemy.probabilityAttack == 0) {
             entityFactory.enemyActionEntityFactory.createEnemyFire(entity, playerEntity.first());
             enemy.attackCapacity--;
@@ -45,9 +46,9 @@ public class EnemyAttackSystem extends IteratingSystem {
     }
 
     private boolean isVisible(Entity entity) {
-        PositionComponent position = Mappers.position.get(entity);
-        EnemyComponent enemy = Mappers.enemy.get(entity);
-        SpriteComponent sprite = Mappers.sprite.get(entity);
+        PositionComponent position = ComponentMapperHelper.position.get(entity);
+        EnemyComponent enemy = ComponentMapperHelper.enemy.get(entity);
+        SpriteComponent sprite = ComponentMapperHelper.sprite.get(entity);
         return (position.x >= 0
                 && position.x <= SCREEN_WIDTH - sprite.sprite.getWidth()
                 && position.y <= SCREEN_HEIGHT - sprite.sprite.getHeight()

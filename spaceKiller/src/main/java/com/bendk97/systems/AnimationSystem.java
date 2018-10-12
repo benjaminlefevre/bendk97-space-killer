@@ -12,9 +12,9 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.bendk97.components.AnimationComponent;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.SpriteComponent;
 import com.bendk97.components.StateComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 
 public class AnimationSystem extends IteratingSystem {
 
@@ -24,9 +24,9 @@ public class AnimationSystem extends IteratingSystem {
 
     @Override
     public void processEntity(Entity entity, float deltaTime) {
-        SpriteComponent sprite = Mappers.sprite.get(entity);
-        AnimationComponent anim = Mappers.animation.get(entity);
-        StateComponent state = Mappers.state.get(entity);
+        SpriteComponent sprite = ComponentMapperHelper.sprite.get(entity);
+        AnimationComponent anim = ComponentMapperHelper.animation.get(entity);
+        StateComponent state = ComponentMapperHelper.state.get(entity);
 
         Animation<Sprite> animation = anim.animations.get(state.get());
 

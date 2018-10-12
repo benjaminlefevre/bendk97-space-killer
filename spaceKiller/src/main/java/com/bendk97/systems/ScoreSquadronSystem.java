@@ -13,9 +13,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.bendk97.assets.Assets;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.ScoreSquadronComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 
 public class ScoreSquadronSystem extends IteratingSystem {
 
@@ -30,8 +30,8 @@ public class ScoreSquadronSystem extends IteratingSystem {
 
     @Override
     public void processEntity(final Entity entity, float deltaTime) {
-        ScoreSquadronComponent squadron = Mappers.scoreSquadron.get(entity);
-        PositionComponent position = Mappers.position.get(entity);
+        ScoreSquadronComponent squadron = ComponentMapperHelper.scoreSquadron.get(entity);
+        PositionComponent position = ComponentMapperHelper.position.get(entity);
         font.setColor(Color.YELLOW);
         font.draw(batcher, squadron.score + "", position.x, position.y);
     }

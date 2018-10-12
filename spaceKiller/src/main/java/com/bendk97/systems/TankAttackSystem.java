@@ -11,10 +11,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.PauseComponent;
 import com.bendk97.components.PlayerComponent;
 import com.bendk97.components.TankComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 
 public class TankAttackSystem extends IteratingSystem {
 
@@ -31,7 +31,7 @@ public class TankAttackSystem extends IteratingSystem {
         if (playerEntity.size() == 0) {
             return;
         }
-        final TankComponent tank = Mappers.tank.get(entity);
+        final TankComponent tank = ComponentMapperHelper.tank.get(entity);
         if (tank.nbShootsBeforeLastReload >= tank.nbShoots) {
             if ((TimeUtils.millis() - tank.lastShoot) > tank.delayBetweenBursts) {
                 tank.reRandomCharacteristics();
@@ -40,7 +40,7 @@ public class TankAttackSystem extends IteratingSystem {
         } else if ((TimeUtils.millis() - tank.lastShoot) > tank.delayShoot) {
             tank.lastShoot = TimeUtils.millis();
             tank.nbShootsBeforeLastReload++;
-            Mappers.enemy.get(entity).attackCapacity = 1;
+            ComponentMapperHelper.enemy.get(entity).attackCapacity = 1;
         }
 
     }

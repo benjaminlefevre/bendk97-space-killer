@@ -12,9 +12,9 @@ import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.bendk97.components.GameOverComponent;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.SpriteComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
@@ -24,15 +24,15 @@ public class DynamicEntitiesRenderingSystem extends SortedIteratingSystem {
 
     public DynamicEntitiesRenderingSystem(SpriteBatch batcher, int priority) {
         super(Family.all(SpriteComponent.class, PositionComponent.class).exclude(GameOverComponent.class).get(),
-                (o1, o2) -> Integer.compare(Mappers.sprite.get(o1).zIndex, Mappers.sprite.get(o2).zIndex),
+                (o1, o2) -> Integer.compare(ComponentMapperHelper.sprite.get(o1).zIndex, ComponentMapperHelper.sprite.get(o2).zIndex),
                 priority);
         this.batcher = batcher;
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        PositionComponent position = Mappers.position.get(entity);
-        SpriteComponent spriteComponent = Mappers.sprite.get(entity);
+        PositionComponent position = ComponentMapperHelper.position.get(entity);
+        SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(entity);
         Sprite sprite = spriteComponent.sprite;
         sprite.setPosition(position.x, position.y);
         if((sprite.getX()+sprite.getWidth()<0)
