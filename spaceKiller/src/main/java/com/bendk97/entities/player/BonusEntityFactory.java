@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 import com.bendk97.components.*;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
@@ -44,8 +45,8 @@ public class BonusEntityFactory {
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
         powerUp.add(component);
-        position.x = Mappers.squadron.get(squadron).lastKilledPosition.x;
-        position.y = Mappers.squadron.get(squadron).lastKilledPosition.y;
+        position.x = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.x;
+        position.y = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.y;
         powerUp.add(entityFactory.engine.createComponent(StateComponent.class));
         tweenBonus(powerUp, position, component);
         entityFactory.engine.addEntity(powerUp);
@@ -65,8 +66,8 @@ public class BonusEntityFactory {
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
         shieldUp.add(component);
-        position.x = Mappers.squadron.get(squadron).lastKilledPosition.x;
-        position.y = Mappers.squadron.get(squadron).lastKilledPosition.y;
+        position.x = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.x;
+        position.y = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.y;
         shieldUp.add(entityFactory.engine.createComponent(StateComponent.class));
         tweenBonus(shieldUp, position, component);
         entityFactory.engine.addEntity(shieldUp);
@@ -81,8 +82,8 @@ public class BonusEntityFactory {
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
         component.sprite = new Sprite(entityFactory.atlasMask.findRegion("bombUp"));
         bombUp.add(component);
-        position.x = Mappers.squadron.get(squadron).lastKilledPosition.x;
-        position.y = Mappers.squadron.get(squadron).lastKilledPosition.y;
+        position.x = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.x;
+        position.y = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.y;
         tweenBonus(bombUp, position, component);
         entityFactory.engine.addEntity(bombUp);
     }

@@ -7,7 +7,7 @@
 package com.bendk97.screens.levels.utils;
 
 import com.badlogic.ashley.core.Entity;
-import com.bendk97.components.Mappers;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.enemies.SquadronFactory;
 
 public class ScriptItemExecutor {
@@ -22,8 +22,8 @@ public class ScriptItemExecutor {
 
     public void execute(ScriptItem scriptItem) {
         squadronFactory.createSquadron(scriptItem);
-        if (Mappers.levelFinished.get(player) == null) {
-            Mappers.player.get(player).enemiesCountLevel += scriptItem.number;
+        if (ComponentMapperHelper.levelFinished.get(player) == null) {
+            ComponentMapperHelper.player.get(player).enemiesCountLevel += scriptItem.number;
         }
     }
 }

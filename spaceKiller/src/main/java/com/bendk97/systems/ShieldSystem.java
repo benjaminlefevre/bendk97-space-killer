@@ -9,7 +9,11 @@ package com.bendk97.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.bendk97.components.*;
+import com.bendk97.components.GameOverComponent;
+import com.bendk97.components.PositionComponent;
+import com.bendk97.components.ShieldComponent;
+import com.bendk97.components.SpriteComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 
 public class ShieldSystem extends IteratingSystem {
 
@@ -22,10 +26,10 @@ public class ShieldSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        PositionComponent positionComponent = Mappers.position.get(entity);
-        PositionComponent playerPosition = Mappers.position.get(player);
-        SpriteComponent spriteComponent = Mappers.sprite.get(entity);
-        SpriteComponent playerSprite = Mappers.sprite.get(player);
+        PositionComponent positionComponent = ComponentMapperHelper.position.get(entity);
+        PositionComponent playerPosition = ComponentMapperHelper.position.get(player);
+        SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(entity);
+        SpriteComponent playerSprite = ComponentMapperHelper.sprite.get(player);
         positionComponent.setPosition(playerPosition.x - (spriteComponent.sprite.getWidth() - playerSprite.sprite.getWidth()) / 2f,
                 playerPosition.y - (spriteComponent.sprite.getHeight() - playerSprite.sprite.getHeight()) / 2f);
     }

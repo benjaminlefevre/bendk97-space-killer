@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.bendk97.components.*;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.timer.PausableTimer;
 
@@ -22,8 +23,8 @@ import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP_PINGPONG;
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.SOUND_BOMB_EXPLOSION;
-import static com.bendk97.components.Mappers.position;
-import static com.bendk97.components.Mappers.sprite;
+import static com.bendk97.components.helpers.ComponentMapperHelper.position;
+import static com.bendk97.components.helpers.ComponentMapperHelper.sprite;
 import static com.bendk97.tweens.PositionComponentAccessor.POSITION_XY;
 import static com.bendk97.tweens.PositionComponentAccessor.POSITION_Y;
 
@@ -36,13 +37,13 @@ public class PlayerActionsEntityFactory {
     }
 
     public void createPlayerFire(Entity player) {
-        PlayerComponent playerComponent = Mappers.player.get(player);
+        PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
         SpriteComponent spriteBulletComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         VelocityComponent velocityBulletComponent = entityFactory.engine.createComponent(VelocityComponent.class);
         PositionComponent positionBulletComponent = entityFactory.engine.createComponent(PositionComponent.class);
         Entity bullet = createBullet(playerComponent.powerLevel.bulletRegionName, spriteBulletComponent, velocityBulletComponent, positionBulletComponent);
         PositionComponent playerPosition = position.get(player);
-        positionBulletComponent.x = playerPosition.x + Mappers.sprite.get(player).sprite.getWidth() / 2f - spriteBulletComponent.sprite.getWidth() / 2f;
+        positionBulletComponent.x = playerPosition.x + ComponentMapperHelper.sprite.get(player).sprite.getWidth() / 2f - spriteBulletComponent.sprite.getWidth() / 2f;
         positionBulletComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
         velocityBulletComponent.y = PLAYER_BULLET_VELOCITY;
         if (entityFactory.rayHandler != null) {
@@ -56,7 +57,7 @@ public class PlayerActionsEntityFactory {
     }
 
     private void createPlayerLeftFire(Entity player) {
-        PlayerComponent playerComponent = Mappers.player.get(player);
+        PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
         SpriteComponent spriteBulletComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         VelocityComponent velocityBulletComponent = entityFactory.engine.createComponent(VelocityComponent.class);
         PositionComponent positionBulletComponent = entityFactory.engine.createComponent(PositionComponent.class);
@@ -77,7 +78,7 @@ public class PlayerActionsEntityFactory {
 
 
     private void createPlayerRightFire(Entity player) {
-        PlayerComponent playerComponent = Mappers.player.get(player);
+        PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
         SpriteComponent spriteBulletComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         VelocityComponent velocityBulletComponent = entityFactory.engine.createComponent(VelocityComponent.class);
         PositionComponent positionBulletComponent = entityFactory.engine.createComponent(PositionComponent.class);
@@ -109,8 +110,8 @@ public class PlayerActionsEntityFactory {
         bomb.add(entityFactory.engine.createComponent(StateComponent.class));
         entityFactory.engine.addEntity(bomb);
         PositionComponent playerPosition = position.get(player);
-        positionComponent.x = playerPosition.x + Mappers.sprite.get(player).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
-        positionComponent.y = playerPosition.y + Mappers.sprite.get(player).sprite.getHeight() >= SCREEN_HEIGHT * 3f / 4f ?
+        positionComponent.x = playerPosition.x + ComponentMapperHelper.sprite.get(player).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
+        positionComponent.y = playerPosition.y + ComponentMapperHelper.sprite.get(player).sprite.getHeight() >= SCREEN_HEIGHT * 3f / 4f ?
                 playerPosition.y : playerPosition.y + sprite.get(player).sprite.getHeight();
         Tween.to(positionComponent, POSITION_XY, 0.6f).ease(Linear.INOUT)
                 .target(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f, SCREEN_HEIGHT * 3f / 4f)

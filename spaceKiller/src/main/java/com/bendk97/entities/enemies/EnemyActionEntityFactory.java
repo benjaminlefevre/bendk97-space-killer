@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.bendk97.components.*;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.entities.EntityFactoryIds;
 import com.bendk97.screens.levels.Level;
@@ -21,8 +22,8 @@ import java.util.Random;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 import static com.bendk97.assets.Assets.SOUND_FIRE_ENEMY;
-import static com.bendk97.components.Mappers.position;
-import static com.bendk97.components.Mappers.sprite;
+import static com.bendk97.components.helpers.ComponentMapperHelper.position;
+import static com.bendk97.components.helpers.ComponentMapperHelper.sprite;
 import static com.bendk97.entities.EntityFactoryIds.ENEMY_FIRE_CIRCLE;
 import static com.bendk97.screens.levels.Level.Level1;
 import static com.bendk97.screens.levels.Level.Level3;
@@ -38,7 +39,7 @@ public class EnemyActionEntityFactory {
 
 
     public void createEnemyFire(Entity enemy, Entity player) {
-        switch (Mappers.enemy.get(enemy).attackType) {
+        switch (ComponentMapperHelper.enemy.get(enemy).attackType) {
             case EntityFactoryIds.ENEMY_FIRE_LASER:
                 createEnemyFireLaser(enemy);
                 break;
@@ -50,9 +51,9 @@ public class EnemyActionEntityFactory {
     }
 
     private void createEnemyFireLaser(Entity enemy) {
-        PositionComponent position = Mappers.position.get(enemy);
-        Sprite sprite = Mappers.sprite.get(enemy).sprite;
-        createEnemyFireLaser(position.x + sprite.getWidth() / 2f, position.y, Mappers.enemy.get(enemy).bulletVelocity);
+        PositionComponent position = ComponentMapperHelper.position.get(enemy);
+        Sprite sprite = ComponentMapperHelper.sprite.get(enemy).sprite;
+        createEnemyFireLaser(position.x + sprite.getWidth() / 2f, position.y, ComponentMapperHelper.enemy.get(enemy).bulletVelocity);
     }
 
     private void createEnemyFireLaser(float posX, float posY, float velocity) {
@@ -93,14 +94,14 @@ public class EnemyActionEntityFactory {
         entityFactory.engine.addEntity(bullet);
         PositionComponent playerPosition = position.get(player);
         PositionComponent enemyPosition = position.get(enemy);
-        EnemyComponent enemyComponent = Mappers.enemy.get(enemy);
+        EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(enemy);
         if (enemyComponent.isBoss) {
-            positionComponent.x = enemyPosition.x + Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
+            positionComponent.x = enemyPosition.x + ComponentMapperHelper.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
             positionComponent.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight() * 3f / 4f;
         } else if (enemyComponent.isTank) {
             Sprite tank = sprite.get(enemy).sprite;
             float rotation = tank.getRotation();
-            Vector2 pos = new Vector2(enemyPosition.x + Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f,
+            Vector2 pos = new Vector2(enemyPosition.x + ComponentMapperHelper.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f,
                     enemyPosition.y + 32f);
             Vector2 angle = new Vector2(0, -1);
             angle.rotate(rotation);
@@ -110,7 +111,7 @@ public class EnemyActionEntityFactory {
             positionComponent.x = angle.x;
             positionComponent.y = angle.y;
         } else {
-            positionComponent.x = enemyPosition.x + Mappers.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
+            positionComponent.x = enemyPosition.x + ComponentMapperHelper.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
             positionComponent.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight();
         }
         Vector2 directionBullet = new Vector2(playerPosition.x - positionComponent.x, playerPosition.y - positionComponent.y);
@@ -118,14 +119,14 @@ public class EnemyActionEntityFactory {
         if (!enemyComponent.isTank) {
             directionBullet.rotate(-10 + random.nextFloat() * 20f);
         }
-        directionBullet.scl(Mappers.enemy.get(enemy).bulletVelocity);
+        directionBullet.scl(ComponentMapperHelper.enemy.get(enemy).bulletVelocity);
         velocityComponent.x = directionBullet.x;
         velocityComponent.y = directionBullet.y;
     }
 
     public void createBossFire(final Entity boss, final Entity player) {
         int type = random.nextInt(3);
-        Level level = Mappers.player.get(player).level;
+        Level level = ComponentMapperHelper.player.get(player).level;
         if (type == 0) {
             final int bullets = level.equals(Level3) ? 20 : 10;
             float delay = level.equals(Level3) ? 0.1f : 0.2f;
@@ -138,14 +139,14 @@ public class EnemyActionEntityFactory {
                 }, 0f + delay * i);
             }
         } else if (type == 1 || level.equals(Level1)
-                || Mappers.position.get(boss).x < 0 || Mappers.position.get(boss).x > SCREEN_WIDTH * 3f / 4f) {
+                || ComponentMapperHelper.position.get(boss).x < 0 || ComponentMapperHelper.position.get(boss).x > SCREEN_WIDTH * 3f / 4f) {
             createBossFireCircle(boss, false);
             if (level.equals(Level3)) {
                 createBossFireCircle(boss, true);
             }
         } else {
-            PositionComponent position = Mappers.position.get(boss);
-            BossComponent bossComponent = Mappers.boss.get(boss);
+            PositionComponent position = ComponentMapperHelper.position.get(boss);
+            BossComponent bossComponent = ComponentMapperHelper.boss.get(boss);
             createEnemyFireLaser(position.x + 160f, position.y + 170f, bossComponent.velocityFire2);
             createEnemyFireLaser(position.x + 195f, position.y + 170f, bossComponent.velocityFire2);
             if (level.equals(Level3)) {
@@ -157,8 +158,8 @@ public class EnemyActionEntityFactory {
     }
 
     public void createBossFire2(Entity boss) {
-        PositionComponent position = Mappers.position.get(boss);
-        BossComponent bossComponent = Mappers.boss.get(boss);
+        PositionComponent position = ComponentMapperHelper.position.get(boss);
+        BossComponent bossComponent = ComponentMapperHelper.boss.get(boss);
         createEnemyFireLaser(position.x + 12f, position.y + 186f, bossComponent.velocityFire2);
         createEnemyFireLaser(position.x + 342f, position.y + 186f, bossComponent.velocityFire2);
     }
@@ -184,8 +185,8 @@ public class EnemyActionEntityFactory {
             bullet.add(entityFactory.engine.createComponent(RemovableComponent.class));
 
             PositionComponent enemyPosition = position.get(boss);
-            positionComponent.x = enemyPosition.x + Mappers.sprite.get(boss).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
-            positionComponent.y = enemyPosition.y + Mappers.sprite.get(boss).sprite.getHeight() / 4f;
+            positionComponent.x = enemyPosition.x + ComponentMapperHelper.sprite.get(boss).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
+            positionComponent.y = enemyPosition.y + ComponentMapperHelper.sprite.get(boss).sprite.getHeight() / 4f;
 
             bullets.add(bullet);
             entityFactory.engine.addEntity(bullet);
@@ -195,8 +196,8 @@ public class EnemyActionEntityFactory {
             Vector2 directionBullet = new Vector2(1f, 0f);
             directionBullet.setAngle(rotation);
             rotation -= yUp ? -10f : 10f;
-            directionBullet.scl(Mappers.boss.get(boss).velocityFire1);
-            VelocityComponent velocityComponent = Mappers.velocity.get(bullets.get(i));
+            directionBullet.scl(ComponentMapperHelper.boss.get(boss).velocityFire1);
+            VelocityComponent velocityComponent = ComponentMapperHelper.velocity.get(bullets.get(i));
             velocityComponent.x = directionBullet.x;
             velocityComponent.y = directionBullet.y;
         }

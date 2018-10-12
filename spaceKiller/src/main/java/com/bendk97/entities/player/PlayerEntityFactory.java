@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.SnapshotArray;
 import com.bendk97.Settings;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.components.*;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.Level;
 
@@ -84,16 +85,16 @@ public class PlayerEntityFactory {
         player.add(component);
         player.add(entityFactory.engine.createComponent(StateComponent.class));
         entityFactory.engine.addEntity(player);
-        Mappers.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+        ComponentMapperHelper.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         entityFactory.enemyEntityFactory.setPlayer(player);
         return player;
     }
 
     public void createShield(final Entity player) {
         final Entity shield = entityFactory.engine.createEntity();
-        PositionComponent playerPosition = Mappers.position.get(player);
+        PositionComponent playerPosition = ComponentMapperHelper.position.get(player);
         addInvulnerableComponent(player);
-        SpriteComponent playerSprite = Mappers.sprite.get(player);
+        SpriteComponent playerSprite = ComponentMapperHelper.sprite.get(player);
         SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         spriteComponent.zIndex = 99;
         spriteComponent.sprite = entityFactory.atlasMask.createSprite("shield");
@@ -119,7 +120,7 @@ public class PlayerEntityFactory {
     }
 
     public SnapshotArray<Entity> createEntityPlayerLives(Entity player) {
-        PlayerComponent playerComponent = Mappers.player.get(player);
+        PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
         SnapshotArray<Entity> entities = new SnapshotArray<>(true, playerComponent.lives, Entity.class);
         for (int i = 0; i < playerComponent.lives - 1; ++i) {
             Entity life = entityFactory.engine.createEntity();
@@ -135,7 +136,7 @@ public class PlayerEntityFactory {
     }
 
     public SnapshotArray<Entity> createEntityPlayerBombs(Entity player) {
-        PlayerComponent playerComponent = Mappers.player.get(player);
+        PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
         SnapshotArray<Entity> entities = new SnapshotArray<>(true, playerComponent.bombs, Entity.class);
         for (int i = 0; i < playerComponent.bombs; ++i) {
             Entity bomb = entityFactory.engine.createEntity();
@@ -152,7 +153,7 @@ public class PlayerEntityFactory {
     }
 
     public void addInvulnerableComponent(Entity player) {
-        InvulnerableComponent invulnerableComponent = Mappers.invulnerable.get(player);
+        InvulnerableComponent invulnerableComponent = ComponentMapperHelper.invulnerable.get(player);
         if (invulnerableComponent != null) {
             invulnerableComponent.nbItems++;
         } else {
@@ -161,7 +162,7 @@ public class PlayerEntityFactory {
     }
 
     public void removeInvulnerableComponent(Entity player) {
-        InvulnerableComponent invulnerableComponent = Mappers.invulnerable.get(player);
+        InvulnerableComponent invulnerableComponent = ComponentMapperHelper.invulnerable.get(player);
         invulnerableComponent.nbItems--;
         if (invulnerableComponent.nbItems == 0) {
             player.remove(InvulnerableComponent.class);

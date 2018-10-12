@@ -41,13 +41,6 @@ public class PausableTimer {
     }
 
     /**
-     * Schedules a task to occur once as soon as possible, but not sooner than the start of the next frame.
-     */
-    private Task postTask(Task task) {
-        return scheduleTask(task, 0, 0, 0);
-    }
-
-    /**
      * Schedules a task to occur once after the specified delay.
      */
     private void scheduleTask(Task task, float delaySeconds) {
@@ -175,15 +168,6 @@ public class PausableTimer {
         synchronized (instances) {
             instances.notifyAll();
         }
-    }
-
-    /**
-     * Schedules a task on {@link #instance}.
-     *
-     * @see #postTask(Task)
-     */
-    static public Task post(Task task) {
-        return instance().postTask(task);
     }
 
     /**

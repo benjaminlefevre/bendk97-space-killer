@@ -10,6 +10,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.bendk97.components.*;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
@@ -23,9 +24,9 @@ public class RemovableSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        RemovableComponent removableComponent = Mappers.removable.get(entity);
-        PositionComponent position = Mappers.position.get(entity);
-        SpriteComponent sprite = Mappers.sprite.get(entity);
+        RemovableComponent removableComponent = ComponentMapperHelper.removable.get(entity);
+        PositionComponent position = ComponentMapperHelper.position.get(entity);
+        SpriteComponent sprite = ComponentMapperHelper.sprite.get(entity);
         removableComponent.elapseTime += deltaTime;
         if ((removableComponent.elapseTime >= 2.0f || entity.getComponent(PlayerBulletComponent.class) != null) &&
                 (position.x + sprite.sprite.getWidth() < 0

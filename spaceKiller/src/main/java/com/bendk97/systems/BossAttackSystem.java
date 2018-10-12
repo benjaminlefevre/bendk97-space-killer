@@ -12,9 +12,9 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.RandomXS128;
 import com.bendk97.components.BossComponent;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.PauseComponent;
 import com.bendk97.components.PlayerComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 
 import java.util.Random;
@@ -37,9 +37,9 @@ public class BossAttackSystem extends IteratingSystem {
         if (playerEntity.size() == 0) {
             return;
         }
-        final BossComponent boss = Mappers.boss.get(entity);
+        final BossComponent boss = ComponentMapperHelper.boss.get(entity);
         if (boss.pleaseFire1) {
-            if (Mappers.enemy.get(entity).isDead()) {
+            if (ComponentMapperHelper.enemy.get(entity).isDead()) {
                 return;
             }
             entityFactory.enemyActionEntityFactory.createBossFire(entity, playerEntity.first());
@@ -47,14 +47,14 @@ public class BossAttackSystem extends IteratingSystem {
             com.bendk97.timer.PausableTimer.schedule(new com.bendk97.timer.PausableTimer.Task() {
                 @Override
                 public void run() {
-                    if (Mappers.enemy.get(entity) != null && !Mappers.enemy.get(entity).isDead()) {
+                    if (ComponentMapperHelper.enemy.get(entity) != null && !ComponentMapperHelper.enemy.get(entity).isDead()) {
                         boss.pleaseFire1 = true;
                     }
                 }
             }, boss.minTriggerFire1 + random.nextFloat() * 2f);
         }
-        if (Mappers.boss.get(entity).pleaseFire2) {
-            if (Mappers.enemy.get(entity).isDead()) {
+        if (ComponentMapperHelper.boss.get(entity).pleaseFire2) {
+            if (ComponentMapperHelper.enemy.get(entity).isDead()) {
                 return;
             }
             entityFactory.enemyActionEntityFactory.createBossFire2(entity);
@@ -62,7 +62,7 @@ public class BossAttackSystem extends IteratingSystem {
             com.bendk97.timer.PausableTimer.schedule(new com.bendk97.timer.PausableTimer.Task() {
                 @Override
                 public void run() {
-                    if (!Mappers.enemy.get(entity).isDead()) {
+                    if (!ComponentMapperHelper.enemy.get(entity).isDead()) {
                         boss.pleaseFire2 = true;
                     }
                 }

@@ -12,7 +12,7 @@ import aurelienribon.tweenengine.equations.Quad;
 import com.badlogic.ashley.core.Entity;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.GameOverComponent;
-import com.bendk97.components.Mappers;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
@@ -151,9 +151,9 @@ public final class Level1Script extends LevelScript {
         }
         if (second == 185) {
             playSound(BOSS_ALERT);
-            Tween.to(Mappers.velocity.get(background), VELOCITY_Y, 4).ease(Quad.IN)
+            Tween.to(ComponentMapperHelper.velocity.get(background), VELOCITY_Y, 4).ease(Quad.IN)
                     .target(50f).start(tweenManager);
-            Tween.to(Mappers.velocity.get(background2), VELOCITY_Y, 4).ease(Quad.IN)
+            Tween.to(ComponentMapperHelper.velocity.get(background2), VELOCITY_Y, 4).ease(Quad.IN)
                     .target(20f).start(tweenManager);
             return;
         }

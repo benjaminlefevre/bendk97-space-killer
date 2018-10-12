@@ -11,6 +11,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.bendk97.components.*;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
@@ -25,13 +26,13 @@ public class MovementSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        PositionComponent position = Mappers.position.get(entity);
-        VelocityComponent velocity = Mappers.velocity.get(entity);
+        PositionComponent position = ComponentMapperHelper.position.get(entity);
+        VelocityComponent velocity = ComponentMapperHelper.velocity.get(entity);
         position.x += velocity.x * deltaTime;
         position.y += velocity.y * deltaTime;
-        LightComponent light = Mappers.light.get(entity);
+        LightComponent light = ComponentMapperHelper.light.get(entity);
         if(light!=null){
-            Sprite sprite = Mappers.sprite.get(entity).sprite;
+            Sprite sprite = ComponentMapperHelper.sprite.get(entity).sprite;
             light.light.setPosition(position.x + sprite.getWidth() / 2f,
                     position.y + sprite.getHeight() / 2f);
         }
@@ -40,7 +41,7 @@ public class MovementSystem extends IteratingSystem {
     }
 
     private void playerCannotGetOutBoundaries(Entity entity, PositionComponent position) {
-        SpriteComponent spriteComponent = Mappers.sprite.get(entity);
+        SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(entity);
         if (spriteComponent != null && spriteComponent.stayInBoundaries) {
             if (position.x < 0) {
                 position.x = 0;

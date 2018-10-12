@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
-import com.bendk97.components.Mappers;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SocialScoreScreen;
 
@@ -68,7 +68,7 @@ public class GameOverTouchInputProcessor implements InputProcessor {
             game.currentScreen.dispose();
             game.goToScreen(MenuScreen.class);
         } else if (share.contains(worldTouch.x, worldTouch.y)) {
-            SocialScoreScreen socialScoreScreen = new SocialScoreScreen(assets, game, Mappers.player.get(player).getScoreInt());
+            SocialScoreScreen socialScoreScreen = new SocialScoreScreen(assets, game, ComponentMapperHelper.player.get(player).getScoreInt());
             String filePath = socialScoreScreen.takeScreenshot();
             if (filePath != null) {
                 game.intentShare.shareScore(filePath);

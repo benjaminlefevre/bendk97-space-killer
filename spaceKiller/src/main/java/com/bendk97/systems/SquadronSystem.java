@@ -10,8 +10,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.RandomXS128;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.SquadronComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.listeners.PlayerListener;
 import com.bendk97.screens.levels.Level;
@@ -46,7 +46,7 @@ public class SquadronSystem extends IteratingSystem {
 
     @Override
     public void processEntity(final Entity entity, float deltaTime) {
-        SquadronComponent squadron = Mappers.squadron.get(entity);
+        SquadronComponent squadron = ComponentMapperHelper.squadron.get(entity);
         if (squadron.ships.size == 0) {
             getEngine().removeEntity(entity);
             if (squadron.toShoot == 0) {

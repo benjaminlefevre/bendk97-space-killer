@@ -20,9 +20,9 @@ import com.badlogic.gdx.utils.Pool;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.LightComponent;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.SpriteComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.enemies.EnemyActionEntityFactory;
 import com.bendk97.entities.enemies.EnemyEntityFactory;
 import com.bendk97.entities.player.BonusEntityFactory;
@@ -89,12 +89,12 @@ public class EntityFactory implements Disposable {
 
     public void createLight(Entity entity) {
         createLight(entity, new Color(0.5f, 0f, 0f, 0.3f),
-                Mappers.sprite.get(entity).sprite.getHeight() * 20f);
+                ComponentMapperHelper.sprite.get(entity).sprite.getHeight() * 20f);
     }
 
     public void createLight(Entity entity, Color color, float distance) {
-        SpriteComponent sprite = Mappers.sprite.get(entity);
-        PositionComponent position = Mappers.position.get(entity);
+        SpriteComponent sprite = ComponentMapperHelper.sprite.get(entity);
+        PositionComponent position = ComponentMapperHelper.position.get(entity);
         LightComponent lightComponent = engine.createComponent(LightComponent.class);
         PointLight light = lightPool.obtain();
         light.setActive(true);

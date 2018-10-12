@@ -9,8 +9,8 @@ package com.bendk97.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.StateComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 
 public class StateSystem extends IteratingSystem {
 
@@ -20,6 +20,6 @@ public class StateSystem extends IteratingSystem {
 
     @Override
     public void processEntity(Entity entity, float deltaTime) {
-        Mappers.state.get(entity).time += deltaTime;
+        ComponentMapperHelper.state.get(entity).time += deltaTime;
     }
 }

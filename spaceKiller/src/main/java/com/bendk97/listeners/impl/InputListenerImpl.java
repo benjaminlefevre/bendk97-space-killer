@@ -13,8 +13,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.GameOverComponent;
-import com.bendk97.components.Mappers;
 import com.bendk97.components.PlayerComponent;
+import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.listeners.PlayerListener;
 
@@ -58,14 +58,14 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
     @Override
     public void fire() {
         if (playerFamily.matches(player)) {
-            PlayerComponent playerComponent = Mappers.player.get(player);
+            PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
             if (TimeUtils.timeSinceMillis(lastShoot) > playerComponent.fireDelay) {
                 assets.playSound(Assets.SOUND_FIRE, 0.5f);
                 entityFactory.playerActionsEntityFactory.createPlayerFire(player);
                 lastShoot = TimeUtils.millis();
             }
             if (playerComponent.powerLevel.compareTo(PlayerComponent.PowerLevel.TRIPLE_SIDE) >= 0
-                    && TimeUtils.timeSinceMillis(lastShootSide) > Mappers.player.get(player).fireDelaySide) {
+                    && TimeUtils.timeSinceMillis(lastShootSide) > ComponentMapperHelper.player.get(player).fireDelaySide) {
                 entityFactory.playerActionsEntityFactory.createPlayerFireSide(player);
                 lastShootSide = TimeUtils.millis();
             }
@@ -74,7 +74,7 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
 
     @Override
     public void dropBomb() {
-        PlayerComponent playerComponent = Mappers.player.get(player);
+        PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
         if (playerFamily.matches(player) && playerComponent.hasBombs()) {
             assets.playSound(Assets.SOUND_BOMB_DROP);
             playerComponent.useBomb();
@@ -85,71 +85,71 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
 
     @Override
     public void goLeft() {
-        Mappers.velocity.get(player).x = -PLAYER_VELOCITY;
-        Mappers.state.get(player).set(GO_LEFT);
+        ComponentMapperHelper.velocity.get(player).x = -PLAYER_VELOCITY;
+        ComponentMapperHelper.state.get(player).set(GO_LEFT);
     }
 
     @Override
     public void goRight() {
-        Mappers.velocity.get(player).x = PLAYER_VELOCITY;
-        Mappers.state.get(player).set(GO_RIGHT);
+        ComponentMapperHelper.velocity.get(player).x = PLAYER_VELOCITY;
+        ComponentMapperHelper.state.get(player).set(GO_RIGHT);
     }
 
     @Override
     public void goTop() {
-        Mappers.velocity.get(player).x = 0;
-        Mappers.velocity.get(player).y = PLAYER_VELOCITY;
-        Mappers.state.get(player).set(ANIMATION_MAIN);
+        ComponentMapperHelper.velocity.get(player).x = 0;
+        ComponentMapperHelper.velocity.get(player).y = PLAYER_VELOCITY;
+        ComponentMapperHelper.state.get(player).set(ANIMATION_MAIN);
     }
 
     @Override
     public void goDown() {
-        Mappers.velocity.get(player).x = 0;
-        Mappers.velocity.get(player).y = -PLAYER_VELOCITY;
-        Mappers.state.get(player).set(ANIMATION_MAIN);
+        ComponentMapperHelper.velocity.get(player).x = 0;
+        ComponentMapperHelper.velocity.get(player).y = -PLAYER_VELOCITY;
+        ComponentMapperHelper.state.get(player).set(ANIMATION_MAIN);
     }
 
     @Override
     public void goLeftTop() {
         Vector2 vector2 = new Vector2(-1f, 1f);
         vector2.nor();
-        Mappers.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
-        Mappers.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
-        Mappers.state.get(player).set(GO_LEFT);
+        ComponentMapperHelper.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
+        ComponentMapperHelper.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
+        ComponentMapperHelper.state.get(player).set(GO_LEFT);
     }
 
     @Override
     public void goLeftDown() {
         Vector2 vector2 = new Vector2(-1f, -1f);
         vector2.nor();
-        Mappers.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
-        Mappers.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
-        Mappers.state.get(player).set(GO_LEFT);
+        ComponentMapperHelper.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
+        ComponentMapperHelper.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
+        ComponentMapperHelper.state.get(player).set(GO_LEFT);
     }
 
     @Override
     public void goRightTop() {
         Vector2 vector2 = new Vector2(1f, 1f);
         vector2.nor();
-        Mappers.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
-        Mappers.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
-        Mappers.state.get(player).set(GO_RIGHT);
+        ComponentMapperHelper.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
+        ComponentMapperHelper.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
+        ComponentMapperHelper.state.get(player).set(GO_RIGHT);
     }
 
     @Override
     public void goRightBottom() {
         Vector2 vector2 = new Vector2(1f, -1f);
         vector2.nor();
-        Mappers.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
-        Mappers.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
-        Mappers.state.get(player).set(GO_RIGHT);
+        ComponentMapperHelper.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
+        ComponentMapperHelper.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
+        ComponentMapperHelper.state.get(player).set(GO_RIGHT);
     }
 
     @Override
     public void stop() {
-        Mappers.velocity.get(player).x = 0;
-        Mappers.velocity.get(player).y = 0;
-        Mappers.state.get(player).set(ANIMATION_MAIN);
+        ComponentMapperHelper.velocity.get(player).x = 0;
+        ComponentMapperHelper.velocity.get(player).y = 0;
+        ComponentMapperHelper.state.get(player).set(ANIMATION_MAIN);
     }
 
 }
