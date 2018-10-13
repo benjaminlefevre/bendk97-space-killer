@@ -16,8 +16,6 @@ public class EnemyCharacteristics {
     public String atlasName;
     public int points;
 
-    public EnemyCharacteristics() {}
-
     public EnemyCharacteristics setCanAttack(boolean canAttack) {
         this.canAttack = canAttack;
         return this;
