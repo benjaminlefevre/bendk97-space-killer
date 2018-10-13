@@ -165,15 +165,14 @@ public class EnemyEntityFactory {
         return entities;
     }
 
-    private Entity createEnemy(Entity squadron, boolean canAttack, int rateShoot, float velocityBullet, String atlasName, int points,
-                               int strength, float frameDuration, Animation.PlayMode animationType, int attackCapacity) {
+    private Entity createEnemy(Entity squadron, EnemyCharacteristics characteristics, float frameDuration, Animation.PlayMode animationType) {
         Entity enemy = entityFactory.engine.createEntity();
         EnemyComponent enemyComponent = entityFactory.engine.createComponent(EnemyComponent.class);
-        enemyComponent.points = points;
-        enemyComponent.initLifeGauge(strength);
-        enemyComponent.probabilityAttack = rateShoot;
-        enemyComponent.bulletVelocity = velocityBullet;
-        enemyComponent.attackCapacity = canAttack ? attackCapacity : 0;
+        enemyComponent.points = characteristics.points;
+        enemyComponent.initLifeGauge(characteristics.strength);
+        enemyComponent.probabilityAttack = characteristics.rateShoot;
+        enemyComponent.bulletVelocity = characteristics.velocityBullet;
+        enemyComponent.attackCapacity = characteristics.canAttack ? characteristics.attackCapacity : 0;
         if (squadron != null) {
             enemyComponent.squadron = squadron;
         }
@@ -181,7 +180,7 @@ public class EnemyEntityFactory {
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
         enemy.add(position);
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = entityFactory.atlasMask.createSprites(atlasName);
+        Array<Sprite> sprites = entityFactory.atlasMask.createSprites(characteristics.atlasName);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(frameDuration, sprites, animationType));
         enemy.add(animationComponent);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
@@ -193,7 +192,16 @@ public class EnemyEntityFactory {
     }
 
     public Entity createEnemySoucoupe(Entity squadron, boolean canAttack, float velocityBullet) {
-        return createEnemy(squadron, canAttack, STANDARD_RATE_SHOOT, velocityBullet, "soucoupe", 100, 1, FRAME_DURATION, LOOP, 1);
+        EnemyCharacteristics characteristics = new EnemyCharacteristics()
+                .setAtlasName("soucoupe")
+                .setCanAttack(canAttack)
+                .setRateShoot(STANDARD_RATE_SHOOT)
+                .setVelocityBullet(velocityBullet)
+                .setPoints(100)
+                .setStrength(1)
+                .setAttackCapacity(1);
+
+        return createEnemy(squadron, characteristics, FRAME_DURATION, LOOP);
     }
 
 
@@ -280,7 +288,15 @@ public class EnemyEntityFactory {
                 points = 200;
                 break;
         }
-        return createEnemy(squadron, canAttack, rateShoot, velocityBullet, atlasRegion, points, strength, frameDuration, playMode, attackCapacity);
+        EnemyCharacteristics characteristics = new EnemyCharacteristics()
+                .setAtlasName(atlasRegion)
+                .setCanAttack(canAttack)
+                .setRateShoot(rateShoot)
+                .setVelocityBullet(velocityBullet)
+                .setPoints(points)
+                .setStrength(strength)
+                .setAttackCapacity(attackCapacity);
+        return createEnemy(squadron, characteristics, frameDuration, playMode);
     }
 
 
