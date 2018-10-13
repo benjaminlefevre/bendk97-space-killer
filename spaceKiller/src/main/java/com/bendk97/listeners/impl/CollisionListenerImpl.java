@@ -83,23 +83,27 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         enemyComponent.hit(bullet != null ? 1 : HIT_EXPLOSION);
 
         if (enemyComponent.isDead()) {
-            if (ComponentMapperHelper.levelFinished.get(player) == null) {
-                ComponentMapperHelper.player.get(player).enemyKilled();
-            }
-            if (enemyComponent.isLaserShip) {
-                screenShake.shake(20, 0.5f, false);
-                ComponentMapperHelper.player.get(player).laserShipKilled++;
-            }
-            if (enemyComponent.isTank) {
-                screenShake.shake(20, 0.5f, false);
-            }
-            screen.checkAchievements(player);
-            tweenManager.killTarget(ComponentMapperHelper.position.get(enemy));
-            if (enemyComponent.belongsToSquadron()) {
-                ComponentMapperHelper.squadron.get(enemyComponent.squadron).removeEntity(enemy);
-            }
-            getEngine().removeEntity(enemy);
+            enemyIsDead(enemy, player, enemyComponent);
         }
+    }
+
+    private void enemyIsDead(Entity enemy, Entity player, EnemyComponent enemyComponent) {
+        if (ComponentMapperHelper.levelFinished.get(player) == null) {
+            ComponentMapperHelper.player.get(player).enemyKilled();
+        }
+        if (enemyComponent.isLaserShip) {
+            screenShake.shake(20, 0.5f, false);
+            ComponentMapperHelper.player.get(player).laserShipKilled++;
+        }
+        if (enemyComponent.isTank) {
+            screenShake.shake(20, 0.5f, false);
+        }
+        screen.checkAchievements(player);
+        tweenManager.killTarget(ComponentMapperHelper.position.get(enemy));
+        if (enemyComponent.belongsToSquadron()) {
+            ComponentMapperHelper.squadron.get(enemyComponent.squadron).removeEntity(enemy);
+        }
+        getEngine().removeEntity(enemy);
     }
 
     private void bossIsShoot(Entity enemy, Entity player, Entity bullet) {
@@ -137,19 +141,20 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         }
 
         if (enemyComponent.isDead()) {
-            if (ComponentMapperHelper.levelFinished.get(player) == null) {
-                ComponentMapperHelper.player.get(player).enemyKilled();
-            }
-            screen.checkAchievements(player);
-            tweenManager.killTarget(ComponentMapperHelper.position.get(enemy));
-            ComponentMapperHelper.squadron.get(enemyComponent.squadron).removeEntity(enemy);
-            SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(enemy);
-            bossIdDead(enemy, player, spriteComponent);
+            bossIdDead(enemy, player, enemyComponent);
         }
     }
 
-    private void bossIdDead(Entity enemy, Entity player, SpriteComponent spriteComponent) {
+    private void bossIdDead(Entity enemy, Entity player, EnemyComponent enemyComponent) {
         assets.playSound(Assets.SOUND_BOSS_FINISHED);
+        if (ComponentMapperHelper.levelFinished.get(player) == null) {
+            ComponentMapperHelper.player.get(player).enemyKilled();
+        }
+        screen.checkAchievements(player);
+        tweenManager.killTarget(ComponentMapperHelper.position.get(enemy));
+        ComponentMapperHelper.squadron.get(enemyComponent.squadron).removeEntity(enemy);
+        SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(enemy);
+
         entityFactory.enemyEntityFactory.createBossExploding(enemy);
         screenShake.shake(20, 2f, true);
         entityFactory.playerEntityFactory.addInvulnerableComponent(player);
