@@ -161,13 +161,13 @@ public class PlayerActionsEntityFactory {
         }, 0.6f);
     }
 
-    private Entity createBullet(String bulletSpriteName, SpriteComponent spritebulletComponent, VelocityComponent velocityBulletComponent, PositionComponent positionBulletComponent) {
+    private Entity createBullet(String bulletSpriteName, SpriteComponent spriteBulletComponent, VelocityComponent velocityBulletComponent, PositionComponent positionBulletComponent) {
         Entity bullet = entityFactory.engine.createEntity();
         bullet.add(entityFactory.engine.createComponent(PlayerBulletComponent.class));
         bullet.add(positionBulletComponent);
         bullet.add(velocityBulletComponent);
-        spritebulletComponent.sprite = new Sprite(entityFactory.atlasMask.findRegion(bulletSpriteName));
-        bullet.add(spritebulletComponent);
+        spriteBulletComponent.sprite = new Sprite(entityFactory.atlasMask.findRegion(bulletSpriteName));
+        bullet.add(spriteBulletComponent);
         bullet.add(entityFactory.engine.createComponent(RemovableComponent.class));
         entityFactory.engine.addEntity(bullet);
         return bullet;

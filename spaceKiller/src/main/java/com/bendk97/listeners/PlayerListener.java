@@ -17,5 +17,5 @@ public interface PlayerListener {
 
     void newBombObtained(Entity player);
 
-    void dropBomb();
+    void dropBomb(Entity player);
 }

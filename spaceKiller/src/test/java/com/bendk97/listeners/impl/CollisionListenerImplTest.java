@@ -65,7 +65,7 @@ public class CollisionListenerImplTest {
     @InjectMocks
     private CollisionListenerImpl collisionListener;
 
-    private Engine engine = new Engine();
+    private final Engine engine = new Engine();
 
     @Before
     public void initMocks() {
