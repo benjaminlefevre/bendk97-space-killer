@@ -61,21 +61,65 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         }
         // create explosion
         assets.playSound(Assets.SOUND_EXPLOSION);
-        PositionComponent explodePosition;
-        if (enemyComponent.isBoss && bullet != null) {
-            explodePosition = ComponentMapperHelper.position.get(bullet);
 
+        if (enemyComponent.isBoss) {
+            bossIsShoot(enemy, player, bullet);
+        } else {
+            enemyIsShoot(enemy, player, bullet);
+
+        }
+    }
+
+    private void enemyIsShoot(Entity enemy, Entity player, Entity bullet) {
+        EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(enemy);
+        PositionComponent explodePosition = ComponentMapperHelper.position.get(enemy);
+        entityFactory.enemyEntityFactory.createEntityExploding(explodePosition.x, explodePosition.y);
+        if (bullet != null) {
+            getEngine().removeEntity(bullet);
+        }
+        // update score
+        int nbHits = bullet != null ? 1 : HIT_EXPLOSION;
+        playerListener.updateScore(player, enemy, nbHits);
+        enemyComponent.hit(bullet != null ? 1 : HIT_EXPLOSION);
+
+        if (enemyComponent.isDead()) {
+            enemyIsDead(enemy, player, enemyComponent);
+        }
+    }
+
+    private void enemyIsDead(Entity enemy, Entity player, EnemyComponent enemyComponent) {
+        if (ComponentMapperHelper.levelFinished.get(player) == null) {
+            ComponentMapperHelper.player.get(player).enemyKilled();
+        }
+        if (enemyComponent.isLaserShip) {
+            screenShake.shake(20, 0.5f, false);
+            ComponentMapperHelper.player.get(player).laserShipKilled++;
+        }
+        if (enemyComponent.isTank) {
+            screenShake.shake(20, 0.5f, false);
+        }
+        screen.checkAchievements(player);
+        tweenManager.killTarget(ComponentMapperHelper.position.get(enemy));
+        if (enemyComponent.belongsToSquadron()) {
+            ComponentMapperHelper.squadron.get(enemyComponent.squadron).removeEntity(enemy);
+        }
+        getEngine().removeEntity(enemy);
+    }
+
+    private void bossIsShoot(Entity enemy, Entity player, Entity bullet) {
+        PositionComponent explodePosition;
+        EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(enemy);
+        if (bullet != null) {
+            explodePosition = ComponentMapperHelper.position.get(bullet);
         } else {
             explodePosition = ComponentMapperHelper.position.get(enemy);
         }
         Entity explosion = entityFactory.enemyEntityFactory.createEntityExploding(explodePosition.x, explodePosition.y);
-        if (enemyComponent.isBoss) {
-            if (bullet != null) {
-                ComponentMapperHelper.position.get(explosion).x -= ComponentMapperHelper.sprite.get(explosion).sprite.getWidth() / 2f;
-            } else {
-                ComponentMapperHelper.position.get(explosion).x += ComponentMapperHelper.sprite.get(enemy).sprite.getWidth() / 2f;
-                ComponentMapperHelper.position.get(explosion).y += ComponentMapperHelper.sprite.get(enemy).sprite.getHeight() / 2f;
-            }
+        if (bullet != null) {
+            ComponentMapperHelper.position.get(explosion).x -= ComponentMapperHelper.sprite.get(explosion).sprite.getWidth() / 2f;
+        } else {
+            ComponentMapperHelper.position.get(explosion).x += ComponentMapperHelper.sprite.get(enemy).sprite.getWidth() / 2f;
+            ComponentMapperHelper.position.get(explosion).y += ComponentMapperHelper.sprite.get(enemy).sprite.getHeight() / 2f;
         }
         if (bullet != null) {
             getEngine().removeEntity(bullet);
@@ -83,11 +127,19 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         // update score
         int nbHits = bullet != null ? 1 : HIT_EXPLOSION;
         playerListener.updateScore(player, enemy, nbHits);
+        checkBossHealth(enemy, bullet, enemyComponent);
+
+        if (enemyComponent.isDead()) {
+            bossIdDead(enemy, player, enemyComponent);
+        }
+    }
+
+    private void checkBossHealth(Entity enemy, Entity bullet, EnemyComponent enemyComponent) {
         // check health of enemy
         float percentLifeBefore = enemyComponent.getRemainingLifeInPercent();
         enemyComponent.hit(bullet != null ? 1 : HIT_EXPLOSION);
         float percentLifeAfter = enemyComponent.getRemainingLifeInPercent();
-        if (enemyComponent.isBoss && percentLifeBefore >= 0.25 && percentLifeAfter < 0.25) {
+        if (percentLifeBefore >= 0.25 && percentLifeAfter < 0.25) {
             AnimationComponent animationComponent = ComponentMapperHelper.animation.get(enemy);
             if (animationComponent != null) {
                 animationComponent.tintRed(ANIMATION_MAIN, 0.99f);
@@ -95,66 +147,58 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
                 ComponentMapperHelper.sprite.get(enemy).tintRed(0.99f);
             }
         }
+    }
 
-        if (enemyComponent.isDead()) {
-            if (ComponentMapperHelper.levelFinished.get(player) == null) {
-                ComponentMapperHelper.player.get(player).enemyKilled();
-            }
-            if (enemyComponent.isLaserShip) {
-                screenShake.shake(20, 0.5f, false);
-                ComponentMapperHelper.player.get(player).laserShipKilled++;
-            }
-            if (enemyComponent.isTank) {
-                screenShake.shake(20, 0.5f, false);
-            }
-            screen.checkAchievements(player);
-            tweenManager.killTarget(ComponentMapperHelper.position.get(enemy));
-            if (enemyComponent.belongsToSquadron()) {
-                ComponentMapperHelper.squadron.get(enemyComponent.squadron).removeEntity(enemy);
-            }
-            SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(enemy);
-            if (ComponentMapperHelper.boss.get(enemy) != null) {
-                assets.playSound(Assets.SOUND_BOSS_FINISHED);
-                entityFactory.enemyEntityFactory.createBossExploding(enemy);
-                screenShake.shake(20, 2f, true);
-                entityFactory.playerEntityFactory.addInvulnerableComponent(player);
-                Timeline.createSequence()
-                        .push(Tween.to(ComponentMapperHelper.sprite.get(player), SpriteComponentAccessor.ALPHA, 0.2f).target(0f))
-                        .push(Tween.to(ComponentMapperHelper.sprite.get(player), SpriteComponentAccessor.ALPHA, 0.2f).target(1f))
-                        .repeat(Tween.INFINITY, 0f)
-                        .start(tweenManager);
-                Timeline.createSequence()
-                        .beginParallel()
-                        .push(Tween.to(ComponentMapperHelper.position.get(enemy), PositionComponentAccessor.POSITION_XY, 5f).ease(Linear.INOUT)
-                                .target(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f,
-                                        SCREEN_HEIGHT - spriteComponent.sprite.getHeight() - 20f))
+    private void bossIdDead(Entity enemy, Entity player, EnemyComponent enemyComponent) {
+        assets.playSound(Assets.SOUND_BOSS_FINISHED);
+        if (ComponentMapperHelper.levelFinished.get(player) == null) {
+            ComponentMapperHelper.player.get(player).enemyKilled();
+        }
+        screen.checkAchievements(player);
+        tweenManager.killTarget(ComponentMapperHelper.position.get(enemy));
+        ComponentMapperHelper.squadron.get(enemyComponent.squadron).removeEntity(enemy);
+        SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(enemy);
 
-                        .push(Tween.to(ComponentMapperHelper.sprite.get(enemy), SpriteComponentAccessor.ALPHA, 0.2f).ease(Linear.INOUT)
-                                .target(0.2f).repeatYoyo(25, 0f))
-                        .end()
-                        .setCallback((i, baseTween) -> {
-                            if (i == TweenCallback.COMPLETE) {
-                                getEngine().removeEntity(enemy);
-                            }
+        entityFactory.enemyEntityFactory.createBossExploding(enemy);
+        screenShake.shake(20, 2f, true);
+        entityFactory.playerEntityFactory.addInvulnerableComponent(player);
+        tweenBossDeath(enemy, player, spriteComponent);
+    }
+
+    private void tweenBossDeath(Entity enemy, Entity player, SpriteComponent spriteComponent) {
+        Timeline.createSequence()
+                .push(Tween.to(ComponentMapperHelper.sprite.get(player), SpriteComponentAccessor.ALPHA, 0.2f).target(0f))
+                .push(Tween.to(ComponentMapperHelper.sprite.get(player), SpriteComponentAccessor.ALPHA, 0.2f).target(1f))
+                .repeat(Tween.INFINITY, 0f)
+                .start(tweenManager);
+        Timeline.createSequence()
+                .beginParallel()
+                .push(Tween.to(ComponentMapperHelper.position.get(enemy), PositionComponentAccessor.POSITION_XY, 5f).ease(Linear.INOUT)
+                        .target(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f,
+                                SCREEN_HEIGHT - spriteComponent.sprite.getHeight() - 20f))
+
+                .push(Tween.to(ComponentMapperHelper.sprite.get(enemy), SpriteComponentAccessor.ALPHA, 0.2f).ease(Linear.INOUT)
+                        .target(0.2f).repeatYoyo(25, 0f))
+                .end()
+                .setCallback((i, baseTween) -> {
+                    if (i == TweenCallback.COMPLETE) {
+                        getEngine().removeEntity(enemy);
+                    }
+                    PausableTimer.schedule(new PausableTimer.Task() {
+                        @Override
+                        public void run() {
+                            player.add(getEngine().createComponent(LevelFinishedComponent.class));
                             PausableTimer.schedule(new PausableTimer.Task() {
                                 @Override
                                 public void run() {
-                                    player.add(getEngine().createComponent(LevelFinishedComponent.class));
-                                    PausableTimer.schedule(new PausableTimer.Task() {
-                                        @Override
-                                        public void run() {
-                                            player.remove(LevelFinishedComponent.class);
-                                            screen.nextLevel();
-                                        }
-                                    }, 5f);
+                                    player.remove(LevelFinishedComponent.class);
+                                    screen.nextLevel();
                                 }
-                            }, 2f);
-                        })
-                        .start(tweenManager);
-            } else {
-                getEngine().removeEntity(enemy);
-            }
-        }
+                            }, 5f);
+                        }
+                    }, 2f);
+                })
+                .start(tweenManager);
     }
 
     @Override

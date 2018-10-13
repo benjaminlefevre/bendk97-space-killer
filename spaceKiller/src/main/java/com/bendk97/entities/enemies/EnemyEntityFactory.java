@@ -165,15 +165,14 @@ public class EnemyEntityFactory {
         return entities;
     }
 
-    private Entity createEnemy(Entity squadron, boolean canAttack, int rateShoot, float velocityBullet, String atlasName, int points,
-                               int strength, float frameDuration, Animation.PlayMode animationType, int attackCapacity) {
+    private Entity createEnemy(Entity squadron, EnemyCharacteristics characteristics, float frameDuration, Animation.PlayMode animationType) {
         Entity enemy = entityFactory.engine.createEntity();
         EnemyComponent enemyComponent = entityFactory.engine.createComponent(EnemyComponent.class);
-        enemyComponent.points = points;
-        enemyComponent.initLifeGauge(strength);
-        enemyComponent.probabilityAttack = rateShoot;
-        enemyComponent.bulletVelocity = velocityBullet;
-        enemyComponent.attackCapacity = canAttack ? attackCapacity : 0;
+        enemyComponent.points = characteristics.points;
+        enemyComponent.initLifeGauge(characteristics.strength);
+        enemyComponent.probabilityAttack = characteristics.rateShoot;
+        enemyComponent.bulletVelocity = characteristics.velocityBullet;
+        enemyComponent.attackCapacity = characteristics.canAttack ? characteristics.attackCapacity : 0;
         if (squadron != null) {
             enemyComponent.squadron = squadron;
         }
@@ -181,7 +180,7 @@ public class EnemyEntityFactory {
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
         enemy.add(position);
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = entityFactory.atlasMask.createSprites(atlasName);
+        Array<Sprite> sprites = entityFactory.atlasMask.createSprites(characteristics.atlasName);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(frameDuration, sprites, animationType));
         enemy.add(animationComponent);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
@@ -193,7 +192,16 @@ public class EnemyEntityFactory {
     }
 
     public Entity createEnemySoucoupe(Entity squadron, boolean canAttack, float velocityBullet) {
-        return createEnemy(squadron, canAttack, STANDARD_RATE_SHOOT, velocityBullet, "soucoupe", 100, 1, FRAME_DURATION, LOOP, 1);
+        EnemyCharacteristics characteristics = new EnemyCharacteristics()
+                .setAtlasName("soucoupe")
+                .setCanAttack(canAttack)
+                .setRateShoot(STANDARD_RATE_SHOOT)
+                .setVelocityBullet(velocityBullet)
+                .setPoints(100)
+                .setStrength(1)
+                .setAttackCapacity(1);
+
+        return createEnemy(squadron, characteristics, FRAME_DURATION, LOOP);
     }
 
 
@@ -280,15 +288,23 @@ public class EnemyEntityFactory {
                 points = 200;
                 break;
         }
-        return createEnemy(squadron, canAttack, rateShoot, velocityBullet, atlasRegion, points, strength, frameDuration, playMode, attackCapacity);
+        EnemyCharacteristics characteristics = new EnemyCharacteristics()
+                .setAtlasName(atlasRegion)
+                .setCanAttack(canAttack)
+                .setRateShoot(rateShoot)
+                .setVelocityBullet(velocityBullet)
+                .setPoints(points)
+                .setStrength(strength)
+                .setAttackCapacity(attackCapacity);
+        return createEnemy(squadron, characteristics, frameDuration, playMode);
     }
 
 
     public Entity createBoss(Entity squadron, float velocityBullet, float velocityCircle) {
-        final Entity enemy = entityFactory.engine.createEntity();
+        final Entity boss = entityFactory.engine.createEntity();
         BossComponent bossComponent = entityFactory.engine.createComponent(BossComponent.class);
         bossComponent.velocityFire1 = velocityCircle;
-        enemy.add(bossComponent);
+        boss.add(bossComponent);
         EnemyComponent enemyComponent = entityFactory.engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
         enemyComponent.isBoss = true;
@@ -298,30 +314,30 @@ public class EnemyEntityFactory {
         if (squadron != null) {
             enemyComponent.squadron = squadron;
         }
-        enemy.add(enemyComponent);
+        boss.add(enemyComponent);
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
-        enemy.add(position);
+        boss.add(position);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
         component.sprite = entityFactory.atlasMask.createSprite("boss-level1");
-        enemy.add(component);
-        entityFactory.engine.addEntity(enemy);
+        boss.add(component);
+        entityFactory.engine.addEntity(boss);
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
-                ComponentMapperHelper.boss.get(enemy).pleaseFire1 = true;
+                ComponentMapperHelper.boss.get(boss).pleaseFire1 = true;
             }
         }, 5f);
-        return enemy;
+        return boss;
     }
 
     public Entity createBoss2(Entity squadron, float velocityBullet, float velocityFireCircle, float velocityBullet2) {
-        final Entity enemy = entityFactory.engine.createEntity();
-        BossComponent boss = entityFactory.engine.createComponent(BossComponent.class);
-        enemy.add(boss);
-        boss.minTriggerFire1 = 4;
-        boss.minTriggerFire2 = 7;
-        boss.velocityFire1 = velocityFireCircle;
-        boss.velocityFire2 = velocityBullet2;
+        final Entity boss = entityFactory.engine.createEntity();
+        BossComponent bossComponent = entityFactory.engine.createComponent(BossComponent.class);
+        boss.add(bossComponent);
+        bossComponent.minTriggerFire1 = 4;
+        bossComponent.minTriggerFire2 = 7;
+        bossComponent.velocityFire1 = velocityFireCircle;
+        bossComponent.velocityFire2 = velocityBullet2;
         EnemyComponent enemyComponent = entityFactory.engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
         enemyComponent.isBoss = true;
@@ -331,37 +347,37 @@ public class EnemyEntityFactory {
         if (squadron != null) {
             enemyComponent.squadron = squadron;
         }
-        enemy.add(enemyComponent);
+        boss.add(enemyComponent);
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
-        enemy.add(position);
+        boss.add(position);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
         component.sprite = entityFactory.atlasMask.createSprite("boss");
-        enemy.add(component);
-        entityFactory.engine.addEntity(enemy);
+        boss.add(component);
+        entityFactory.engine.addEntity(boss);
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
-                ComponentMapperHelper.boss.get(enemy).pleaseFire1 = true;
+                ComponentMapperHelper.boss.get(boss).pleaseFire1 = true;
             }
         }, 5f);
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
-                ComponentMapperHelper.boss.get(enemy).pleaseFire2 = true;
+                ComponentMapperHelper.boss.get(boss).pleaseFire2 = true;
             }
         }, 2f);
 
-        return enemy;
+        return boss;
     }
 
     public Entity createBoss3(Entity squadron, float velocityBullet, float velocityBulletFireCircle, float velocityBullet2) {
-        final Entity enemy = entityFactory.engine.createEntity();
-        BossComponent boss = entityFactory.engine.createComponent(BossComponent.class);
-        enemy.add(boss);
-        boss.minTriggerFire1 = 3;
-        boss.minTriggerFire2 = 7;
-        boss.velocityFire1 = velocityBulletFireCircle;
-        boss.velocityFire2 = velocityBullet2;
+        final Entity boss = entityFactory.engine.createEntity();
+        BossComponent bossComponent = entityFactory.engine.createComponent(BossComponent.class);
+        boss.add(bossComponent);
+        bossComponent.minTriggerFire1 = 3;
+        bossComponent.minTriggerFire2 = 7;
+        bossComponent.velocityFire1 = velocityBulletFireCircle;
+        bossComponent.velocityFire2 = velocityBullet2;
         EnemyComponent enemyComponent = entityFactory.engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
         enemyComponent.isBoss = true;
@@ -371,28 +387,28 @@ public class EnemyEntityFactory {
         if (squadron != null) {
             enemyComponent.squadron = squadron;
         }
-        enemy.add(enemyComponent);
+        boss.add(enemyComponent);
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
-        enemy.add(position);
+        boss.add(position);
 
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = entityFactory.atlasMask.createSprites("boss3");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(0.075f, (Sprite[]) sprites.toArray(Sprite.class)));
         animationComponent.animations.get(ANIMATION_MAIN).setPlayMode(LOOP_PINGPONG);
-        enemy.add(animationComponent);
+        boss.add(animationComponent);
 
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
-        enemy.add(component);
-        entityFactory.engine.addEntity(enemy);
+        boss.add(component);
+        entityFactory.engine.addEntity(boss);
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
             public void run() {
-                ComponentMapperHelper.boss.get(enemy).pleaseFire1 = true;
+                ComponentMapperHelper.boss.get(boss).pleaseFire1 = true;
             }
         }, 5f);
-        enemy.add(entityFactory.engine.createComponent(StateComponent.class));
-        return enemy;
+        boss.add(entityFactory.engine.createComponent(StateComponent.class));
+        return boss;
     }
 
 
