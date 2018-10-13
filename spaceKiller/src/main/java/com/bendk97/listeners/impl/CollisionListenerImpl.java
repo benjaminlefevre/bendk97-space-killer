@@ -127,6 +127,14 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         // update score
         int nbHits = bullet != null ? 1 : HIT_EXPLOSION;
         playerListener.updateScore(player, enemy, nbHits);
+        checkBossHealth(enemy, bullet, enemyComponent);
+
+        if (enemyComponent.isDead()) {
+            bossIdDead(enemy, player, enemyComponent);
+        }
+    }
+
+    private void checkBossHealth(Entity enemy, Entity bullet, EnemyComponent enemyComponent) {
         // check health of enemy
         float percentLifeBefore = enemyComponent.getRemainingLifeInPercent();
         enemyComponent.hit(bullet != null ? 1 : HIT_EXPLOSION);
@@ -138,10 +146,6 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
             } else {
                 ComponentMapperHelper.sprite.get(enemy).tintRed(0.99f);
             }
-        }
-
-        if (enemyComponent.isDead()) {
-            bossIdDead(enemy, player, enemyComponent);
         }
     }
 
@@ -158,6 +162,10 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         entityFactory.enemyEntityFactory.createBossExploding(enemy);
         screenShake.shake(20, 2f, true);
         entityFactory.playerEntityFactory.addInvulnerableComponent(player);
+        tweenBossDeath(enemy, player, spriteComponent);
+    }
+
+    private void tweenBossDeath(Entity enemy, Entity player, SpriteComponent spriteComponent) {
         Timeline.createSequence()
                 .push(Tween.to(ComponentMapperHelper.sprite.get(player), SpriteComponentAccessor.ALPHA, 0.2f).target(0f))
                 .push(Tween.to(ComponentMapperHelper.sprite.get(player), SpriteComponentAccessor.ALPHA, 0.2f).target(1f))
