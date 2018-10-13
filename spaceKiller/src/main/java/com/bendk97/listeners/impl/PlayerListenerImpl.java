@@ -11,12 +11,12 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.bendk97.Settings;
-import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.EnemyComponent;
 import com.bendk97.components.GameOverComponent;
 import com.bendk97.components.PlayerComponent;
 import com.bendk97.components.helpers.ComponentMapperHelper;
+import com.bendk97.components.helpers.Families;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.listeners.PlayerListener;
 import com.bendk97.screens.levels.LevelScreen;
@@ -28,20 +28,18 @@ import static com.bendk97.SpaceKillerGameConstants.PLAYER_ORIGIN_Y;
 import static com.bendk97.assets.Assets.*;
 
 
-public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
+public final class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     private final EntityFactory entityFactory;
-    private SnapshotArray<Entity> lives;
-    private SnapshotArray<Entity> bombs;
+    protected SnapshotArray<Entity> lives;
+    protected SnapshotArray<Entity> bombs;
     private final Assets assets;
     private final LevelScreen screen;
-    private final SpaceKillerGame game;
     private final ScreenShake screenShake;
 
 
-    public PlayerListenerImpl(SpaceKillerGame game, Assets asset, EntityFactory entityFactory, SnapshotArray<Entity> lives,
+    public PlayerListenerImpl(Assets asset, EntityFactory entityFactory, SnapshotArray<Entity> lives,
                               SnapshotArray<Entity> bombs, ScreenShake screenShake, LevelScreen screen) {
         this.entityFactory = entityFactory;
-        this.game = game;
         this.lives = lives;
         this.bombs = bombs;
         this.assets = asset;
@@ -50,8 +48,15 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     }
 
     @Override
-    public void dropBomb() {
-        getEngine().removeEntity(bombs.removeIndex(bombs.size - 1));
+    public void dropBomb(Entity player) {
+        PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
+        if (Families.player.matches(player) && playerComponent.hasBombs()) {
+            assets.playSound(SOUND_BOMB_DROP);
+            playerComponent.useBomb();
+            entityFactory.playerActionsEntityFactory.createPlayerBomb(player);
+            getEngine().removeEntity(bombs.removeIndex(bombs.size - 1));
+
+        }
     }
 
     @Override
@@ -77,6 +82,8 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
             getEngine().removeEntity(bombsArray[i]);
         }
         this.bombs.end();
+        ComponentMapperHelper.player.get(player).newCredit();
+
         this.lives = entityFactory.playerEntityFactory.createEntityPlayerLives(player);
         this.bombs = entityFactory.playerEntityFactory.createEntityPlayerBombs(player);
     }
@@ -88,7 +95,7 @@ public class PlayerListenerImpl extends EntitySystem implements PlayerListener {
         screenShake.shake(20, 0.5f, true);
         if (playerComponent.isGameOver()) {
             assets.playSound(SOUND_GAME_OVER);
-            ComponentMapperHelper.player.get(player).secondScript = ((LevelScreen) game.currentScreen).getCurrentTimeScript();
+            ComponentMapperHelper.player.get(player).secondScript = screen.getCurrentTimeScript();
             player.add(getEngine().createComponent(GameOverComponent.class));
             Settings.addScore(playerComponent.getScoreInt());
             screen.submitScore(playerComponent.getScoreInt());

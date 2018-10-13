@@ -28,11 +28,11 @@ public class FamiliesTest {
         Entity entity2 = createEntity(engine, SpriteComponent.class);
         Entity entity3 = createEntity(engine,PositionComponent.class, SpriteComponent.class, PlayerBulletComponent.class);
 
-        ImmutableArray<Entity> playerBulletEntitites = engine.getEntitiesFor(Families.playerBullet);
+        ImmutableArray<Entity> playerBulletEntities = engine.getEntitiesFor(Families.playerBullet);
 
-        assertThat(playerBulletEntitites).hasSize(2);
-        assertThat(playerBulletEntitites).containsExactlyInAnyOrder(entity1, entity3);
-        assertThat(playerBulletEntitites).doesNotContain(entity2);
+        assertThat(playerBulletEntities).hasSize(2);
+        assertThat(playerBulletEntities).containsExactlyInAnyOrder(entity1, entity3);
+        assertThat(playerBulletEntities).doesNotContain(entity2);
     }
 
 

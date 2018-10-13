@@ -104,8 +104,11 @@ public class PlayerComponent implements Component, Pool.Poolable {
         return String.format("%7s", String.valueOf(high_score)).replace(' ', '0');
     }
 
-    public void resetScore() {
+    public void newCredit() {
+        lives = LIVES;
+        bombs = BOMBS;
         this.score = 0;
+        numberOfContinue--;
     }
 
     public boolean updateScore(int points) {

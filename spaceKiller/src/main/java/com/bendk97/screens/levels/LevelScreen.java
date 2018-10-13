@@ -194,11 +194,7 @@ public final class LevelScreen extends ScreenAdapter {
         player.remove(GameOverComponent.class);
         this.time = playerComponent.secondScript;
         this.levelScript.initSpawns();
-        playerComponent.lives = LIVES;
-        playerComponent.bombs = BOMBS;
-        playerComponent.resetScore();
         playerListener.updateLivesAndBombsAfterContinue(player);
-        playerComponent.numberOfContinue--;
         ComponentMapperHelper.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         ComponentMapperHelper.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         Gdx.input.setInputProcessor(inputProcessor);
@@ -241,7 +237,7 @@ public final class LevelScreen extends ScreenAdapter {
 
     protected void createSystems(Entity player, SnapshotArray<Entity> lives, SnapshotArray<Entity> bombs, SpriteBatch batcher,
                                  ScreenShake screenShake) {
-        playerListener = new PlayerListenerImpl(game, assets, entityFactory, lives, bombs, screenShake, this);
+        playerListener = new PlayerListenerImpl(assets, entityFactory, lives, bombs, screenShake, this);
         engine.addSystem(playerListener);
         engine.addSystem(createInputHandlerSystem(player, playerListener));
         CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, screenShake, assets, entityFactory, playerListener, this);
