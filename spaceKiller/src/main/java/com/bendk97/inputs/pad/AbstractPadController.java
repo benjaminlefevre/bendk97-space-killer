@@ -1,29 +1,27 @@
-    /*
+/*
  * Developed by Benjamin Lefèvre
- * Last modified 29/09/18 21:09
+ * Last modified 10/10/18 09:05
  * Copyright (c) 2018. All rights reserved.
  */
+package com.bendk97.inputs.pad;
 
-package com.bendk97.inputs;
-
-    import com.badlogic.gdx.Input;
-    import com.badlogic.gdx.InputAdapter;
-    import com.badlogic.gdx.graphics.Camera;
-    import com.badlogic.gdx.math.Rectangle;
-    import com.badlogic.gdx.math.Vector3;
-    import com.bendk97.listeners.InputListener;
-    import com.bendk97.screens.levels.LevelScreen;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
+import com.bendk97.listeners.InputListener;
+import com.bendk97.screens.levels.LevelScreen;
 
 
-    abstract class TouchInputProcessor extends InputAdapter {
-    final InputListener listener;
-
-    final Camera camera;
-    Rectangle[] squareTouches;
-    final Rectangle bombButton;
+abstract class AbstractPadController extends InputAdapter {
+    protected final InputListener listener;
+    protected final Camera camera;
+    protected Rectangle[] squareTouches;
+    protected final Rectangle bombButton;
     private final LevelScreen screen;
 
-    TouchInputProcessor(LevelScreen screen, InputListener inputListener, Camera camera, Rectangle bombButton) {
+    AbstractPadController(LevelScreen screen, InputListener inputListener, Camera camera, Rectangle bombButton) {
         this.listener = inputListener;
         this.screen = screen;
         this.camera = camera;
@@ -32,14 +30,14 @@ package com.bendk97.inputs;
 
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode == Input.Keys.BACK){
+        if (keycode == Input.Keys.BACK) {
             screen.pause();
             return true;
         }
         return false;
     }
 
-    void moveShip(Vector3 worldTouch) {
+    protected void moveShip(Vector3 worldTouch) {
         if (squareTouches[0].contains(worldTouch.x, worldTouch.y)) {
             listener.goLeftTop();
         } else if (squareTouches[1].contains(worldTouch.x, worldTouch.y)) {
