@@ -1,10 +1,10 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 29/09/18 21:09
+ * Last modified 13/10/18 23:32
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97.inputs;
+package com.bendk97.inputs.pad;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.bendk97.listeners.InputListener;
 import com.bendk97.screens.levels.LevelScreen;
 
-public class RetroPadController extends com.bendk97.inputs.TouchInputProcessor {
+public class RetroPadController extends AbstractPadController {
 
     private final Rectangle fireButton;
 
@@ -29,7 +29,7 @@ public class RetroPadController extends com.bendk97.inputs.TouchInputProcessor {
         touchDragged(screenX, screenY, pointer);
         if (fireButton.contains(worldTouch.x, worldTouch.y)) {
             listener.fire();
-        }else if(bombButton.contains(worldTouch.x, worldTouch.y)){
+        } else if (bombButton.contains(worldTouch.x, worldTouch.y)) {
             listener.dropBomb();
         }
         return true;

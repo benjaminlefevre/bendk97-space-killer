@@ -7,7 +7,7 @@
 package com.bendk97.inputs;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -16,7 +16,7 @@ import com.bendk97.screens.levels.LevelScreen;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 
 
-public class PauseInputProcessor implements InputProcessor {
+public class PauseInputProcessor extends InputAdapter {
 
     private final Camera camera;
     private final LevelScreen screen;
@@ -34,15 +34,6 @@ public class PauseInputProcessor implements InputProcessor {
     public boolean keyDown(int keycode) {
         return keycode == Input.Keys.BACK;
     }
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -54,25 +45,4 @@ public class PauseInputProcessor implements InputProcessor {
         }
         return true;
     }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
-
 }

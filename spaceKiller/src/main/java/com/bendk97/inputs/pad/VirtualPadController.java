@@ -1,10 +1,10 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 29/09/18 21:09
+ * Last modified 13/10/18 23:32
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97.inputs;
+package com.bendk97.inputs.pad;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Camera;
@@ -18,7 +18,7 @@ import com.bendk97.screens.levels.LevelScreen;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
-public class VirtualPadController extends com.bendk97.inputs.TouchInputProcessor {
+public class VirtualPadController extends AbstractPadController {
 
     private final Entity player;
 
