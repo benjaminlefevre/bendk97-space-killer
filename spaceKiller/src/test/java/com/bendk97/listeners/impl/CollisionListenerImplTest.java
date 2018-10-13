@@ -131,6 +131,7 @@ public class CollisionListenerImplTest {
         Entity player = createEntity(engine, PlayerComponent.class);
         Entity bullet = createEntity(engine, PlayerBulletComponent.class, PositionComponent.class);
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(enemy);
+        enemyComponent.squadron = createEntity(engine, SquadronComponent.class);
         enemyComponent.isBoss = true;
         enemyComponent.initLifeGauge(1);
         ComponentMapperHelper.sprite.get(enemy).sprite = new Sprite();
