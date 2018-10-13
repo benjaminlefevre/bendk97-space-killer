@@ -9,9 +9,9 @@ jdk:
 
 android:
   components:
-    - tools
+    - tools-26.1.1
+    - build-tools-28.0.3
     - android-28
-    - build-tools-28.0.2
     - extra-android-support
 licenses:
     - 'android-sdk-license-.+'
@@ -24,7 +24,7 @@ after_success:
   - ./gradlew spaceKiller:jacocoTestReport spaceKiller:coveralls
 
 script:
-  ./gradlew clean build --stacktrace
+  ./gradlew clean assembleRelease check
 
 # Cache gradle dependencies (should be faster to download them from cache)
 cache:
@@ -32,3 +32,4 @@ cache:
   - $HOME/.gradle/wrapper
   - $HOME/.gradle/caches
   - $HOME/.gradle/caches/modules-2/files-2.1
+  - $HOME/.android/build-cache
