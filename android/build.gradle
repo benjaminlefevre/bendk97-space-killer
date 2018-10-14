@@ -1,3 +1,17 @@
+// Create a variable called keystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+// Initialize a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+
+// Load your keystore.properties file into the keystoreProperties object.
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+} else {
+    keystoreProperties['storeFile']='fake'
+}
+
 android {
     buildToolsVersion "28.0.3"
     compileSdkVersion 28
@@ -27,6 +41,16 @@ android {
         versionName project.property('space.killer.version')
         resConfigs "xhdpi"
     }
+    signingConfigs {
+        releaseSigned {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            if (file(keystoreProperties['storeFile']).exists()) {
+                storeFile file(keystoreProperties['storeFile'])
+            }
+            storePassword keystoreProperties['storePassword']
+        }
+    }
     buildTypes {
         debug {
             applicationIdSuffix ".demo"
@@ -35,6 +59,12 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles 'proguard-rules.pro', getDefaultProguardFile('proguard-android-optimize.txt')
+        }
+        releaseSigned {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles 'proguard-rules.pro', getDefaultProguardFile('proguard-android-optimize.txt')
+            signingConfig signingConfigs.releaseSigned
         }
     }
     splits {
@@ -56,7 +86,7 @@ android {
     }
 
     // Map for the version code that gives each ABI a value.
-    def abiCodes = ['x86':1, 'x86_64':2, 'armeabi-v7a':4, 'arm64-v8a':5, 'armeabi':3]
+    def abiCodes = ['x86': 1, 'x86_64': 2, 'armeabi-v7a': 4, 'arm64-v8a': 5, 'armeabi': 3]
 
     // APKs for the same app that all have the same version information.
     android.applicationVariants.all { variant ->
