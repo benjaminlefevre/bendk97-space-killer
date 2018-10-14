@@ -9,7 +9,7 @@ package com.bendk97;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.bendk97.assets.Assets;
 import com.bendk97.google.PlayServices;
 import com.bendk97.player.PlayerData;
@@ -33,13 +33,11 @@ public class SpaceKillerGame extends Game {
     public Screen currentScreen;
     public PlayerData playerData;
     public final IntentShare intentShare;
-    public final String gameVersion;
     public boolean signInFailed = false;
 
 
-    public SpaceKillerGame(PlayServices playServices, IntentShare intentShare, String version) {
+    public SpaceKillerGame(PlayServices playServices, IntentShare intentShare) {
         this.playServices = playServices;
-        this.gameVersion = version;
         this.intentShare = intentShare;
     }
 
@@ -92,14 +90,12 @@ public class SpaceKillerGame extends Game {
         goToLevelScreen(level, null, null);
     }
 
-    public void goToLevelScreen(Level level, PlayerData playerData, FrameBuffer screenshot) {
+    public void goToLevelScreen(Level level, PlayerData playerData, Sprite previousScreenSprite) {
         try {
-            assets.loadResources(level);
             this.playerData = playerData;
-            //noinspection JavaReflectionMemberAccess
             currentScreen = new LevelScreen(assets, this, level);
-            if (screenshot != null) {
-                this.setScreen(new TransitionScreen(screenshot, currentScreen, this));
+            if (previousScreenSprite != null) {
+                this.setScreen(new TransitionScreen(previousScreenSprite, (LevelScreen) currentScreen, this));
             } else {
                 this.setScreen(currentScreen);
             }

@@ -70,7 +70,7 @@ public final class LevelScreen extends ScreenAdapter {
     private Music music = null;
     private final LevelScript levelScript;
     private final Viewport viewport;
-    private final SpriteBatch batcher;
+    public final SpriteBatch batcher;
     private final Viewport viewportHUD;
     private final OrthographicCamera cameraHUD;
     private final SpriteBatch batcherHUD;
@@ -99,6 +99,7 @@ public final class LevelScreen extends ScreenAdapter {
     }
 
     public LevelScreen(final Assets assets, final SpaceKillerGame game, final Level level) {
+        assets.loadResources(level);
         PausableTimer.instance().stop();
         PausableTimer.instance().start();
         this.level = level;
@@ -159,13 +160,9 @@ public final class LevelScreen extends ScreenAdapter {
 
     public void nextLevel() {
         PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
-        FrameBuffer screenshot = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-        screenshot.begin();
-        this.render(Gdx.graphics.getDeltaTime());
-        screenshot.end();
         playerComponent.level = nextLevelAfter(playerComponent.level);
         PlayerData playerData = playerComponent.copyPlayerData();
-        this.dispose();
+        Sprite screenshot = this.takeScreenshot(Gdx.graphics.getDeltaTime(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         switch (level) {
             case Level2:
                 game.playServices.unlockAchievement(KILL_BOSS_2);
@@ -329,6 +326,20 @@ public final class LevelScreen extends ScreenAdapter {
         }
     }
 
+
+    public Sprite takeScreenshot(float delta, int width, int height) {
+        FrameBuffer buffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
+        buffer.begin();
+        this.resize(width, height);
+        Gdx.gl.glClearColor(1f, 1f, 1f, 1f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        engine.update(delta);
+        buffer.end();
+        Sprite sprite = new Sprite(buffer.getColorBufferTexture());
+        sprite.flip(false, true);
+        return sprite;
+    }
+
     private void updateScriptLevel(float delta) {
         int timeBefore = (int) Math.floor(time);
         time += delta;
@@ -409,5 +420,9 @@ public final class LevelScreen extends ScreenAdapter {
         } else if (playerComponent.laserShipKilled == 5) {
             game.playServices.unlockAchievement(KILL_5_LASER_SHIPS);
         }
+    }
+
+    public Level getLevel() {
+        return level;
     }
 }

@@ -9,7 +9,7 @@ def keystoreProperties = new Properties()
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 } else {
-    keystoreProperties['storeFile']='fake'
+    keystoreProperties['storeFile'] = 'fake'
 }
 
 android {
@@ -53,17 +53,29 @@ android {
     }
     buildTypes {
         debug {
-            applicationIdSuffix ".demo"
+            applicationIdSuffix ".debug"
+            buildConfigField "boolean", "SPLASH_SCREEN_SKIP", project.property('space.killer.debug.mode.when.debug.build') as String
+            buildConfigField "boolean", "GOOGLE_PLAY_SKIP", project.property('space.killer.debug.mode.when.debug.build') as String
+            buildConfigField "boolean", "DEBUG_GAME", project.property('space.killer.debug.mode.when.debug.build') as String
         }
         release {
+            buildConfigField "boolean", "SPLASH_SCREEN_SKIP", "false"
+            buildConfigField "boolean", "GOOGLE_PLAY_SKIP", "false"
+            buildConfigField "boolean", "DEBUG_GAME", "false"
             minifyEnabled true
             shrinkResources true
             proguardFiles 'proguard-rules.pro', getDefaultProguardFile('proguard-android-optimize.txt')
+
         }
-        releaseSigned {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles 'proguard-rules.pro', getDefaultProguardFile('proguard-android-optimize.txt')
+    }
+    flavorDimensions "prod"
+    productFlavors {
+        unsigned {
+            dimension "prod"
+            applicationIdSuffix ".unsigned"
+        }
+        signed {
+            dimension "prod"
             signingConfig signingConfigs.releaseSigned
         }
     }
@@ -85,10 +97,10 @@ android {
         }
     }
 
-    // Map for the version code that gives each ABI a value.
+// Map for the version code that gives each ABI a value.
     def abiCodes = ['x86': 1, 'x86_64': 2, 'armeabi-v7a': 4, 'arm64-v8a': 5, 'armeabi': 3]
 
-    // APKs for the same app that all have the same version information.
+// APKs for the same app that all have the same version information.
     android.applicationVariants.all { variant ->
         // Assigns a different version code for each output APK.
         variant.outputs.each {
