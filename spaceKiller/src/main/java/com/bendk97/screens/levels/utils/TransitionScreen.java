@@ -10,24 +10,19 @@ import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.bendk97.SpaceKillerGame;
+import com.bendk97.screens.levels.LevelScreen;
 import com.bendk97.tweens.SpriteTween;
 
 public class TransitionScreen extends ScreenAdapter {
-    private final static float screenWidth = Gdx.graphics.getWidth();
-    private final static float screenHeight = Gdx.graphics.getHeight();
+    private final static int screenWidth = Gdx.graphics.getWidth();
+    private final static int screenHeight = Gdx.graphics.getHeight();
 
     private final SpaceKillerGame game;
-    private final Screen next;
-
-    private final FrameBuffer currentBuffer;
-    private FrameBuffer nextBuffer;
+    private final LevelScreen nextScreen;
 
     private SpriteBatch spriteBatch;
     private TweenManager manager;
@@ -38,13 +33,11 @@ public class TransitionScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         spriteBatch.dispose();
-        currentBuffer.dispose();
-        nextBuffer.dispose();
     }
 
-    public TransitionScreen(FrameBuffer current, Screen next, SpaceKillerGame game) {
-        this.currentBuffer = current;
-        this.next = next;
+    public TransitionScreen(Sprite currentScreenSprite, LevelScreen nextScreen, SpaceKillerGame game) {
+        this.currentScreenSprite = currentScreenSprite;
+        this.nextScreen = nextScreen;
         this.game = game;
     }
 
@@ -66,22 +59,15 @@ public class TransitionScreen extends ScreenAdapter {
 
         TweenCallback backgroundAnimationTweenComplete = (type, source) -> {
             dispose();
-            game.setScreen(next);
+            game.setScreen(nextScreen);
         };
 
-        nextBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, (int) screenWidth, (int) screenHeight, false);
-        nextBuffer.begin();
-        next.resize((int) screenWidth, (int) screenHeight);
-        next.render(Gdx.graphics.getDeltaTime());
-        nextBuffer.end();
-        nextScreenSprite = new Sprite(nextBuffer.getColorBufferTexture());
+        nextScreenSprite = nextScreen.takeScreenshot(Gdx.graphics.getDeltaTime(), screenWidth, screenHeight);
         nextScreenSprite.setPosition(screenWidth, 0);
-        nextScreenSprite.flip(false, true);
 
-        currentScreenSprite = new Sprite(currentBuffer.getColorBufferTexture());
         currentScreenSprite.setPosition(0, 0);
-        currentScreenSprite.flip(false, true);
-        Tween.to(nextScreenSprite, SpriteTween.POS_XY, 1.0f)
+
+        Tween.to(nextScreenSprite, SpriteTween.POS_XY, 1.5f)
                 .target(0, 0)
                 .setCallback(backgroundAnimationTweenComplete)
                 .setCallbackTriggers(TweenCallback.COMPLETE)

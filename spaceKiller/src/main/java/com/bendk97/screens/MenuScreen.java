@@ -66,7 +66,7 @@ public class MenuScreen extends HDScreen {
 
     public MenuScreen(final Assets assets, final SpaceKillerGame game) {
         super(game, assets);
-        this.gameVersion = game.gameVersion;
+        this.gameVersion = VERSION;
         if (!NO_GOOGLE && !game.signInFailed && !game.playServices.isSignedIn()) {
             game.playServices.signIn();
         }

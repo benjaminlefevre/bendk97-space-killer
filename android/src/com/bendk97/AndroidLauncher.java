@@ -23,7 +23,6 @@ import com.bendk97.space.killer.BuildConfig;
 import com.bendk97.space.killer.R;
 import com.google.android.gms.games.Games;
 
-import static com.bendk97.SpaceKillerGameConstants.DEBUG;
 
 
 public class AndroidLauncher extends AndroidApplication implements PlayServices, IntentShare {
@@ -53,7 +52,11 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
         config.useAccelerometer = false;
         config.useCompass = false;
         config.useWakelock = true;
-        game = new SpaceKillerGame(this, this, BuildConfig.VERSION_NAME);
+        SpaceKillerGameConstants.DEBUG = BuildConfig.DEBUG_GAME;
+        SpaceKillerGameConstants.NO_GOOGLE = BuildConfig.GOOGLE_PLAY_SKIP;
+        SpaceKillerGameConstants.VERSION = BuildConfig.VERSION_NAME;
+        SpaceKillerGameConstants.SKIP_SPLASH = BuildConfig.SPLASH_SCREEN_SKIP;
+        game = new SpaceKillerGame(this, this);
         initialize(game, config);
     }
 
@@ -105,14 +108,9 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
     @Override
     public void signIn() {
         try {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    gameHelper.beginUserInitiatedSignIn();
-                }
-            });
+            runOnUiThread(() -> gameHelper.beginUserInitiatedSignIn());
         } catch (Exception e) {
-            if (DEBUG) {
+            if (SpaceKillerGameConstants.DEBUG) {
                 Gdx.app.log("MainActivity", "Log in failed: " + e.getMessage() + ".");
             }
         }
@@ -121,14 +119,9 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
     @Override
     public void signOut() {
         try {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    gameHelper.signOut();
-                }
-            });
+            runOnUiThread(() -> gameHelper.signOut());
         } catch (Exception e) {
-            if (DEBUG) {
+            if (SpaceKillerGameConstants.DEBUG) {
                 Gdx.app.log("MainActivity", "Log out failed: " + e.getMessage() + ".");
             }
         }

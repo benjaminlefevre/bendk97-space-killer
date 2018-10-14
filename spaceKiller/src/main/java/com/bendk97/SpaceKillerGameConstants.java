@@ -10,9 +10,10 @@ public class SpaceKillerGameConstants {
     // general settings
     public final static float SCREEN_WIDTH = 400;
     public final static float SCREEN_HEIGHT = 700;
-    public final static boolean DEBUG = false;
-    public final static boolean NO_GOOGLE = false;
-    public final static boolean SKIP_SPLASH = false;
+    public static boolean DEBUG = false;
+    public static boolean NO_GOOGLE = false;
+    public static boolean SKIP_SPLASH = false;
+    public static String VERSION = "x.y.z";
     // player
     public final static int LIVES = 4;
     public final static int NUMBER_OF_CONTINUE = 2;

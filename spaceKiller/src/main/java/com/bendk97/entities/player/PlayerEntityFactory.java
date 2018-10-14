@@ -144,7 +144,7 @@ public class PlayerEntityFactory {
             Sprite sprite = entityFactory.atlasNoMask.createSprite("bomb", 1);
             component.zIndex = 100;
             component.setTexture(sprite, 1f, 0f, 1f);
-            component.setPosition(BOMB_STOCK_X - 22f * i, BOMB_STOCK_Y);
+            component.setPosition(BOMB_STOCK_X - (22f * (i % 4)), BOMB_STOCK_Y + (22f * (float) Math.floor(i/4d)));
             bomb.add(component);
             entityFactory.engine.addEntity(bomb);
             entities.add(bomb);

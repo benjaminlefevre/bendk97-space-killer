@@ -24,7 +24,7 @@ after_success:
   - ./gradlew spaceKiller:jacocoTestReport spaceKiller:coveralls
 
 script:
-  ./gradlew clean assembleRelease check
+  ./gradlew clean assembleUnsignedRelease check
 
 # Cache gradle dependencies (should be faster to download them from cache)
 cache:
