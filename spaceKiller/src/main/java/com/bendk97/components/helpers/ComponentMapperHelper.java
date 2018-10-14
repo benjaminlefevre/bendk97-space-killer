@@ -27,4 +27,5 @@ public class ComponentMapperHelper {
     public static final ComponentMapper<InvulnerableComponent> invulnerable = ComponentMapper.getFor(InvulnerableComponent.class);
     public static final ComponentMapper<LevelFinishedComponent> levelFinished = ComponentMapper.getFor(LevelFinishedComponent.class);
     public static final ComponentMapper<LightComponent> light = ComponentMapper.getFor(LightComponent.class);
+    public static final ComponentMapper<StatusHealthComponent> healthBar = ComponentMapper.getFor(StatusHealthComponent.class);
 }

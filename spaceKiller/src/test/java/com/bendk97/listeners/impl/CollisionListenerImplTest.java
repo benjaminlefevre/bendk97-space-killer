@@ -18,6 +18,7 @@ import com.bendk97.entities.EntityFactory;
 import com.bendk97.entities.enemies.EnemyEntityFactory;
 import com.bendk97.entities.player.PlayerEntityFactory;
 import com.bendk97.listeners.PlayerListener;
+import com.bendk97.runner.GdxTestRunner;
 import com.bendk97.screens.levels.LevelScreen;
 import com.bendk97.screens.levels.utils.ScreenShake;
 import org.junit.Before;
@@ -25,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 
 import static com.bendk97.assets.Assets.*;
 import static com.bendk97.components.PlayerComponent.PowerLevel.*;
@@ -35,7 +36,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(GdxTestRunner.class)
 public class CollisionListenerImplTest {
 
     @Mock
@@ -69,6 +70,7 @@ public class CollisionListenerImplTest {
 
     @Before
     public void initMocks() {
+        MockitoAnnotations.initMocks(this);
         this.entityFactory.enemyEntityFactory = enemyEntityFactory;
         this.entityFactory.playerEntityFactory = playerEntityFactory;
         engine.addSystem(collisionListener);
@@ -125,25 +127,27 @@ public class CollisionListenerImplTest {
         assertThat(enemyComponent.isDead()).isEqualTo(true);
     }
 
-    @Test
+       @Test
     public void boss_is_shoot_by_bullet() {
-        Entity enemy = createEntity(engine, BossComponent.class, EnemyComponent.class, SpriteComponent.class, PositionComponent.class);
+        Entity boss = createEntity(engine, BossComponent.class, EnemyComponent.class,
+                StatusHealthComponent.class, SpriteComponent.class, PositionComponent.class);
         Entity player = createEntity(engine, PlayerComponent.class);
         Entity bullet = createEntity(engine, PlayerBulletComponent.class, PositionComponent.class);
-        EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(enemy);
+        EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(boss);
         enemyComponent.squadron = createEntity(engine, SquadronComponent.class);
         enemyComponent.isBoss = true;
         enemyComponent.initLifeGauge(1);
-        ComponentMapperHelper.sprite.get(enemy).sprite = new Sprite();
+        ComponentMapperHelper.sprite.get(boss).sprite = new Sprite();
         Entity explosion = createEntity(engine, SpriteComponent.class, PositionComponent.class, BombExplosionComponent.class);
         ComponentMapperHelper.sprite.get(explosion).sprite = new Sprite();
         when(enemyEntityFactory.createEntityExploding(anyFloat(), anyFloat())).thenReturn(explosion);
 
-        collisionListener.enemyShoot(enemy, player, bullet);
+        collisionListener.enemyShoot(boss, player, bullet);
 
         verify(assets).playSound(SOUND_EXPLOSION);
         verify(assets).playSound(SOUND_BOSS_FINISHED);
         verify(screenShake).shake(anyFloat(), anyFloat(), anyBoolean());
+        assertThat(ComponentMapperHelper.healthBar.get(boss)).isNull();
         assertThat(enemyComponent.isDead()).isEqualTo(true);
     }
 
@@ -161,6 +165,32 @@ public class CollisionListenerImplTest {
         assertThat(enemyComponent.isDead()).isEqualTo(false);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(399);
     }
+
+    @Test
+    public void boss_is_hurt_by_bullet() {
+        Entity boss = createEntity(engine, BossComponent.class, EnemyComponent.class,
+                StatusHealthComponent.class, SpriteComponent.class, PositionComponent.class);
+        Entity player = createEntity(engine, PlayerComponent.class);
+        Entity bullet = createEntity(engine, PlayerBulletComponent.class, PositionComponent.class);
+        EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(boss);
+        enemyComponent.squadron = createEntity(engine, SquadronComponent.class);
+        enemyComponent.isBoss = true;
+        enemyComponent.initLifeGauge(50);
+        ComponentMapperHelper.sprite.get(boss).sprite = new Sprite();
+        Entity explosion = createEntity(engine, SpriteComponent.class, PositionComponent.class, BombExplosionComponent.class);
+        ComponentMapperHelper.sprite.get(explosion).sprite = new Sprite();
+        when(enemyEntityFactory.createEntityExploding(anyFloat(), anyFloat())).thenReturn(explosion);
+
+        collisionListener.enemyShoot(boss, player, bullet);
+
+        verify(assets).playSound(SOUND_EXPLOSION);
+        verify(assets, never()).playSound(SOUND_BOSS_FINISHED);
+        verify(screenShake, never()).shake(anyFloat(), anyFloat(), anyBoolean());
+        assertThat(ComponentMapperHelper.healthBar.get(boss)).isNotNull();
+        assertThat(enemyComponent.isDead()).isEqualTo(false);
+        assertThat(enemyComponent.getLifeGauge()).isEqualTo(49);
+    }
+
 
     @Test
     public void player_is_hit_by_enemy_body() {

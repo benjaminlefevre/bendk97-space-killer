@@ -10,14 +10,12 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.bendk97.components.BombExplosionComponent;
-import com.bendk97.components.EnemyBulletComponent;
-import com.bendk97.components.EnemyComponent;
+import com.bendk97.components.helpers.Families;
 import com.bendk97.listeners.CollisionListener;
+
 
 public class BombExplosionSystem extends IteratingSystem {
 
-    private final Family enemies = Family.one(EnemyComponent.class).get();
-    private final Family bullets = Family.one(EnemyBulletComponent.class).get();
     private final CollisionListener collisionListener;
     private final Entity player;
 
@@ -30,10 +28,10 @@ public class BombExplosionSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(final Entity entity, float deltaTime) {
-        for(Entity bullet : getEngine().getEntitiesFor(bullets)){
+        for(Entity bullet : getEngine().getEntitiesFor(Families.enemyBullet)){
             getEngine().removeEntity(bullet);
         }
-        for (Entity enemy : getEngine().getEntitiesFor(enemies)) {
+        for (Entity enemy : getEngine().getEntitiesFor(Families.enemies)) {
             collisionListener.enemyShootByExplosion(enemy, player);
         }
         getEngine().removeEntity(entity);

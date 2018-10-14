@@ -30,7 +30,7 @@ import static com.bendk97.assets.Assets.SOUND_EXPLOSION;
 import static com.bendk97.entities.EntityFactoryIds.*;
 
 public class EnemyEntityFactory {
-    
+
     private final EntityFactory entityFactory;
     public SoloEnemyFactory soloEnemyFactory;
     public SquadronFactory squadronFactory;
@@ -301,10 +301,11 @@ public class EnemyEntityFactory {
 
 
     public Entity createBoss(Entity squadron, float velocityBullet, float velocityCircle) {
-        final Entity boss = entityFactory.engine.createEntity();
+        Entity boss = entityFactory.engine.createEntity();
         BossComponent bossComponent = entityFactory.engine.createComponent(BossComponent.class);
         bossComponent.velocityFire1 = velocityCircle;
         boss.add(bossComponent);
+        addStatusHealthBarTo(boss);
         EnemyComponent enemyComponent = entityFactory.engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
         enemyComponent.isBoss = true;
@@ -331,13 +332,14 @@ public class EnemyEntityFactory {
     }
 
     public Entity createBoss2(Entity squadron, float velocityBullet, float velocityFireCircle, float velocityBullet2) {
-        final Entity boss = entityFactory.engine.createEntity();
+        Entity boss = entityFactory.engine.createEntity();
         BossComponent bossComponent = entityFactory.engine.createComponent(BossComponent.class);
         boss.add(bossComponent);
         bossComponent.minTriggerFire1 = 4;
         bossComponent.minTriggerFire2 = 7;
         bossComponent.velocityFire1 = velocityFireCircle;
         bossComponent.velocityFire2 = velocityBullet2;
+        addStatusHealthBarTo(boss);
         EnemyComponent enemyComponent = entityFactory.engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
         enemyComponent.isBoss = true;
@@ -371,13 +373,14 @@ public class EnemyEntityFactory {
     }
 
     public Entity createBoss3(Entity squadron, float velocityBullet, float velocityBulletFireCircle, float velocityBullet2) {
-        final Entity boss = entityFactory.engine.createEntity();
+        Entity boss = entityFactory.engine.createEntity();
         BossComponent bossComponent = entityFactory.engine.createComponent(BossComponent.class);
         boss.add(bossComponent);
         bossComponent.minTriggerFire1 = 3;
         bossComponent.minTriggerFire2 = 7;
         bossComponent.velocityFire1 = velocityBulletFireCircle;
         bossComponent.velocityFire2 = velocityBullet2;
+        addStatusHealthBarTo(boss);
         EnemyComponent enemyComponent = entityFactory.engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
         enemyComponent.isBoss = true;
@@ -409,6 +412,12 @@ public class EnemyEntityFactory {
         }, 5f);
         boss.add(entityFactory.engine.createComponent(StateComponent.class));
         return boss;
+    }
+
+    private void addStatusHealthBarTo(Entity boss) {
+        StatusHealthComponent statusBar = entityFactory.engine.createComponent(StatusHealthComponent.class);
+        statusBar.setBounds(SCREEN_WIDTH / 2f - StatusHealthComponent.WIDTH / 2f, 12);
+        boss.add(statusBar);
     }
 
 
@@ -467,8 +476,6 @@ public class EnemyEntityFactory {
         entities.add(houseDestroyed);
         return entities;
     }
-
-
 
     public Entity createEntityExploding(float x, float y) {
         Entity explosion = entityFactory.engine.createEntity();

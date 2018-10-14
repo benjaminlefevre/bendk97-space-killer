@@ -106,63 +106,64 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         getEngine().removeEntity(enemy);
     }
 
-    private void bossIsShoot(Entity enemy, Entity player, Entity bullet) {
+    private void bossIsShoot(Entity boss, Entity player, Entity bullet) {
         PositionComponent explodePosition;
-        EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(enemy);
+        EnemyComponent bossComponent = ComponentMapperHelper.enemy.get(boss);
         if (bullet != null) {
             explodePosition = ComponentMapperHelper.position.get(bullet);
         } else {
-            explodePosition = ComponentMapperHelper.position.get(enemy);
+            explodePosition = ComponentMapperHelper.position.get(boss);
         }
         Entity explosion = entityFactory.enemyEntityFactory.createEntityExploding(explodePosition.x, explodePosition.y);
         if (bullet != null) {
             ComponentMapperHelper.position.get(explosion).x -= ComponentMapperHelper.sprite.get(explosion).sprite.getWidth() / 2f;
         } else {
-            ComponentMapperHelper.position.get(explosion).x += ComponentMapperHelper.sprite.get(enemy).sprite.getWidth() / 2f;
-            ComponentMapperHelper.position.get(explosion).y += ComponentMapperHelper.sprite.get(enemy).sprite.getHeight() / 2f;
+            ComponentMapperHelper.position.get(explosion).x += ComponentMapperHelper.sprite.get(boss).sprite.getWidth() / 2f;
+            ComponentMapperHelper.position.get(explosion).y += ComponentMapperHelper.sprite.get(boss).sprite.getHeight() / 2f;
         }
         if (bullet != null) {
             getEngine().removeEntity(bullet);
         }
         // update score
         int nbHits = bullet != null ? 1 : HIT_EXPLOSION;
-        playerListener.updateScore(player, enemy, nbHits);
-        checkBossHealth(enemy, bullet, enemyComponent);
-
-        if (enemyComponent.isDead()) {
-            bossIdDead(enemy, player, enemyComponent);
+        playerListener.updateScore(player, boss, nbHits);
+        checkBossHealth(boss, bullet, bossComponent);
+        if (bossComponent.isDead()) {
+            bossIdDead(boss, player, bossComponent);
         }
     }
 
-    private void checkBossHealth(Entity enemy, Entity bullet, EnemyComponent enemyComponent) {
+    private void checkBossHealth(Entity boss, Entity bullet, EnemyComponent bossComponent) {
         // check health of enemy
-        float percentLifeBefore = enemyComponent.getRemainingLifeInPercent();
-        enemyComponent.hit(bullet != null ? 1 : HIT_EXPLOSION);
-        float percentLifeAfter = enemyComponent.getRemainingLifeInPercent();
+        float percentLifeBefore = bossComponent.getRemainingLifeInPercent();
+        bossComponent.hit(bullet != null ? 1 : HIT_EXPLOSION);
+        ComponentMapperHelper.healthBar.get(boss).setValue(bossComponent.getRemainingLifeInPercent());
+        float percentLifeAfter = bossComponent.getRemainingLifeInPercent();
         if (percentLifeBefore >= 0.25 && percentLifeAfter < 0.25) {
-            AnimationComponent animationComponent = ComponentMapperHelper.animation.get(enemy);
+            AnimationComponent animationComponent = ComponentMapperHelper.animation.get(boss);
             if (animationComponent != null) {
                 animationComponent.tintRed(ANIMATION_MAIN, 0.99f);
             } else {
-                ComponentMapperHelper.sprite.get(enemy).tintRed(0.99f);
+                ComponentMapperHelper.sprite.get(boss).tintRed(0.99f);
             }
         }
     }
 
-    private void bossIdDead(Entity enemy, Entity player, EnemyComponent enemyComponent) {
+    private void bossIdDead(Entity boss, Entity player, EnemyComponent enemyComponent) {
         assets.playSound(Assets.SOUND_BOSS_FINISHED);
+        boss.remove(StatusHealthComponent.class);
         if (ComponentMapperHelper.levelFinished.get(player) == null) {
             ComponentMapperHelper.player.get(player).enemyKilled();
         }
         screen.checkAchievements(player);
-        tweenManager.killTarget(ComponentMapperHelper.position.get(enemy));
-        ComponentMapperHelper.squadron.get(enemyComponent.squadron).removeEntity(enemy);
-        SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(enemy);
+        tweenManager.killTarget(ComponentMapperHelper.position.get(boss));
+        ComponentMapperHelper.squadron.get(enemyComponent.squadron).removeEntity(boss);
+        SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(boss);
 
-        entityFactory.enemyEntityFactory.createBossExploding(enemy);
+        entityFactory.enemyEntityFactory.createBossExploding(boss);
         screenShake.shake(20, 2f, true);
         entityFactory.playerEntityFactory.addInvulnerableComponent(player);
-        tweenBossDeath(enemy, player, spriteComponent);
+        tweenBossDeath(boss, player, spriteComponent);
     }
 
     private void tweenBossDeath(Entity enemy, Entity player, SpriteComponent spriteComponent) {
