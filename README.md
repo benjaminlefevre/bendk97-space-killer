@@ -20,7 +20,7 @@ The game is only tested and compiled for android platforms :
 # debug 
 ./gradlew clean assembleDebug check
 # release
-./gradlew clean assembleDebug check
+./gradlew clean assembleRelease check
 # release signed and aligned (you have to provide a keystore.properties in root directory and a keystore file in android directory)
 ./gradlew clean assembleReleaseSigned check 
 ```
