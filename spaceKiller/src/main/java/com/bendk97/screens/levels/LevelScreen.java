@@ -397,8 +397,8 @@ public final class LevelScreen extends ScreenAdapter {
             world.dispose();
         }
         assets.unloadResources(this.level);
-        engine.clearPools();
         engine.removeAllEntities();
+        engine.clearPools();
         postProcessor.dispose();
         tweenManager.killAll();
     }

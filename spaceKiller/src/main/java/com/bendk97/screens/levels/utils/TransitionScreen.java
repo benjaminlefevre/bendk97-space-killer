@@ -32,6 +32,8 @@ public class TransitionScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
+        currentScreenSprite.getTexture().dispose();
+        nextScreenSprite.getTexture().dispose();
         spriteBatch.dispose();
     }
 
