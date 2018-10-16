@@ -46,18 +46,27 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
         setupGooglePlay();
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
+        AndroidApplicationConfiguration config = configureAppAndroid();
+        configureSpaceKillerConstants();
+        game = new SpaceKillerGame(this, this);
+        initialize(game, config);
+    }
+
+    private AndroidApplicationConfiguration configureAppAndroid() {
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useImmersiveMode = true;
         config.numSamples = 2;
         config.useAccelerometer = false;
         config.useCompass = false;
         config.useWakelock = true;
+        return config;
+    }
+
+    private void configureSpaceKillerConstants() {
         SpaceKillerGameConstants.DEBUG = BuildConfig.DEBUG_GAME;
         SpaceKillerGameConstants.NO_GOOGLE = BuildConfig.GOOGLE_PLAY_SKIP;
         SpaceKillerGameConstants.VERSION = BuildConfig.VERSION_NAME;
         SpaceKillerGameConstants.SKIP_SPLASH = BuildConfig.SPLASH_SCREEN_SKIP;
-        game = new SpaceKillerGame(this, this);
-        initialize(game, config);
     }
 
     private void setupGooglePlay() {

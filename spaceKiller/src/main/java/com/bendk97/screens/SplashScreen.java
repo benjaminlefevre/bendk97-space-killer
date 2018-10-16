@@ -6,20 +6,22 @@
 
 package com.bendk97.screens;
 
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.equations.Linear;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
+import com.bendk97.tweens.SpriteTween;
 
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
+import static com.bendk97.tweens.SpriteTween.ROTATION;
+import static com.bendk97.tweens.SpriteTween.SCALE;
 
 
 public class SplashScreen extends HDScreen {
@@ -28,10 +30,10 @@ public class SplashScreen extends HDScreen {
     private float stateTime;
     // Objects used
     private Animation<TextureRegion> walkAnimation; // Must declare frame type (TextureRegion)
-    private Texture logo;
+    private Sprite logo;
     private SpriteBatch spriteBatch;
-    private SpriteBatch logoBatcher;
     private final Actor fader = new Actor();
+    private TweenManager tweenManager = new TweenManager();
 
 
     public SplashScreen(Assets assets, SpaceKillerGame game) {
@@ -50,8 +52,18 @@ public class SplashScreen extends HDScreen {
         // time to 0
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
-        logo = assets.get(Assets.SPLASH_TXT_LOGO);
-        logoBatcher = new SpriteBatch();
+        logo = new Sprite(assets.get(Assets.SPLASH_TXT_LOGO));
+        logo.setPosition(viewport.getWorldWidth() / 2f - logo.getWidth() / 2f,
+                viewport.getWorldHeight() / 2f - logo.getHeight() / 2f);
+        logo.setScale(0f);
+        Tween.registerAccessor(Sprite.class, new SpriteTween());
+        Tween.to(logo, ROTATION, 0.5f)
+                .ease(Linear.INOUT).target(360f).repeat(3, 0f)
+                .start(tweenManager);
+        Tween.to(logo, SCALE, 1.5f)
+                .ease(Linear.INOUT).target(1f, 1f)
+                .start(tweenManager);
+
     }
 
     private void initFader() {
@@ -59,7 +71,7 @@ public class SplashScreen extends HDScreen {
         //Assign the starting value
         fader.setColor(new Color(1f, 1f, 1f, 0f));
         // Fade in during 2 seconds
-        fader.addAction(Actions.sequence(Actions.fadeIn(3f), Actions.fadeOut(3f)));
+        fader.addAction(Actions.sequence(Actions.fadeIn(4f), Actions.fadeOut(1f)));
     }
 
 
@@ -76,6 +88,7 @@ public class SplashScreen extends HDScreen {
         float stateTimeBefore = stateTime;
         stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
 
+        tweenManager.update(delta);
         //Act updates the actions of an actor
         fader.act(Gdx.graphics.getDeltaTime());
 
@@ -85,14 +98,9 @@ public class SplashScreen extends HDScreen {
 
         spriteBatch.begin();
         spriteBatch.draw(currentFrame, ((viewport.getWorldWidth() / 3) * stateTime), 0, 150, 150);
+        logo.setAlpha(fader.getColor().a);
+        logo.draw(spriteBatch);
         spriteBatch.end();
-        logoBatcher.setProjectionMatrix(viewport.getCamera().combined);
-        logoBatcher.setColor(fader.getColor());
-        logoBatcher.begin();
-        logoBatcher.draw(logo,
-                viewport.getWorldWidth() / 2f - logo.getWidth() / 2f,
-                viewport.getWorldHeight() / 2f - logo.getHeight() / 2f);
-        logoBatcher.end();
         if(stateTime>5 && stateTimeBefore <= 5){
             this.dispose();
             game.goToScreen(MenuScreen.class);
@@ -102,6 +110,7 @@ public class SplashScreen extends HDScreen {
     @Override
     public void dispose() { // SpriteBatches and Textures must always be disposed
         spriteBatch.dispose();
+        tweenManager.killAll();
         assets.unloadResources(this.getClass());
     }
 
