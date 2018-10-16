@@ -400,6 +400,7 @@ public final class LevelScreen extends ScreenAdapter {
         engine.clearPools();
         engine.removeAllEntities();
         postProcessor.dispose();
+        tweenManager.killAll();
     }
 
     public void submitScore(int scoreInt) {

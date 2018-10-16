@@ -38,6 +38,7 @@ public class SpriteMaskFactory {
                 );
             }
         }
+        pixmap.dispose();
         masks.put(texture, mask);
     }
 
