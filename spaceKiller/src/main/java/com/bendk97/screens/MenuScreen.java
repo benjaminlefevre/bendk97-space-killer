@@ -31,6 +31,9 @@ import static com.bendk97.screens.levels.Level.Level1;
 
 public class MenuScreen extends HDScreen {
 
+    public static final String SPACE = "SPACE";
+    public static final String KILLER = "KILLER";
+    public static final String GOOGLE_PLAY_PLEASE_SIGN_IN = " Google Play\nPlease sign in";
     private final SpriteBatch batcher;
     private final String gameVersion;
     private final TextButton playButton;
@@ -483,11 +486,11 @@ public class MenuScreen extends HDScreen {
         batcher.setProjectionMatrix(viewport.getCamera().combined);
         stage.draw();
         batcher.begin();
-        font.draw(batcher, "SPACE", SCREEN_WIDTH / 5f - 15f, SCREEN_HEIGHT * 3 / 4 + 100f);
-        font.draw(batcher, "KILLER", SCREEN_WIDTH / 5f - 40f, SCREEN_HEIGHT * 3 / 4 + 50f);
+        font.draw(batcher, SPACE, SCREEN_WIDTH / 5f - 15f, SCREEN_HEIGHT * 3 / 4 + 100f);
+        font.draw(batcher, KILLER, SCREEN_WIDTH / 5f - 40f, SCREEN_HEIGHT * 3 / 4 + 50f);
         fontVersion.draw(batcher, gameVersion, 10f, 20f);
         if (!game.playServices.isSignedIn()) {
-            fontVersion.draw(batcher, " Google Play\nPlease sign in", 90f, 60f);
+            fontVersion.draw(batcher, GOOGLE_PLAY_PLEASE_SIGN_IN, 90f, 60f);
         }
         batcher.end();
     }
