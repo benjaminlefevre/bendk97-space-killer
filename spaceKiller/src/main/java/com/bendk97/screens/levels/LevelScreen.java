@@ -10,6 +10,7 @@ import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
+import box2dLight.ConeLight;
 import box2dLight.RayHandler;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
@@ -50,10 +51,7 @@ import com.bendk97.systems.*;
 import com.bendk97.systems.screen.GameOverRenderingSystem;
 import com.bendk97.systems.screen.PauseRenderingSystem;
 import com.bendk97.timer.PausableTimer;
-import com.bendk97.tweens.CameraTween;
-import com.bendk97.tweens.PositionComponentAccessor;
-import com.bendk97.tweens.SpriteComponentAccessor;
-import com.bendk97.tweens.VelocityComponentAccessor;
+import com.bendk97.tweens.*;
 import com.bitfire.postprocessing.PostProcessor;
 import com.bitfire.postprocessing.effects.MotionBlur;
 import com.bitfire.utils.ShaderLoader;
@@ -84,7 +82,7 @@ public final class LevelScreen extends ScreenAdapter {
 
     private World world;
     private RayHandler rayHandler;
-    private final boolean fxLightEnabled;
+    protected final boolean fxLightEnabled;
     private PostProcessor postProcessor;
 
     private PlayerListenerImpl playerListener;
@@ -136,11 +134,7 @@ public final class LevelScreen extends ScreenAdapter {
             }
         });
         if (fxLightEnabled) {
-            world = new World(new Vector2(0, 0), false);
-            rayHandler = new RayHandler(world, Gdx.graphics.getWidth() / 16, Gdx.graphics
-                    .getHeight() / 16);
-            rayHandler.setShadows(false);
-            rayHandler.setCombinedMatrix(camera);
+            initRayLightEffects(camera);
         }
         entityFactory = new EntityFactory(game, engine, assets, tweenManager, rayHandler, screenShake, level, camera);
         player = entityFactory.playerEntityFactory.createEntityPlayer(level);
@@ -153,6 +147,13 @@ public final class LevelScreen extends ScreenAdapter {
         time = -3;
     }
 
+    private void initRayLightEffects(OrthographicCamera camera) {
+        world = new World(new Vector2(0, 0), false);
+        rayHandler = new RayHandler(world, Gdx.graphics.getWidth() / 16, Gdx.graphics
+                .getHeight() / 16);
+        rayHandler.setShadows(false);
+        rayHandler.setCombinedMatrix(camera);
+    }
 
     public void currentMusic(Music music) {
         this.music = music;
@@ -232,6 +233,9 @@ public final class LevelScreen extends ScreenAdapter {
         Tween.registerAccessor(PositionComponent.class, new PositionComponentAccessor());
         Tween.registerAccessor(VelocityComponent.class, new VelocityComponentAccessor());
         Tween.registerAccessor(OrthographicCamera.class, new CameraTween());
+        if (fxLightEnabled) {
+            Tween.registerAccessor(ConeLight.class, new ConeLightTween());
+        }
     }
 
     protected void createSystems(Entity player, SnapshotArray<Entity> lives, SnapshotArray<Entity> bombs, SpriteBatch batcher,

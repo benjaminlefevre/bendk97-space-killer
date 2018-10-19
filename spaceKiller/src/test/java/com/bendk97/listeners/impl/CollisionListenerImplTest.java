@@ -101,7 +101,7 @@ public class CollisionListenerImplTest {
 
     @Test
     public void enemy_is_hurt_by_explosion() {
-        Entity enemy = createEntity(engine, EnemyComponent.class, PositionComponent.class);
+        Entity enemy = createEntity(engine, EnemyComponent.class, PositionComponent.class, SpriteComponent.class);
         Entity player = createEntity(engine, PlayerComponent.class);
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(enemy);
         enemyComponent.initLifeGauge(400);
@@ -111,6 +111,7 @@ public class CollisionListenerImplTest {
         verify(assets).playSound(SOUND_EXPLOSION);
         assertThat(enemyComponent.isDead()).isEqualTo(false);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(350);
+        assertThat(ComponentMapperHelper.sprite.get(enemy).flashing).isTrue();
     }
 
     @Test
@@ -153,7 +154,7 @@ public class CollisionListenerImplTest {
 
     @Test
     public void enemy_is_hurt_by_bullet() {
-        Entity enemy = createEntity(engine, EnemyComponent.class, PositionComponent.class);
+        Entity enemy = createEntity(engine, EnemyComponent.class, PositionComponent.class, SpriteComponent.class);
         Entity player = createEntity(engine, PlayerComponent.class);
         Entity bullet = createEntity(engine, PlayerBulletComponent.class, PositionComponent.class);
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(enemy);
@@ -164,6 +165,7 @@ public class CollisionListenerImplTest {
         verify(assets).playSound(SOUND_EXPLOSION);
         assertThat(enemyComponent.isDead()).isEqualTo(false);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(399);
+        assertThat(ComponentMapperHelper.sprite.get(enemy).flashing).isTrue();
     }
 
     @Test

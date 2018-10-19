@@ -84,7 +84,14 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
 
         if (enemyComponent.isDead()) {
             enemyIsDead(enemy, player, enemyComponent);
+        } else {
+            flashEnemy(enemy);
         }
+    }
+
+    private void flashEnemy(Entity enemy) {
+        SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(enemy);
+        spriteComponent.flashing = true;
     }
 
     private void enemyIsDead(Entity enemy, Entity player, EnemyComponent enemyComponent) {
@@ -130,6 +137,8 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         checkBossHealth(boss, bullet, bossComponent);
         if (bossComponent.isDead()) {
             bossIdDead(boss, player, bossComponent);
+        } else {
+            flashEnemy(boss);
         }
     }
 
