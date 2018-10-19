@@ -6,10 +6,14 @@
 
 package com.bendk97.screens.levels;
 
+import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.equations.Linear;
 import aurelienribon.tweenengine.equations.Quad;
+import box2dLight.ConeLight;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.Color;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.GameOverComponent;
 import com.bendk97.components.helpers.ComponentMapperHelper;
@@ -17,6 +21,7 @@ import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
 import com.bendk97.screens.levels.utils.ScriptItemExecutor;
+import com.bendk97.tweens.ConeLightTween;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -61,6 +66,28 @@ public final class Level1Script extends LevelScript {
     private void initLevel1(Assets assets, EntityFactory entityFactory) {
         background = entityFactory.stageSetEntityFactory.createBackground(assets.get(GFX_BGD_LEVEL1), -BGD_VELOCITY);
         background2 = entityFactory.stageSetEntityFactory.createBackground(assets.get(GFX_BGD_STARS), -BGD_PARALLAX_VELOCITY);
+       if(levelScreen.fxLightEnabled) {
+           initAmbiantLights(entityFactory);
+       }
+    }
+
+    private void initAmbiantLights(EntityFactory entityFactory) {
+        ConeLight c1 = new ConeLight(entityFactory.rayHandler, 5000, Color.GOLDENROD, 0,
+                SCREEN_WIDTH, SCREEN_HEIGHT,
+                225, 60);
+        c1.setActive(true);
+        Timeline timeline = Timeline.createSequence();
+        timeline.push(
+                Tween.to(c1, ConeLightTween.DISTANCE, 7f)
+                        .delay(10f)
+                        .ease(Linear.INOUT).target(1200f)
+                        .delay(1f)
+        );
+        timeline.push(
+                Tween.to(c1, ConeLightTween.DISTANCE, 3f)
+                        .ease(Linear.INOUT).target(0f)
+        );
+        timeline.repeat(Tween.INFINITY, 5f).start(tweenManager);
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.bendk97.assets.Assets;
 import com.bendk97.components.PlayerComponent;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.entities.StageSetEntityFactory;
+import com.bendk97.entities.enemies.SoloEnemyFactory;
 import com.bendk97.entities.enemies.SquadronFactory;
 import com.bendk97.runner.GdxTestRunner;
 import com.bendk97.screens.levels.utils.ScriptItemExecutor;
@@ -49,7 +50,7 @@ public abstract class LevelScriptTest {
     protected SquadronFactory squadronFactory;
 
     @Mock
-    protected com.bendk97.entities.enemies.SoloEnemyFactory soloEnemyFactory;
+    protected SoloEnemyFactory soloEnemyFactory;
 
     @Mock
     protected ScriptItemExecutor scriptItemExecutor;

@@ -37,7 +37,7 @@ public abstract class LevelScript {
     protected final Random random = new RandomXS128();
     protected ScriptItemExecutor scriptItemExecutor;
     protected final Level level;
-    private final LevelScreen levelScreen;
+    protected final LevelScreen levelScreen;
 
     /*
      for test purposes only

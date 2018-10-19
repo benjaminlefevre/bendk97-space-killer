@@ -18,6 +18,7 @@ import com.bendk97.components.helpers.ComponentMapperHelper;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.bendk97.shaders.Shaders.HIGHLIGHT;
 
 public class DynamicEntitiesRenderingSystem extends SortedIteratingSystem {
     private final SpriteBatch batcher;
@@ -41,6 +42,21 @@ public class DynamicEntitiesRenderingSystem extends SortedIteratingSystem {
                 || sprite.getY() + sprite.getHeight() < 0){
             return;
         }
+        preBatching(spriteComponent);
         sprite.draw(batcher, spriteComponent.alpha);
+        postBatching(spriteComponent);
+    }
+
+    private void preBatching(SpriteComponent spriteComponent) {
+        if(spriteComponent.flashing && HIGHLIGHT.isCompiled()) {
+            batcher.setShader(HIGHLIGHT);
+        }
+    }
+
+    private void postBatching(SpriteComponent spriteComponent) {
+        if(spriteComponent.flashing) {
+            batcher.setShader(null);
+            spriteComponent.flashing = false;
+        }
     }
 }
