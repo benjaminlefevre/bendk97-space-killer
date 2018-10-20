@@ -1,10 +1,10 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 07/10/18 15:07
+ * Last modified 07/10/18 22:24
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97;
+package com.bendk97.google.play;
 
 import android.app.Activity;
 import android.content.Context;

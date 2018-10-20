@@ -95,7 +95,9 @@ public class SpaceKillerGame extends Game {
             this.playerData = playerData;
             currentScreen = new LevelScreen(assets, this, level);
             if (previousScreenSprite != null) {
-                this.setScreen(new TransitionScreen(previousScreenSprite, (LevelScreen) currentScreen, this));
+                LevelScreen nextScreen = (LevelScreen) currentScreen;
+                Sprite nextScreenSprite = nextScreen.takeScreenshot(Gdx.graphics.getDeltaTime(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                this.setScreen(new TransitionScreen(previousScreenSprite, nextScreenSprite, nextScreen, this));
             } else {
                 this.setScreen(currentScreen);
             }

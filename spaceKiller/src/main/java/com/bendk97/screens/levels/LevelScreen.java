@@ -144,7 +144,7 @@ public final class LevelScreen extends ScreenAdapter {
         registerTweensAccessor();
         registerPostProcessingEffects();
         this.levelScript = getLevelScript(level, this, assets, entityFactory, tweenManager, player, engine);
-        time = -3;
+        time = -5;
     }
 
     private void initRayLightEffects(OrthographicCamera camera) {
@@ -221,7 +221,7 @@ public final class LevelScreen extends ScreenAdapter {
 
 
     private void registerPostProcessingEffects() {
-        ShaderLoader.BasePath = "data/shaders/";
+        ShaderLoader.BasePath = "shaders/files/";
         postProcessor = new PostProcessor(false, false, Gdx.app.getType() == Application.ApplicationType.Desktop);
         MotionBlur motionBlur = new MotionBlur();
         motionBlur.setBlurOpacity(0.5f);
