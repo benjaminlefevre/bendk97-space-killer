@@ -8,6 +8,7 @@ package com.bendk97.screens.levels;
 
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Linear;
 import aurelienribon.tweenengine.equations.Quad;
@@ -66,26 +67,38 @@ public final class Level1Script extends LevelScript {
     private void initLevel1(Assets assets, EntityFactory entityFactory) {
         background = entityFactory.stageSetEntityFactory.createBackground(assets.get(GFX_BGD_LEVEL1), -BGD_VELOCITY);
         background2 = entityFactory.stageSetEntityFactory.createBackground(assets.get(GFX_BGD_STARS), -BGD_PARALLAX_VELOCITY);
-       if(levelScreen.fxLightEnabled) {
-           initAmbiantLights(entityFactory);
-       }
+        if (levelScreen.fxLightEnabled) {
+            initAmbiantLights(entityFactory);
+        }
     }
 
     private void initAmbiantLights(EntityFactory entityFactory) {
-        ConeLight c1 = new ConeLight(entityFactory.rayHandler, 500, Color.GOLDENROD, 0,
+        ConeLight c1 = new ConeLight(entityFactory.rayHandler, 50, Color.GOLDENROD, 0,
                 SCREEN_WIDTH + 40, SCREEN_HEIGHT + 40,
                 225, 60);
-        c1.setActive(true);
+        c1.setActive(false);
         Timeline timeline = Timeline.createSequence();
         timeline.push(
                 Tween.to(c1, ConeLightTween.DISTANCE, 7f)
+                        .setCallbackTriggers(TweenCallback.START)
+                        .setCallback((type, source) -> {
+                            if (type == TweenCallback.START) {
+                                c1.setActive(true);
+                            }
+                        })
                         .delay(10f)
                         .ease(Linear.INOUT).target(1500f)
                         .delay(1f)
         );
         timeline.push(
                 Tween.to(c1, ConeLightTween.DISTANCE, 3f)
-                        .ease(Linear.INOUT).target(0f)
+                        .ease(Linear.INOUT)
+                        .setCallback((type, source) -> {
+                            if (type == TweenCallback.COMPLETE) {
+                                c1.setActive(false);
+                            }
+                        })
+                        .target(0f)
         );
         timeline.repeat(Tween.INFINITY, 5f).start(tweenManager);
     }

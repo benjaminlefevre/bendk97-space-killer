@@ -8,6 +8,7 @@ package com.bendk97.screens.levels;
 
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Linear;
 import aurelienribon.tweenengine.equations.Quad;
@@ -62,20 +63,32 @@ public class Level2Script extends LevelScript {
     }
 
     private void initAmbiantLights(EntityFactory entityFactory) {
-        ConeLight c1 = new ConeLight(entityFactory.rayHandler, 500, Color.WHITE, 0,
+        ConeLight c1 = new ConeLight(entityFactory.rayHandler, 50, Color.WHITE, 0,
                 -SCREEN_WIDTH / 3, SCREEN_HEIGHT / 2,
                 0, 60);
-        c1.setActive(true);
+        c1.setActive(false);
         Timeline timeline = Timeline.createSequence();
         timeline.push(
                 Tween.to(c1, ConeLightTween.DISTANCE, 10f)
+                        .setCallbackTriggers(TweenCallback.START)
+                        .setCallback((type, source) -> {
+                            if (type == TweenCallback.START) {
+                                c1.setActive(true);
+                            }
+                        })
                         .delay(5f)
                         .ease(Linear.INOUT).target(1200f)
                         .delay(3f)
         );
         timeline.push(
                 Tween.to(c1, ConeLightTween.DISTANCE, 5f)
-                        .ease(Linear.INOUT).target(0f)
+                        .ease(Linear.INOUT)
+                        .setCallback((type, source) -> {
+                            if (type == TweenCallback.COMPLETE) {
+                                c1.setActive(false);
+                            }
+                        })
+                        .target(0f)
         );
         timeline.repeat(Tween.INFINITY, 5f).start(tweenManager);
     }
