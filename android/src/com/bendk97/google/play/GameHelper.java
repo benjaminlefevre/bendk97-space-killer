@@ -1,10 +1,10 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 07/10/18 15:07
+ * Last modified 07/10/18 22:24
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97;
+package com.bendk97.google.play;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -76,7 +76,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
     // Google API client object we manage.
     private GoogleApiClient mGoogleApiClient = null;
 
-    final static int CLIENT_GAMES = 0x01;
+    public final static int CLIENT_GAMES = 0x01;
     private final static int CLIENT_PLUS = 0x02;
     private final static int CLIENT_SNAPSHOT = 0x08;
 

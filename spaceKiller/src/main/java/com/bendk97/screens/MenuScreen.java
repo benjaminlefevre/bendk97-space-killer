@@ -9,6 +9,7 @@ package com.bendk97.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -501,6 +502,7 @@ public class MenuScreen extends HDScreen {
         batcher.dispose();
         assets.unloadResources(this.getClass());
         stage.dispose();
+        Texture.clearAllTextures(Gdx.app);
     }
 
     public void signInSucceeded() {
@@ -513,14 +515,14 @@ public class MenuScreen extends HDScreen {
         hideImageButtons(gplay, leaderBoard, achievements);
     }
 
-    private void displayImageButtons(ImageButton ... imageButtons) {
-        for(ImageButton imageButton : imageButtons){
+    private void displayImageButtons(ImageButton... imageButtons) {
+        for (ImageButton imageButton : imageButtons) {
             stage.addActor(imageButton);
         }
     }
 
-    private void hideImageButtons(ImageButton ... imageButtons) {
-        for(ImageButton imageButton : imageButtons){
+    private void hideImageButtons(ImageButton... imageButtons) {
+        for (ImageButton imageButton : imageButtons) {
             imageButton.remove();
         }
     }

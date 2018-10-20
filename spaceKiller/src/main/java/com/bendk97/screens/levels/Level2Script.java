@@ -6,11 +6,15 @@
 
 package com.bendk97.screens.levels;
 
+import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.equations.Linear;
 import aurelienribon.tweenengine.equations.Quad;
+import box2dLight.ConeLight;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.bendk97.assets.Assets;
@@ -22,6 +26,7 @@ import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
 import com.bendk97.screens.levels.utils.ScriptItemExecutor;
 import com.bendk97.systems.FollowPlayerSystem;
+import com.bendk97.tweens.ConeLightTween;
 import com.bendk97.tweens.VelocityComponentAccessor;
 
 import java.util.LinkedList;
@@ -51,6 +56,28 @@ public class Level2Script extends LevelScript {
                         PooledEngine engine) {
         super(levelScreen, Level2, assets, entityFactory, tweenManager, player);
         initLevel2(assets, entityFactory, engine);
+        if (levelScreen.fxLightEnabled) {
+            initAmbiantLights(entityFactory);
+        }
+    }
+
+    private void initAmbiantLights(EntityFactory entityFactory) {
+        ConeLight c1 = new ConeLight(entityFactory.rayHandler, 500, Color.WHITE, 0,
+                -SCREEN_WIDTH / 3, SCREEN_HEIGHT / 2,
+                0, 60);
+        c1.setActive(true);
+        Timeline timeline = Timeline.createSequence();
+        timeline.push(
+                Tween.to(c1, ConeLightTween.DISTANCE, 10f)
+                        .delay(5f)
+                        .ease(Linear.INOUT).target(1200f)
+                        .delay(3f)
+        );
+        timeline.push(
+                Tween.to(c1, ConeLightTween.DISTANCE, 5f)
+                        .ease(Linear.INOUT).target(0f)
+        );
+        timeline.repeat(Tween.INFINITY, 5f).start(tweenManager);
     }
 
     /*

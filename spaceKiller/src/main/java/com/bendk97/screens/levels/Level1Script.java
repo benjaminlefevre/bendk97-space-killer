@@ -72,15 +72,15 @@ public final class Level1Script extends LevelScript {
     }
 
     private void initAmbiantLights(EntityFactory entityFactory) {
-        ConeLight c1 = new ConeLight(entityFactory.rayHandler, 5000, Color.GOLDENROD, 0,
-                SCREEN_WIDTH, SCREEN_HEIGHT,
+        ConeLight c1 = new ConeLight(entityFactory.rayHandler, 500, Color.GOLDENROD, 0,
+                SCREEN_WIDTH + 40, SCREEN_HEIGHT + 40,
                 225, 60);
         c1.setActive(true);
         Timeline timeline = Timeline.createSequence();
         timeline.push(
                 Tween.to(c1, ConeLightTween.DISTANCE, 7f)
                         .delay(10f)
-                        .ease(Linear.INOUT).target(1200f)
+                        .ease(Linear.INOUT).target(1500f)
                         .delay(1f)
         );
         timeline.push(

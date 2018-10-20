@@ -18,6 +18,7 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.bendk97.google.Achievement;
 import com.bendk97.google.PlayServices;
+import com.bendk97.google.play.GameHelper;
 import com.bendk97.share.IntentShare;
 import com.bendk97.space.killer.BuildConfig;
 import com.bendk97.space.killer.R;

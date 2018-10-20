@@ -6,11 +6,13 @@
 
 package com.bendk97.assets;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;
+import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,6 +23,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.bendk97.Settings;
+import com.bendk97.assets.helper.ArchiveFileHandleResolver;
 import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SocialScoreScreen;
 import com.bendk97.screens.SplashScreen;
@@ -32,6 +35,8 @@ import java.util.*;
 import static com.bendk97.screens.levels.Level.*;
 
 public class Assets {
+
+    private FileHandleResolver resolver;
     private AssetManager manager;
 
     // SPLASH SCREEN
@@ -253,10 +258,14 @@ public class Assets {
         if (manager != null) {
             manager.dispose();
         }
-        AssetManager manager = new AssetManager();
-        FileHandleResolver resolver = new InternalFileHandleResolver();
+        if (resolver == null) {
+            resolver = new ArchiveFileHandleResolver(Gdx.files.internal("gfx.dat"));
+        }
+        manager = new AssetManager();
         manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
         manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+        manager.setLoader(TextureAtlas.class, new TextureAtlasLoader(resolver));
+        manager.setLoader(Texture.class, new TextureLoader(resolver));
         return manager;
     }
 

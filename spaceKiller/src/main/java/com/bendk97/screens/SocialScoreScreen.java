@@ -100,5 +100,6 @@ public class SocialScoreScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         batcher.dispose();
+        Texture.clearAllTextures(Gdx.app);
     }
 }

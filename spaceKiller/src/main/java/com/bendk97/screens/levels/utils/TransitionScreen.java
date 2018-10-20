@@ -11,6 +11,7 @@ import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.bendk97.SpaceKillerGame;
@@ -18,9 +19,6 @@ import com.bendk97.screens.levels.LevelScreen;
 import com.bendk97.tweens.SpriteTween;
 
 public class TransitionScreen extends ScreenAdapter {
-    private final static int screenWidth = Gdx.graphics.getWidth();
-    private final static int screenHeight = Gdx.graphics.getHeight();
-
     private final SpaceKillerGame game;
     private final LevelScreen nextScreen;
 
@@ -35,10 +33,12 @@ public class TransitionScreen extends ScreenAdapter {
         currentScreenSprite.getTexture().dispose();
         nextScreenSprite.getTexture().dispose();
         spriteBatch.dispose();
+        Texture.clearAllTextures(Gdx.app);
     }
 
-    public TransitionScreen(Sprite currentScreenSprite, LevelScreen nextScreen, SpaceKillerGame game) {
+    public TransitionScreen(Sprite currentScreenSprite, Sprite nextScreenSprite, LevelScreen nextScreen, SpaceKillerGame game) {
         this.currentScreenSprite = currentScreenSprite;
+        this.nextScreenSprite = nextScreenSprite;
         this.nextScreen = nextScreen;
         this.game = game;
     }
@@ -64,12 +64,10 @@ public class TransitionScreen extends ScreenAdapter {
             game.setScreen(nextScreen);
         };
 
-        nextScreenSprite = nextScreen.takeScreenshot(Gdx.graphics.getDeltaTime(), screenWidth, screenHeight);
-        nextScreenSprite.setPosition(screenWidth, 0);
-
         currentScreenSprite.setPosition(0, 0);
+        nextScreenSprite.setPosition(Gdx.graphics.getWidth(), 0);
 
-        Tween.to(nextScreenSprite, SpriteTween.POS_XY, 1.5f)
+        Tween.to(nextScreenSprite, SpriteTween.POS_XY, 2.5f)
                 .target(0, 0)
                 .setCallback(backgroundAnimationTweenComplete)
                 .setCallbackTriggers(TweenCallback.COMPLETE)
