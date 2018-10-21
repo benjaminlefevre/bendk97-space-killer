@@ -52,10 +52,10 @@ public class SquadronFactory {
     private final EntityFactory entityFactory;
     private final OrthographicCamera camera;
     private final Random random = new RandomXS128();
-    
+
     protected SquadronFactory(EntityFactory entityFactory, OrthographicCamera camera) {
-         this.entityFactory = entityFactory;
-         this.camera = camera;
+        this.entityFactory = entityFactory;
+        this.camera = camera;
     }
 
     public void createSquadron(ScriptItem scriptItem) {
@@ -260,7 +260,7 @@ public class SquadronFactory {
 
     private void createArrowUpSquadron(Entity[] entities, float velocity) {
         if (entities.length != 7) {
-            throw new IllegalArgumentException("Works only with 5 entities");
+            throw new IllegalArgumentException("Works only with 7 entities");
         }
         SpriteComponent sprite = ComponentMapperHelper.sprite.get(entities[0]);
         float width = sprite.sprite.getWidth();
@@ -278,7 +278,7 @@ public class SquadronFactory {
 
     private void createArrowDownSquadron(Entity[] entities, float velocity) {
         if (entities.length != 7) {
-            throw new IllegalArgumentException("Works only with 5 entities");
+            throw new IllegalArgumentException("Works only with 7 entities");
         }
         SpriteComponent sprite = ComponentMapperHelper.sprite.get(entities[0]);
         float width = sprite.sprite.getWidth();

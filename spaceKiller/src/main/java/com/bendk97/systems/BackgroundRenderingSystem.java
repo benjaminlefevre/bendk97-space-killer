@@ -14,8 +14,7 @@ import com.bendk97.components.BackgroundComponent;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 
-import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
-import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.bendk97.SpaceKillerGameConstants.*;
 
 public class BackgroundRenderingSystem extends SortedIteratingSystem {
 
@@ -32,8 +31,8 @@ public class BackgroundRenderingSystem extends SortedIteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         BackgroundComponent backgroundComponent = ComponentMapperHelper.background.get(entity);
         PositionComponent positionComponent = ComponentMapperHelper.position.get(entity);
-        batcher.draw(backgroundComponent.texture, 0, -20f,
+        batcher.draw(backgroundComponent.texture, -OFFSET_WIDTH, -20,
                 (int) positionComponent.x, ((int) positionComponent.y) % (backgroundComponent.texture.getHeight()),
-                (int) (SCREEN_WIDTH), (int) (SCREEN_HEIGHT * 1.05f));
+                (int) (WORLD_WIDTH), (int) (SCREEN_HEIGHT * 1.05f));
     }
 }

@@ -123,7 +123,18 @@ public abstract class LevelScript {
             int randomMoveType = getRandomMoveType();
             int number = randomMoveType == ARROW_DOWN || randomMoveType == ARROW_UP ? 7 : minEnemies + random.nextInt(maxEnemies - minEnemies + 1);
             list.add(
-                    new ScriptItemBuilder().typeShip(getRandomShipType()).typeSquadron(randomMoveType).velocity(velocity).number(number).powerUp(false).displayBonus(true).withBonus(number * bonus).rateShoot(rateShoot).bulletVelocity(bulletVelocity).withParams(getRandomMoveParams(randomMoveType, comingFromLeft == null ? random.nextBoolean() : comingFromLeft)).createScriptItem());
+                    new ScriptItemBuilder()
+                            .typeShip(getRandomShipType())
+                            .typeSquadron(randomMoveType)
+                            .velocity(velocity)
+                            .number(number)
+                            .powerUp(false)
+                            .displayBonus(true)
+                            .withBonus(number * bonus)
+                            .rateShoot(rateShoot)
+                            .bulletVelocity(bulletVelocity)
+                            .withParams(getRandomMoveParams(randomMoveType, comingFromLeft == null ? random.nextBoolean() : comingFromLeft))
+                            .createScriptItem());
         }
         return list;
     }
@@ -148,16 +159,19 @@ public abstract class LevelScript {
             case BEZIER_SPLINE:
                 if (random.nextBoolean()) {
                     return new Object[]{
-                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
+                            new Vector2(-OFFSET_WIDTH + leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH), SCREEN_HEIGHT),
                             new Vector2(SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
                             new Vector2(SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f),
-                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, 0f)};
+                            new Vector2(-OFFSET_WIDTH + leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH), 0f)};
                 } else {
                     return new Object[]{
-                            new Vector2(-11 * SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + 11 * SHIP_WIDTH), SCREEN_HEIGHT / 2f),
-                            new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 2 * SHIP_WIDTH), SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH - leftOrRight * (SCREEN_WIDTH + 6 * SHIP_WIDTH), SCREEN_HEIGHT / 2f)};
+                            new Vector2((-11 - OFFSET_WIDTH) * SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH + (11 + OFFSET_WIDTH) * SHIP_WIDTH),
+                                    SCREEN_HEIGHT / 2f),
+                            new Vector2(-OFFSET_WIDTH + leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH), SCREEN_HEIGHT),
+                            new Vector2(SCREEN_WIDTH + OFFSET_WIDTH - leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH * 2 + 2 * SHIP_WIDTH),
+                                    SCREEN_HEIGHT),
+                            new Vector2(SCREEN_WIDTH + OFFSET_WIDTH - leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH * 2 + 6 * SHIP_WIDTH),
+                                    SCREEN_HEIGHT / 2f)};
                 }
             case CATMULL_ROM_SPLINE:
             default:
