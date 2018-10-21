@@ -4,12 +4,15 @@
  * Copyright (c) 2018. All rights reserved.
  */
 
+
 package com.bendk97;
 
 public class SpaceKillerGameConstants {
     // general settings
+    public final static float WORLD_WIDTH = 500;
     public final static float SCREEN_WIDTH = 400;
     public final static float SCREEN_HEIGHT = 700;
+    public final static float OFFSET_WIDTH = (WORLD_WIDTH - SCREEN_WIDTH) / 2;
     public static boolean DEBUG = false;
     public static boolean NO_GOOGLE = false;
     public static boolean SKIP_SPLASH = false;

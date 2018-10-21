@@ -16,8 +16,7 @@ import com.bendk97.components.PositionComponent;
 import com.bendk97.components.SpriteComponent;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 
-import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
-import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.shaders.Shaders.HIGHLIGHT;
 
 public class DynamicEntitiesRenderingSystem extends SortedIteratingSystem {
@@ -36,10 +35,10 @@ public class DynamicEntitiesRenderingSystem extends SortedIteratingSystem {
         SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(entity);
         Sprite sprite = spriteComponent.sprite;
         sprite.setPosition(position.x, position.y);
-        if((sprite.getX()+sprite.getWidth()<0)
-                || sprite.getX() > SCREEN_WIDTH
+        if ((sprite.getX() + sprite.getWidth() < -OFFSET_WIDTH)
+                || sprite.getX() > SCREEN_WIDTH + OFFSET_WIDTH
                 || sprite.getY() > SCREEN_HEIGHT
-                || sprite.getY() + sprite.getHeight() < 0){
+                || sprite.getY() + sprite.getHeight() < 0) {
             return;
         }
         preBatching(spriteComponent);
@@ -48,13 +47,13 @@ public class DynamicEntitiesRenderingSystem extends SortedIteratingSystem {
     }
 
     private void preBatching(SpriteComponent spriteComponent) {
-        if(spriteComponent.flashing && HIGHLIGHT.isCompiled()) {
+        if (spriteComponent.flashing && HIGHLIGHT.isCompiled()) {
             batcher.setShader(HIGHLIGHT);
         }
     }
 
     private void postBatching(SpriteComponent spriteComponent) {
-        if(spriteComponent.flashing) {
+        if (spriteComponent.flashing) {
             batcher.setShader(null);
             spriteComponent.flashing = false;
         }

@@ -81,7 +81,6 @@ public class PlayerEntityFactory {
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
         component.sprite = spritesMAIN.get(0);
         component.zIndex = 99;
-        component.stayInBoundaries = true;
         player.add(component);
         player.add(entityFactory.engine.createComponent(StateComponent.class));
         entityFactory.engine.addEntity(player);

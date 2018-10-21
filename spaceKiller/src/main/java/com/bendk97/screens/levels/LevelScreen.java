@@ -70,6 +70,7 @@ public final class LevelScreen extends ScreenAdapter {
     private final Viewport viewport;
     public final SpriteBatch batcher;
     private final Viewport viewportHUD;
+    private final OrthographicCamera camera;
     private final OrthographicCamera cameraHUD;
     private final SpriteBatch batcherHUD;
     private final PooledEngine engine;
@@ -106,7 +107,7 @@ public final class LevelScreen extends ScreenAdapter {
 
         this.game = game;
         this.fxLightEnabled = Settings.isLightFXEnabled();
-        OrthographicCamera camera = new OrthographicCamera();
+        camera = new OrthographicCamera();
         viewport = new ExtendViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
         camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
         this.batcher = new SpriteBatch();
@@ -248,6 +249,7 @@ public final class LevelScreen extends ScreenAdapter {
         engine.addSystem(new AnimationSystem(0));
         engine.addSystem(new BombExplosionSystem(0, collisionListener, player));
         engine.addSystem(new StateSystem(1));
+        engine.addSystem(new MovementPlayerSystem(2, camera));
         engine.addSystem(new MovementSystem(2));
         engine.addSystem(new ShieldSystem(3, player));
         // RENDERING

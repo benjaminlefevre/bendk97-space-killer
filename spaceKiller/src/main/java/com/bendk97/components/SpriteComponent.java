@@ -15,7 +15,6 @@ public class SpriteComponent implements Component, Pool.Poolable {
 
     public Sprite sprite;
     public float alpha = 1.0f;
-    public boolean stayInBoundaries = false;
     public int zIndex = 0;
     public boolean flashing = false;
 
@@ -24,7 +23,6 @@ public class SpriteComponent implements Component, Pool.Poolable {
         sprite = null;
         alpha = 1.0f;
         zIndex = 0;
-        stayInBoundaries = false;
     }
 
 

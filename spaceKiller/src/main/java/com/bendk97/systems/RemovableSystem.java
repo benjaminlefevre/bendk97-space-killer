@@ -12,8 +12,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.bendk97.components.*;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 
-import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
-import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.bendk97.SpaceKillerGameConstants.*;
 
 public class RemovableSystem extends IteratingSystem {
 
@@ -29,8 +28,8 @@ public class RemovableSystem extends IteratingSystem {
         SpriteComponent sprite = ComponentMapperHelper.sprite.get(entity);
         removableComponent.elapseTime += deltaTime;
         if ((removableComponent.elapseTime >= 2.0f || entity.getComponent(PlayerBulletComponent.class) != null) &&
-                (position.x + sprite.sprite.getWidth() < 0
-                        || position.x > SCREEN_WIDTH
+                (position.x + sprite.sprite.getWidth() < -OFFSET_WIDTH
+                        || position.x > SCREEN_WIDTH + OFFSET_WIDTH
                         || position.y > SCREEN_HEIGHT
                         || position.y + sprite.sprite.getHeight() < 0)) {
             getEngine().removeEntity(entity);
