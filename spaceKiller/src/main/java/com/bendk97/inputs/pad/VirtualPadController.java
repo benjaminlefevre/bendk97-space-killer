@@ -26,7 +26,7 @@ public class VirtualPadController extends AbstractPadController {
     public VirtualPadController(LevelScreen screen, InputListener inputListener, Camera camera, Entity player, Rectangle bombButton) {
         super(screen, inputListener, camera, bombButton);
         this.player = player;
-        this.squareTouches = new Rectangle[8];
+        this.squareTouches = new Rectangle[9];
     }
 
     @Override
@@ -54,6 +54,14 @@ public class VirtualPadController extends AbstractPadController {
         return true;
     }
 
+    @Override
+    protected void moveShip(Vector3 worldTouch) {
+        super.moveShip(worldTouch);
+        if (squareTouches[8].contains(worldTouch.x, worldTouch.y)) {
+            listener.stop();
+        }
+    }
+
     private void computeVirtualButtons() {
         PositionComponent position = ComponentMapperHelper.position.get(player);
         float playerWidth = ComponentMapperHelper.sprite.get(player).sprite.getWidth();
@@ -62,47 +70,70 @@ public class VirtualPadController extends AbstractPadController {
         squareTouches[0] = new Rectangle(
                 0f,
                 position.y + 1.5f * playerHeight,
-                position.x,
+                getPositionXTakingIntoAccountHorizontalScrolling(position, playerWidth, true),
                 SCREEN_HEIGHT);
+
         squareTouches[1] = new Rectangle(
-                position.x,
+                getPositionXTakingIntoAccountHorizontalScrolling(position, playerWidth, true),
                 position.y + 1.5f * playerHeight,
                 playerWidth,
                 SCREEN_HEIGHT);
+
         squareTouches[2] = new Rectangle(
-                position.x + playerWidth,
+                getPositionXTakingIntoAccountHorizontalScrolling(position, playerWidth, false),
                 position.y + 1.5f * playerHeight,
-                SCREEN_WIDTH - position.x - playerWidth,
+                SCREEN_WIDTH - getPositionXTakingIntoAccountHorizontalScrolling(position, playerWidth, false),
                 SCREEN_HEIGHT);
 
         squareTouches[3] = new Rectangle(
                 0f,
                 position.y - 0.5f * playerHeight,
-                position.x,
+                getPositionXTakingIntoAccountHorizontalScrolling(position, playerWidth, true),
                 2 * playerHeight);
-        squareTouches[4] = new Rectangle(
-                position.x + playerWidth,
+
+        squareTouches[8] = new Rectangle(
+                position.x >= 50 && position.x < SCREEN_WIDTH - 50 - playerWidth ?
+                        getPositionXTakingIntoAccountHorizontalScrolling(position, playerWidth, true) : 666,
                 position.y - 0.5f * playerHeight,
-                SCREEN_WIDTH - position.x - playerWidth,
+                playerWidth,
+                2 * playerHeight);
+
+
+        squareTouches[4] = new Rectangle(
+                getPositionXTakingIntoAccountHorizontalScrolling(position, playerWidth, false),
+                position.y - 0.5f * playerHeight,
+                SCREEN_WIDTH - getPositionXTakingIntoAccountHorizontalScrolling(position, playerWidth, false),
                 playerHeight * 2);
 
 
         squareTouches[5] = new Rectangle(
                 0f,
                 0f,
-                position.x,
+                getPositionXTakingIntoAccountHorizontalScrolling(position, playerWidth, true),
                 position.y - 0.5f * playerHeight);
+
         squareTouches[6] = new Rectangle(
-                position.x,
+                getPositionXTakingIntoAccountHorizontalScrolling(position, playerWidth, true),
                 0f,
                 playerWidth,
                 position.y - 0.5f * playerHeight);
+
         squareTouches[7] = new Rectangle(
-                position.x + playerWidth,
+                getPositionXTakingIntoAccountHorizontalScrolling(position, playerWidth, false),
                 0f,
-                SCREEN_WIDTH - position.x - playerWidth,
+                SCREEN_WIDTH - getPositionXTakingIntoAccountHorizontalScrolling(position, playerWidth, false),
                 position.y - 0.5f * playerHeight);
 
+    }
+
+    private float getPositionXTakingIntoAccountHorizontalScrolling(PositionComponent positionComponent, float playerWidth, boolean left) {
+        if (positionComponent.x < 0) {
+            return 50f;
+        }
+        if ((positionComponent.x + playerWidth) > SCREEN_WIDTH) {
+            return SCREEN_WIDTH - 50f;
+        }
+        return positionComponent.x + (left ? 0 : playerWidth);
     }
 
 }
