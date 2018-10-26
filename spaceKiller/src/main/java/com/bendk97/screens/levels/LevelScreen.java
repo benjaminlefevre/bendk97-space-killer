@@ -36,7 +36,9 @@ import com.bendk97.assets.Assets;
 import com.bendk97.components.*;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
+import com.bendk97.inputs.GameOverTouchInputProcessor;
 import com.bendk97.inputs.GestureHandler;
+import com.bendk97.inputs.PauseInputProcessor;
 import com.bendk97.inputs.pad.RetroPadController;
 import com.bendk97.inputs.pad.VirtualPadController;
 import com.bendk97.listeners.PlayerListener;
@@ -68,12 +70,12 @@ public final class LevelScreen extends ScreenAdapter {
     private Music music = null;
     private final LevelScript levelScript;
     private final Viewport viewport;
-    public final SpriteBatch batcher;
+    public SpriteBatch batcher;
     private final Viewport viewportHUD;
     private final OrthographicCamera camera;
     private final OrthographicCamera cameraHUD;
-    private final SpriteBatch batcherHUD;
-    private final PooledEngine engine;
+    private SpriteBatch batcherHUD;
+    protected final PooledEngine engine;
     private final EntityFactory entityFactory;
     private final TweenManager tweenManager;
     private final Assets assets;
@@ -98,23 +100,34 @@ public final class LevelScreen extends ScreenAdapter {
     }
 
     public LevelScreen(final Assets assets, final SpaceKillerGame game, final Level level) {
+        this(assets, game, level, true);
+    }
+
+    /* for test purposes */
+    protected LevelScreen(final Assets assets, final SpaceKillerGame game, final Level level, final SpriteBatch batcher) {
+        this(assets, game, level, false);
+        this.batcherHUD = batcher;
+        this.batcher = batcher;
+    }
+
+    private LevelScreen(final Assets assets, final SpaceKillerGame game, final Level level, boolean initBatchers) {
+        if (initBatchers) {
+            this.initBatchers();
+        }
         assets.loadResources(level);
         PausableTimer.instance().stop();
         PausableTimer.instance().start();
         this.level = level;
         this.spriteMaskFactory = new SpriteMaskFactory();
         new Thread(() -> spriteMaskFactory.addMask(assets.get(level.sprites).getTextures().first())).start();
-
         this.game = game;
         this.fxLightEnabled = Settings.isLightFXEnabled();
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
         camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
-        this.batcher = new SpriteBatch();
         this.cameraHUD = new OrthographicCamera();
         viewportHUD = new ExtendViewport(SCREEN_WIDTH, SCREEN_HEIGHT, cameraHUD);
         cameraHUD.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
-        this.batcherHUD = new SpriteBatch();
         this.assets = assets;
         this.tweenManager = new TweenManager();
         ScreenShake screenShake = new ScreenShake(tweenManager, camera);
@@ -146,6 +159,11 @@ public final class LevelScreen extends ScreenAdapter {
         registerPostProcessingEffects();
         this.levelScript = getLevelScript(level, this, assets, entityFactory, tweenManager, player, engine);
         time = -5;
+    }
+
+    private void initBatchers() {
+        this.batcher = new SpriteBatch();
+        this.batcherHUD = new SpriteBatch();
     }
 
     private void initRayLightEffects(OrthographicCamera camera) {
@@ -183,11 +201,11 @@ public final class LevelScreen extends ScreenAdapter {
     }
 
     public InputProcessor getGameOverInputProcessor() {
-        return new com.bendk97.inputs.GameOverTouchInputProcessor(cameraHUD, game, assets, player);
+        return new GameOverTouchInputProcessor(cameraHUD, game, assets, player);
     }
 
     private InputProcessor getPauseInputProcessor() {
-        return new com.bendk97.inputs.PauseInputProcessor(cameraHUD, this);
+        return new PauseInputProcessor(cameraHUD, this);
     }
 
     public void continueWithExtraLife() {
@@ -222,6 +240,9 @@ public final class LevelScreen extends ScreenAdapter {
 
 
     private void registerPostProcessingEffects() {
+        if(Gdx.app.getType() == Application.ApplicationType.HeadlessDesktop) {
+            return;
+        }
         ShaderLoader.BasePath = "shaders/files/";
         postProcessor = new PostProcessor(false, false, Gdx.app.getType() == Application.ApplicationType.Desktop);
         MotionBlur motionBlur = new MotionBlur();
