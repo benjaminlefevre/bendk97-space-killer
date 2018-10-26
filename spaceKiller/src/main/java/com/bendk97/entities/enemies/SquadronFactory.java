@@ -28,8 +28,7 @@ import com.bendk97.tweens.PositionComponentAccessor;
 
 import java.util.Random;
 
-import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
-import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.entities.EntityFactoryIds.*;
 
 public class SquadronFactory {
@@ -130,7 +129,7 @@ public class SquadronFactory {
                 createLinearXYSquadron(entities, velocity, (Float) params[0], (Float) params[1], (Float) params[2], (Float) params[3]);
                 break;
             case SEMI_CIRCLE:
-                createSemiCircleSquadron(entities, velocity, (Float) params[0], (Float) params[1]);
+                createSemiCircleSquadron(entities, velocity, (Float) params[0], (Float) params[1], (boolean) params[2]);
                 break;
             case BEZIER_SPLINE:
                 createBezierSplineSquadron(entities, velocity, convertObjectArrayToVector2Array(params));
@@ -475,18 +474,21 @@ public class SquadronFactory {
         }
     }
 
-    private void createSemiCircleSquadron(Entity[] entities, float velocity, float posX, float posY) {
+    private void createSemiCircleSquadron(Entity[] entities, float velocity, float posX, float posY, boolean comingFromLeft) {
+        float worldWidth = SCREEN_WIDTH + 2 * OFFSET_WIDTH;
+        int leftOrRight = comingFromLeft ? 0 : 1;
+        int direction = comingFromLeft ? 1 : -1;
         Vector2 center = new Vector2(SCREEN_WIDTH / 2f, SCREEN_HEIGHT);
-        Vector2 radius = new Vector2(-SCREEN_WIDTH / 2f, 0f);
+        Vector2 radius = new Vector2((worldWidth * -direction) / 2f, 0f);
         Vector2[] array = new Vector2[20];
         for (int i = 0; i < array.length; ++i) {
-            array[i] = radius.cpy().rotate((180f / array.length - 1) * i).add(center);
+            array[i] = radius.cpy().rotate(((180f * direction) / array.length - 1) * i).add(center);
         }
-
         for (int i = 0; i < entities.length; ++i) {
             final Entity entity = entities[i];
             PositionComponent position = ComponentMapperHelper.position.get(entity);
-            position.setPosition(posX, posY + 2 * i * ComponentMapperHelper.sprite.get(entity).sprite.getHeight());
+            position.setPosition(posX + leftOrRight * worldWidth,
+                    posY + 2 * i * ComponentMapperHelper.sprite.get(entity).sprite.getHeight());
             Timeline timeline = Timeline.createSequence()
                     .push(Tween.to(position, PositionComponentAccessor.POSITION_XY, array[0].dst(position.x, position.y) / velocity)
                             .ease(Linear.INOUT)
