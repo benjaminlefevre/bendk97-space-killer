@@ -27,8 +27,8 @@ import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
 import com.bendk97.screens.levels.utils.ScriptItemExecutor;
 import com.bendk97.systems.FollowPlayerSystem;
-import com.bendk97.tweens.ConeLightTween;
-import com.bendk97.tweens.VelocityComponentAccessor;
+import com.bendk97.tweens.ConeLightTweenAccessor;
+import com.bendk97.tweens.VelocityComponentTweenAccessor;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -69,7 +69,7 @@ public class Level2Script extends LevelScript {
         c1.setActive(false);
         Timeline timeline = Timeline.createSequence();
         timeline.push(
-                Tween.to(c1, ConeLightTween.DISTANCE, 10f)
+                Tween.to(c1, ConeLightTweenAccessor.DISTANCE, 10f)
                         .setCallbackTriggers(TweenCallback.START)
                         .setCallback((type, source) -> {
                             if (type == TweenCallback.START) {
@@ -81,7 +81,7 @@ public class Level2Script extends LevelScript {
                         .delay(3f)
         );
         timeline.push(
-                Tween.to(c1, ConeLightTween.DISTANCE, 5f)
+                Tween.to(c1, ConeLightTweenAccessor.DISTANCE, 5f)
                         .ease(Linear.INOUT)
                         .setCallback((type, source) -> {
                             if (type == TweenCallback.COMPLETE) {
@@ -247,7 +247,7 @@ public class Level2Script extends LevelScript {
         if (second == 255) {
             playSound(BOSS_ALERT);
             for (Entity background : new Array.ArrayIterator<>(backgrounds)) {
-                Tween.to(ComponentMapperHelper.velocity.get(background), VelocityComponentAccessor.VELOCITY_Y, 4).ease(Quad.IN)
+                Tween.to(ComponentMapperHelper.velocity.get(background), VelocityComponentTweenAccessor.VELOCITY_Y, 4).ease(Quad.IN)
                         .target(-ComponentMapperHelper.velocity.get(background).y / 10f).start(tweenManager);
             }
             return;

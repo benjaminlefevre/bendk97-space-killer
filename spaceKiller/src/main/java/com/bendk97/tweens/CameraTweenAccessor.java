@@ -9,7 +9,7 @@ package com.bendk97.tweens;
 import aurelienribon.tweenengine.TweenAccessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-public class CameraTween implements TweenAccessor<OrthographicCamera> {
+public class CameraTweenAccessor implements TweenAccessor<OrthographicCamera> {
     public final static int ZOOM = 0;
     public final static int X = 1;
     public final static int Y = 2;

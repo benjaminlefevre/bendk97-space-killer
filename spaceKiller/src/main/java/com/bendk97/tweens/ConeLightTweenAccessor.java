@@ -9,7 +9,7 @@ package com.bendk97.tweens;
 import aurelienribon.tweenengine.TweenAccessor;
 import box2dLight.ConeLight;
 
-public class ConeLightTween implements TweenAccessor<ConeLight> {
+public class ConeLightTweenAccessor implements TweenAccessor<ConeLight> {
     public final static int DISTANCE = 0;
     public final static int POSITION = 1;
 

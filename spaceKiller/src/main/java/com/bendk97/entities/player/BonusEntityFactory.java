@@ -21,8 +21,8 @@ import com.bendk97.entities.EntityFactory;
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
 import static com.bendk97.SpaceKillerGameConstants.ANIMATION_MAIN;
 import static com.bendk97.SpaceKillerGameConstants.FRAME_DURATION_POWER_UP;
-import static com.bendk97.tweens.PositionComponentAccessor.POSITION_Y;
-import static com.bendk97.tweens.SpriteComponentAccessor.ALPHA;
+import static com.bendk97.tweens.PositionComponentTweenAccessor.POSITION_Y;
+import static com.bendk97.tweens.SpriteComponentTweenAccessor.ALPHA;
 
 public class BonusEntityFactory {
 

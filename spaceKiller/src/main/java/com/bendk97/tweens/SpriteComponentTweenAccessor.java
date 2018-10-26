@@ -9,7 +9,7 @@ package com.bendk97.tweens;
 import aurelienribon.tweenengine.TweenAccessor;
 import com.bendk97.components.SpriteComponent;
 
-public class SpriteComponentAccessor implements TweenAccessor<SpriteComponent> {
+public class SpriteComponentTweenAccessor implements TweenAccessor<SpriteComponent> {
 
     public final static int ALPHA = 0;
 

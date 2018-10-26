@@ -22,8 +22,8 @@ import com.bendk97.listeners.PlayerListener;
 import com.bendk97.screens.levels.LevelScreen;
 import com.bendk97.screens.levels.utils.ScreenShake;
 import com.bendk97.timer.PausableTimer;
-import com.bendk97.tweens.PositionComponentAccessor;
-import com.bendk97.tweens.SpriteComponentAccessor;
+import com.bendk97.tweens.PositionComponentTweenAccessor;
+import com.bendk97.tweens.SpriteComponentTweenAccessor;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
 
@@ -177,17 +177,17 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
 
     private void tweenBossDeath(Entity enemy, Entity player, SpriteComponent spriteComponent) {
         Timeline.createSequence()
-                .push(Tween.to(ComponentMapperHelper.sprite.get(player), SpriteComponentAccessor.ALPHA, 0.2f).target(0f))
-                .push(Tween.to(ComponentMapperHelper.sprite.get(player), SpriteComponentAccessor.ALPHA, 0.2f).target(1f))
+                .push(Tween.to(ComponentMapperHelper.sprite.get(player), SpriteComponentTweenAccessor.ALPHA, 0.2f).target(0f))
+                .push(Tween.to(ComponentMapperHelper.sprite.get(player), SpriteComponentTweenAccessor.ALPHA, 0.2f).target(1f))
                 .repeat(Tween.INFINITY, 0f)
                 .start(tweenManager);
         Timeline.createSequence()
                 .beginParallel()
-                .push(Tween.to(ComponentMapperHelper.position.get(enemy), PositionComponentAccessor.POSITION_XY, 5f).ease(Linear.INOUT)
+                .push(Tween.to(ComponentMapperHelper.position.get(enemy), PositionComponentTweenAccessor.POSITION_XY, 5f).ease(Linear.INOUT)
                         .target(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f,
                                 SCREEN_HEIGHT - spriteComponent.sprite.getHeight() - 20f))
 
-                .push(Tween.to(ComponentMapperHelper.sprite.get(enemy), SpriteComponentAccessor.ALPHA, 0.2f).ease(Linear.INOUT)
+                .push(Tween.to(ComponentMapperHelper.sprite.get(enemy), SpriteComponentTweenAccessor.ALPHA, 0.2f).ease(Linear.INOUT)
                         .target(0.2f).repeatYoyo(25, 0f))
                 .end()
                 .setCallback((i, baseTween) -> {

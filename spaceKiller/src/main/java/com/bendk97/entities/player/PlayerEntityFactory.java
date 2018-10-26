@@ -24,7 +24,7 @@ import com.bendk97.screens.levels.Level;
 
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
 import static com.bendk97.SpaceKillerGameConstants.*;
-import static com.bendk97.tweens.SpriteComponentAccessor.ALPHA;
+import static com.bendk97.tweens.SpriteComponentTweenAccessor.ALPHA;
 
 public class PlayerEntityFactory {
 

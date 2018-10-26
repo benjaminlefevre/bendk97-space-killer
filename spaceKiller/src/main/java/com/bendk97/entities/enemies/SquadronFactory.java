@@ -23,8 +23,8 @@ import com.bendk97.components.SpriteComponent;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.utils.ScriptItem;
-import com.bendk97.tweens.CameraTween;
-import com.bendk97.tweens.PositionComponentAccessor;
+import com.bendk97.tweens.CameraTweenAccessor;
+import com.bendk97.tweens.PositionComponentTweenAccessor;
 
 import java.util.Random;
 
@@ -166,18 +166,18 @@ public class SquadronFactory {
         PositionComponent position = ComponentMapperHelper.position.get(entity);
         position.setPosition(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f,
                 SCREEN_HEIGHT + 10f);
-        Tween.to(camera, CameraTween.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(entityFactory.tweenManager);
+        Tween.to(camera, CameraTweenAccessor.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(entityFactory.tweenManager);
         Timeline.createSequence()
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (spriteComponent.sprite.getHeight() + 30f) / velocity)
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_Y, (spriteComponent.sprite.getHeight() + 30f) / velocity)
                         .ease(Linear.INOUT)
                         .target(SCREEN_HEIGHT - spriteComponent.sprite.getHeight() - 20f))
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, ((SCREEN_WIDTH + spriteComponent.sprite.getWidth()) / 2f) / velocity)
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_X, ((SCREEN_WIDTH + spriteComponent.sprite.getWidth()) / 2f) / velocity)
                         .ease(Linear.INOUT)
                         .target(-spriteComponent.sprite.getWidth()).delay(2f))
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH + spriteComponent.sprite.getWidth() / 2f) / velocity)
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_X, (SCREEN_WIDTH + spriteComponent.sprite.getWidth() / 2f) / velocity)
                         .ease(Linear.INOUT)
                         .target(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f).delay(2f))
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH + spriteComponent.sprite.getWidth() / 2f) / velocity)
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_X, (SCREEN_WIDTH + spriteComponent.sprite.getWidth() / 2f) / velocity)
                         .ease(Linear.INOUT)
                         .target(SCREEN_WIDTH).delay(2f))
 
@@ -194,19 +194,19 @@ public class SquadronFactory {
         PositionComponent position = ComponentMapperHelper.position.get(entity);
         position.setPosition(SCREEN_WIDTH / 2f - sprite.getWidth() / 2f,
                 SCREEN_HEIGHT);
-        Tween.to(camera, CameraTween.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(entityFactory.tweenManager);
+        Tween.to(camera, CameraTweenAccessor.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(entityFactory.tweenManager);
 
         Timeline.createSequence()
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (sprite.getHeight() + 30f) / velocity)
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_Y, (sprite.getHeight() + 30f) / velocity)
                         .ease(Linear.INOUT)
                         .targetRelative(-sprite.getHeight() - 30f))
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocity * 2))
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocity * 2))
                         .ease(Linear.INOUT)
                         .targetRelative(SCREEN_WIDTH / 2f).delay(2f))
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH) / (velocity * 2))
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_X, (SCREEN_WIDTH) / (velocity * 2))
                         .ease(Linear.INOUT)
                         .targetRelative(-SCREEN_WIDTH).delay(2f))
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocity * 2))
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocity * 2))
                         .ease(Linear.INOUT)
                         .targetRelative(SCREEN_WIDTH / 2f).delay(2f))
                 .repeatYoyo(Tween.INFINITY, 1f)
@@ -222,34 +222,34 @@ public class SquadronFactory {
         PositionComponent position = ComponentMapperHelper.position.get(entity);
         position.setPosition(SCREEN_WIDTH / 2f - sprite.getWidth() / 2f,
                 SCREEN_HEIGHT);
-        Tween.to(camera, CameraTween.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(entityFactory.tweenManager);
+        Tween.to(camera, CameraTweenAccessor.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(entityFactory.tweenManager);
 
         float velocityMin = velocity * 0.75f;
         float velocityMax = velocity * 2f;
 
         Timeline.createSequence()
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (3 * sprite.getHeight()) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_Y, (3 * sprite.getHeight()) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
                         .ease(Linear.INOUT)
                         .targetRelative(-3 * sprite.getHeight()))
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (1.5f * sprite.getHeight()) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_Y, (1.5f * sprite.getHeight()) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
                         .ease(Linear.INOUT)
                         .targetRelative(1.5f * sprite.getHeight()))
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
                         .ease(Linear.INOUT)
                         .targetRelative(-SCREEN_WIDTH / 2f))
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_X, (SCREEN_WIDTH) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
                         .ease(Linear.INOUT)
                         .targetRelative(SCREEN_WIDTH))
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_X, (SCREEN_WIDTH / 2f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
                         .ease(Linear.INOUT)
                         .targetRelative(-SCREEN_WIDTH / 2f))
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, (0.5f * sprite.getHeight()) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_Y, (0.5f * sprite.getHeight()) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
                         .ease(Linear.INOUT)
                         .targetRelative(0.5f * sprite.getHeight()))
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (SCREEN_WIDTH / 4f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_X, (SCREEN_WIDTH / 4f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
                         .ease(Linear.INOUT).delay(1f)
                         .targetRelative(-SCREEN_WIDTH / 4f))
-                .push(Tween.to(position, PositionComponentAccessor.POSITION_X, (2 * SCREEN_WIDTH / 4f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
+                .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_X, (2 * SCREEN_WIDTH / 4f) / (velocityMin + random.nextFloat() * (velocityMax - velocityMin)))
                         .ease(Linear.INOUT).delay(1f)
                         .targetRelative(2 * SCREEN_WIDTH / 4f))
                 .repeatYoyo(Tween.INFINITY, 1f)
@@ -297,7 +297,7 @@ public class SquadronFactory {
         for (final Entity entity : entities) {
             PositionComponent position = ComponentMapperHelper.position.get(entity);
             Timeline.createSequence()
-                    .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, 3 * SCREEN_HEIGHT / velocity)
+                    .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_Y, 3 * SCREEN_HEIGHT / velocity)
                             .ease(Linear.INOUT)
                             .targetRelative(-3f * SCREEN_HEIGHT))
                     .setCallback((i, baseTween) -> {
@@ -367,11 +367,11 @@ public class SquadronFactory {
             PositionComponent position = ComponentMapperHelper.position.get(entity);
             position.setPosition(startPoint.x, startPoint.y + i * ComponentMapperHelper.sprite.get(entity).sprite.getHeight());
             Timeline timeline = Timeline.createSequence();
-            timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, points[0].dst(position.x, position.y) / velocity)
+            timeline.push(Tween.to(position, PositionComponentTweenAccessor.POSITION_XY, points[0].dst(position.x, position.y) / velocity)
                     .ease(Linear.INOUT)
                     .target(points[0].x, points[0].y));
             for (int j = 1; j < points.length; ++j) {
-                timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, points[j].dst(points[j - 1].x, points[j - 1].y) / velocity)
+                timeline.push(Tween.to(position, PositionComponentTweenAccessor.POSITION_XY, points[j].dst(points[j - 1].x, points[j - 1].y) / velocity)
                         .ease(Linear.INOUT)
                         .target(points[j].x, points[j].y));
             }
@@ -387,14 +387,14 @@ public class SquadronFactory {
     private void placeEntitiesOnSplineInfinite(Entity[] entities, final float velocity, final Vector2[] points) {
         for (final Entity entity : entities) {
             final PositionComponent position = ComponentMapperHelper.position.get(entity);
-            Tween.to(position, PositionComponentAccessor.POSITION_XY, points[0].dst(position.x, position.y) / velocity)
+            Tween.to(position, PositionComponentTweenAccessor.POSITION_XY, points[0].dst(position.x, position.y) / velocity)
                     .ease(Linear.INOUT)
                     .target(points[0].x, points[0].y)
                     .setCallback((i, baseTween) -> {
                         if (i == TweenCallback.COMPLETE) {
                             Timeline timeline = Timeline.createSequence();
                             for (int j = 1; j < points.length; ++j) {
-                                timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, points[j].dst(points[j - 1].x, points[j - 1].y) / velocity)
+                                timeline.push(Tween.to(position, PositionComponentTweenAccessor.POSITION_XY, points[j].dst(points[j - 1].x, points[j - 1].y) / velocity)
                                         .ease(Linear.INOUT)
                                         .target(points[j].x, points[j].y));
                             }
@@ -421,7 +421,7 @@ public class SquadronFactory {
             PositionComponent position = ComponentMapperHelper.position.get(entity);
             position.setPosition(posX - direction * i * ComponentMapperHelper.sprite.get(entity).sprite.getWidth(), posY);
             Timeline.createSequence()
-                    .push(Tween.to(position, PositionComponentAccessor.POSITION_X, 3f * SCREEN_WIDTH / velocity)
+                    .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_X, 3f * SCREEN_WIDTH / velocity)
                             .ease(Linear.INOUT)
                             .targetRelative(direction * 3f * SCREEN_WIDTH))
                     .setCallback((i1, baseTween) -> {
@@ -443,7 +443,7 @@ public class SquadronFactory {
                 position.setPosition(posX, posY + i * ComponentMapperHelper.sprite.get(entity).sprite.getHeight());
             }
             Timeline.createSequence()
-                    .push(Tween.to(position, PositionComponentAccessor.POSITION_Y, 3 * SCREEN_HEIGHT / velocity)
+                    .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_Y, 3 * SCREEN_HEIGHT / velocity)
                             .ease(Linear.INOUT)
                             .targetRelative(-3f * SCREEN_HEIGHT))
                     .setCallback((i1, baseTween) -> {
@@ -462,7 +462,7 @@ public class SquadronFactory {
             PositionComponent position = ComponentMapperHelper.position.get(entity);
             position.setPosition(startX, startY + i * ComponentMapperHelper.sprite.get(entity).sprite.getHeight());
             Timeline.createSequence()
-                    .push(Tween.to(position, PositionComponentAccessor.POSITION_XY, (new Vector2(startX, startY)).dst(new Vector2(endX, endY)) / velocity)
+                    .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_XY, (new Vector2(startX, startY)).dst(new Vector2(endX, endY)) / velocity)
                             .ease(Linear.INOUT)
                             .target(endX, endY))
                     .setCallback((i1, baseTween) -> {
@@ -490,11 +490,11 @@ public class SquadronFactory {
             position.setPosition(posX + leftOrRight * worldWidth,
                     posY + 2 * i * ComponentMapperHelper.sprite.get(entity).sprite.getHeight());
             Timeline timeline = Timeline.createSequence()
-                    .push(Tween.to(position, PositionComponentAccessor.POSITION_XY, array[0].dst(position.x, position.y) / velocity)
+                    .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_XY, array[0].dst(position.x, position.y) / velocity)
                             .ease(Linear.INOUT)
                             .target(array[0].x, array[0].y));
             for (int j = 1; j < array.length; ++j) {
-                timeline.push(Tween.to(position, PositionComponentAccessor.POSITION_XY, array[j].dst(array[j - 1].x, array[j - 1].y) / velocity)
+                timeline.push(Tween.to(position, PositionComponentTweenAccessor.POSITION_XY, array[j].dst(array[j - 1].x, array[j - 1].y) / velocity)
                         .ease(Linear.INOUT)
                         .target(array[j].x, array[j].y));
             }

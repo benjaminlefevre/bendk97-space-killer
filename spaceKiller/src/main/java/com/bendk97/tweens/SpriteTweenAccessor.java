@@ -9,7 +9,7 @@ package com.bendk97.tweens;
 import aurelienribon.tweenengine.TweenAccessor;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-public class SpriteTween implements TweenAccessor<Sprite> {
+public class SpriteTweenAccessor implements TweenAccessor<Sprite> {
     public final static int POS_XY = 0;
     public final static int ROTATION = 1;
     public final static int SCALE = 2;

@@ -61,7 +61,7 @@ import com.bitfire.utils.ShaderLoader;
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.google.Achievement.*;
 import static com.bendk97.screens.levels.Level.*;
-import static com.bendk97.tweens.SpriteComponentAccessor.ALPHA;
+import static com.bendk97.tweens.SpriteComponentTweenAccessor.ALPHA;
 
 public final class LevelScreen extends ScreenAdapter {
 
@@ -251,12 +251,12 @@ public final class LevelScreen extends ScreenAdapter {
     }
 
     private void registerTweensAccessor() {
-        Tween.registerAccessor(SpriteComponent.class, new SpriteComponentAccessor());
-        Tween.registerAccessor(PositionComponent.class, new PositionComponentAccessor());
-        Tween.registerAccessor(VelocityComponent.class, new VelocityComponentAccessor());
-        Tween.registerAccessor(OrthographicCamera.class, new CameraTween());
+        Tween.registerAccessor(SpriteComponent.class, new SpriteComponentTweenAccessor());
+        Tween.registerAccessor(PositionComponent.class, new PositionComponentTweenAccessor());
+        Tween.registerAccessor(VelocityComponent.class, new VelocityComponentTweenAccessor());
+        Tween.registerAccessor(OrthographicCamera.class, new CameraTweenAccessor());
         if (fxLightEnabled) {
-            Tween.registerAccessor(ConeLight.class, new ConeLightTween());
+            Tween.registerAccessor(ConeLight.class, new ConeLightTweenAccessor());
         }
     }
 

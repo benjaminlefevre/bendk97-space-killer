@@ -25,8 +25,8 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.SOUND_BOMB_EXPLOSION;
 import static com.bendk97.components.helpers.ComponentMapperHelper.position;
 import static com.bendk97.components.helpers.ComponentMapperHelper.sprite;
-import static com.bendk97.tweens.PositionComponentAccessor.POSITION_XY;
-import static com.bendk97.tweens.PositionComponentAccessor.POSITION_Y;
+import static com.bendk97.tweens.PositionComponentTweenAccessor.POSITION_XY;
+import static com.bendk97.tweens.PositionComponentTweenAccessor.POSITION_Y;
 
 public class PlayerActionsEntityFactory {
 

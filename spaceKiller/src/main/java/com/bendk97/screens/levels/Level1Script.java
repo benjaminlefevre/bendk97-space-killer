@@ -22,7 +22,7 @@ import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
 import com.bendk97.screens.levels.utils.ScriptItemExecutor;
-import com.bendk97.tweens.ConeLightTween;
+import com.bendk97.tweens.ConeLightTweenAccessor;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +38,7 @@ import static com.bendk97.screens.levels.Level.MusicTrack.BOSS;
 import static com.bendk97.screens.levels.Level.MusicTrack.LEVEL;
 import static com.bendk97.screens.levels.Level.SoundEffect.BOSS_ALERT;
 import static com.bendk97.screens.levels.Level.SoundEffect.GO;
-import static com.bendk97.tweens.VelocityComponentAccessor.VELOCITY_Y;
+import static com.bendk97.tweens.VelocityComponentTweenAccessor.VELOCITY_Y;
 
 public final class Level1Script extends LevelScript {
     private LinkedList<ScriptItem> scriptItemsEasy;
@@ -79,7 +79,7 @@ public final class Level1Script extends LevelScript {
         c1.setActive(false);
         Timeline timeline = Timeline.createSequence();
         timeline.push(
-                Tween.to(c1, ConeLightTween.DISTANCE, 7f)
+                Tween.to(c1, ConeLightTweenAccessor.DISTANCE, 7f)
                         .setCallbackTriggers(TweenCallback.START)
                         .setCallback((type, source) -> {
                             if (type == TweenCallback.START) {
@@ -91,7 +91,7 @@ public final class Level1Script extends LevelScript {
                         .delay(1f)
         );
         timeline.push(
-                Tween.to(c1, ConeLightTween.DISTANCE, 3f)
+                Tween.to(c1, ConeLightTweenAccessor.DISTANCE, 3f)
                         .ease(Linear.INOUT)
                         .setCallback((type, source) -> {
                             if (type == TweenCallback.COMPLETE) {

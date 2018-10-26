@@ -18,11 +18,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
-import com.bendk97.tweens.SpriteTween;
+import com.bendk97.tweens.SpriteTweenAccessor;
 
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
-import static com.bendk97.tweens.SpriteTween.ROTATION;
-import static com.bendk97.tweens.SpriteTween.SCALE;
+import static com.bendk97.tweens.SpriteTweenAccessor.ROTATION;
+import static com.bendk97.tweens.SpriteTweenAccessor.SCALE;
 
 
 public class SplashScreen extends HDScreen {
@@ -57,7 +57,7 @@ public class SplashScreen extends HDScreen {
         logo.setPosition(viewport.getWorldWidth() / 2f - logo.getWidth() / 2f,
                 viewport.getWorldHeight() / 2f - logo.getHeight() / 2f);
         logo.setScale(0f);
-        Tween.registerAccessor(Sprite.class, new SpriteTween());
+        Tween.registerAccessor(Sprite.class, new SpriteTweenAccessor());
         Tween.to(logo, ROTATION, 0.5f)
                 .ease(Linear.INOUT).target(360f).repeat(3, 0f)
                 .start(tweenManager);

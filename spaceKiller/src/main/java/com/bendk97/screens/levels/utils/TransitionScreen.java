@@ -16,7 +16,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.screens.levels.LevelScreen;
-import com.bendk97.tweens.SpriteTween;
+import com.bendk97.tweens.SpriteTweenAccessor;
 
 public class TransitionScreen extends ScreenAdapter {
     private final SpaceKillerGame game;
@@ -57,7 +57,7 @@ public class TransitionScreen extends ScreenAdapter {
     public void show() {
         spriteBatch = new SpriteBatch();
         manager = new TweenManager();
-        Tween.registerAccessor(Sprite.class, new SpriteTween());
+        Tween.registerAccessor(Sprite.class, new SpriteTweenAccessor());
 
         TweenCallback backgroundAnimationTweenComplete = (type, source) -> {
             dispose();
@@ -67,7 +67,7 @@ public class TransitionScreen extends ScreenAdapter {
         currentScreenSprite.setPosition(0, 0);
         nextScreenSprite.setPosition(Gdx.graphics.getWidth(), 0);
 
-        Tween.to(nextScreenSprite, SpriteTween.POS_XY, 2.5f)
+        Tween.to(nextScreenSprite, SpriteTweenAccessor.POS_XY, 2.5f)
                 .target(0, 0)
                 .setCallback(backgroundAnimationTweenComplete)
                 .setCallbackTriggers(TweenCallback.COMPLETE)

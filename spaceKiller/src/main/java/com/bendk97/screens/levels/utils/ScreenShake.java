@@ -13,7 +13,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.RandomXS128;
 import com.bendk97.Settings;
-import com.bendk97.tweens.CameraTween;
+import com.bendk97.tweens.CameraTweenAccessor;
 
 import java.util.Random;
 
@@ -49,8 +49,8 @@ public class ScreenShake {
             float x = (float) Math.floor(SCREEN_WIDTH / 2f + currentStrength *
                     Math.cos(angle));
             float y = (float) Math.floor(SCREEN_HEIGHT / 2f + currentStrength * Math.sin(angle));
-            Tween.to(camera, CameraTween.X, STEP_INTERVAL).delay(step * STEP_INTERVAL).target(x).ease(Linear.INOUT).start(tweenManager);
-            Tween.to(camera, CameraTween.Y, STEP_INTERVAL).delay(step * STEP_INTERVAL).target(y).ease(Linear.INOUT).start(tweenManager);
+            Tween.to(camera, CameraTweenAccessor.X, STEP_INTERVAL).delay(step * STEP_INTERVAL).target(x).ease(Linear.INOUT).start(tweenManager);
+            Tween.to(camera, CameraTweenAccessor.Y, STEP_INTERVAL).delay(step * STEP_INTERVAL).target(y).ease(Linear.INOUT).start(tweenManager);
             currentStrength -= STRENGTH_STEP;
         }
     }
