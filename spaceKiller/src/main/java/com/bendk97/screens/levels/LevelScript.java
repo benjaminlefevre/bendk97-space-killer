@@ -155,7 +155,7 @@ public abstract class LevelScript {
             case LINEAR_XY:
                 return new Object[]{0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f};
             case SEMI_CIRCLE:
-                return new Object[]{0f, SCREEN_HEIGHT};
+                return new Object[]{-OFFSET_WIDTH, SCREEN_HEIGHT, comingFromLeft};
             case BEZIER_SPLINE:
                 if (random.nextBoolean()) {
                     return new Object[]{
