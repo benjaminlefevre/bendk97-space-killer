@@ -28,6 +28,7 @@ import java.util.Random;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 import static com.bendk97.entities.EntityFactoryIds.*;
+import static com.bendk97.pools.GamePools.poolVector2;
 import static com.bendk97.screens.levels.Level.Level2;
 import static com.bendk97.screens.levels.Level.Level3;
 
@@ -100,13 +101,17 @@ public class SoloEnemyFactory {
         final PositionComponent position = ComponentMapperHelper.position.get(enemy);
         Sprite sprite = ComponentMapperHelper.sprite.get(enemy).sprite;
         final int k = 100;
-        Bezier<Vector2> bezier = new Bezier<>(new Vector2(0f, SCREEN_HEIGHT - sprite.getHeight()), new Vector2(0f, SCREEN_HEIGHT / 2f),
-                new Vector2(SCREEN_WIDTH, SCREEN_HEIGHT / 2f), new Vector2(SCREEN_WIDTH - sprite.getWidth(), SCREEN_HEIGHT - sprite.getHeight()));
+        Bezier<Vector2> bezier = new Bezier<>(
+                poolVector2.getVector2(0f, SCREEN_HEIGHT - sprite.getHeight()),
+                poolVector2.getVector2(0f, SCREEN_HEIGHT / 2f),
+                poolVector2.getVector2(SCREEN_WIDTH, SCREEN_HEIGHT / 2f),
+                poolVector2.getVector2(SCREEN_WIDTH - sprite.getWidth(), SCREEN_HEIGHT - sprite.getHeight()));
         final Vector2[] vPoints = new Vector2[k];
         for (int i = 0; i < k; ++i) {
-            vPoints[i] = new Vector2();
+            vPoints[i] = poolVector2.obtain();
             bezier.valueAt(vPoints[i], ((float) i) / ((float) k - 1));
         }
+        poolVector2.free(bezier.points);
         Tween.to(position, PositionComponentTweenAccessor.POSITION_X, sprite.getWidth() / velocity)
                 .ease(Linear.INOUT).targetRelative(directionFactor * sprite.getWidth())
                 .setCallback((i, baseTween) -> {
@@ -122,7 +127,7 @@ public class SoloEnemyFactory {
                     }
                     timeline.repeatYoyo(Tween.INFINITY, 1f)
                             .start(entityFactory.tweenManager);
-
+                    poolVector2.free(vPoints);
                 }).start(entityFactory.tweenManager);
     }
 
@@ -135,7 +140,10 @@ public class SoloEnemyFactory {
                 .ease(Linear.INOUT).targetRelative(directionFactor * sprite.getWidth())
                 .setCallback((i, baseTween) -> {
                     if (i == TweenCallback.COMPLETE) {
-                        float distance = (new Vector2(0f, SCREEN_HEIGHT - sprite.getHeight())).dst(new Vector2(75f, SCREEN_HEIGHT - sprite.getHeight() - 75f));
+                        Vector2 point1 = poolVector2.getVector2(0f, SCREEN_HEIGHT - sprite.getHeight());
+                        Vector2 point2 = poolVector2.getVector2(75f, SCREEN_HEIGHT - sprite.getHeight() - 75f);
+                        float distance = point1.dst(point2);
+                        poolVector2.free(point1, point2);
                         Timeline.createSequence()
                                 .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_XY, distance / velocity)
                                         .ease(Linear.INOUT).targetRelative(75f * directionFactor, -75f))

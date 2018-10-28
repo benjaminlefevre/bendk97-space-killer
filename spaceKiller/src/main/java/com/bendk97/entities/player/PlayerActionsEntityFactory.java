@@ -12,7 +12,6 @@ import aurelienribon.tweenengine.equations.Linear;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.bendk97.components.*;
 import com.bendk97.components.helpers.ComponentMapperHelper;
@@ -25,11 +24,14 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.SOUND_BOMB_EXPLOSION;
 import static com.bendk97.components.helpers.ComponentMapperHelper.position;
 import static com.bendk97.components.helpers.ComponentMapperHelper.sprite;
+import static com.bendk97.pools.GamePools.poolSprite;
+import static com.bendk97.pools.GamePools.poolVector2;
 import static com.bendk97.tweens.PositionComponentTweenAccessor.POSITION_XY;
 import static com.bendk97.tweens.PositionComponentTweenAccessor.POSITION_Y;
 
 public class PlayerActionsEntityFactory {
 
+    private static final Color WHITE_80 = new Color(1f, 1f, 1f, 0.8f);
     private final EntityFactory entityFactory;
 
     public PlayerActionsEntityFactory(EntityFactory entityFactory) {
@@ -65,12 +67,13 @@ public class PlayerActionsEntityFactory {
         PositionComponent playerPosition = position.get(player);
         positionBulletComponent.x = playerPosition.x - spriteBulletComponent.sprite.getWidth();
         positionBulletComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
-        Vector2 direction = new Vector2(0, 1);
+        Vector2 direction = poolVector2.getVector2(0, 1);
         direction.rotate(35f);
         direction.nor();
         direction.scl(PLAYER_BULLET_VELOCITY * 1.5f);
         velocityBulletComponent.y = direction.y;
         velocityBulletComponent.x = direction.x;
+        poolVector2.free(direction);
         if (entityFactory.rayHandler != null) {
             entityFactory.createLight(bullet, playerComponent.powerLevel.color, spriteBulletComponent.sprite.getWidth() * 7f);
         }
@@ -86,12 +89,13 @@ public class PlayerActionsEntityFactory {
         PositionComponent playerPosition = position.get(player);
         positionBulletComponent.x = playerPosition.x + sprite.get(player).sprite.getWidth();
         positionBulletComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
-        Vector2 direction = new Vector2(0, 1);
+        Vector2 direction = poolVector2.getVector2(0, 1);
         direction.rotate(-35f);
         direction.nor();
         direction.scl(PLAYER_BULLET_VELOCITY * 1.5f);
         velocityBulletComponent.y = direction.y;
         velocityBulletComponent.x = direction.x;
+        poolVector2.free(direction);
         if (entityFactory.rayHandler != null) {
             entityFactory.createLight(bullet, playerComponent.powerLevel.color, spriteBulletComponent.sprite.getWidth() * 7f);
         }
@@ -103,7 +107,7 @@ public class PlayerActionsEntityFactory {
         bomb.add(positionComponent);
         SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION, entityFactory.commonAtlas.createSprites("bomb"), LOOP));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION, poolSprite.getSprites(entityFactory.commonAtlas.findRegions("bomb")), LOOP));
         spriteComponent.sprite = animationComponent.animations.get(ANIMATION_MAIN).getKeyFrame(0);
         bomb.add(spriteComponent);
         bomb.add(animationComponent);
@@ -124,15 +128,15 @@ public class PlayerActionsEntityFactory {
                 .start(entityFactory.tweenManager);
     }
 
-    protected void createBombExplosion(Entity bomb) {
+    private void createBombExplosion(Entity bomb) {
         final Entity bombExplosion = entityFactory.engine.createEntity();
         PositionComponent positionComponent = entityFactory.engine.createComponent(PositionComponent.class);
         bombExplosion.add(positionComponent);
         final SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION_BOMB_EXPLOSION,
-                entityFactory.commonAtlas.createSprites("bomb_explosion"), LOOP_PINGPONG));
-        spriteComponent.sprite = entityFactory.commonAtlas.createSprite("bomb_explosion", 6);
+                poolSprite.getSprites(entityFactory.commonAtlas.findRegions("bomb_explosion")), LOOP_PINGPONG));
+        spriteComponent.sprite = poolSprite.getSprite(entityFactory.commonAtlas.findRegion("bomb_explosion", 6));
         spriteComponent.zIndex = 100;
         bombExplosion.add(spriteComponent);
         bombExplosion.add(animationComponent);
@@ -155,7 +159,7 @@ public class PlayerActionsEntityFactory {
             @Override
             public void run() {
                 if (entityFactory.rayHandler != null) {
-                    entityFactory.createLight(bombExplosion, new Color(1f, 1f, 1f, 0.8f), spriteComponent.sprite.getHeight() * 20f);
+                    entityFactory.createLight(bombExplosion, WHITE_80, spriteComponent.sprite.getHeight() * 20f);
                 }
             }
         }, 0.6f);
@@ -166,7 +170,7 @@ public class PlayerActionsEntityFactory {
         bullet.add(entityFactory.engine.createComponent(PlayerBulletComponent.class));
         bullet.add(positionBulletComponent);
         bullet.add(velocityBulletComponent);
-        spriteBulletComponent.sprite = new Sprite(entityFactory.levelAtlas.findRegion(bulletSpriteName));
+        spriteBulletComponent.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion(bulletSpriteName));
         bullet.add(spriteBulletComponent);
         bullet.add(entityFactory.engine.createComponent(RemovableComponent.class));
         entityFactory.engine.addEntity(bullet);

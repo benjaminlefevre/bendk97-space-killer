@@ -16,7 +16,6 @@ import box2dLight.ConeLight;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.bendk97.assets.Assets;
-import com.bendk97.components.GameOverComponent;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.utils.ScriptItem;
@@ -30,6 +29,7 @@ import java.util.List;
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.GFX_BGD_LEVEL1;
 import static com.bendk97.assets.Assets.GFX_BGD_STARS;
+import static com.bendk97.components.helpers.ComponentMapperHelper.gameOver;
 import static com.bendk97.entities.EntityFactoryIds.BOSS_LEVEL_1;
 import static com.bendk97.entities.enemies.SquadronFactory.BOSS_MOVE;
 import static com.bendk97.entities.enemies.SquadronFactory.LINEAR_Y;
@@ -45,6 +45,7 @@ public final class Level1Script extends LevelScript {
     private LinkedList<ScriptItem> scriptItemsHardRight;
     private Entity background;
     private Entity background2;
+    private ConeLight coneLight;
 
     /*
     for test purposes only
@@ -69,17 +70,17 @@ public final class Level1Script extends LevelScript {
     }
 
     private void initAmbiantLights(EntityFactory entityFactory) {
-        ConeLight c1 = new ConeLight(entityFactory.rayHandler, 50, Color.GOLDENROD, 0,
+        coneLight = new ConeLight(entityFactory.rayHandler, 10, Color.GOLDENROD, 0,
                 SCREEN_WIDTH + 40, SCREEN_HEIGHT + 40,
                 225, 60);
-        c1.setActive(false);
+        coneLight.setActive(false);
         Timeline timeline = Timeline.createSequence();
         timeline.push(
-                Tween.to(c1, ConeLightTweenAccessor.DISTANCE, 7f)
+                Tween.to(coneLight, ConeLightTweenAccessor.DISTANCE, 7f)
                         .setCallbackTriggers(TweenCallback.START)
                         .setCallback((type, source) -> {
                             if (type == TweenCallback.START) {
-                                c1.setActive(true);
+                                coneLight.setActive(true);
                             }
                         })
                         .delay(10f)
@@ -87,11 +88,11 @@ public final class Level1Script extends LevelScript {
                         .delay(1f)
         );
         timeline.push(
-                Tween.to(c1, ConeLightTweenAccessor.DISTANCE, 3f)
+                Tween.to(coneLight, ConeLightTweenAccessor.DISTANCE, 3f)
                         .ease(Linear.INOUT)
                         .setCallback((type, source) -> {
                             if (type == TweenCallback.COMPLETE) {
-                                c1.setActive(false);
+                                coneLight.setActive(false);
                             }
                         })
                         .target(0f)
@@ -182,7 +183,7 @@ public final class Level1Script extends LevelScript {
     }
 
     private void scriptBoss(int second) {
-        if (player.getComponent(GameOverComponent.class) != null) {
+        if (gameOver.get(player) != null) {
             return;
         }
         if (second == 185) {
@@ -221,5 +222,17 @@ public final class Level1Script extends LevelScript {
     private List<ScriptItem> randomHardSpawnEnemiesComingFromRight(int nbSpawns) {
         return randomSpawnEnemies(nbSpawns, ENEMY_VELOCITY_HARD, STANDARD_RATE_SHOOT, ENEMY_BULLET_HARD_VELOCITY, BONUS_SQUADRON_HARD, 7, 15, false);
 
+    }
+
+    @Override
+    public void dispose() {
+        if (coneLight != null) {
+            coneLight.dispose();
+        }
+        scriptItemsEasy.clear();
+        scriptItemsMediumLeft.clear();
+        scriptItemsMediumRight.clear();
+        scriptItemsHardLeft.clear();
+        scriptItemsHardRight.clear();
     }
 }

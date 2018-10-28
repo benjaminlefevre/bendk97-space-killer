@@ -134,4 +134,8 @@ public class SpaceKillerGameConstants {
     public static final float BOMB_STOCK_Y = 10f;
     public static final float BOSS_ALERT_X = SCREEN_WIDTH / 4;
     public static final float BOSS_ALERT_Y = SCREEN_HEIGHT * 3 / 4;
+
+    // POOLS
+    public static final int POOL_INIT = 50;
+    public static final int POOL_MAX = 150;
 }

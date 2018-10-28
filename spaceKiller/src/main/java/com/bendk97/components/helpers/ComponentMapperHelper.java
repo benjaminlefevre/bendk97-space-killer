@@ -8,6 +8,7 @@ package com.bendk97.components.helpers;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.bendk97.components.*;
+import com.bendk97.components.texts.BossAlertComponent;
 
 public class ComponentMapperHelper {
     public static final ComponentMapper<BackgroundComponent> background = ComponentMapper.getFor(BackgroundComponent.class);
@@ -28,4 +29,8 @@ public class ComponentMapperHelper {
     public static final ComponentMapper<LevelFinishedComponent> levelFinished = ComponentMapper.getFor(LevelFinishedComponent.class);
     public static final ComponentMapper<LightComponent> light = ComponentMapper.getFor(LightComponent.class);
     public static final ComponentMapper<StatusHealthComponent> healthBar = ComponentMapper.getFor(StatusHealthComponent.class);
+    public static final ComponentMapper<BossAlertComponent> bossAlert = ComponentMapper.getFor(BossAlertComponent.class);
+    public static final ComponentMapper<GameOverComponent> gameOver = ComponentMapper.getFor(GameOverComponent.class);
+    public static final ComponentMapper<PauseComponent> pause = ComponentMapper.getFor(PauseComponent.class);
+    public static final ComponentMapper<PlayerBulletComponent> playerBullet = ComponentMapper.getFor(PlayerBulletComponent.class);
 }

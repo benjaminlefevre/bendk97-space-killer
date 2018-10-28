@@ -8,6 +8,7 @@ package com.bendk97;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.utils.StringBuilder;
 
 public class Settings {
     private static final String LIGHT_FX = "lightFX";
@@ -16,6 +17,12 @@ public class Settings {
     private static final String HIGHSCORES = "highscores";
     private static final String CONTROLLER = "controller";
     private static final String VIBRATION = "vibration";
+    private static final String NEWLINE = "\n\n";
+    private static final String DEFAULT_HIGHSCORES = "0;0;0;0;0";
+    private static final String SPLIT_STR = ";";
+    private static final String SPACE_KILLER = "space-killer";
+    private static final String VIRTUAL = "virtual";
+    private static final String RETRO = "retro";
 
     private final Preferences preferences;
     private int[] highscores;
@@ -23,20 +30,20 @@ public class Settings {
     private static final Settings settings = new Settings();
 
     private Settings() {
-        preferences = Gdx.app.getPreferences("space-killer");
+        preferences = Gdx.app.getPreferences(SPACE_KILLER);
     }
 
     public static boolean isVirtualPad() {
-        return settings.preferences.getString(CONTROLLER, "virtual").equals("virtual");
+        return settings.preferences.getString(CONTROLLER, VIRTUAL).equals(VIRTUAL);
     }
 
     public static void setRetroPad() {
-        settings.preferences.putString(CONTROLLER, "retro");
+        settings.preferences.putString(CONTROLLER, RETRO);
         settings.preferences.flush();
     }
 
     public static void setVirtualPad() {
-        settings.preferences.putString(CONTROLLER, "virtual");
+        settings.preferences.putString(CONTROLLER, VIRTUAL);
         settings.preferences.flush();
     }
 
@@ -74,7 +81,7 @@ public class Settings {
         }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 5; ++i) {
-            sb.append(String.format("%7s", String.valueOf(settings.highscores[i])).replace(' ', '0')).append("\n\n");
+            sb.append(settings.highscores[i], 7).append(NEWLINE);
         }
         return sb.toString();
     }
@@ -88,8 +95,8 @@ public class Settings {
     }
 
     private void loadHighScores() {
-        String scoreString = settings.preferences.getString(HIGHSCORES, "0;0;0;0;0");
-        String[] scores = scoreString.split(";");
+        String scoreString = settings.preferences.getString(HIGHSCORES, DEFAULT_HIGHSCORES);
+        String[] scores = scoreString.split(SPLIT_STR);
         settings.highscores = new int[scores.length];
         for (int i = 0; i < scores.length; ++i) {
             settings.highscores[i] = Integer.valueOf(scores[i]);
@@ -110,7 +117,7 @@ public class Settings {
         StringBuilder highScoreStr = new StringBuilder();
         for (int i = 0; i < settings.highscores.length; ++i) {
             highScoreStr.append(settings.highscores[i]);
-            highScoreStr.append(";");
+            highScoreStr.append(SPLIT_STR);
         }
         settings.preferences.putString(HIGHSCORES, highScoreStr.toString());
         settings.preferences.flush();

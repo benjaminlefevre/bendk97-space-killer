@@ -21,6 +21,7 @@ import com.bendk97.entities.EntityFactory;
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
 import static com.bendk97.SpaceKillerGameConstants.ANIMATION_MAIN;
 import static com.bendk97.SpaceKillerGameConstants.FRAME_DURATION_POWER_UP;
+import static com.bendk97.pools.GamePools.poolSprite;
 import static com.bendk97.tweens.PositionComponentTweenAccessor.POSITION_Y;
 import static com.bendk97.tweens.SpriteComponentTweenAccessor.ALPHA;
 
@@ -39,7 +40,7 @@ public class BonusEntityFactory {
         powerUp.add(position);
         powerUp.add(entityFactory.engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = entityFactory.levelAtlas.createSprites("power-up");
+        Array<Sprite> sprites = poolSprite.getSprites(entityFactory.levelAtlas.findRegions("power-up"));
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION_POWER_UP, sprites, LOOP));
         powerUp.add(animationComponent);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
@@ -60,7 +61,7 @@ public class BonusEntityFactory {
         shieldUp.add(position);
         shieldUp.add(entityFactory.engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = entityFactory.levelAtlas.createSprites("shieldup");
+        Array<Sprite> sprites = poolSprite.getSprites(entityFactory.levelAtlas.findRegions("shieldup"));
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION_POWER_UP, sprites, LOOP));
         shieldUp.add(animationComponent);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
@@ -80,7 +81,7 @@ public class BonusEntityFactory {
         bombUp.add(position);
         bombUp.add(entityFactory.engine.createComponent(VelocityComponent.class));
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-        component.sprite = new Sprite(entityFactory.levelAtlas.findRegion("bombUp"));
+        component.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("bombUp"));
         bombUp.add(component);
         position.x = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.x;
         position.y = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.y;

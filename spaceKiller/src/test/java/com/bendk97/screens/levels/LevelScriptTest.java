@@ -11,10 +11,13 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.PlayerComponent;
+import com.bendk97.components.texts.BossAlertComponent;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.entities.StageSetEntityFactory;
+import com.bendk97.entities.enemies.EnemyEntityFactory;
 import com.bendk97.entities.enemies.SoloEnemyFactory;
 import com.bendk97.entities.enemies.SquadronFactory;
 import com.bendk97.runner.GdxTestRunner;
@@ -24,9 +27,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static com.bendk97.assets.Assets.FONT_SPACE_KILLER_LARGE;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(GdxTestRunner.class)
 public abstract class LevelScriptTest {
@@ -44,7 +47,7 @@ public abstract class LevelScriptTest {
     protected StageSetEntityFactory stageSetEntityFactory;
 
     @Mock
-    protected com.bendk97.entities.enemies.EnemyEntityFactory enemyEntityFactory;
+    protected EnemyEntityFactory enemyEntityFactory;
 
     @Mock
     protected SquadronFactory squadronFactory;
@@ -69,12 +72,14 @@ public abstract class LevelScriptTest {
         MockitoAnnotations.initMocks(this);
         entityFactory.stageSetEntityFactory = stageSetEntityFactory;
         entityFactory.enemyEntityFactory = enemyEntityFactory;
-        entityFactory.engine = engine;
+        entityFactory.engine = spy(engine);
         entityFactory.tweenManager = tweenManager;
         entityFactory.enemyEntityFactory.squadronFactory = squadronFactory;
         entityFactory.enemyEntityFactory.soloEnemyFactory = soloEnemyFactory;
         player.add(engine.createComponent(PlayerComponent.class));
         when(assets.get(any(AssetDescriptor.class))).thenReturn(mock(Texture.class));
+        when(assets.getFont(FONT_SPACE_KILLER_LARGE)).thenReturn(mock(BitmapFontCache.class));
+        doReturn(mock(BossAlertComponent.class)).when(entityFactory.engine).createComponent(BossAlertComponent.class);
         initSpecificMocking();
         initLevelScript();
     }

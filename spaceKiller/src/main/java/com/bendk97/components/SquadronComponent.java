@@ -13,6 +13,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 
+import static com.bendk97.pools.GamePools.poolVector2;
+
 public class SquadronComponent implements Component, Pool.Poolable {
     public Array<Entity> ships = new Array<>();
     public int toShoot = 0;
@@ -21,6 +23,11 @@ public class SquadronComponent implements Component, Pool.Poolable {
     public int scoreBonus = 1000;
     public Vector2 lastKilledPosition;
 
+    public SquadronComponent() {
+        lastKilledPosition = poolVector2.obtain();
+        lastKilledPosition.set(10f, 10f);
+    }
+
     public void addEntities(Entity... entities){
         ships.addAll(entities);
         toShoot = entities.length;
@@ -28,7 +35,7 @@ public class SquadronComponent implements Component, Pool.Poolable {
 
     public void removeEntity(Entity entity){
         PositionComponent position = ComponentMapperHelper.position.get(entity);
-        lastKilledPosition = new Vector2(position.x, position.y);
+        lastKilledPosition.set(position.x, position.y);
         ships.removeValue(entity, true);
         toShoot--;
     }
@@ -37,7 +44,7 @@ public class SquadronComponent implements Component, Pool.Poolable {
     public void reset() {
         powerUpAfterDestruction = false;
         ships = new Array<>();
-        lastKilledPosition = null;
+        lastKilledPosition.set(10f, 10f);
         displayBonusSquadron = false;
         scoreBonus = 1000;
         toShoot = 0;

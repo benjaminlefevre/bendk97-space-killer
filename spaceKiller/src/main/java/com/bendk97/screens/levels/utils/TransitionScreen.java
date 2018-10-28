@@ -18,6 +18,8 @@ import com.bendk97.SpaceKillerGame;
 import com.bendk97.screens.levels.LevelScreen;
 import com.bendk97.tweens.SpriteTweenAccessor;
 
+import static com.bendk97.pools.GamePools.poolSprite;
+
 public class TransitionScreen extends ScreenAdapter {
     private final SpaceKillerGame game;
     private final LevelScreen nextScreen;
@@ -32,6 +34,8 @@ public class TransitionScreen extends ScreenAdapter {
     public void dispose() {
         currentScreenSprite.getTexture().dispose();
         nextScreenSprite.getTexture().dispose();
+        poolSprite.free(currentScreenSprite);
+        poolSprite.free(nextScreenSprite);
         spriteBatch.dispose();
         Texture.clearAllTextures(Gdx.app);
     }

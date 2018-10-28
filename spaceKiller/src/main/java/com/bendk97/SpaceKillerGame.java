@@ -10,6 +10,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.utils.Disposable;
 import com.bendk97.assets.Assets;
 import com.bendk97.google.PlayServices;
 import com.bendk97.player.PlayerData;
@@ -25,12 +26,11 @@ import java.io.File;
 import static com.bendk97.SpaceKillerGameConstants.SKIP_SPLASH;
 import static com.bendk97.screens.SocialScoreScreen.TEMP_DIRECTORY;
 
-public class SpaceKillerGame extends Game {
+public class SpaceKillerGame extends Game implements Disposable {
     private static final String INTENT_FILES = "intent files";
     private static final String WAS_UNABLE_TO_CLEAN_TEMP_DIRECTORY = "was unable to clean temp directory";
     private final Assets assets = new Assets();
     public final PlayServices playServices;
-    public Screen currentScreen;
     public PlayerData playerData;
     public final IntentShare intentShare;
     public boolean signInFailed = false;
@@ -72,12 +72,12 @@ public class SpaceKillerGame extends Game {
         }
     }
 
-    public void goToScreen(Class<? extends Screen> screen) {
+    public void goToScreen(Class<? extends Screen> newScreen) {
         try {
-            assets.loadResources(screen);
+            assets.loadResources(newScreen);
             //noinspection JavaReflectionMemberAccess
-            currentScreen = screen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this);
-            this.setScreen(currentScreen);
+            screen = newScreen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this);
+            this.setScreen(screen);
         } catch (Exception e) {
             Gdx.app.log("Guru Meditation", "error: " + e.getMessage());
             Gdx.app.exit();
@@ -93,13 +93,13 @@ public class SpaceKillerGame extends Game {
     public void goToLevelScreen(Level level, PlayerData playerData, Sprite previousScreenSprite) {
         try {
             this.playerData = playerData;
-            currentScreen = new LevelScreen(assets, this, level);
+            screen = new LevelScreen(assets, this, level);
             if (previousScreenSprite != null) {
-                LevelScreen nextScreen = (LevelScreen) currentScreen;
+                LevelScreen nextScreen = (LevelScreen) screen;
                 Sprite nextScreenSprite = nextScreen.takeScreenshot(Gdx.graphics.getDeltaTime(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
                 this.setScreen(new TransitionScreen(previousScreenSprite, nextScreenSprite, nextScreen, this));
             } else {
-                this.setScreen(currentScreen);
+                this.setScreen(screen);
             }
         } catch (Exception e) {
             Gdx.app.log("Guru Meditation", "error: " + e.getMessage());
@@ -116,22 +116,22 @@ public class SpaceKillerGame extends Game {
     }
 
     public void signInSucceeded() {
-        if (currentScreen instanceof MenuScreen) {
+        if (screen instanceof MenuScreen) {
             signInFailed = false;
-            ((MenuScreen) currentScreen).signInSucceeded();
+            ((MenuScreen) screen).signInSucceeded();
         }
     }
 
     public void signInFailed() {
-        if (currentScreen instanceof MenuScreen) {
+        if (screen instanceof MenuScreen) {
             signInFailed = true;
-            ((MenuScreen) currentScreen).signInFailed();
+            ((MenuScreen) screen).signInFailed();
         }
     }
 
     public void continueWithExtraLife() {
-        if (currentScreen instanceof LevelScreen) {
-            ((LevelScreen) currentScreen).continueWithExtraLife();
+        if (screen instanceof LevelScreen) {
+            ((LevelScreen) screen).continueWithExtraLife();
         }
     }
 }

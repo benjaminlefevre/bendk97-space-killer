@@ -18,6 +18,7 @@ import com.bendk97.entities.EntityFactory;
 import com.bendk97.listeners.PlayerListener;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
+import static com.bendk97.pools.GamePools.poolVector2;
 
 public class InputListenerImpl extends EntitySystem implements com.bendk97.listeners.InputListener {
     private static final float AUTOFIRE_DELAY = 1 / 10f;
@@ -103,38 +104,42 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
 
     @Override
     public void goLeftTop() {
-        Vector2 vector2 = new Vector2(-1f, 1f);
+        Vector2 vector2 = poolVector2.getVector2(-1f, 1f);
         vector2.nor();
         ComponentMapperHelper.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
         ComponentMapperHelper.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
         ComponentMapperHelper.state.get(player).set(GO_LEFT);
+        poolVector2.free(vector2);
     }
 
     @Override
     public void goLeftDown() {
-        Vector2 vector2 = new Vector2(-1f, -1f);
+        Vector2 vector2 = poolVector2.getVector2(-1f, -1f);
         vector2.nor();
         ComponentMapperHelper.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
         ComponentMapperHelper.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
         ComponentMapperHelper.state.get(player).set(GO_LEFT);
+        poolVector2.free(vector2);
     }
 
     @Override
     public void goRightTop() {
-        Vector2 vector2 = new Vector2(1f, 1f);
+        Vector2 vector2 = poolVector2.getVector2(1f, 1f);
         vector2.nor();
         ComponentMapperHelper.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
         ComponentMapperHelper.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
         ComponentMapperHelper.state.get(player).set(GO_RIGHT);
+        poolVector2.free(vector2);
     }
 
     @Override
     public void goRightBottom() {
-        Vector2 vector2 = new Vector2(1f, -1f);
+        Vector2 vector2 = poolVector2.getVector2(1f, -1f);
         vector2.nor();
         ComponentMapperHelper.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
         ComponentMapperHelper.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
         ComponentMapperHelper.state.get(player).set(GO_RIGHT);
+        poolVector2.free(vector2);
     }
 
     @Override

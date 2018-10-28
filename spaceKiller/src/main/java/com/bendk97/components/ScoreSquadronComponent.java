@@ -8,11 +8,12 @@ package com.bendk97.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.StringBuilder;
 
 public class ScoreSquadronComponent implements Component, Pool.Poolable {
-   public String score = "";
+   public StringBuilder score = new StringBuilder();
     @Override
     public void reset() {
-        score = "";
+        score.setLength(0);
     }
 }

@@ -28,9 +28,11 @@ import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP_PINGPONG;
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.SOUND_EXPLOSION;
 import static com.bendk97.entities.EntityFactoryIds.*;
+import static com.bendk97.pools.GamePools.poolSprite;
 
 public class EnemyEntityFactory {
 
+    private static final Color SOFT_RED_40 = new Color(0.7f, 0f, 0f, 0.4f);
     private final EntityFactory entityFactory;
     public SoloEnemyFactory soloEnemyFactory;
     public SquadronFactory squadronFactory;
@@ -102,13 +104,12 @@ public class EnemyEntityFactory {
 
         }
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = entityFactory.levelAtlas.createSprites(atlasRegion);
+        Array<Sprite> sprites = poolSprite.getSprites(entityFactory.levelAtlas.findRegions(atlasRegion));
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION, sprites, LOOP_PINGPONG));
         enemy.add(animationComponent);
         SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         enemy.add(spriteComponent);
         spriteComponent.sprite = sprites.get(0);
-        spriteComponent.pixelPerfectCollision = true;
         spriteComponent.zIndex = 20;
         positionComponent.x = fromLeft ? -spriteComponent.sprite.getWidth() : SCREEN_WIDTH;
         positionComponent.y = SCREEN_HEIGHT - spriteComponent.sprite.getHeight();
@@ -126,7 +127,7 @@ public class EnemyEntityFactory {
     }
 
 
-    public List<Entity> createTank(TankComponent.TankLevel level, int gauge, int points) {
+    protected List<Entity> createTank(TankComponent.TankLevel level, int gauge, int points) {
         List<Entity> entities = new ArrayList<>();
         Entity tankCannon = entityFactory.engine.createEntity();
         final EnemyComponent enemyComponent = entityFactory.engine.createComponent(EnemyComponent.class);
@@ -140,7 +141,7 @@ public class EnemyEntityFactory {
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
         tankCannon.add(position);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-        component.sprite = entityFactory.levelAtlas.createSprite("tankCannon");
+        component.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("tankCannon"));
         component.sprite.setOrigin(32f, 46f);
         component.zIndex = -5;
         tankCannon.add(component);
@@ -155,8 +156,7 @@ public class EnemyEntityFactory {
         Entity tankBody = entityFactory.engine.createEntity();
         tankBody.add(entityFactory.engine.createComponent(PositionComponent.class));
         SpriteComponent sprite = entityFactory.engine.createComponent(SpriteComponent.class);
-        sprite.pixelPerfectCollision = true;
-        sprite.sprite = entityFactory.levelAtlas.createSprite("tankBody");
+        sprite.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("tankBody"));
         sprite.zIndex = -6;
         tankBody.add(sprite);
         tankBody.add(entityFactory.engine.createComponent(GroundEnemyComponent.class));
@@ -182,7 +182,7 @@ public class EnemyEntityFactory {
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
         enemy.add(position);
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = entityFactory.levelAtlas.createSprites(characteristics.atlasName);
+        Array<Sprite> sprites = poolSprite.getSprites(entityFactory.levelAtlas.findRegions(characteristics.atlasName));
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(frameDuration, sprites, animationType));
         enemy.add(animationComponent);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
@@ -193,7 +193,7 @@ public class EnemyEntityFactory {
         return enemy;
     }
 
-    public Entity createEnemySoucoupe(Entity squadron, boolean canAttack, float velocityBullet) {
+    protected Entity createEnemySoucoupe(Entity squadron, boolean canAttack, float velocityBullet) {
         EnemyCharacteristics characteristics = new EnemyCharacteristics()
                 .setAtlasName("soucoupe")
                 .setCanAttack(canAttack)
@@ -207,7 +207,7 @@ public class EnemyEntityFactory {
     }
 
 
-    public Entity createEnemyShip(Entity squadron, boolean canAttack, float velocityBullet, int rateShoot, int enemyType) {
+    protected Entity createEnemyShip(Entity squadron, boolean canAttack, float velocityBullet, int rateShoot, int enemyType) {
         String atlasRegion;
         int points = 200;
         int strength = 1;
@@ -302,7 +302,7 @@ public class EnemyEntityFactory {
     }
 
 
-    public Entity createBoss(Entity squadron, float velocityBullet, float velocityCircle) {
+    protected Entity createBoss(Entity squadron, float velocityBullet, float velocityCircle) {
         Entity boss = entityFactory.engine.createEntity();
         BossComponent bossComponent = entityFactory.engine.createComponent(BossComponent.class);
         bossComponent.velocityFire1 = velocityCircle;
@@ -322,7 +322,7 @@ public class EnemyEntityFactory {
         boss.add(position);
         SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         spriteComponent.pixelPerfectCollision = true;
-        spriteComponent.sprite = entityFactory.levelAtlas.createSprite("boss-level1");
+        spriteComponent.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("boss-level1"));
         boss.add(spriteComponent);
         entityFactory.engine.addEntity(boss);
         PausableTimer.schedule(new PausableTimer.Task() {
@@ -334,7 +334,7 @@ public class EnemyEntityFactory {
         return boss;
     }
 
-    public Entity createBoss2(Entity squadron, float velocityBullet, float velocityFireCircle, float velocityBullet2) {
+    protected Entity createBoss2(Entity squadron, float velocityBullet, float velocityFireCircle, float velocityBullet2) {
         Entity boss = entityFactory.engine.createEntity();
         BossComponent bossComponent = entityFactory.engine.createComponent(BossComponent.class);
         boss.add(bossComponent);
@@ -356,7 +356,7 @@ public class EnemyEntityFactory {
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
         boss.add(position);
         SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
-        spriteComponent.sprite = entityFactory.levelAtlas.createSprite("boss");
+        spriteComponent.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("boss"));
         spriteComponent.pixelPerfectCollision = true;
         boss.add(spriteComponent);
         entityFactory.engine.addEntity(boss);
@@ -376,7 +376,7 @@ public class EnemyEntityFactory {
         return boss;
     }
 
-    public Entity createBoss3(Entity squadron, float velocityBullet, float velocityBulletFireCircle, float velocityBullet2) {
+    protected Entity createBoss3(Entity squadron, float velocityBullet, float velocityBulletFireCircle, float velocityBullet2) {
         Entity boss = entityFactory.engine.createEntity();
         BossComponent bossComponent = entityFactory.engine.createComponent(BossComponent.class);
         boss.add(bossComponent);
@@ -399,11 +399,10 @@ public class EnemyEntityFactory {
         boss.add(position);
 
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = entityFactory.levelAtlas.createSprites("boss3");
+        Array<Sprite> sprites = poolSprite.getSprites(entityFactory.levelAtlas.findRegions("boss3"));
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(0.075f, (Sprite[]) sprites.toArray(Sprite.class)));
         animationComponent.animations.get(ANIMATION_MAIN).setPlayMode(LOOP_PINGPONG);
         boss.add(animationComponent);
-
         SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         spriteComponent.sprite = sprites.get(0);
         spriteComponent.pixelPerfectCollision = true;
@@ -426,7 +425,7 @@ public class EnemyEntityFactory {
     }
 
 
-    public Entity createAsteroid(Entity squadron, int asteroid) {
+    protected Entity createAsteroid(Entity squadron, int asteroid) {
         Entity enemy = entityFactory.engine.createEntity();
         EnemyComponent enemyComponent = entityFactory.engine.createComponent(EnemyComponent.class);
         enemyComponent.points = 50;
@@ -438,7 +437,7 @@ public class EnemyEntityFactory {
         enemy.add(position);
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
         String asteroidSprite = asteroid == ASTEROID_1 ? "asteroid" : "asteroid2";
-        Array<Sprite> sprites = entityFactory.levelAtlas.createSprites(asteroidSprite);
+        Array<Sprite> sprites = poolSprite.getSprites(entityFactory.levelAtlas.findRegions(asteroidSprite));
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION, sprites, LOOP));
         enemy.add(animationComponent);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
@@ -451,7 +450,7 @@ public class EnemyEntityFactory {
     }
 
 
-    public Array<Entity> createHouse(Entity squadron, int houseType) {
+    protected Array<Entity> createHouse(Entity squadron, int houseType) {
         Array<Entity> entities = new Array<>();
         Entity house = entityFactory.engine.createEntity();
         EnemyComponent enemyComponent = entityFactory.engine.createComponent(EnemyComponent.class);
@@ -463,7 +462,7 @@ public class EnemyEntityFactory {
         house.add(entityFactory.engine.createComponent(PositionComponent.class));
         house.add(entityFactory.engine.createComponent(GroundEnemyComponent.class));
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-        component.sprite = entityFactory.levelAtlas.createSprite("house-" + (houseType - HOUSE_1 + 1));
+        component.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("house-" + (houseType - HOUSE_1 + 1)));
         component.zIndex = -10;
         house.add(component);
         entityFactory.engine.addEntity(house);
@@ -472,7 +471,7 @@ public class EnemyEntityFactory {
         houseDestroyed.add(entityFactory.engine.createComponent(PositionComponent.class));
         houseDestroyed.add(entityFactory.engine.createComponent(GroundEnemyComponent.class));
         component = entityFactory.engine.createComponent(SpriteComponent.class);
-        component.sprite = entityFactory.levelAtlas.createSprite("house-" + (houseType - HOUSE_1 + 1) + "_destroyed");
+        component.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("house-" + (houseType - HOUSE_1 + 1) + "_destroyed"));
         component.zIndex = -11;
         houseDestroyed.add(component);
         entityFactory.engine.addEntity(houseDestroyed);
@@ -488,7 +487,7 @@ public class EnemyEntityFactory {
         explosion.add(position);
         position.setPosition(x, y);
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = entityFactory.commonAtlas.createSprites("explosion");
+        Array<Sprite> sprites = poolSprite.getSprites(entityFactory.commonAtlas.findRegions("explosion"));
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION_EXPLOSION, sprites, Animation.PlayMode.NORMAL));
         explosion.add(animationComponent);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
@@ -520,12 +519,12 @@ public class EnemyEntityFactory {
             }, i * 0.1f);
         }
         if (entityFactory.rayHandler != null) {
-            entityFactory.createLight(enemy, new Color(0.7f, 0f, 0f, 0.4f), sprite.sprite.getHeight() * 20f);
+            entityFactory.createLight(enemy, SOFT_RED_40, sprite.sprite.getHeight() * 20f);
         }
     }
 
 
-    public Entity createSquadron(boolean powerUp, boolean displayScoreBonus, int bonus) {
+    protected Entity createSquadron(boolean powerUp, boolean displayScoreBonus, int bonus) {
         Entity squadron = entityFactory.engine.createEntity();
         SquadronComponent squadronComponent = entityFactory.engine.createComponent(SquadronComponent.class);
         squadronComponent.powerUpAfterDestruction = powerUp;
@@ -541,7 +540,7 @@ public class EnemyEntityFactory {
         ScoreSquadronComponent score = entityFactory.engine.createComponent(ScoreSquadronComponent.class);
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
         SquadronComponent squadronComponent = ComponentMapperHelper.squadron.get(squadron);
-        score.score = squadronComponent.scoreBonus + "";
+        score.score.append(squadronComponent.scoreBonus);
         position.x = squadronComponent.lastKilledPosition.x;
         position.y = squadronComponent.lastKilledPosition.y;
         if (position.x < SCREEN_WIDTH) {

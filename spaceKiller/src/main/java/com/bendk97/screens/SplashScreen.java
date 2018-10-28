@@ -21,6 +21,7 @@ import com.bendk97.assets.Assets;
 import com.bendk97.tweens.SpriteTweenAccessor;
 
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
+import static com.bendk97.pools.GamePools.poolSprite;
 import static com.bendk97.tweens.SpriteTweenAccessor.ROTATION;
 import static com.bendk97.tweens.SpriteTweenAccessor.SCALE;
 
@@ -53,7 +54,7 @@ public class SplashScreen extends HDScreen {
         // time to 0
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
-        logo = new Sprite(assets.get(Assets.SPLASH_TXT_LOGO));
+        logo = poolSprite.getSprite(assets.get(Assets.SPLASH_TXT_LOGO));
         logo.setPosition(viewport.getWorldWidth() / 2f - logo.getWidth() / 2f,
                 viewport.getWorldHeight() / 2f - logo.getHeight() / 2f);
         logo.setScale(0f);
@@ -70,7 +71,7 @@ public class SplashScreen extends HDScreen {
     private void initFader() {
         fader.clearActions();
         //Assign the starting value
-        fader.setColor(new Color(1f, 1f, 1f, 0f));
+        fader.setColor(Color.WHITE);
         // Fade in during 2 seconds
         fader.addAction(Actions.sequence(Actions.fadeIn(4f), Actions.fadeOut(1f)));
     }
@@ -114,6 +115,7 @@ public class SplashScreen extends HDScreen {
         tweenManager.killAll();
         assets.unloadResources(this.getClass());
         Texture.clearAllTextures(Gdx.app);
+        poolSprite.free(logo);
     }
 
 }

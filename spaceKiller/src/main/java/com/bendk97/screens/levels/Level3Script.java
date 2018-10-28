@@ -11,7 +11,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.Array;
 import com.bendk97.assets.Assets;
-import com.bendk97.components.GameOverComponent;
 import com.bendk97.components.TankComponent;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.entities.enemies.SquadronFactory;
@@ -24,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
+import static com.bendk97.components.helpers.ComponentMapperHelper.gameOver;
 import static com.bendk97.entities.EntityFactoryIds.*;
 import static com.bendk97.screens.levels.Level.Level3;
 import static com.bendk97.screens.levels.Level.SoundEffect.GO;
@@ -170,7 +170,7 @@ public class Level3Script extends LevelScript {
     }
 
     private void scriptBoss(int second) {
-        if (player.getComponent(GameOverComponent.class) != null) {
+        if (gameOver.get(player) != null) {
             return;
         }
         if (second == 215) {
@@ -210,6 +210,15 @@ public class Level3Script extends LevelScript {
 
     private List<ScriptItem> randomHardSpawnEnemiesComingFromRight(int nbSpawns) {
         return randomSpawnEnemies(nbSpawns, ENEMY_LEVEL3_VELOCITY_HARD, MEDIUM_RATE_SHOOT, ENEMY_LEVEL3_BULLET_HARD_VELOCITY, BONUS_LEVEL3_SQUADRON_HARD, 6, 10, false);
+    }
+
+    @Override
+    public void dispose() {
+        scriptItemsEasy.clear();
+        scriptItemsMediumLeft.clear();
+        scriptItemsMediumRight.clear();
+        scriptItemsHardLeft.clear();
+        scriptItemsHardRight.clear();
     }
 }
 

@@ -7,14 +7,14 @@
 package com.bendk97.tweens;
 
 import aurelienribon.tweenengine.TweenAccessor;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 
-public class BitmapFontTweenAccessor implements TweenAccessor<BitmapFont> {
+public class BitmapFontCacheTweenAccessor implements TweenAccessor<BitmapFontCache> {
 
     public final static int ALPHA = 0;
 
     @Override
-    public int getValues(BitmapFont font, int type, float[] returnValues) {
+    public int getValues(BitmapFontCache font, int type, float[] returnValues) {
         switch (type) {
             case ALPHA:
                 returnValues[0] = font.getColor().a;
@@ -25,7 +25,7 @@ public class BitmapFontTweenAccessor implements TweenAccessor<BitmapFont> {
     }
 
     @Override
-    public void setValues(BitmapFont font, int type, float[] newValues) {
+    public void setValues(BitmapFontCache font, int type, float[] newValues) {
         switch (type) {
             case ALPHA:
                 font.getColor().a = newValues[0];

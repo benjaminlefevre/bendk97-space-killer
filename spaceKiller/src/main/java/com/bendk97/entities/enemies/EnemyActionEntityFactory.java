@@ -22,14 +22,15 @@ import java.util.Random;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 import static com.bendk97.assets.Assets.SOUND_FIRE_ENEMY;
-import static com.bendk97.components.helpers.ComponentMapperHelper.position;
-import static com.bendk97.components.helpers.ComponentMapperHelper.sprite;
+import static com.bendk97.components.helpers.ComponentMapperHelper.*;
 import static com.bendk97.entities.EntityFactoryIds.ENEMY_FIRE_CIRCLE;
+import static com.bendk97.pools.GamePools.poolSprite;
+import static com.bendk97.pools.GamePools.poolVector2;
 import static com.bendk97.screens.levels.Level.Level1;
 import static com.bendk97.screens.levels.Level.Level3;
 
 public class EnemyActionEntityFactory {
-    
+
     private final EntityFactory entityFactory;
     private final Random random = new RandomXS128();
 
@@ -65,63 +66,65 @@ public class EnemyActionEntityFactory {
         VelocityComponent velocityComponent = entityFactory.engine.createComponent(VelocityComponent.class);
         bullet.add(velocityComponent);
         SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
-        spriteComponent.sprite = new Sprite(entityFactory.levelAtlas.findRegion("laser"));
+        spriteComponent.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("laser"));
+        spriteComponent.pixelPerfectCollision = true;
         bullet.add(spriteComponent);
-        bullet.add(entityFactory.engine.createComponent(RemovableComponent.class));
+        RemovableComponent removableComponent = entityFactory.engine.createComponent(RemovableComponent.class);
+        removableComponent.setDuration(2f);
+        bullet.add(removableComponent);
         entityFactory.engine.addEntity(bullet);
         positionComponent.x = posX - spriteComponent.sprite.getWidth() / 2f;
         positionComponent.y = posY - spriteComponent.sprite.getHeight() / 2f;
 
-        Vector2 directionBullet = new Vector2(0f, -1);
+        Vector2 directionBullet = poolVector2.getVector2(0f, -1);
         directionBullet.scl(velocity);
         velocityComponent.x = 0;
         velocityComponent.y = directionBullet.y;
+        poolVector2.free(directionBullet);
     }
 
 
     private void createEnemyFireCircle(Entity enemy, Entity player) {
         entityFactory.assets.playSound(SOUND_FIRE_ENEMY);
-        Entity bullet = entityFactory.engine.createEntity();
-        bullet.add(entityFactory.engine.createComponent(EnemyBulletComponent.class));
-        PositionComponent positionComponent = entityFactory.engine.createComponent(PositionComponent.class);
-        bullet.add(positionComponent);
-        VelocityComponent velocityComponent = entityFactory.engine.createComponent(VelocityComponent.class);
-        bullet.add(velocityComponent);
-        SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
-        spriteComponent.sprite = new Sprite(entityFactory.levelAtlas.findRegion("bulletEnemy"));
-        bullet.add(spriteComponent);
-        bullet.add(entityFactory.engine.createComponent(RemovableComponent.class));
+        Entity bullet = createEnemyBullet();
         entityFactory.engine.addEntity(bullet);
         PositionComponent playerPosition = position.get(player);
         PositionComponent enemyPosition = position.get(enemy);
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(enemy);
+        PositionComponent bulletPosition = position.get(bullet);
+        VelocityComponent bulletVelocity = velocity.get(bullet);
+        SpriteComponent bulletSprite = sprite.get(bullet);
         if (enemyComponent.isBoss) {
-            positionComponent.x = enemyPosition.x + ComponentMapperHelper.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
-            positionComponent.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight() * 3f / 4f;
+            bulletPosition.x = enemyPosition.x + sprite.get(enemy).sprite.getWidth() / 2f - bulletSprite.sprite.getWidth() / 2f;
+            bulletPosition.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight() * 3f / 4f;
         } else if (enemyComponent.isTank) {
             Sprite tank = sprite.get(enemy).sprite;
             float rotation = tank.getRotation();
-            Vector2 pos = new Vector2(enemyPosition.x + ComponentMapperHelper.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f,
+            Vector2 pos = poolVector2.getVector2(
+                    enemyPosition.x + sprite.get(enemy).sprite.getWidth() / 2f - bulletSprite.sprite.getWidth() / 2f,
                     enemyPosition.y + 32f);
-            Vector2 angle = new Vector2(0, -1);
+            Vector2 angle = poolVector2.getVector2(0, -1);
+            Vector2 scaler = poolVector2.getVector2(32, 32);
             angle.rotate(rotation);
             angle.nor();
-            angle.scl(new Vector2(32, 32));
+            angle.scl(scaler);
             angle.add(pos);
-            positionComponent.x = angle.x;
-            positionComponent.y = angle.y;
+            bulletPosition.x = angle.x;
+            bulletPosition.y = angle.y;
+            poolVector2.free(angle, scaler, pos);
         } else {
-            positionComponent.x = enemyPosition.x + ComponentMapperHelper.sprite.get(enemy).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
-            positionComponent.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight();
+            bulletPosition.x = enemyPosition.x + sprite.get(enemy).sprite.getWidth() / 2f - bulletSprite.sprite.getWidth() / 2f;
+            bulletPosition.y = enemyPosition.y + sprite.get(enemy).sprite.getHeight();
         }
-        Vector2 directionBullet = new Vector2(playerPosition.x - positionComponent.x, playerPosition.y - positionComponent.y);
+        Vector2 directionBullet = poolVector2.getVector2(playerPosition.x - bulletPosition.x, playerPosition.y - bulletPosition.y);
         directionBullet.nor();
         if (!enemyComponent.isTank) {
             directionBullet.rotate(-10 + random.nextFloat() * 20f);
         }
         directionBullet.scl(ComponentMapperHelper.enemy.get(enemy).bulletVelocity);
-        velocityComponent.x = directionBullet.x;
-        velocityComponent.y = directionBullet.y;
+        bulletVelocity.x = directionBullet.x;
+        bulletVelocity.y = directionBullet.y;
+        poolVector2.free(directionBullet);
     }
 
     public void createBossFire(final Entity boss, final Entity player) {
@@ -139,7 +142,7 @@ public class EnemyActionEntityFactory {
                 }, 0f + delay * i);
             }
         } else if (type == 1 || level.equals(Level1)
-                || ComponentMapperHelper.position.get(boss).x < 0 || ComponentMapperHelper.position.get(boss).x > SCREEN_WIDTH * 3f / 4f) {
+                || position.get(boss).x < 0 || position.get(boss).x > SCREEN_WIDTH * 3f / 4f) {
             createBossFireCircle(boss, false);
             if (level.equals(Level3)) {
                 createBossFireCircle(boss, true);
@@ -164,42 +167,45 @@ public class EnemyActionEntityFactory {
         createEnemyFireLaser(position.x + 342f, position.y + 186f, bossComponent.velocityFire2);
     }
 
+
     private void createBossFireCircle(Entity boss, boolean yUp) {
         Array<Entity> bullets = new Array<>(10);
         entityFactory.assets.playSound(SOUND_FIRE_ENEMY);
         for (int i = 0; i < 12; ++i) {
-            Entity bullet = entityFactory.engine.createEntity();
-
-            bullet.add(entityFactory.engine.createComponent(EnemyBulletComponent.class));
-
-            PositionComponent positionComponent = entityFactory.engine.createComponent(PositionComponent.class);
-            bullet.add(positionComponent);
-
-            VelocityComponent velocityComponent = entityFactory.engine.createComponent(VelocityComponent.class);
-            bullet.add(velocityComponent);
-
-            SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
-            spriteComponent.sprite = new Sprite(entityFactory.levelAtlas.findRegion("bulletEnemy"));
-            bullet.add(spriteComponent);
-
-            bullet.add(entityFactory.engine.createComponent(RemovableComponent.class));
-
+            Entity bullet = createEnemyBullet();
+            PositionComponent bulletPosition = position.get(bullet);
             PositionComponent enemyPosition = position.get(boss);
-            positionComponent.x = enemyPosition.x + ComponentMapperHelper.sprite.get(boss).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
-            positionComponent.y = enemyPosition.y + ComponentMapperHelper.sprite.get(boss).sprite.getHeight() / 4f;
+            bulletPosition.x = enemyPosition.x + sprite.get(boss).sprite.getWidth() / 2f
+                    - sprite.get(bullet).sprite.getWidth() / 2f;
+            bulletPosition.y = enemyPosition.y + sprite.get(boss).sprite.getHeight() / 4f;
 
             bullets.add(bullet);
             entityFactory.engine.addEntity(bullet);
         }
         float rotation = yUp ? 35f : -35f;
         for (int i = 0; i < bullets.size; ++i) {
-            Vector2 directionBullet = new Vector2(1f, 0f);
+            Vector2 directionBullet = poolVector2.getVector2(1f, 0f);
             directionBullet.setAngle(rotation);
             rotation -= yUp ? -10f : 10f;
             directionBullet.scl(ComponentMapperHelper.boss.get(boss).velocityFire1);
             VelocityComponent velocityComponent = ComponentMapperHelper.velocity.get(bullets.get(i));
             velocityComponent.x = directionBullet.x;
             velocityComponent.y = directionBullet.y;
+            poolVector2.free(directionBullet);
         }
+    }
+
+    private Entity createEnemyBullet() {
+        Entity bullet = entityFactory.engine.createEntity();
+        bullet.add(entityFactory.engine.createComponent(EnemyBulletComponent.class));
+        bullet.add(entityFactory.engine.createComponent(PositionComponent.class));
+        bullet.add(entityFactory.engine.createComponent(VelocityComponent.class));
+        SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
+        spriteComponent.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("bulletEnemy"));
+        bullet.add(spriteComponent);
+        RemovableComponent removableComponent = entityFactory.engine.createComponent(RemovableComponent.class);
+        removableComponent.setDuration(5.0f);
+        bullet.add(removableComponent);
+        return bullet;
     }
 }
