@@ -54,7 +54,7 @@ public class EnemyEntityFactoryTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        when(assets.get(Assets.GFX_LEVEL_ALL_ATLAS_NO_MASK)).thenReturn(noMaskSprites);
+        when(assets.get(Assets.GFX_LEVEL_COMMON)).thenReturn(noMaskSprites);
         when(assets.get(Level.Level2.sprites)).thenReturn(sprites);
         Array<Sprite> spriteArray = new Array<>();
         spriteArray.add(new Sprite());

@@ -102,12 +102,13 @@ public class EnemyEntityFactory {
 
         }
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = entityFactory.atlasMask.createSprites(atlasRegion);
+        Array<Sprite> sprites = entityFactory.levelAtlas.createSprites(atlasRegion);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION, sprites, LOOP_PINGPONG));
         enemy.add(animationComponent);
         SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         enemy.add(spriteComponent);
         spriteComponent.sprite = sprites.get(0);
+        spriteComponent.pixelPerfectCollision = true;
         spriteComponent.zIndex = 20;
         positionComponent.x = fromLeft ? -spriteComponent.sprite.getWidth() : SCREEN_WIDTH;
         positionComponent.y = SCREEN_HEIGHT - spriteComponent.sprite.getHeight();
@@ -139,7 +140,7 @@ public class EnemyEntityFactory {
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
         tankCannon.add(position);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-        component.sprite = entityFactory.atlasMask.createSprite("tankCannon");
+        component.sprite = entityFactory.levelAtlas.createSprite("tankCannon");
         component.sprite.setOrigin(32f, 46f);
         component.zIndex = -5;
         tankCannon.add(component);
@@ -154,7 +155,8 @@ public class EnemyEntityFactory {
         Entity tankBody = entityFactory.engine.createEntity();
         tankBody.add(entityFactory.engine.createComponent(PositionComponent.class));
         SpriteComponent sprite = entityFactory.engine.createComponent(SpriteComponent.class);
-        sprite.sprite = entityFactory.atlasMask.createSprite("tankBody");
+        sprite.pixelPerfectCollision = true;
+        sprite.sprite = entityFactory.levelAtlas.createSprite("tankBody");
         sprite.zIndex = -6;
         tankBody.add(sprite);
         tankBody.add(entityFactory.engine.createComponent(GroundEnemyComponent.class));
@@ -180,7 +182,7 @@ public class EnemyEntityFactory {
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
         enemy.add(position);
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = entityFactory.atlasMask.createSprites(characteristics.atlasName);
+        Array<Sprite> sprites = entityFactory.levelAtlas.createSprites(characteristics.atlasName);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(frameDuration, sprites, animationType));
         enemy.add(animationComponent);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
@@ -318,9 +320,10 @@ public class EnemyEntityFactory {
         boss.add(enemyComponent);
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
         boss.add(position);
-        SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-        component.sprite = entityFactory.atlasMask.createSprite("boss-level1");
-        boss.add(component);
+        SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
+        spriteComponent.pixelPerfectCollision = true;
+        spriteComponent.sprite = entityFactory.levelAtlas.createSprite("boss-level1");
+        boss.add(spriteComponent);
         entityFactory.engine.addEntity(boss);
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
@@ -352,9 +355,10 @@ public class EnemyEntityFactory {
         boss.add(enemyComponent);
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
         boss.add(position);
-        SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-        component.sprite = entityFactory.atlasMask.createSprite("boss");
-        boss.add(component);
+        SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
+        spriteComponent.sprite = entityFactory.levelAtlas.createSprite("boss");
+        spriteComponent.pixelPerfectCollision = true;
+        boss.add(spriteComponent);
         entityFactory.engine.addEntity(boss);
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
@@ -395,14 +399,15 @@ public class EnemyEntityFactory {
         boss.add(position);
 
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = entityFactory.atlasMask.createSprites("boss3");
+        Array<Sprite> sprites = entityFactory.levelAtlas.createSprites("boss3");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(0.075f, (Sprite[]) sprites.toArray(Sprite.class)));
         animationComponent.animations.get(ANIMATION_MAIN).setPlayMode(LOOP_PINGPONG);
         boss.add(animationComponent);
 
-        SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-        component.sprite = sprites.get(0);
-        boss.add(component);
+        SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
+        spriteComponent.sprite = sprites.get(0);
+        spriteComponent.pixelPerfectCollision = true;
+        boss.add(spriteComponent);
         entityFactory.engine.addEntity(boss);
         PausableTimer.schedule(new PausableTimer.Task() {
             @Override
@@ -433,7 +438,7 @@ public class EnemyEntityFactory {
         enemy.add(position);
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
         String asteroidSprite = asteroid == ASTEROID_1 ? "asteroid" : "asteroid2";
-        Array<Sprite> sprites = entityFactory.atlasMask.createSprites(asteroidSprite);
+        Array<Sprite> sprites = entityFactory.levelAtlas.createSprites(asteroidSprite);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION, sprites, LOOP));
         enemy.add(animationComponent);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
@@ -458,7 +463,7 @@ public class EnemyEntityFactory {
         house.add(entityFactory.engine.createComponent(PositionComponent.class));
         house.add(entityFactory.engine.createComponent(GroundEnemyComponent.class));
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-        component.sprite = entityFactory.atlasMask.createSprite("house-" + (houseType - HOUSE_1 + 1));
+        component.sprite = entityFactory.levelAtlas.createSprite("house-" + (houseType - HOUSE_1 + 1));
         component.zIndex = -10;
         house.add(component);
         entityFactory.engine.addEntity(house);
@@ -467,7 +472,7 @@ public class EnemyEntityFactory {
         houseDestroyed.add(entityFactory.engine.createComponent(PositionComponent.class));
         houseDestroyed.add(entityFactory.engine.createComponent(GroundEnemyComponent.class));
         component = entityFactory.engine.createComponent(SpriteComponent.class);
-        component.sprite = entityFactory.atlasMask.createSprite("house-" + (houseType - HOUSE_1 + 1) + "_destroyed");
+        component.sprite = entityFactory.levelAtlas.createSprite("house-" + (houseType - HOUSE_1 + 1) + "_destroyed");
         component.zIndex = -11;
         houseDestroyed.add(component);
         entityFactory.engine.addEntity(houseDestroyed);
@@ -483,7 +488,7 @@ public class EnemyEntityFactory {
         explosion.add(position);
         position.setPosition(x, y);
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = entityFactory.atlasNoMask.createSprites("explosion");
+        Array<Sprite> sprites = entityFactory.commonAtlas.createSprites("explosion");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION_EXPLOSION, sprites, Animation.PlayMode.NORMAL));
         explosion.add(animationComponent);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);

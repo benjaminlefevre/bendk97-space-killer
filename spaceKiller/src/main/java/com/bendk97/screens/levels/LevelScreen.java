@@ -45,7 +45,6 @@ import com.bendk97.listeners.PlayerListener;
 import com.bendk97.listeners.impl.CollisionListenerImpl;
 import com.bendk97.listeners.impl.InputListenerImpl;
 import com.bendk97.listeners.impl.PlayerListenerImpl;
-import com.bendk97.mask.SpriteMaskFactory;
 import com.bendk97.player.PlayerData;
 import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.levels.utils.ScreenShake;
@@ -81,8 +80,6 @@ public final class LevelScreen extends ScreenAdapter {
     private final Assets assets;
     private final SpaceKillerGame game;
     private final Entity player;
-    private final SpriteMaskFactory spriteMaskFactory;
-
     private World world;
     private RayHandler rayHandler;
     protected final boolean fxLightEnabled;
@@ -100,26 +97,20 @@ public final class LevelScreen extends ScreenAdapter {
     }
 
     public LevelScreen(final Assets assets, final SpaceKillerGame game, final Level level) {
-        this(assets, game, level, true);
+        this(assets, game, level, null);
     }
 
-    /* for test purposes */
-    protected LevelScreen(final Assets assets, final SpaceKillerGame game, final Level level, final SpriteBatch batcher) {
-        this(assets, game, level, false);
-        this.batcherHUD = batcher;
-        this.batcher = batcher;
-    }
-
-    private LevelScreen(final Assets assets, final SpaceKillerGame game, final Level level, boolean initBatchers) {
-        if (initBatchers) {
+    protected LevelScreen(final Assets assets, final SpaceKillerGame game, final Level level, SpriteBatch defaultBatcher) {
+        if (defaultBatcher == null) {
             this.initBatchers();
+        } else {
+            this.batcherHUD = defaultBatcher;
+            this.batcher = defaultBatcher;
         }
         assets.loadResources(level);
         PausableTimer.instance().stop();
         PausableTimer.instance().start();
         this.level = level;
-        this.spriteMaskFactory = new SpriteMaskFactory();
-        new Thread(() -> spriteMaskFactory.addMask(assets.get(level.sprites).getTextures().first())).start();
         this.game = game;
         this.fxLightEnabled = Settings.isLightFXEnabled();
         camera = new OrthographicCamera();
@@ -291,7 +282,7 @@ public final class LevelScreen extends ScreenAdapter {
         }
         engine.addSystem(new BatcherHUDEndSystem(batcherHUD, 12));
         // END RENDERING
-        engine.addSystem(new CollisionSystem(collisionListener, spriteMaskFactory, 13));
+        engine.addSystem(new CollisionSystem(collisionListener, viewport, batcher, 13));
         engine.addSystem(new TankAttackSystem(13));
         engine.addSystem(new EnemyAttackSystem(14, entityFactory));
         engine.addSystem(new BossAttackSystem(14, entityFactory));
@@ -418,7 +409,6 @@ public final class LevelScreen extends ScreenAdapter {
         batcher.dispose();
         batcherHUD.dispose();
         entityFactory.dispose();
-        spriteMaskFactory.clear();
         if (fxLightEnabled) {
             rayHandler.dispose();
             world.dispose();
@@ -426,6 +416,7 @@ public final class LevelScreen extends ScreenAdapter {
         assets.unloadResources(this.level);
         engine.removeAllEntities();
         engine.clearPools();
+        engine.getSystem(CollisionSystem.class).dispose();
         postProcessor.dispose();
         tweenManager.killAll();
     }

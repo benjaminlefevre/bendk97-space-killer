@@ -18,17 +18,17 @@ public class LevelTest {
 
     @Test
     public void level_after_level1_is_level2() {
-        assertThat(Level.nextLevelAfter(Level1)).isEqualTo(Level2);
+        assertThat(nextLevelAfter(Level1)).isEqualTo(Level2);
     }
 
     @Test
     public void level_after_level2_is_level3() {
-        assertThat(Level.nextLevelAfter(Level2)).isEqualTo(Level3);
+        assertThat(nextLevelAfter(Level2)).isEqualTo(Level3);
     }
 
 
     @Test
     public void level_after_level3_comes_back_to_level1() {
-        assertThat(Level.nextLevelAfter(Level3)).isEqualTo(Level1);
+        assertThat(nextLevelAfter(Level3)).isEqualTo(Level1);
     }
 }

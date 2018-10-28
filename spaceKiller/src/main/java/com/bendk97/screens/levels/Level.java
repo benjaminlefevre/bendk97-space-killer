@@ -27,9 +27,9 @@ import static com.bendk97.screens.levels.Level.SoundEffect.GO;
 import static com.google.common.collect.ImmutableMap.of;
 
 public enum Level {
-    Level1(GFX_LEVEL1_ATLAS_MASK, of(GO, SOUND_GO, BOSS_ALERT, SOUND_BOSS_ALERT), of(LEVEL, MUSIC_LEVEL_1, BOSS, MUSIC_LEVEL_1_BOSS), 0.3f),
-    Level2(GFX_LEVEL2_ATLAS_MASK, of(GO, SOUND_GO, BOSS_ALERT, SOUND_BOSS_ALERT), of(LEVEL, MUSIC_LEVEL_2, BOSS, MUSIC_LEVEL_2_BOSS), 0.3f),
-    Level3(GFX_LEVEL3_ATLAS_MASK, of(GO, SOUND_GO, BOSS_ALERT, SOUND_BOSS_ALERT), of(LEVEL, MUSIC_LEVEL_3, BOSS, MUSIC_LEVEL_3_BOSS), 0.6f);
+    Level1(GFX_LEVEL1, of(GO, SOUND_GO, BOSS_ALERT, SOUND_BOSS_ALERT), of(LEVEL, MUSIC_LEVEL_1, BOSS, MUSIC_LEVEL_1_BOSS), 0.3f),
+    Level2(GFX_LEVEL2, of(GO, SOUND_GO, BOSS_ALERT, SOUND_BOSS_ALERT), of(LEVEL, MUSIC_LEVEL_2, BOSS, MUSIC_LEVEL_2_BOSS), 0.3f),
+    Level3(GFX_LEVEL3, of(GO, SOUND_GO, BOSS_ALERT, SOUND_BOSS_ALERT), of(LEVEL, MUSIC_LEVEL_3, BOSS, MUSIC_LEVEL_3_BOSS), 0.6f);
     public final AssetDescriptor<TextureAtlas> sprites;
     public final Map<SoundEffect, AssetDescriptor<Sound>> sounds;
     public final Map<MusicTrack, AssetDescriptor<Music>> musics;

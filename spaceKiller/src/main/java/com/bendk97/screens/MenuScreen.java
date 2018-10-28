@@ -27,6 +27,8 @@ import com.bendk97.Settings;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
 
+import static com.badlogic.gdx.graphics.Color.WHITE;
+import static com.badlogic.gdx.graphics.Color.YELLOW;
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.screens.levels.Level.Level1;
 
@@ -95,22 +97,22 @@ public class MenuScreen extends HDScreen {
 
         final TextButtonStyle styleRetro = new TextButtonStyle();
         styleRetro.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
-        styleRetro.fontColor = !Settings.isVirtualPad() ? Color.YELLOW : Color.WHITE;
+        styleRetro.fontColor = !Settings.isVirtualPad() ? YELLOW : WHITE;
         retroPad = new TextButton("retro pad", styleRetro);
 
         TextButtonStyle styleVirtual = new TextButtonStyle();
         styleVirtual.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
-        styleVirtual.fontColor = Settings.isVirtualPad() ? Color.YELLOW : Color.WHITE;
+        styleVirtual.fontColor = Settings.isVirtualPad() ? YELLOW : WHITE;
         virtualPad = new TextButton("virtual pad\n\n   / autofire", styleVirtual);
 
         TextButtonStyle styleFX = new TextButtonStyle();
         styleFX.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
-        styleFX.fontColor = Settings.isLightFXEnabled() ? Color.YELLOW : Color.WHITE;
+        styleFX.fontColor = Settings.isLightFXEnabled() ? YELLOW : WHITE;
         lightFx = new TextButton("light fx", styleFX);
 
         TextButtonStyle styleVibration = new TextButtonStyle();
         styleVibration.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
-        styleVibration.fontColor = Settings.isVibrationEnabled() ? Color.YELLOW : Color.WHITE;
+        styleVibration.fontColor = Settings.isVibrationEnabled() ? YELLOW : WHITE;
         vibration = new TextButton("vibration", styleVibration);
 
 
@@ -184,8 +186,8 @@ public class MenuScreen extends HDScreen {
                 if (Settings.isVirtualPad()) {
                     assets.playSound(Assets.MENU_CLICK);
                     Settings.setRetroPad();
-                    retroPad.getStyle().fontColor = Color.YELLOW;
-                    virtualPad.getStyle().fontColor = Color.WHITE;
+                    retroPad.getStyle().fontColor = YELLOW;
+                    virtualPad.getStyle().fontColor = WHITE;
                 }
                 return true;
             }
@@ -197,8 +199,8 @@ public class MenuScreen extends HDScreen {
                 if (!Settings.isVirtualPad()) {
                     assets.playSound(Assets.MENU_CLICK);
                     Settings.setVirtualPad();
-                    virtualPad.getStyle().fontColor = Color.YELLOW;
-                    retroPad.getStyle().fontColor = Color.WHITE;
+                    virtualPad.getStyle().fontColor = YELLOW;
+                    retroPad.getStyle().fontColor = WHITE;
 
                 }
                 return true;
@@ -210,7 +212,7 @@ public class MenuScreen extends HDScreen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 assets.playSound(Assets.MENU_CLICK);
                 Settings.changeLightFXEnabled();
-                lightFx.getStyle().fontColor = Settings.isLightFXEnabled() ? Color.YELLOW : Color.WHITE;
+                lightFx.getStyle().fontColor = Settings.isLightFXEnabled() ? YELLOW : WHITE;
                 return true;
             }
         });
@@ -220,7 +222,7 @@ public class MenuScreen extends HDScreen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 assets.playSound(Assets.MENU_CLICK);
                 Settings.changeVibrationEnabled();
-                vibration.getStyle().fontColor = Settings.isVibrationEnabled() ? Color.YELLOW : Color.WHITE;
+                vibration.getStyle().fontColor = Settings.isVibrationEnabled() ? YELLOW : WHITE;
                 return true;
             }
         });
@@ -471,7 +473,7 @@ public class MenuScreen extends HDScreen {
         assets.playMusic(Assets.MENU_MUSIC);
         font = assets.get(Assets.FONT_SPACE_KILLER_LARGE);
         fontVersion = new BitmapFont();
-        fontVersion.setColor(Color.WHITE);
+        fontVersion.setColor(YELLOW);
         fontVersion.getData().setScale(0.5f);
 
     }
@@ -491,7 +493,9 @@ public class MenuScreen extends HDScreen {
         font.draw(batcher, KILLER, SCREEN_WIDTH / 5f - 40f, SCREEN_HEIGHT * 3 / 4 + 50f);
         fontVersion.draw(batcher, gameVersion, 10f, 20f);
         if (!game.playServices.isSignedIn()) {
+            fontVersion.setColor(WHITE);
             fontVersion.draw(batcher, GOOGLE_PLAY_PLEASE_SIGN_IN, 90f, 60f);
+            fontVersion.setColor(YELLOW);
         }
         batcher.end();
     }

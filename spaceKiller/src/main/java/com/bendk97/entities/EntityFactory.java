@@ -31,7 +31,7 @@ import com.bendk97.entities.player.PlayerEntityFactory;
 import com.bendk97.screens.levels.Level;
 import com.bendk97.screens.levels.utils.ScreenShake;
 
-import static com.bendk97.assets.Assets.GFX_LEVEL_ALL_ATLAS_NO_MASK;
+import static com.bendk97.assets.Assets.GFX_LEVEL_COMMON;
 
 public class EntityFactory implements Disposable {
 
@@ -39,8 +39,8 @@ public class EntityFactory implements Disposable {
     public final Assets assets;
     public final TweenManager tweenManager;
     public final ScreenShake screenShake;
-    public final TextureAtlas atlasNoMask;
-    public final TextureAtlas atlasMask;
+    public final TextureAtlas commonAtlas;
+    public final TextureAtlas levelAtlas;
     public final RayHandler rayHandler;
     private final Pool<PointLight> lightPool = new Pool<PointLight>() {
         @Override
@@ -73,8 +73,8 @@ public class EntityFactory implements Disposable {
         }
         this.assets = assets;
         this.tweenManager = tweenManager;
-        this.atlasNoMask = assets.get(GFX_LEVEL_ALL_ATLAS_NO_MASK);
-        this.atlasMask = assets.get(level.sprites);
+        this.commonAtlas = assets.get(GFX_LEVEL_COMMON);
+        this.levelAtlas = assets.get(level.sprites);
         initSubFactories(game, level, camera);
     }
 
