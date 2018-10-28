@@ -26,9 +26,6 @@ import java.util.List;
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.entities.EntityFactoryIds.*;
 import static com.bendk97.screens.levels.Level.Level3;
-import static com.bendk97.screens.levels.Level.MusicTrack.BOSS;
-import static com.bendk97.screens.levels.Level.MusicTrack.LEVEL;
-import static com.bendk97.screens.levels.Level.SoundEffect.BOSS_ALERT;
 import static com.bendk97.screens.levels.Level.SoundEffect.GO;
 
 public class Level3Script extends LevelScript {
@@ -38,8 +35,6 @@ public class Level3Script extends LevelScript {
     private LinkedList<ScriptItem> scriptItemsMediumRight;
     private LinkedList<ScriptItem> scriptItemsHardLeft;
     private LinkedList<ScriptItem> scriptItemsHardRight;
-    private ScriptItem boss;
-
 
     public Level3Script(final LevelScreen levelScreen, final Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
                         PooledEngine engine) {
@@ -179,13 +174,11 @@ public class Level3Script extends LevelScript {
             return;
         }
         if (second == 215) {
-            playSound(BOSS_ALERT);
+            bossIsComing();
             return;
         }
         if (second == 219) {
-            stopMusic(LEVEL);
-            playMusic(BOSS);
-            scriptItemExecutor.execute(boss);
+            bossIsHere();
         }
     }
 

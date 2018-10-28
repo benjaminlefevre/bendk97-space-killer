@@ -123,7 +123,7 @@ public class SpaceKillerGameConstants {
     public static final float SHARE_Y = 40f;
 
 
-    // SCORE LIVES HIGH
+    // TEXT HUD
     public static final float SCORE_X = 20f;
     public static final float SCORE_Y = SCREEN_HEIGHT - 10f;
     public static final float LIVES_X = SCREEN_WIDTH / 2f - 50f;
@@ -132,5 +132,6 @@ public class SpaceKillerGameConstants {
     public static final float HIGH_Y = SCREEN_HEIGHT - 10f;
     public static final float BOMB_STOCK_X = SCREEN_WIDTH - 22f;
     public static final float BOMB_STOCK_Y = 10f;
-
+    public static final float BOSS_ALERT_X = SCREEN_WIDTH / 4;
+    public static final float BOSS_ALERT_Y = SCREEN_HEIGHT * 3 / 4;
 }

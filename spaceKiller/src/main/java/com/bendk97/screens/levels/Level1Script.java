@@ -34,9 +34,6 @@ import static com.bendk97.entities.EntityFactoryIds.BOSS_LEVEL_1;
 import static com.bendk97.entities.enemies.SquadronFactory.BOSS_MOVE;
 import static com.bendk97.entities.enemies.SquadronFactory.LINEAR_Y;
 import static com.bendk97.screens.levels.Level.Level1;
-import static com.bendk97.screens.levels.Level.MusicTrack.BOSS;
-import static com.bendk97.screens.levels.Level.MusicTrack.LEVEL;
-import static com.bendk97.screens.levels.Level.SoundEffect.BOSS_ALERT;
 import static com.bendk97.screens.levels.Level.SoundEffect.GO;
 import static com.bendk97.tweens.VelocityComponentTweenAccessor.VELOCITY_Y;
 
@@ -46,7 +43,6 @@ public final class Level1Script extends LevelScript {
     private LinkedList<ScriptItem> scriptItemsMediumRight;
     private LinkedList<ScriptItem> scriptItemsHardLeft;
     private LinkedList<ScriptItem> scriptItemsHardRight;
-    private ScriptItem boss;
     private Entity background;
     private Entity background2;
 
@@ -190,7 +186,7 @@ public final class Level1Script extends LevelScript {
             return;
         }
         if (second == 185) {
-            playSound(BOSS_ALERT);
+            bossIsComing();
             Tween.to(ComponentMapperHelper.velocity.get(background), VELOCITY_Y, 4).ease(Quad.IN)
                     .target(50f).start(tweenManager);
             Tween.to(ComponentMapperHelper.velocity.get(background2), VELOCITY_Y, 4).ease(Quad.IN)
@@ -198,9 +194,7 @@ public final class Level1Script extends LevelScript {
             return;
         }
         if (second == 189) {
-            stopMusic(LEVEL);
-            playMusic(BOSS);
-            scriptItemExecutor.execute(boss);
+            bossIsHere();
         }
     }
 

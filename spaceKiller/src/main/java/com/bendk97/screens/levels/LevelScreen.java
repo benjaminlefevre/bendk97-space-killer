@@ -20,6 +20,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -158,7 +159,7 @@ public final class LevelScreen extends ScreenAdapter {
         registerTweensAccessor();
         registerPostProcessingEffects();
         this.levelScript = getLevelScript(level, this, assets, entityFactory, tweenManager, player, engine);
-        time = -5;
+        time = 180;
     }
 
     private void initBatchers() {
@@ -255,6 +256,7 @@ public final class LevelScreen extends ScreenAdapter {
         Tween.registerAccessor(PositionComponent.class, new PositionComponentTweenAccessor());
         Tween.registerAccessor(VelocityComponent.class, new VelocityComponentTweenAccessor());
         Tween.registerAccessor(OrthographicCamera.class, new CameraTweenAccessor());
+        Tween.registerAccessor(BitmapFont.class, new BitmapFontTweenAccessor());
         if (fxLightEnabled) {
             Tween.registerAccessor(ConeLight.class, new ConeLightTweenAccessor());
         }
@@ -281,7 +283,7 @@ public final class LevelScreen extends ScreenAdapter {
         engine.addSystem(new BatcherEndSystem(batcher, 7));
         engine.addSystem(new BatcherHUDBeginSystem(viewportHUD, batcherHUD, 8));
         engine.addSystem(new StaticEntitiesRenderingSystem(batcherHUD, 9));
-        engine.addSystem(new ScoresRenderingSystem(batcherHUD, assets, 11));
+        engine.addSystem(new TextHUDRenderingSystem(batcherHUD, assets, 11));
         engine.addSystem(new StatusHealthRenderingSystem(batcherHUD, assets, 10));
         engine.addSystem(new GameOverRenderingSystem(batcherHUD, cameraHUD, assets, 10));
         engine.addSystem(new PauseRenderingSystem(batcherHUD, cameraHUD, assets, 10));

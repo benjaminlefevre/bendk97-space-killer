@@ -89,11 +89,11 @@ public class BonusEntityFactory {
     }
 
 
-    private void tweenBonus(Entity powerUp, PositionComponent position, SpriteComponent component) {
+    private void tweenBonus(Entity powerUp, PositionComponent position, SpriteComponent spriteComponent) {
         Timeline.createSequence()
                 .beginParallel()
                 .push(Tween.to(position, POSITION_Y, 8f).ease(Linear.INOUT).target(50f))
-                .push(Tween.to(component, ALPHA, 0.5f).delay(4f).ease(Linear.INOUT).target(0f).repeat(8, 0f))
+                .push(Tween.to(spriteComponent, ALPHA, 0.5f).delay(4f).ease(Linear.INOUT).target(0f).repeat(8, 0f))
                 .end()
                 .setCallback((i, baseTween) -> {
                     if (i == TweenCallback.COMPLETE) {

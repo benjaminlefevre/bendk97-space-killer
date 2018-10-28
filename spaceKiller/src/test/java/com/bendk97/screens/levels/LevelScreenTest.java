@@ -114,7 +114,7 @@ public class LevelScreenTest {
                         BatcherEndSystem.class,
                         BatcherHUDBeginSystem.class,
                         StaticEntitiesRenderingSystem.class,
-                        ScoresRenderingSystem.class,
+                        TextHUDRenderingSystem.class,
                         StatusHealthRenderingSystem.class,
                         GameOverRenderingSystem.class,
                         PauseRenderingSystem.class,
