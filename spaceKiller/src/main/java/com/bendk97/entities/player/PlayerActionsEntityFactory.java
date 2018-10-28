@@ -103,7 +103,7 @@ public class PlayerActionsEntityFactory {
         bomb.add(positionComponent);
         SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION, entityFactory.atlasNoMask.createSprites("bomb"), LOOP));
+        animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION, entityFactory.commonAtlas.createSprites("bomb"), LOOP));
         spriteComponent.sprite = animationComponent.animations.get(ANIMATION_MAIN).getKeyFrame(0);
         bomb.add(spriteComponent);
         bomb.add(animationComponent);
@@ -131,8 +131,8 @@ public class PlayerActionsEntityFactory {
         final SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION_BOMB_EXPLOSION,
-                entityFactory.atlasNoMask.createSprites("bomb_explosion"), LOOP_PINGPONG));
-        spriteComponent.sprite = entityFactory.atlasNoMask.createSprite("bomb_explosion", 6);
+                entityFactory.commonAtlas.createSprites("bomb_explosion"), LOOP_PINGPONG));
+        spriteComponent.sprite = entityFactory.commonAtlas.createSprite("bomb_explosion", 6);
         spriteComponent.zIndex = 100;
         bombExplosion.add(spriteComponent);
         bombExplosion.add(animationComponent);
@@ -166,7 +166,7 @@ public class PlayerActionsEntityFactory {
         bullet.add(entityFactory.engine.createComponent(PlayerBulletComponent.class));
         bullet.add(positionBulletComponent);
         bullet.add(velocityBulletComponent);
-        spriteBulletComponent.sprite = new Sprite(entityFactory.atlasMask.findRegion(bulletSpriteName));
+        spriteBulletComponent.sprite = new Sprite(entityFactory.levelAtlas.findRegion(bulletSpriteName));
         bullet.add(spriteBulletComponent);
         bullet.add(entityFactory.engine.createComponent(RemovableComponent.class));
         entityFactory.engine.addEntity(bullet);

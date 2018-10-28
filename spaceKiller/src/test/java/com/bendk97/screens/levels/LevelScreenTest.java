@@ -73,8 +73,8 @@ public class LevelScreenTest {
 
     private void mockAssets() {
         TextureAtlas textureAtlas = mock(TextureAtlas.class);
-        when(assets.get(GFX_LEVEL1_ATLAS_MASK)).thenReturn(textureAtlas);
-        when(assets.get(GFX_LEVEL_ALL_ATLAS_NO_MASK)).thenReturn(textureAtlas);
+        when(assets.get(GFX_LEVEL1)).thenReturn(textureAtlas);
+        when(assets.get(GFX_LEVEL_COMMON)).thenReturn(textureAtlas);
         when(assets.get(FONT_SPACE_KILLER_LARGE)).thenReturn(mock(BitmapFont.class));
         when(assets.get(FONT_SPACE_KILLER_MEDIUM)).thenReturn(mock(BitmapFont.class));
         when(assets.get(FONT_SPACE_KILLER_SMALLEST)).thenReturn(mock(BitmapFont.class));

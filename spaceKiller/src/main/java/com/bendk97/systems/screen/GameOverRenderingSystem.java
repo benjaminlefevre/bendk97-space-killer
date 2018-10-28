@@ -39,10 +39,10 @@ public class GameOverRenderingSystem extends GLDarkRenderingSystem {
         this.largeFont.setColor(Color.RED);
         this.mediumFont = assets.get(FONT_SPACE_KILLER_MEDIUM);
         this.mediumFont.setColor(Color.WHITE);
-        this.playAgain = assets.get(GFX_LEVEL_ALL_ATLAS_NO_MASK).createSprite("icon-playagain");
-        this.home = assets.get(GFX_LEVEL_ALL_ATLAS_NO_MASK).createSprite("icon-home");
-        this.share = assets.get(GFX_LEVEL_ALL_ATLAS_NO_MASK).createSprite("icon-share");
-        this.extraLife = assets.get(GFX_LEVEL_ALL_ATLAS_NO_MASK).createSprite("icon-extralife");
+        this.playAgain = assets.get(GFX_LEVEL_COMMON).createSprite("icon-playagain");
+        this.home = assets.get(GFX_LEVEL_COMMON).createSprite("icon-home");
+        this.share = assets.get(GFX_LEVEL_COMMON).createSprite("icon-share");
+        this.extraLife = assets.get(GFX_LEVEL_COMMON).createSprite("icon-extralife");
         this.playAgain.setPosition(PLAY_X, PLAY_Y);
         this.home.setPosition(HOME_X, HOME_Y);
         this.share.setPosition(SHARE_X, SHARE_Y);

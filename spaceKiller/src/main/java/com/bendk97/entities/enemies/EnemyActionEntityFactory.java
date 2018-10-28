@@ -65,7 +65,7 @@ public class EnemyActionEntityFactory {
         VelocityComponent velocityComponent = entityFactory.engine.createComponent(VelocityComponent.class);
         bullet.add(velocityComponent);
         SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
-        spriteComponent.sprite = new Sprite(entityFactory.atlasMask.findRegion("laser"));
+        spriteComponent.sprite = new Sprite(entityFactory.levelAtlas.findRegion("laser"));
         bullet.add(spriteComponent);
         bullet.add(entityFactory.engine.createComponent(RemovableComponent.class));
         entityFactory.engine.addEntity(bullet);
@@ -88,7 +88,7 @@ public class EnemyActionEntityFactory {
         VelocityComponent velocityComponent = entityFactory.engine.createComponent(VelocityComponent.class);
         bullet.add(velocityComponent);
         SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
-        spriteComponent.sprite = new Sprite(entityFactory.atlasMask.findRegion("bulletEnemy"));
+        spriteComponent.sprite = new Sprite(entityFactory.levelAtlas.findRegion("bulletEnemy"));
         bullet.add(spriteComponent);
         bullet.add(entityFactory.engine.createComponent(RemovableComponent.class));
         entityFactory.engine.addEntity(bullet);
@@ -179,7 +179,7 @@ public class EnemyActionEntityFactory {
             bullet.add(velocityComponent);
 
             SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
-            spriteComponent.sprite = new Sprite(entityFactory.atlasMask.findRegion("bulletEnemy"));
+            spriteComponent.sprite = new Sprite(entityFactory.levelAtlas.findRegion("bulletEnemy"));
             bullet.add(spriteComponent);
 
             bullet.add(entityFactory.engine.createComponent(RemovableComponent.class));

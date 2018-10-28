@@ -8,25 +8,44 @@ package com.bendk97.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.bendk97.components.SpriteComponent;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.components.helpers.Families;
 import com.bendk97.listeners.CollisionListener;
-import com.bendk97.mask.SpriteMaskFactory;
+
+import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
+import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.bendk97.sprite.SpriteHelper.getBoundingCircle;
 
 public class CollisionSystem extends EntitySystem {
 
 
     private final CollisionListener collisionListener;
-    private final SpriteMaskFactory spriteMaskFactory;
+    private final SpriteBatch spriteBatch;
+    private FrameBuffer fbo;
+    private final Viewport viewport;
 
-    public CollisionSystem(CollisionListener collisionListener, SpriteMaskFactory spriteMaskFactory, int priority) {
+    public CollisionSystem(CollisionListener collisionListener, Viewport viewport, SpriteBatch spriteBatch, int priority) {
         super(priority);
-        this.spriteMaskFactory = spriteMaskFactory;
+        try {
+            this.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, (int) SCREEN_WIDTH, (int) SCREEN_HEIGHT, false);
+        } catch(Exception e) {
+            Gdx.app.log("Pixel Perfect Collision", "Unable on this device");
+            this.fbo = null;
+        }
+        this.viewport = viewport;
+        this.spriteBatch = spriteBatch;
+        this.spriteBatch.enableBlending();
         this.collisionListener = collisionListener;
     }
 
@@ -42,7 +61,7 @@ public class CollisionSystem extends EntitySystem {
             for (Entity bullet : getEngine().getEntitiesFor(Families.playerBullet)) {
                 for (Entity enemy : getEngine().getEntitiesFor(Families.enemies)) {
                     if (!ComponentMapperHelper.enemy.get(enemy).isDead()
-                            && isCollisionBetween(ComponentMapperHelper.sprite.get(enemy).sprite, ComponentMapperHelper.sprite.get(bullet).sprite)) {
+                            && isCollisionBetween(ComponentMapperHelper.sprite.get(enemy), ComponentMapperHelper.sprite.get(bullet))) {
                         collisionListener.enemyShoot(enemy, player, bullet);
                         return;
                     }
@@ -50,19 +69,19 @@ public class CollisionSystem extends EntitySystem {
             }
 
             for (Entity powerUp : getEngine().getEntitiesFor(Families.powerUp)) {
-                if (isCollisionBetween(ComponentMapperHelper.sprite.get(player).sprite, ComponentMapperHelper.sprite.get(powerUp).sprite)) {
+                if (isCollisionBetween(ComponentMapperHelper.sprite.get(player), ComponentMapperHelper.sprite.get(powerUp))) {
                     collisionListener.playerPowerUp(player, powerUp);
                     return;
                 }
             }
             for (Entity shieldUp : getEngine().getEntitiesFor(Families.shieldUp)) {
-                if (isCollisionBetween(ComponentMapperHelper.sprite.get(player).sprite, ComponentMapperHelper.sprite.get(shieldUp).sprite)) {
+                if (isCollisionBetween(ComponentMapperHelper.sprite.get(player), ComponentMapperHelper.sprite.get(shieldUp))) {
                     collisionListener.playerShieldUp(player, shieldUp);
                     return;
                 }
             }
             for (Entity bombUp : getEngine().getEntitiesFor(Families.bombUp)) {
-                if (isCollisionBetween(ComponentMapperHelper.sprite.get(player).sprite, ComponentMapperHelper.sprite.get(bombUp).sprite)) {
+                if (isCollisionBetween(ComponentMapperHelper.sprite.get(player), ComponentMapperHelper.sprite.get(bombUp))) {
                     collisionListener.playerBombUp(player, bombUp);
                     return;
                 }
@@ -73,7 +92,7 @@ public class CollisionSystem extends EntitySystem {
     private void detectCollisionWithPlayerVulnerable() {
         for (Entity player : getEngine().getEntitiesFor(Families.playerVulnerable)) {
             for (Entity enemy : getEngine().getEntitiesFor(Families.enemyBodies)) {
-                if (isCollisionBetween(ComponentMapperHelper.sprite.get(enemy).sprite, ComponentMapperHelper.sprite.get(player).sprite)) {
+                if (isCollisionBetween(ComponentMapperHelper.sprite.get(enemy), ComponentMapperHelper.sprite.get(player))) {
                     collisionListener.playerHitByEnemyBody(player);
                     return;
                 }
@@ -81,7 +100,7 @@ public class CollisionSystem extends EntitySystem {
             }
             for (Entity bullet : getEngine().getEntitiesFor(Families.enemyBullet)) {
                 SpriteComponent enemyBullet = ComponentMapperHelper.sprite.get(bullet);
-                if (isCollisionBetween(enemyBullet.sprite, ComponentMapperHelper.sprite.get(player).sprite)) {
+                if (isCollisionBetween(enemyBullet, ComponentMapperHelper.sprite.get(player))) {
                     collisionListener.playerHitByEnemyBullet(player, bullet);
                     return;
                 }
@@ -93,7 +112,7 @@ public class CollisionSystem extends EntitySystem {
         for (Entity shield : getEngine().getEntitiesFor(Families.shield)) {
             for (Entity bullet : getEngine().getEntitiesFor(Families.enemyBullet)) {
                 SpriteComponent enemyBullet = ComponentMapperHelper.sprite.get(bullet);
-                if (isCollisionBetween(enemyBullet.sprite, ComponentMapperHelper.sprite.get(shield).sprite)) {
+                if (isCollisionBetween(enemyBullet, ComponentMapperHelper.sprite.get(shield))) {
                     collisionListener.bulletStoppedByShield(bullet);
                     return;
                 }
@@ -103,7 +122,7 @@ public class CollisionSystem extends EntitySystem {
                     break;
                 }
                 SpriteComponent enemySprite = ComponentMapperHelper.sprite.get(enemy);
-                if (isCollisionBetween(enemySprite.sprite, ComponentMapperHelper.sprite.get(shield).sprite)) {
+                if (isCollisionBetween(enemySprite, ComponentMapperHelper.sprite.get(shield))) {
                     collisionListener.enemyShootByShield(enemy);
                     return;
                 }
@@ -111,28 +130,67 @@ public class CollisionSystem extends EntitySystem {
         }
     }
 
-    private boolean isCollisionBetween(Sprite sprite1, Sprite sprite2) {
+    private boolean isCollisionBetween(SpriteComponent spriteComponent1, SpriteComponent spriteComponent2) {
+        if (fbo != null && (spriteComponent1.pixelPerfectCollision || spriteComponent2.pixelPerfectCollision)) {
+            return isPerfectPixelCollisionBetween(spriteComponent1.sprite, spriteComponent2.sprite);
+        } else {
+            return isBoundingCircleCollisionBetween(spriteComponent1.sprite, spriteComponent2.sprite);
+        }
+    }
+
+    private boolean isBoundingCircleCollisionBetween(Sprite sprite1, Sprite sprite2) {
+        return Intersector.overlaps(getBoundingCircle(sprite1), getBoundingCircle(sprite2));
+    }
+
+    private boolean isPerfectPixelCollisionBetween(Sprite sprite1, Sprite sprite2) {
         Rectangle collision = new Rectangle();
         if (Intersector.intersectRectangles(sprite1.getBoundingRectangle(), sprite2.getBoundingRectangle(), collision)) {
-            Array<Array<Boolean>> mask1 = spriteMaskFactory.getMask(sprite1.getTexture());
-            Array<Array<Boolean>> mask2 = spriteMaskFactory.getMask(sprite2.getTexture());
-            if (mask1 == null || mask2 == null) {
-                return true;
-            }
-            for (int i = (int) collision.x; i < Math.floor(collision.x + collision.width); ++i) {
-                for (int j = (int) collision.y; j < Math.floor(collision.y + collision.height); ++j) {
-                    try {
-                        if (mask1.get(sprite1.getRegionX() + i - (int) sprite1.getX()).get(sprite1.getRegionY() + (int) sprite1.getHeight() - (j - (int) sprite1.getY()))
-                                && mask2.get(sprite2.getRegionX() + i - (int) sprite2.getX()).get(sprite2.getRegionY() + (int) sprite2.getHeight() - (j - (int) sprite2.getY()))) {
+            Pixmap pix1 = null;
+            Pixmap pix2 = null;
+            try {
+                spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+                pix1 = transformToPixels(sprite1, collision);
+                pix2 = transformToPixels(sprite2, collision);
+                for (int i = 0; i < pix1.getWidth(); ++i) {
+                    for (int j = 0; j < pix1.getHeight(); ++j) {
+                        if (pix1.getPixel(i, j) != 255 && pix2.getPixel(i, j) != 255) {
                             return true;
                         }
-                    } catch (Exception e) {
-                        return true;
                     }
+                }
+            } finally {
+                if (pix1 != null) {
+                    pix1.dispose();
+                }
+                if (pix2 != null) {
+                    pix2.dispose();
                 }
             }
         }
         return false;
+    }
+
+    private Pixmap transformToPixels(Sprite sprite, Rectangle collision) {
+        fbo.begin();
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        spriteBatch.begin();
+        sprite.draw(spriteBatch);
+        spriteBatch.end();
+        fbo.end();
+        fbo.bind();
+        Pixmap pixmap = ScreenUtils.getFrameBufferPixmap(
+                (int) Math.floor(collision.x),
+                (int) Math.floor(collision.y),
+                (int) Math.ceil(collision.width),
+                (int) Math.ceil(collision.height)
+        );
+        FrameBuffer.unbind();
+        return pixmap;
+    }
+
+    public void dispose() {
+        fbo.dispose();
     }
 }
 

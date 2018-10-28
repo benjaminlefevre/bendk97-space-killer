@@ -39,7 +39,7 @@ public class BonusEntityFactory {
         powerUp.add(position);
         powerUp.add(entityFactory.engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = entityFactory.atlasMask.createSprites("power-up");
+        Array<Sprite> sprites = entityFactory.levelAtlas.createSprites("power-up");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION_POWER_UP, sprites, LOOP));
         powerUp.add(animationComponent);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
@@ -60,7 +60,7 @@ public class BonusEntityFactory {
         shieldUp.add(position);
         shieldUp.add(entityFactory.engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> sprites = entityFactory.atlasMask.createSprites("shieldup");
+        Array<Sprite> sprites = entityFactory.levelAtlas.createSprites("shieldup");
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION_POWER_UP, sprites, LOOP));
         shieldUp.add(animationComponent);
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
@@ -80,7 +80,7 @@ public class BonusEntityFactory {
         bombUp.add(position);
         bombUp.add(entityFactory.engine.createComponent(VelocityComponent.class));
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-        component.sprite = new Sprite(entityFactory.atlasMask.findRegion("bombUp"));
+        component.sprite = new Sprite(entityFactory.levelAtlas.findRegion("bombUp"));
         bombUp.add(component);
         position.x = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.x;
         position.y = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.y;
