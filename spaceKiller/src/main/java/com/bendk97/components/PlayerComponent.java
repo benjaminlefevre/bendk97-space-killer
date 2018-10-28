@@ -9,6 +9,7 @@ package com.bendk97.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.StringBuilder;
 import com.bendk97.player.PlayerData;
 import com.bendk97.player.PlayerDataBuilder;
 import com.bendk97.screens.levels.Level;
@@ -28,7 +29,9 @@ public class PlayerComponent implements Component, Pool.Poolable {
     public int laserShipKilled = 0;
     public int howManyLivesLost = 0;
     private int score = 0;
+    private StringBuilder scoreStr = new StringBuilder();
     private int high_score = 0;
+    private StringBuilder highScoreStr = new StringBuilder();
     public int lives = LIVES;
     public int bombs = BOMBS;
     public PowerLevel powerLevel = NORMAL;
@@ -42,12 +45,12 @@ public class PlayerComponent implements Component, Pool.Poolable {
     }
 
     public enum PowerLevel {
-        NORMAL(new Color(43f / 255f, 197f / 255f, 205f / 255f, 0.6f), "bullet"),
-        DOUBLE(new Color(43f / 255f, 197f / 255f, 205f / 255f, 0.6f), "bullet2"),
-        TRIPLE(new Color(43f / 255f, 197f / 255f, 205f / 255f, 0.6f), "bullet3"),
-        TRIPLE_SIDE(new Color(43f / 255f, 197f / 255f, 205f / 255f, 0.6f), "bullet3", "bulletLeft1", "bulletRight1"),
-        TRIPLE_FAST(new Color(3f / 255f, 255f / 255f, 136f / 255f, 0.6f), "bullet4", "bulletLeft2", "bulletRight2"),
-        TRIPLE_VERY_FAST(new Color(255f / 255f, 120f / 255f, 0f, 0.6f), "bullet5", "bulletLeft3", "bulletRight3");
+        NORMAL(Constants.BLUE_FIRE, "bullet"),
+        DOUBLE(Constants.BLUE_FIRE, "bullet2"),
+        TRIPLE(Constants.BLUE_FIRE, "bullet3"),
+        TRIPLE_SIDE(Constants.BLUE_FIRE, "bullet3", "bulletLeft1", "bulletRight1"),
+        TRIPLE_FAST(Constants.GREEN_FIRE, "bullet4", "bulletLeft2", "bulletRight2"),
+        TRIPLE_VERY_FAST(Constants.ORANGE_FIRE, "bullet5", "bulletLeft3", "bulletRight3");
 
         public final Color color;
         public final String bulletRegionName;
@@ -66,6 +69,11 @@ public class PlayerComponent implements Component, Pool.Poolable {
             this.bulletRightSidedRegionName = right;
         }
 
+        private static class Constants {
+            static final Color BLUE_FIRE = new Color(43f / 255f, 197f / 255f, 205f / 255f, 0.6f);
+            static final Color GREEN_FIRE = new Color(3f / 255f, 255f / 255f, 136f / 255f, 0.6f);
+            static final Color ORANGE_FIRE = new Color(255f / 255f, 120f / 255f, 0f, 0.6f);
+        }
     }
 
     public PlayerData copyPlayerData() {
@@ -96,12 +104,14 @@ public class PlayerComponent implements Component, Pool.Poolable {
         enemiesKilledLevel = 0;
     }
 
-    public String getScore() {
-        return String.format("%7s", String.valueOf(score)).replace(' ', '0');
+    public StringBuilder getScore() {
+        scoreStr.setLength(0);
+        return scoreStr.append(score, 7);
     }
 
-    public String getHighScoreFormatted() {
-        return String.format("%7s", String.valueOf(high_score)).replace(' ', '0');
+    public StringBuilder getHighScoreFormatted() {
+        highScoreStr.setLength(0);
+        return highScoreStr.append(high_score, 7);
     }
 
     public void newCredit() {

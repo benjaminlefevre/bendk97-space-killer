@@ -1,11 +1,12 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 29/09/18 21:09
+ * Last modified 28/10/18 21:28
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97.systems;
+package com.bendk97.systems.collision;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -25,21 +27,24 @@ import com.bendk97.listeners.CollisionListener;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
-import static com.bendk97.sprite.SpriteHelper.getBoundingCircle;
+import static com.bendk97.pools.GamePools.poolCircle;
+import static com.bendk97.pools.GamePools.poolRectangle;
 
 public class CollisionSystem extends EntitySystem {
 
-
+    private static final int FREQUENCY_MS = 50;
     private final CollisionListener collisionListener;
+    private final CollisionHelper collisionHelper = new CollisionHelper();
     private final SpriteBatch spriteBatch;
     private FrameBuffer fbo;
     private final Viewport viewport;
+    private float deltaCount = 0;
 
     public CollisionSystem(CollisionListener collisionListener, Viewport viewport, SpriteBatch spriteBatch, int priority) {
         super(priority);
         try {
-            this.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, (int) SCREEN_WIDTH, (int) SCREEN_HEIGHT, false);
-        } catch(Exception e) {
+            this.fbo = new FrameBuffer(Pixmap.Format.RGBA4444, (int) SCREEN_WIDTH, (int) SCREEN_HEIGHT, false);
+        } catch (Exception e) {
             Gdx.app.log("Pixel Perfect Collision", "Unable on this device");
             this.fbo = null;
         }
@@ -49,8 +54,15 @@ public class CollisionSystem extends EntitySystem {
         this.collisionListener = collisionListener;
     }
 
+
     @Override
     public void update(float delta) {
+        deltaCount += delta * 1000f;
+        if (deltaCount < FREQUENCY_MS) {
+            return;
+        }
+        deltaCount = 0f;
+
         detectCollisionWithPlayer();
         detectCollisionWithShields();
         detectCollisionWithPlayerVulnerable();
@@ -139,35 +151,47 @@ public class CollisionSystem extends EntitySystem {
     }
 
     private boolean isBoundingCircleCollisionBetween(Sprite sprite1, Sprite sprite2) {
-        return Intersector.overlaps(getBoundingCircle(sprite1), getBoundingCircle(sprite2));
+        Circle boundingCircle1 = collisionHelper.getBoundingCircle(sprite1);
+        Circle boundingCircle2 = collisionHelper.getBoundingCircle(sprite2);
+        try {
+            return Intersector.overlaps(boundingCircle1, boundingCircle2);
+        } finally {
+            poolCircle.free(boundingCircle1);
+            poolCircle.free(boundingCircle2);
+        }
     }
 
     private boolean isPerfectPixelCollisionBetween(Sprite sprite1, Sprite sprite2) {
-        Rectangle collision = new Rectangle();
-        if (Intersector.intersectRectangles(sprite1.getBoundingRectangle(), sprite2.getBoundingRectangle(), collision)) {
-            Pixmap pix1 = null;
-            Pixmap pix2 = null;
-            try {
-                spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
-                pix1 = transformToPixels(sprite1, collision);
-                pix2 = transformToPixels(sprite2, collision);
-                for (int i = 0; i < pix1.getWidth(); ++i) {
-                    for (int j = 0; j < pix1.getHeight(); ++j) {
-                        if (pix1.getPixel(i, j) != 255 && pix2.getPixel(i, j) != 255) {
-                            return true;
+        Rectangle collision = poolRectangle.obtain();
+        try {
+            if (Intersector.intersectRectangles(sprite1.getBoundingRectangle(), sprite2.getBoundingRectangle(), collision)) {
+                Pixmap pix1 = null;
+                Pixmap pix2 = null;
+                try {
+                    viewport.apply();
+                    spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+                    pix1 = transformToPixels(sprite1, collision);
+                    pix2 = transformToPixels(sprite2, collision);
+                    for (int i = 0; i < pix1.getWidth(); ++i) {
+                        for (int j = 0; j < pix1.getHeight(); ++j) {
+                            if (pix1.getPixel(i, j) != 255 && pix2.getPixel(i, j) != 255) {
+                                return true;
+                            }
                         }
                     }
-                }
-            } finally {
-                if (pix1 != null) {
-                    pix1.dispose();
-                }
-                if (pix2 != null) {
-                    pix2.dispose();
+                } finally {
+                    if (pix1 != null) {
+                        pix1.dispose();
+                    }
+                    if (pix2 != null) {
+                        pix2.dispose();
+                    }
                 }
             }
+            return false;
+        } finally {
+            poolRectangle.free(collision);
         }
-        return false;
     }
 
     private Pixmap transformToPixels(Sprite sprite, Rectangle collision) {
@@ -189,8 +213,12 @@ public class CollisionSystem extends EntitySystem {
         return pixmap;
     }
 
-    public void dispose() {
-        fbo.dispose();
+    @Override
+    public void removedFromEngine(Engine engine) {
+        super.removedFromEngine(engine);
+        if (fbo != null) {
+            fbo.dispose();
+        }
     }
 }
 

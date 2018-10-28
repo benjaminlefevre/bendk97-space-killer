@@ -17,6 +17,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
@@ -252,6 +253,10 @@ public class Assets {
 
     public <T> T get(AssetDescriptor<T> descriptor) {
         return manager.get(descriptor.fileName);
+    }
+
+    public BitmapFontCache getFont(AssetDescriptor<BitmapFont> descriptor) {
+        return new BitmapFontCache(manager.get(descriptor.fileName));
     }
 
     private AssetManager getAssetManager() {

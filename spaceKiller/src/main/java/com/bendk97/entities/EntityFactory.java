@@ -35,6 +35,7 @@ import static com.bendk97.assets.Assets.GFX_LEVEL_COMMON;
 
 public class EntityFactory implements Disposable {
 
+    private static final Color LIGHT_EXPLOSION_COLOR = new Color(0.5f, 0f, 0f, 0.3f);
     public PooledEngine engine;
     public final Assets assets;
     public TweenManager tweenManager;
@@ -70,7 +71,7 @@ public class EntityFactory implements Disposable {
                 poolObjects.add(light);
             }
             lightPool.freeAll(poolObjects);
-        }
+    }
         this.assets = assets;
         this.tweenManager = tweenManager;
         this.commonAtlas = assets.get(GFX_LEVEL_COMMON);
@@ -88,7 +89,7 @@ public class EntityFactory implements Disposable {
     }
 
     public void createLight(Entity entity) {
-        createLight(entity, new Color(0.5f, 0f, 0f, 0.3f),
+        createLight(entity, LIGHT_EXPLOSION_COLOR,
                 ComponentMapperHelper.sprite.get(entity).sprite.getHeight() * 20f);
     }
 

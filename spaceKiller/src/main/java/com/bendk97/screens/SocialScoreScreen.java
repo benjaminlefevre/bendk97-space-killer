@@ -9,7 +9,7 @@ package com.bendk97.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -21,6 +21,9 @@ import com.bendk97.assets.Assets;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.UUID;
+
+import static com.bendk97.pools.BitmapFontHelper.drawText;
+import static com.bendk97.pools.GamePools.poolSprite;
 
 public class SocialScoreScreen extends ScreenAdapter {
 
@@ -38,8 +41,8 @@ public class SocialScoreScreen extends ScreenAdapter {
 
     private final Sprite iconGame;
     private final Sprite google;
-    private final BitmapFont font;
-    private final BitmapFont fontSmall;
+    private final BitmapFontCache font;
+    private final BitmapFontCache fontSmall;
 
     public SocialScoreScreen(Assets assets, SpaceKillerGame game, int score) {
         this.game = game;
@@ -47,11 +50,11 @@ public class SocialScoreScreen extends ScreenAdapter {
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, screen_width, screen_height);
         this.batcher = new SpriteBatch();
-        iconGame = new Sprite(assets.get(Assets.ICON_GAME));
-        google = new Sprite(assets.get(Assets.ICON_GOOGLE));
-        fontSmall = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
+        iconGame = poolSprite.getSprite(assets.get(Assets.ICON_GAME));
+        google = poolSprite.getSprite(assets.get(Assets.ICON_GOOGLE));
+        fontSmall = assets.getFont(Assets.FONT_SPACE_KILLER_SMALL);
         fontSmall.setColor(Color.BLACK);
-        font = assets.get(Assets.FONT_SPACE_KILLER_MEDIUM);
+        font = assets.getFont(Assets.FONT_SPACE_KILLER_MEDIUM);
         font.setColor(Color.BLACK);
         iconGame.setPosition(10f, 25);
         google.setPosition(700f, 10f);
@@ -66,10 +69,10 @@ public class SocialScoreScreen extends ScreenAdapter {
         batcher.setProjectionMatrix(camera.combined);
         iconGame.draw(batcher);
         google.draw(batcher);
-        font.draw(batcher, SPACE_KILLER, 350f, 235f);
-        fontSmall.draw(batcher, SCORE, 350f, 100f);
+        drawText(batcher, font, SPACE_KILLER, 350f, 235f);
+        drawText(batcher, fontSmall, SCORE, 350f, 100f);
         font.setColor(Color.RED);
-        font.draw(batcher, numberFormatter.format(score), 550f, 105f);
+        drawText(batcher, font, numberFormatter.format(score), 550f, 105f);
         font.setColor(Color.WHITE);
         batcher.end();
     }
@@ -100,6 +103,8 @@ public class SocialScoreScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         batcher.dispose();
+        poolSprite.free(google);
+        poolSprite.free(iconGame);
         Texture.clearAllTextures(Gdx.app);
     }
 }

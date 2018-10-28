@@ -17,6 +17,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.bendk97.google.Achievement;
+import com.bendk97.google.FakePlayServices;
 import com.bendk97.google.PlayServices;
 import com.bendk97.google.play.GameHelper;
 import com.bendk97.share.IntentShare;
@@ -24,6 +25,7 @@ import com.bendk97.space.killer.BuildConfig;
 import com.bendk97.space.killer.R;
 import com.google.android.gms.games.Games;
 
+import static com.bendk97.SpaceKillerGameConstants.NO_GOOGLE;
 
 
 public class AndroidLauncher extends AndroidApplication implements PlayServices, IntentShare {
@@ -44,12 +46,14 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupGooglePlay();
+        configureSpaceKillerConstants();
+        if (!NO_GOOGLE) {
+            setupGooglePlay();
+        }
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         AndroidApplicationConfiguration config = configureAppAndroid();
-        configureSpaceKillerConstants();
-        game = new SpaceKillerGame(this, this);
+        game = new SpaceKillerGame(NO_GOOGLE ? new FakePlayServices() : this, this);
         initialize(game, config);
     }
 
@@ -65,7 +69,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
 
     private void configureSpaceKillerConstants() {
         SpaceKillerGameConstants.DEBUG = BuildConfig.DEBUG_GAME;
-        SpaceKillerGameConstants.NO_GOOGLE = BuildConfig.GOOGLE_PLAY_SKIP;
+        NO_GOOGLE = BuildConfig.GOOGLE_PLAY_SKIP;
         SpaceKillerGameConstants.VERSION = BuildConfig.VERSION_NAME;
         SpaceKillerGameConstants.SKIP_SPLASH = BuildConfig.SPLASH_SCREEN_SKIP;
     }
@@ -95,24 +99,32 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
     @Override
     protected void onStart() {
         super.onStart();
-        gameHelper.onStart(this);
+        if (!NO_GOOGLE) {
+            gameHelper.onStart(this);
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        gameHelper.onStop();
+        if (!NO_GOOGLE) {
+            gameHelper.onStop();
+        }
     }
 
     @Override
     public void startGooglePlay() {
-        gameHelper.onStart(this);
+        if (!NO_GOOGLE) {
+            gameHelper.onStart(this);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        gameHelper.onActivityResult(requestCode, resultCode, data);
+        if (!NO_GOOGLE) {
+            gameHelper.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override

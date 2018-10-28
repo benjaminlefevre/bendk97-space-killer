@@ -20,7 +20,9 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -29,6 +31,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.SnapshotArray;
+import com.badlogic.gdx.utils.StringBuilder;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.bendk97.Settings;
@@ -36,6 +39,7 @@ import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.*;
 import com.bendk97.components.helpers.ComponentMapperHelper;
+import com.bendk97.components.texts.TextComponent;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.inputs.GameOverTouchInputProcessor;
 import com.bendk97.inputs.GestureHandler;
@@ -47,9 +51,11 @@ import com.bendk97.listeners.impl.CollisionListenerImpl;
 import com.bendk97.listeners.impl.InputListenerImpl;
 import com.bendk97.listeners.impl.PlayerListenerImpl;
 import com.bendk97.player.PlayerData;
+import com.bendk97.pools.GamePools;
 import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.levels.utils.ScreenShake;
 import com.bendk97.systems.*;
+import com.bendk97.systems.collision.CollisionSystem;
 import com.bendk97.systems.screen.GameOverRenderingSystem;
 import com.bendk97.systems.screen.PauseRenderingSystem;
 import com.bendk97.timer.PausableTimer;
@@ -59,7 +65,10 @@ import com.bitfire.postprocessing.effects.MotionBlur;
 import com.bitfire.utils.ShaderLoader;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
+import static com.bendk97.components.helpers.ComponentMapperHelper.gameOver;
+import static com.bendk97.components.helpers.ComponentMapperHelper.pause;
 import static com.bendk97.google.Achievement.*;
+import static com.bendk97.pools.GamePools.poolSprite;
 import static com.bendk97.screens.levels.Level.*;
 import static com.bendk97.tweens.SpriteComponentTweenAccessor.ALPHA;
 
@@ -93,7 +102,7 @@ public final class LevelScreen extends ScreenAdapter {
 
 
     public enum State {
-        PAUSED, RUNNING
+        PAUSED, RUNNING, SCRIPT_PAUSED
 
     }
 
@@ -123,22 +132,8 @@ public final class LevelScreen extends ScreenAdapter {
         this.assets = assets;
         this.tweenManager = new TweenManager();
         ScreenShake screenShake = new ScreenShake(tweenManager, camera);
-        engine = new PooledEngine(50, 150, 50, 150);
-        engine.addEntityListener(new EntityListener() {
-            @Override
-            public void entityAdded(Entity entity) {
-                if (DEBUG) {
-                    Gdx.app.log("entity added", "size: " + engine.getEntities().size());
-                }
-            }
-
-            @Override
-            public void entityRemoved(Entity entity) {
-                if (DEBUG) {
-                    Gdx.app.log("entity removed", "size " + engine.getEntities().size());
-                }
-            }
-        });
+        engine = new PooledEngine(POOL_INIT, POOL_MAX, POOL_INIT, POOL_MAX);
+        engineListeners();
         if (fxLightEnabled) {
             initRayLightEffects(camera);
         }
@@ -150,7 +145,47 @@ public final class LevelScreen extends ScreenAdapter {
         registerTweensAccessor();
         registerPostProcessingEffects();
         this.levelScript = getLevelScript(level, this, assets, entityFactory, tweenManager, player, engine);
-        time = 180;
+        time = -5;
+    }
+
+    private void engineListeners() {
+        engine.addEntityListener(new EntityListener() {
+            static final String ENTITIES_ADDED = "entity added";
+            static final String ENTITY_REMOVED = "entity removed";
+            static final String ENTITIES = "entities: ";
+            StringBuilder sb = new StringBuilder();
+
+            @Override
+            public void entityAdded(Entity entity) {
+                if (DEBUG) {
+                    sb.setLength(0);
+                    Gdx.app.log(ENTITIES_ADDED,
+                            sb.append(ENTITIES).append(engine.getEntities().size()).toString());
+                }
+            }
+
+            @Override
+            public void entityRemoved(Entity entity) {
+                if (DEBUG) {
+                    sb.setLength(0);
+                    Gdx.app.log(ENTITY_REMOVED,
+                            sb.append(ENTITIES).append(engine.getEntities().size()).toString());
+                }
+                AnimationComponent animationComponent = ComponentMapperHelper.animation.get(entity);
+                if (animationComponent != null) {
+                    for (Animation<Sprite> animation : animationComponent.animations.values()) {
+                        for (int i = 0; i < animation.getKeyFrames().length; ++i) {
+                            poolSprite.free(animation.getKeyFrames()[i]);
+                        }
+                    }
+                } else {
+                    SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(entity);
+                    if (spriteComponent != null) {
+                        poolSprite.free(spriteComponent.sprite);
+                    }
+                }
+            }
+        });
     }
 
     private void initBatchers() {
@@ -204,7 +239,7 @@ public final class LevelScreen extends ScreenAdapter {
         final PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
         player.remove(GameOverComponent.class);
         this.time = playerComponent.secondScript;
-        this.levelScript.initSpawns();
+        this.resumeScripting();
         playerListener.updateLivesAndBombsAfterContinue(player);
         ComponentMapperHelper.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         ComponentMapperHelper.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
@@ -232,7 +267,7 @@ public final class LevelScreen extends ScreenAdapter {
 
 
     private void registerPostProcessingEffects() {
-        if(Gdx.app.getType() == Application.ApplicationType.HeadlessDesktop) {
+        if (Gdx.app.getType() == Application.ApplicationType.HeadlessDesktop) {
             return;
         }
         ShaderLoader.BasePath = "shaders/files/";
@@ -244,10 +279,11 @@ public final class LevelScreen extends ScreenAdapter {
 
     private void registerTweensAccessor() {
         Tween.registerAccessor(SpriteComponent.class, new SpriteComponentTweenAccessor());
+        Tween.registerAccessor(TextComponent.class, new TextComponentTweenAccessor());
         Tween.registerAccessor(PositionComponent.class, new PositionComponentTweenAccessor());
         Tween.registerAccessor(VelocityComponent.class, new VelocityComponentTweenAccessor());
         Tween.registerAccessor(OrthographicCamera.class, new CameraTweenAccessor());
-        Tween.registerAccessor(BitmapFont.class, new BitmapFontTweenAccessor());
+        Tween.registerAccessor(BitmapFontCache.class, new BitmapFontCacheTweenAccessor());
         if (fxLightEnabled) {
             Tween.registerAccessor(ConeLight.class, new ConeLightTweenAccessor());
         }
@@ -280,7 +316,7 @@ public final class LevelScreen extends ScreenAdapter {
         engine.addSystem(new PauseRenderingSystem(batcherHUD, cameraHUD, assets, 10));
         engine.addSystem(new LevelFinishedRenderingSystem(batcherHUD, assets, level, 10));
         if (DEBUG) {
-            engine.addSystem(new FPSDisplayRenderingSystem(this, batcherHUD, 11));
+            engine.addSystem(new DebugStatsSystem(this, batcherHUD, 11));
         }
         engine.addSystem(new BatcherHUDEndSystem(batcherHUD, 12));
         // END RENDERING
@@ -333,7 +369,7 @@ public final class LevelScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        float deltaState = state.equals(State.RUNNING) ? delta : 0f;
+        float deltaState = state.equals(State.PAUSED) ? 0f : delta;
         updateScriptLevel(deltaState);
         tweenManager.update(deltaState);
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
@@ -355,12 +391,15 @@ public final class LevelScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         engine.update(delta);
         buffer.end();
-        Sprite sprite = new Sprite(buffer.getColorBufferTexture());
+        Sprite sprite = poolSprite.getSprite(buffer.getColorBufferTexture());
         sprite.flip(false, true);
         return sprite;
     }
 
     private void updateScriptLevel(float delta) {
+        if (State.SCRIPT_PAUSED.equals(state)) {
+            return;
+        }
         int timeBefore = (int) Math.floor(time);
         time += delta;
         int newTime = (int) Math.floor(time);
@@ -377,8 +416,8 @@ public final class LevelScreen extends ScreenAdapter {
 
     @Override
     public void pause() {
-        if (player.getComponent(GameOverComponent.class) == null
-                && player.getComponent(PauseComponent.class) == null) {
+        if (gameOver.get(player) == null
+                && pause.get(player) == null) {
             state = State.PAUSED;
             Gdx.input.setInputProcessor(this.getPauseInputProcessor());
             if (music != null) {
@@ -400,6 +439,14 @@ public final class LevelScreen extends ScreenAdapter {
         postProcessor.rebind();
     }
 
+    public void pauseScripting() {
+        state = State.SCRIPT_PAUSED;
+    }
+
+    public void resumeScripting() {
+        state = State.RUNNING;
+    }
+
     public void quitGame() {
         this.dispose();
         game.goToScreen(MenuScreen.class);
@@ -418,9 +465,49 @@ public final class LevelScreen extends ScreenAdapter {
         assets.unloadResources(this.level);
         engine.removeAllEntities();
         engine.clearPools();
-        engine.getSystem(CollisionSystem.class).dispose();
+        removeSystemsEngine();
+        GamePools.clearPools();
         postProcessor.dispose();
         tweenManager.killAll();
+        tweenManager.update(0);
+        Texture.clearAllTextures(Gdx.app);
+
+    }
+
+    private void removeSystemsEngine() {
+        engine.removeSystem(engine.getSystem(PlayerListenerImpl.class));
+        engine.removeSystem(engine.getSystem(InputListenerImpl.class));
+        engine.removeSystem(engine.getSystem(CollisionListenerImpl.class));
+        engine.removeSystem(engine.getSystem(AnimationSystem.class));
+        engine.removeSystem(engine.getSystem(BombExplosionSystem.class));
+        engine.removeSystem(engine.getSystem(StateSystem.class));
+        engine.removeSystem(engine.getSystem(MovementPlayerSystem.class));
+        engine.removeSystem(engine.getSystem(MovementSystem.class));
+        engine.removeSystem(engine.getSystem(ShieldSystem.class));
+        // RENDERING
+        engine.removeSystem(engine.getSystem(BatcherBeginSystem.class));
+        engine.removeSystem(engine.getSystem(BackgroundRenderingSystem.class));
+        engine.removeSystem(engine.getSystem(DynamicEntitiesRenderingSystem.class));
+        engine.removeSystem(engine.getSystem(ScoreSquadronSystem.class));
+        engine.removeSystem(engine.getSystem(BatcherEndSystem.class));
+        engine.removeSystem(engine.getSystem(BatcherHUDBeginSystem.class));
+        engine.removeSystem(engine.getSystem(StaticEntitiesRenderingSystem.class));
+        engine.removeSystem(engine.getSystem(TextHUDRenderingSystem.class));
+        engine.removeSystem(engine.getSystem(StatusHealthRenderingSystem.class));
+        engine.removeSystem(engine.getSystem(GameOverRenderingSystem.class));
+        engine.removeSystem(engine.getSystem(PauseRenderingSystem.class));
+        engine.removeSystem(engine.getSystem(LevelFinishedRenderingSystem.class));
+        if (DEBUG) {
+            engine.removeSystem(engine.getSystem(DebugStatsSystem.class));
+        }
+        engine.removeSystem(engine.getSystem(BatcherHUDEndSystem.class));
+        // END RENDERING
+        engine.removeSystem(engine.getSystem(CollisionSystem.class));
+        engine.removeSystem(engine.getSystem(TankAttackSystem.class));
+        engine.removeSystem(engine.getSystem(EnemyAttackSystem.class));
+        engine.removeSystem(engine.getSystem(BossAttackSystem.class));
+        engine.removeSystem(engine.getSystem(SquadronSystem.class));
+        engine.removeSystem(engine.getSystem(RemovableSystem.class));
     }
 
     public void submitScore(int scoreInt) {

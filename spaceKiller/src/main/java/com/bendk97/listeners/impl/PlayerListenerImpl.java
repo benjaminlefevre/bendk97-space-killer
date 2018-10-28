@@ -99,6 +99,7 @@ public final class PlayerListenerImpl extends EntitySystem implements PlayerList
             player.add(getEngine().createComponent(GameOverComponent.class));
             Settings.addScore(playerComponent.getScoreInt());
             screen.submitScore(playerComponent.getScoreInt());
+            screen.pauseScripting();
             PausableTimer.schedule(new PausableTimer.Task() {
                 @Override
                 public void run() {

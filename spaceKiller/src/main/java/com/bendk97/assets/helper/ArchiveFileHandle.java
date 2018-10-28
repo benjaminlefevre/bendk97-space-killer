@@ -11,7 +11,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import java.io.*;
-import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -21,26 +20,7 @@ public class ArchiveFileHandle extends FileHandle {
     private ZipEntry _archiveEntry;
     private final String _zipPath;
 
-
-    public ArchiveFileHandle(FileHandle fileHandle_zip, FileHandle fileHandle_content) {
-        super(fileHandle_content.file(), FileType.Classpath);
-
-        //
-        _fileHandle = fileHandle_zip;
-
-        //
-        String zipPath = file.getPath().replace('\\', '/');
-        _zipPath = zipPath;
-
-        try {
-            _archiveEntry = getEntry(zipPath);
-
-        } catch(Exception exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    public ArchiveFileHandle(FileHandle fileHandle_zip, File file_content) {
+    protected ArchiveFileHandle(FileHandle fileHandle_zip, File file_content) {
         super(file_content, FileType.Classpath);
 
         //
@@ -53,12 +33,12 @@ public class ArchiveFileHandle extends FileHandle {
         try {
             _archiveEntry = getEntry(zipPath);
 
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
     }
 
-    public ArchiveFileHandle(FileHandle fileHandle_zip, String fileName_content) {
+    protected ArchiveFileHandle(FileHandle fileHandle_zip, String fileName_content) {
         super(fileName_content.replace('\\', '/'), FileType.Classpath);
 
         //
@@ -77,43 +57,32 @@ public class ArchiveFileHandle extends FileHandle {
     }
 
     private ZipEntry getEntry(String url) throws IOException {
-        try {
-            ZipInputStream zipInputStream = new ZipInputStream(_fileHandle.read());
-
-            try {
-                ZipEntry entry;
-                while ((entry = zipInputStream.getNextEntry()) != null) {
-                    if (!entry.isDirectory()) {
-                        String name = entry.getName();
-                        if(url.equals(name)) {
-                            return entry;
-                        }
+        try (ZipInputStream zipInputStream = new ZipInputStream(_fileHandle.read())) {
+            ZipEntry entry;
+            while ((entry = zipInputStream.getNextEntry()) != null) {
+                if (!entry.isDirectory()) {
+                    String name = entry.getName();
+                    if (url.equals(name)) {
+                        return entry;
                     }
                 }
             }
-            finally {
-                zipInputStream.close();
-            }
-
-        } catch (final Exception e) {
-            e.printStackTrace();
         }
-
         return null;
     }
 
     @Override
     public FileHandle child(String name) {
-        name = name.replace('\\', '/');
-        if (file.getPath().length() == 0) return new ArchiveFileHandle(_fileHandle, new File(name));
-        return new ArchiveFileHandle(_fileHandle, new File(file, name));
+        String fixNamed = name.replace('\\', '/');
+        if (file.getPath().length() == 0) return new ArchiveFileHandle(_fileHandle, new File(fixNamed));
+        return new ArchiveFileHandle(_fileHandle, new File(file, fixNamed));
     }
 
     @Override
     public FileHandle sibling(String name) {
-        name = name.replace('\\', '/');
+        String fixNamed = name.replace('\\', '/');
         if (file.getPath().length() == 0) throw new GdxRuntimeException("Cannot get the sibling of the root.");
-        return new ArchiveFileHandle(_fileHandle, new File(file.getParent(), name));
+        return new ArchiveFileHandle(_fileHandle, new File(file.getParent(), fixNamed));
     }
 
     @Override
@@ -129,48 +98,32 @@ public class ArchiveFileHandle extends FileHandle {
     }
 
     private InputStream getInputStream(String url) throws IOException {
-        try {
-            ZipInputStream zipIsZ = new ZipInputStream(_fileHandle.read());
-
-            try {
-                ZipEntry entry;
-                while ((entry = zipIsZ.getNextEntry()) != null) {
-                    if (!entry.isDirectory()) {
-                        String name = entry.getName();
-                        if(url.equals(name)) {
-                            return convertZipInputStreamToInputStream(zipIsZ);
-                        }
+        try (ZipInputStream zipIsZ = new ZipInputStream(_fileHandle.read())) {
+            ZipEntry entry;
+            while ((entry = zipIsZ.getNextEntry()) != null) {
+                if (!entry.isDirectory()) {
+                    String name = entry.getName();
+                    if (url.equals(name)) {
+                        return convertZipInputStreamToInputStream(zipIsZ);
                     }
                 }
             }
-            finally {
-                zipIsZ.close();
-            }
-
-        } catch (final Exception e) {
-            e.printStackTrace();
         }
-
         return null;
     }
 
     private InputStream convertZipInputStreamToInputStream(final ZipInputStream in) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         copyLarge(in, out); //IOUtils.copyLarge(in, out);
-        InputStream is = new ByteArrayInputStream(out.toByteArray());
-        return is;
+        return new ByteArrayInputStream(out.toByteArray());
     }
 
-    public static long copyLarge(InputStream input, OutputStream output) throws IOException
-    {
+    private static void copyLarge(InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[4096];
-        long count = 0L;
         int n = 0;
         while (-1 != (n = input.read(buffer))) {
             output.write(buffer, 0, n);
-            count += n;
         }
-        return count;
     }
 
     @Override
@@ -189,24 +142,13 @@ public class ArchiveFileHandle extends FileHandle {
     }
 
     @Override
-    public long length () {
+    public long length() {
         return _archiveEntry.getSize();
     }
 
     @Override
-    public long lastModified () {
+    public long lastModified() {
         return _archiveEntry.getTime();
     }
 
-    /////////////
-
-    public void print() throws IOException {
-        ZipInputStream zipInputStream = new ZipInputStream(_fileHandle.read());
-        for (ZipEntry zipEntry; (zipEntry = zipInputStream.getNextEntry()) != null;) {
-            Scanner scanner = new Scanner(zipInputStream);
-            while(scanner.hasNextLine()) {
-                System.out.println(scanner.nextLine());
-            }
-        }
-    }
 }

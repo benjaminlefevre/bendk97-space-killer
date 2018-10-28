@@ -9,13 +9,14 @@ package com.bendk97.screens.levels;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.equations.Bounce;
 import aurelienribon.tweenengine.equations.Quad;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.RandomXS128;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import com.bendk97.assets.Assets;
-import com.bendk97.components.BossAlertComponent;
+import com.bendk97.components.texts.BossAlertComponent;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.Level.MusicTrack;
 import com.bendk97.screens.levels.utils.ScriptItem;
@@ -27,15 +28,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import static com.badlogic.gdx.graphics.Color.RED;
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.*;
 import static com.bendk97.entities.enemies.SquadronFactory.*;
+import static com.bendk97.pools.GamePools.poolVector2;
 import static com.bendk97.screens.levels.Level.MusicTrack.BOSS;
 import static com.bendk97.screens.levels.Level.MusicTrack.LEVEL;
 import static com.bendk97.screens.levels.Level.SoundEffect.BOSS_ALERT;
-import static com.bendk97.tweens.BitmapFontTweenAccessor.ALPHA;
+import static com.bendk97.tweens.BitmapFontCacheTweenAccessor.ALPHA;
+import static com.bendk97.tweens.TextComponentTweenAccessor.POSY;
 
-public abstract class LevelScript {
+public abstract class LevelScript implements Disposable {
 
     protected final Assets assets;
     protected final EntityFactory entityFactory;
@@ -46,6 +50,7 @@ public abstract class LevelScript {
     protected ScriptItem boss;
     protected final Level level;
     protected final LevelScreen levelScreen;
+
 
     /*
      for test purposes only
@@ -167,29 +172,29 @@ public abstract class LevelScript {
             case BEZIER_SPLINE:
                 if (random.nextBoolean()) {
                     return new Object[]{
-                            new Vector2(-OFFSET_WIDTH + leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH), SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f),
-                            new Vector2(-OFFSET_WIDTH + leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH), 0f)};
+                            poolVector2.getVector2(-OFFSET_WIDTH + leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH), SCREEN_HEIGHT),
+                            poolVector2.getVector2(SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
+                            poolVector2.getVector2(SCREEN_WIDTH - leftOrRight * SCREEN_WIDTH, 0f),
+                            poolVector2.getVector2(-OFFSET_WIDTH + leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH), 0f)};
                 } else {
                     return new Object[]{
-                            new Vector2((-11 - OFFSET_WIDTH) * SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH + (11 + OFFSET_WIDTH) * SHIP_WIDTH),
+                            poolVector2.getVector2((-11 - OFFSET_WIDTH) * SHIP_WIDTH + leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH + (11 + OFFSET_WIDTH) * SHIP_WIDTH),
                                     SCREEN_HEIGHT / 2f),
-                            new Vector2(-OFFSET_WIDTH + leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH), SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH + OFFSET_WIDTH - leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH * 2 + 2 * SHIP_WIDTH),
+                            poolVector2.getVector2(-OFFSET_WIDTH + leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH), SCREEN_HEIGHT),
+                            poolVector2.getVector2(SCREEN_WIDTH + OFFSET_WIDTH - leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH * 2 + 2 * SHIP_WIDTH),
                                     SCREEN_HEIGHT),
-                            new Vector2(SCREEN_WIDTH + OFFSET_WIDTH - leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH * 2 + 6 * SHIP_WIDTH),
+                            poolVector2.getVector2(SCREEN_WIDTH + OFFSET_WIDTH - leftOrRight * (SCREEN_WIDTH + OFFSET_WIDTH * 2 + 6 * SHIP_WIDTH),
                                     SCREEN_HEIGHT / 2f)};
                 }
             case CATMULL_ROM_SPLINE:
             default:
                 return new Object[]{
-                        new Vector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
-                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), 3 * SCREEN_HEIGHT / 4f),
-                        new Vector2(SCREEN_WIDTH * (0.2f + leftOrRight * 0.6f), 2 * SCREEN_HEIGHT / 4f),
-                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), SCREEN_HEIGHT / 4f),
-                        new Vector2(SCREEN_WIDTH * (0.2f + leftOrRight * 0.6f), -SCREEN_HEIGHT / 4f),
-                        new Vector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), -2 * SCREEN_HEIGHT / 4f)
+                        poolVector2.getVector2(0f + leftOrRight * SCREEN_WIDTH, SCREEN_HEIGHT),
+                        poolVector2.getVector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), 3 * SCREEN_HEIGHT / 4f),
+                        poolVector2.getVector2(SCREEN_WIDTH * (0.2f + leftOrRight * 0.6f), 2 * SCREEN_HEIGHT / 4f),
+                        poolVector2.getVector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), SCREEN_HEIGHT / 4f),
+                        poolVector2.getVector2(SCREEN_WIDTH * (0.2f + leftOrRight * 0.6f), -SCREEN_HEIGHT / 4f),
+                        poolVector2.getVector2(SCREEN_WIDTH * (0.8f - leftOrRight * 0.6f), -2 * SCREEN_HEIGHT / 4f)
                 };
         }
     }
@@ -213,15 +218,21 @@ public abstract class LevelScript {
 
     protected void bossIsComing() {
         playSound(BOSS_ALERT);
-        player.add(entityFactory.engine.createComponent(BossAlertComponent.class));
-        Tween.to(assets.get(FONT_SPACE_KILLER_LARGE), ALPHA, 0.5f)
-                .ease(Quad.OUT).target(0f)
+        BossAlertComponent bossAlertComponent = entityFactory.engine.createComponent(BossAlertComponent.class);
+        bossAlertComponent.font = assets.getFont(FONT_SPACE_KILLER_LARGE);
+        bossAlertComponent.font.setColor(RED);
+        player.add(bossAlertComponent);
+        Tween.to(bossAlertComponent.font, ALPHA, 0.5f)
+                .ease(Quad.OUT).target(0.2f)
                 .setCallback((i, baseTween) -> {
                     if (i == TweenCallback.COMPLETE) {
                         player.remove(BossAlertComponent.class);
                         assets.get(FONT_SPACE_KILLER_LARGE).getColor().a = 1f;
                     }
-                }).repeatYoyo(6, 0f).start(entityFactory.tweenManager);
+                }).repeatYoyo(8, 0f).start(entityFactory.tweenManager);
+        Tween.to(bossAlertComponent, POSY, 4f)
+                .ease(Bounce.OUT).target(bossAlertComponent.targetPosY)
+                .start(entityFactory.tweenManager);
     }
 
     protected void bossIsHere() {
@@ -230,4 +241,6 @@ public abstract class LevelScript {
         scriptItemExecutor.execute(boss);
     }
 
+    @Override
+    public abstract void dispose();
 }

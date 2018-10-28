@@ -53,10 +53,10 @@ public class GameOverTouchInputProcessor extends InputAdapter {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
         if (playAgain.contains(worldTouch.x, worldTouch.y)) {
-            game.currentScreen.dispose();
+            game.getScreen().dispose();
             game.goToLevelScreen(Level1);
         } else if (home.contains(worldTouch.x, worldTouch.y)) {
-            game.currentScreen.dispose();
+            game.getScreen().dispose();
             game.goToScreen(MenuScreen.class);
         } else if (share.contains(worldTouch.x, worldTouch.y)) {
             SocialScoreScreen socialScoreScreen = new SocialScoreScreen(assets, game, ComponentMapperHelper.player.get(player).getScoreInt());

@@ -13,6 +13,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.bendk97.components.*;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 
+import static com.bendk97.pools.GamePools.poolVector2;
+
 public class FollowPlayerSystem extends IteratingSystem {
 
     private final Family player = Family.one(PlayerComponent.class).get();
@@ -47,9 +49,10 @@ public class FollowPlayerSystem extends IteratingSystem {
         SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(entity);
         PositionComponent positionComponent = ComponentMapperHelper.position.get(entity);
         PositionComponent playerPosition = ComponentMapperHelper.position.get(getEngine().getEntitiesFor(player).first());
-        Vector2 v1 = new Vector2(0,-1);
-        Vector2 v2 = new Vector2(playerPosition.x-positionComponent.x, playerPosition.y-positionComponent.y);
+        Vector2 v1 = poolVector2.getVector2(0,-1);
+        Vector2 v2 = poolVector2.getVector2(playerPosition.x-positionComponent.x, playerPosition.y-positionComponent.y);
         float angle = v2.angle(v1);
+        poolVector2.free(v1, v2);
         spriteComponent.sprite.setRotation(-angle);
     }
 

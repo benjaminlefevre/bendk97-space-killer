@@ -115,7 +115,7 @@ public class PlayerListenerImplTest {
 
         assertThat(playerComponent.bombs).isEqualTo(3);
         assertThat(playerComponent.lives).isEqualTo(4);
-        assertThat(playerComponent.getScore()).isEqualTo("0000000");
+        assertThat(playerComponent.getScore().toString()).isEqualTo("0000000");
         assertThat(playerComponent.numberOfContinue).isEqualTo(1);
     }
 
@@ -155,7 +155,7 @@ public class PlayerListenerImplTest {
 
         playerListener.updateScore(player, enemy, 1);
 
-        assertThat(playerComponent.getScore()).isEqualTo("0000100");
+        assertThat(playerComponent.getScore().toString()).isEqualTo("0000100");
         verify(assets, never()).playSound(SOUND_NEW_HIGH_SCORE);
         verify(assets, never()).playSound(SOUND_NEW_LIFE);
         assertThat(playerComponent.lives).isEqualTo(3);
@@ -172,7 +172,7 @@ public class PlayerListenerImplTest {
 
         playerListener.updateScore(player, enemy, 5);
 
-        assertThat(playerComponent.getScore()).isEqualTo("0000500");
+        assertThat(playerComponent.getScore().toString()).isEqualTo("0000500");
         verify(assets).playSound(SOUND_NEW_HIGH_SCORE);
         verify(assets, never()).playSound(SOUND_NEW_LIFE);
         assertThat(playerComponent.lives).isEqualTo(3);
@@ -189,7 +189,7 @@ public class PlayerListenerImplTest {
 
         playerListener.updateScore(player, enemy, 5);
 
-        assertThat(playerComponent.getScore()).isEqualTo("0150000");
+        assertThat(playerComponent.getScore().toString()).isEqualTo("0150000");
         verify(assets).playSound(SOUND_NEW_LIFE);
         assertThat(playerComponent.lives).isEqualTo(4);
     }

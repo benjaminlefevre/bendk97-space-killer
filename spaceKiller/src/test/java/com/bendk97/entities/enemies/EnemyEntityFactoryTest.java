@@ -10,9 +10,8 @@ import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
@@ -51,15 +50,20 @@ public class EnemyEntityFactoryTest {
     @Mock
     private TextureAtlas noMaskSprites;
 
+    @Mock
+    private Texture texture;
+
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
         when(assets.get(Assets.GFX_LEVEL_COMMON)).thenReturn(noMaskSprites);
         when(assets.get(Level.Level2.sprites)).thenReturn(sprites);
-        Array<Sprite> spriteArray = new Array<>();
-        spriteArray.add(new Sprite());
-        when(sprites.createSprites(anyString())).thenReturn(spriteArray);
-        when(sprites.createSprite(anyString())).thenReturn(new Sprite());
+        TextureAtlas.AtlasRegion atlasRegion = new TextureAtlas.AtlasRegion(texture, 0, 0, 100, 200);
+        atlasRegion.setTexture(texture);
+        Array<TextureAtlas.AtlasRegion> regionArray = new Array<>();
+        regionArray.add(atlasRegion);
+        when(sprites.findRegions(anyString())).thenReturn(regionArray);
+        when(sprites.findRegion(anyString())).thenReturn(atlasRegion);
         PooledEngine engine = new PooledEngine();
         entityFactory = new EntityFactory(mock(SpaceKillerGame.class),
                 engine, assets, mock(TweenManager.class), null, mock(ScreenShake.class),
@@ -72,7 +76,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createLaserShip(SHIP_LV2_LASER_SHIP1, 10f, 10f, 1,
                 100, 1, true);
         assertThatEntityIsLaserShip(entity);
-        verify(sprites).createSprites("staticEnemy1");
+        verify(sprites).findRegions("staticEnemy1");
     }
 
     @Test
@@ -80,7 +84,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createLaserShip(SHIP_LV2_LASER_SHIP2, 10f, 10f, 1,
                 100, 1, true);
         assertThatEntityIsLaserShip(entity);
-        verify(sprites).createSprites("staticEnemy2");
+        verify(sprites).findRegions("staticEnemy2");
     }
 
     @Test
@@ -88,7 +92,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createLaserShip(SHIP_LV2_LASER_SHIP3, 10f, 10f, 1,
                 100, 1, true);
         assertThatEntityIsLaserShip(entity);
-        verify(sprites).createSprites("staticEnemy3");
+        verify(sprites).findRegions("staticEnemy3");
     }
 
     @Test
@@ -96,7 +100,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createLaserShip(SHIP_LV2_LASER_SHIP4, 10f, 10f, 1,
                 100, 1, true);
         assertThatEntityIsLaserShip(entity);
-        verify(sprites).createSprites("staticEnemy4");
+        verify(sprites).findRegions("staticEnemy4");
     }
 
     @Test
@@ -104,7 +108,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createLaserShip(SHIP_LV3_1, 10f, 10f, 1,
                 100, 1, true);
         assertThatEntityIsLaserShip(entity);
-        verify(sprites).createSprites("lark");
+        verify(sprites).findRegions("lark");
     }
 
     @Test
@@ -112,7 +116,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createLaserShip(SHIP_LV3_2, 10f, 10f, 1,
                 100, 1, true);
         assertThatEntityIsLaserShip(entity);
-        verify(sprites).createSprites("stab");
+        verify(sprites).findRegions("stab");
     }
 
     @Test
@@ -120,7 +124,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createLaserShip(SHIP_LV3_3, 10f, 10f, 1,
                 100, 1, true);
         assertThatEntityIsLaserShip(entity);
-        verify(sprites).createSprites("squid");
+        verify(sprites).findRegions("squid");
     }
 
     @Test
@@ -128,7 +132,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createLaserShip(SHIP_LV3_4, 10f, 10f, 1,
                 100, 1, true);
         assertThatEntityIsLaserShip(entity);
-        verify(sprites).createSprites("bug");
+        verify(sprites).findRegions("bug");
     }
 
     @Test
@@ -136,7 +140,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createLaserShip(SHIP_LV3_5, 10f, 10f, 1,
                 100, 1, true);
         assertThatEntityIsLaserShip(entity);
-        verify(sprites).createSprites("swarmer");
+        verify(sprites).findRegions("swarmer");
     }
 
     @Test
@@ -144,7 +148,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createLaserShip(SHIP_LV3_6, 10f, 10f, 1,
                 100, 1, true);
         assertThatEntityIsLaserShip(entity);
-        verify(sprites).createSprites("stingray");
+        verify(sprites).findRegions("stingray");
     }
 
     @Test
@@ -152,7 +156,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createLaserShip(SHIP_LV3_7, 10f, 10f, 1,
                 100, 1, true);
         assertThatEntityIsLaserShip(entity);
-        verify(sprites).createSprites("fish");
+        verify(sprites).findRegions("fish");
     }
 
     @Test
@@ -160,7 +164,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createLaserShip(SHIP_LV3_8, 10f, 10f, 1,
                 100, 1, true);
         assertThatEntityIsLaserShip(entity);
-        verify(sprites).createSprites("podfish");
+        verify(sprites).findRegions("podfish");
     }
 
     @Test
@@ -168,7 +172,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createLaserShip(666, 10f, 10f, 1,
                 100, 1, true);
         assertThatEntityIsLaserShip(entity);
-        verify(sprites).createSprites("podfish");
+        verify(sprites).findRegions("podfish");
     }
 
     @Test
@@ -188,7 +192,7 @@ public class EnemyEntityFactoryTest {
                 PositionComponent.class,
                 EnemyComponent.class,
                 StateComponent.class);
-        verify(sprites).createSprite("tankCannon");
+        verify(sprites).findRegion("tankCannon");
     }
 
     @Test
@@ -196,7 +200,7 @@ public class EnemyEntityFactoryTest {
         Entity soucoupe = enemyEntityFactory.createEnemySoucoupe(entityFactory.engine.createEntity(),
                 true, 10f);
         assertThat(soucoupe).isNotNull();
-        verify(sprites).createSprites("soucoupe");
+        verify(sprites).findRegions("soucoupe");
         assertThat(soucoupe.getComponents()).hasOnlyElementsOfTypes(
                 EnemyComponent.class,
                 PositionComponent.class,
@@ -212,14 +216,13 @@ public class EnemyEntityFactoryTest {
     }
 
 
-
     @Test
     public void a_enemy_ship_1_is_created() {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 SHIP_1);
         assertThat(entity).isNotNull();
         assertThatEntityIsEnemyShip(entity);
-        verify(sprites).createSprites("enemy");
+        verify(sprites).findRegions("enemy");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(1);
@@ -232,7 +235,7 @@ public class EnemyEntityFactoryTest {
                 SHIP_2);
         assertThat(entity).isNotNull();
         assertThatEntityIsEnemyShip(entity);
-        verify(sprites).createSprites("enemy2");
+        verify(sprites).findRegions("enemy2");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(1);
@@ -245,7 +248,7 @@ public class EnemyEntityFactoryTest {
                 SHIP_3);
         assertThat(entity).isNotNull();
         assertThatEntityIsEnemyShip(entity);
-        verify(sprites).createSprites("enemy3");
+        verify(sprites).findRegions("enemy3");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(1);
@@ -258,7 +261,7 @@ public class EnemyEntityFactoryTest {
                 SHIP_4);
         assertThat(entity).isNotNull();
         assertThatEntityIsEnemyShip(entity);
-        verify(sprites).createSprites("enemy4");
+        verify(sprites).findRegions("enemy4");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(1);
@@ -271,7 +274,7 @@ public class EnemyEntityFactoryTest {
                 SHIP_5);
         assertThat(entity).isNotNull();
         assertThatEntityIsEnemyShip(entity);
-        verify(sprites).createSprites("enemy5");
+        verify(sprites).findRegions("enemy5");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(1);
@@ -284,7 +287,7 @@ public class EnemyEntityFactoryTest {
                 SHIP_LV3_1);
         assertThat(entity).isNotNull();
         assertThatEntityIsEnemyShip(entity);
-        verify(sprites).createSprites("lark");
+        verify(sprites).findRegions("lark");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(250);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(2);
@@ -297,7 +300,7 @@ public class EnemyEntityFactoryTest {
                 SHIP_LV3_2);
         assertThat(entity).isNotNull();
         assertThatEntityIsEnemyShip(entity);
-        verify(sprites).createSprites("stab");
+        verify(sprites).findRegions("stab");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(1);
@@ -310,7 +313,7 @@ public class EnemyEntityFactoryTest {
                 SHIP_LV3_3);
         assertThat(entity).isNotNull();
         assertThatEntityIsEnemyShip(entity);
-        verify(sprites).createSprites("squid");
+        verify(sprites).findRegions("squid");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(250);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(2);
@@ -323,7 +326,7 @@ public class EnemyEntityFactoryTest {
                 SHIP_LV3_4);
         assertThat(entity).isNotNull();
         assertThatEntityIsEnemyShip(entity);
-        verify(sprites).createSprites("bug");
+        verify(sprites).findRegions("bug");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(1);
@@ -336,7 +339,7 @@ public class EnemyEntityFactoryTest {
                 SHIP_LV3_5);
         assertThat(entity).isNotNull();
         assertThatEntityIsEnemyShip(entity);
-        verify(sprites).createSprites("swarmer");
+        verify(sprites).findRegions("swarmer");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(250);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(1);
@@ -349,7 +352,7 @@ public class EnemyEntityFactoryTest {
                 SHIP_LV3_6);
         assertThat(entity).isNotNull();
         assertThatEntityIsEnemyShip(entity);
-        verify(sprites).createSprites("stingray");
+        verify(sprites).findRegions("stingray");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(1);
@@ -362,7 +365,7 @@ public class EnemyEntityFactoryTest {
                 SHIP_LV3_7);
         assertThat(entity).isNotNull();
         assertThatEntityIsEnemyShip(entity);
-        verify(sprites).createSprites("fish");
+        verify(sprites).findRegions("fish");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(250);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(2);
@@ -375,7 +378,7 @@ public class EnemyEntityFactoryTest {
                 SHIP_LV3_8);
         assertThat(entity).isNotNull();
         assertThatEntityIsEnemyShip(entity);
-        verify(sprites).createSprites("podfish");
+        verify(sprites).findRegions("podfish");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(1);
@@ -389,7 +392,7 @@ public class EnemyEntityFactoryTest {
                 666);
         assertThat(entity).isNotNull();
         assertThatEntityIsEnemyShip(entity);
-        verify(sprites).createSprites("podfish");
+        verify(sprites).findRegions("podfish");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(1);
@@ -407,7 +410,7 @@ public class EnemyEntityFactoryTest {
                 SpriteComponent.class,
                 StatusHealthComponent.class
         );
-        verify(sprites).createSprite("boss-level1");
+        verify(sprites).findRegion("boss-level1");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(boss);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(300);
     }
@@ -423,7 +426,7 @@ public class EnemyEntityFactoryTest {
                 SpriteComponent.class,
                 StatusHealthComponent.class
         );
-        verify(sprites).createSprite("boss");
+        verify(sprites).findRegion("boss");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(boss);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(400);
     }
@@ -441,7 +444,7 @@ public class EnemyEntityFactoryTest {
                 StateComponent.class,
                 StatusHealthComponent.class
         );
-        verify(sprites).createSprites("boss3");
+        verify(sprites).findRegions("boss3");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(boss);
         assertThat(enemyComponent.getLifeGauge()).isEqualTo(400);
     }
@@ -457,7 +460,7 @@ public class EnemyEntityFactoryTest {
                 SpriteComponent.class,
                 StateComponent.class
         );
-        verify(sprites).createSprites("asteroid");
+        verify(sprites).findRegions("asteroid");
     }
 
     @Test
@@ -476,15 +479,15 @@ public class EnemyEntityFactoryTest {
                 PositionComponent.class,
                 GroundEnemyComponent.class
         );
-        verify(sprites).createSprite("house-1");
-        verify(sprites).createSprite("house-1_destroyed");
+        verify(sprites).findRegion("house-1");
+        verify(sprites).findRegion("house-1_destroyed");
     }
 
     @Test
     public void explosion_is_created() {
-        Array<Sprite> spriteArray = new Array<>();
-        spriteArray.add(new Sprite());
-        when(noMaskSprites.createSprites(anyString())).thenReturn(spriteArray);
+        Array<TextureAtlas.AtlasRegion> regionArray = new Array<>();
+        regionArray.add(new TextureAtlas.AtlasRegion(texture, 0, 0, 50, 50));
+        when(noMaskSprites.findRegions(anyString())).thenReturn(regionArray);
         Entity explosion = enemyEntityFactory.createEntityExploding(10f, 10f);
         assertThat(explosion).isNotNull();
         assertThat(explosion.getComponents()).hasOnlyElementsOfTypes(
@@ -510,13 +513,12 @@ public class EnemyEntityFactoryTest {
     public void score_squadron_is_created() {
         Entity squadron = entityFactory.engine.createEntity();
         SquadronComponent squadronComponent = entityFactory.engine.createComponent(SquadronComponent.class);
-        squadronComponent.lastKilledPosition = new Vector2(10f, 10f);
         squadron.add(squadronComponent);
         Entity entity = enemyEntityFactory.createScoreSquadron(squadron);
         assertThat(entity).isNotNull();
         assertThat(entity.getComponents()).hasOnlyElementsOfTypes(
-          ScoreSquadronComponent.class,
-          PositionComponent.class
+                ScoreSquadronComponent.class,
+                PositionComponent.class
         );
     }
 

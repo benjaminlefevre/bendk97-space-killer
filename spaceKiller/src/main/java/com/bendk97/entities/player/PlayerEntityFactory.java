@@ -24,6 +24,7 @@ import com.bendk97.screens.levels.Level;
 
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
 import static com.bendk97.SpaceKillerGameConstants.*;
+import static com.bendk97.pools.GamePools.poolSprite;
 import static com.bendk97.tweens.SpriteComponentTweenAccessor.ALPHA;
 
 public class PlayerEntityFactory {
@@ -63,15 +64,15 @@ public class PlayerEntityFactory {
         player.add(entityFactory.engine.createComponent(PositionComponent.class));
         player.add(entityFactory.engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
-        Array<Sprite> spritesMAIN = new Array<>(2);
-        spritesMAIN.add(entityFactory.levelAtlas.createSprite("player", 1));
-        spritesMAIN.add(entityFactory.levelAtlas.createSprite("player", 2));
-        Array<Sprite> spritesLEFT = new Array<>(2);
-        spritesLEFT.add(entityFactory.levelAtlas.createSprite("player", 0));
-        spritesLEFT.add(entityFactory.levelAtlas.createSprite("player", 3));
-        Array<Sprite> spritesRIGHT = new Array<>(2);
-        spritesRIGHT.add(entityFactory.levelAtlas.createSprite("player", 0));
-        spritesRIGHT.add(entityFactory.levelAtlas.createSprite("player", 3));
+        Array<Sprite> spritesMAIN = new Array<>(true, 2, Sprite.class);
+        spritesMAIN.add(poolSprite.getSprite(entityFactory.levelAtlas.findRegion("player", 1)));
+        spritesMAIN.add(poolSprite.getSprite(entityFactory.levelAtlas.findRegion("player", 2)));
+        Array<Sprite> spritesLEFT = new Array<>(true, 2, Sprite.class);
+        spritesLEFT.add(poolSprite.getSprite(entityFactory.levelAtlas.findRegion("player", 0)));
+        spritesLEFT.add(poolSprite.getSprite(entityFactory.levelAtlas.findRegion("player", 3)));
+        Array<Sprite> spritesRIGHT = new Array<>(true, 2, Sprite.class);
+        spritesRIGHT.add(poolSprite.getSprite(entityFactory.levelAtlas.findRegion("player", 0)));
+        spritesRIGHT.add(poolSprite.getSprite(entityFactory.levelAtlas.findRegion("player", 3)));
         spritesRIGHT.get(0).flip(true, false);
         spritesRIGHT.get(1).flip(true, false);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION, spritesMAIN, LOOP));
@@ -96,7 +97,7 @@ public class PlayerEntityFactory {
         SpriteComponent playerSprite = ComponentMapperHelper.sprite.get(player);
         SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         spriteComponent.zIndex = 99;
-        spriteComponent.sprite = entityFactory.levelAtlas.createSprite("shield");
+        spriteComponent.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("shield"));
         PositionComponent positionComponent = entityFactory.engine.createComponent(PositionComponent.class);
         positionComponent.setPosition(playerPosition.x - (spriteComponent.sprite.getWidth() - playerSprite.sprite.getWidth()) / 2f,
                 playerPosition.y - (spriteComponent.sprite.getHeight() - playerSprite.sprite.getHeight()) / 2f);
@@ -124,7 +125,7 @@ public class PlayerEntityFactory {
         for (int i = 0; i < playerComponent.lives - 1; ++i) {
             Entity life = entityFactory.engine.createEntity();
             SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-            Sprite sprite = entityFactory.levelAtlas.createSprite("player", 1);
+            Sprite sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("player", 1));
             component.setTexture(sprite, 1f, 0f, 0.5f);
             component.setPosition(LIVES_X + 20f * i, LIVES_Y - sprite.getHeight());
             life.add(component);
@@ -140,7 +141,7 @@ public class PlayerEntityFactory {
         for (int i = 0; i < playerComponent.bombs; ++i) {
             Entity bomb = entityFactory.engine.createEntity();
             SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-            Sprite sprite = entityFactory.commonAtlas.createSprite("bomb", 1);
+            Sprite sprite = poolSprite.getSprite(entityFactory.commonAtlas.findRegion("bomb", 1));
             component.zIndex = 100;
             component.setTexture(sprite, 1f, 0f, 1f);
             component.setPosition(BOMB_STOCK_X - (22f * (i % 4)), BOMB_STOCK_Y + (22f * (float) Math.floor(i/4d)));
@@ -171,7 +172,7 @@ public class PlayerEntityFactory {
     public Entity createEntityFireButton(float alpha, float posX, float posY) {
         Entity entity = entityFactory.engine.createEntity();
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-        component.setTexture(entityFactory.commonAtlas.createSprite("fire_button"), alpha, 0, 1f);
+        component.setTexture(poolSprite.getSprite(entityFactory.commonAtlas.findRegion("fire_button")), alpha, 0, 1f);
         component.zIndex = 100;
         component.setPosition(posX, posY);
         entity.add(component);
@@ -183,7 +184,7 @@ public class PlayerEntityFactory {
         Entity entity = entityFactory.engine.createEntity();
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
         component.zIndex = 100;
-        component.setTexture(entityFactory.commonAtlas.createSprite("bomb_button"), alpha, 0, 1f);
+        component.setTexture(poolSprite.getSprite(entityFactory.commonAtlas.findRegion("bomb_button")), alpha, 0, 1f);
         component.setPosition(posX, posY);
         entity.add(component);
         entityFactory.engine.addEntity(entity);
@@ -195,7 +196,7 @@ public class PlayerEntityFactory {
         Entity pad = entityFactory.engine.createEntity();
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
         component.zIndex = 100;
-        component.setTexture(entityFactory.commonAtlas.createSprite("pad"), alpha, 0f, scale);
+        component.setTexture(poolSprite.getSprite(entityFactory.commonAtlas.findRegion("pad")), alpha, 0f, scale);
         component.setPosition(posX, posY);
         pad.add(component);
         entityFactory.engine.addEntity(pad);

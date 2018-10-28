@@ -10,21 +10,23 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.ScoreSquadronComponent;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 
+import static com.bendk97.pools.BitmapFontHelper.drawText;
+
 public class ScoreSquadronSystem extends IteratingSystem {
 
-    private final BitmapFont font;
+    private final BitmapFontCache font;
     private final SpriteBatch batcher;
 
     public ScoreSquadronSystem(int priority, Assets assets, SpriteBatch batcher) {
         super(Family.all(ScoreSquadronComponent.class).get(), priority);
-        this.font = assets.get(Assets.FONT_SPACE_KILLER);
+        this.font = assets.getFont(Assets.FONT_SPACE_KILLER);
         this.batcher = batcher;
     }
 
@@ -33,6 +35,6 @@ public class ScoreSquadronSystem extends IteratingSystem {
         ScoreSquadronComponent squadron = ComponentMapperHelper.scoreSquadron.get(entity);
         PositionComponent position = ComponentMapperHelper.position.get(entity);
         font.setColor(Color.YELLOW);
-        font.draw(batcher, squadron.score + "", position.x, position.y);
+        drawText(batcher, font, squadron.score.toString(), position.x, position.y);
     }
 }

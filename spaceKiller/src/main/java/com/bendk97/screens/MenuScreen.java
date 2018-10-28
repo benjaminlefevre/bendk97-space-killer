@@ -10,10 +10,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -30,13 +27,25 @@ import com.bendk97.assets.Assets;
 import static com.badlogic.gdx.graphics.Color.WHITE;
 import static com.badlogic.gdx.graphics.Color.YELLOW;
 import static com.bendk97.SpaceKillerGameConstants.*;
+import static com.bendk97.pools.BitmapFontHelper.drawText;
 import static com.bendk97.screens.levels.Level.Level1;
 
 public class MenuScreen extends HDScreen {
 
-    public static final String SPACE = "SPACE";
-    public static final String KILLER = "KILLER";
-    public static final String GOOGLE_PLAY_PLEASE_SIGN_IN = " Google Play\nPlease sign in";
+    private static final String SPACE = "SPACE";
+    private static final String KILLER = "KILLER";
+    private static final String GOOGLE_PLAY_PLEASE_SIGN_IN = " Google Play\nPlease sign in";
+    private static final String PLAY = "play";
+    private static final String SCORES = "scores";
+    private static final String SETTINGS = "settings";
+    private static final String HELP = "help";
+    private static final String CREDITS = "credits";
+    private static final String RETRO_PAD = "retro pad";
+    private static final String VIRTUAL_PAD_AUTOFIRE = "virtual pad\n\n   / autofire";
+    private static final String LIGHT_FX = "light fx";
+    private static final String VIBRATION = "vibration";
+    private static final String BACK = "back";
+    private static final Color WHITE_ALPHA_60 = new Color(1f, 1f, 1f, 0.6f);
     private final SpriteBatch batcher;
     private final String gameVersion;
     private final TextButton playButton;
@@ -50,8 +59,8 @@ public class MenuScreen extends HDScreen {
     private final ImageButton musicOff;
     private final ImageButton musicOn;
     private final Table table;
-    private final BitmapFont font;
-    private final BitmapFont fontVersion;
+    private final BitmapFontCache font;
+    private final BitmapFontCache fontVersion;
     private final Stage stage;
     private TextButton displayScores;
     private final TextButton retroPad;
@@ -83,40 +92,40 @@ public class MenuScreen extends HDScreen {
         stage.addActor(image);
         buttonStyle = new TextButtonStyle();
         buttonStyle.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
-        playButton = new TextButton("play", buttonStyle);
+        playButton = new TextButton(PLAY, buttonStyle);
         playButton.setSize(200f, 75f);
-        highscoresButton = new TextButton("scores", buttonStyle);
+        highscoresButton = new TextButton(SCORES, buttonStyle);
         highscoresButton.setSize(200f, 75f);
-        controllerButton = new TextButton("settings", buttonStyle);
+        controllerButton = new TextButton(SETTINGS, buttonStyle);
         controllerButton.setSize(200f, 75f);
-        helpButton = new TextButton("help", buttonStyle);
+        helpButton = new TextButton(HELP, buttonStyle);
         helpButton.setSize(200f, 75f);
-        creditsButton = new TextButton("credits", buttonStyle);
+        creditsButton = new TextButton(CREDITS, buttonStyle);
         creditsButton.setSize(200f, 75f);
 
 
         final TextButtonStyle styleRetro = new TextButtonStyle();
         styleRetro.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
         styleRetro.fontColor = !Settings.isVirtualPad() ? YELLOW : WHITE;
-        retroPad = new TextButton("retro pad", styleRetro);
+        retroPad = new TextButton(RETRO_PAD, styleRetro);
 
         TextButtonStyle styleVirtual = new TextButtonStyle();
         styleVirtual.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
         styleVirtual.fontColor = Settings.isVirtualPad() ? YELLOW : WHITE;
-        virtualPad = new TextButton("virtual pad\n\n   / autofire", styleVirtual);
+        virtualPad = new TextButton(VIRTUAL_PAD_AUTOFIRE, styleVirtual);
 
         TextButtonStyle styleFX = new TextButtonStyle();
         styleFX.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
         styleFX.fontColor = Settings.isLightFXEnabled() ? YELLOW : WHITE;
-        lightFx = new TextButton("light fx", styleFX);
+        lightFx = new TextButton(LIGHT_FX, styleFX);
 
         TextButtonStyle styleVibration = new TextButtonStyle();
         styleVibration.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
         styleVibration.fontColor = Settings.isVibrationEnabled() ? YELLOW : WHITE;
-        vibration = new TextButton("vibration", styleVibration);
+        vibration = new TextButton(VIBRATION, styleVibration);
 
 
-        back = new TextButton("back", buttonStyle);
+        back = new TextButton(BACK, buttonStyle);
         retroPad.setSize(200f, 75f);
         virtualPad.setSize(200f, 150f);
         back.setSize(200f, 75f);
@@ -362,7 +371,7 @@ public class MenuScreen extends HDScreen {
         table = new Table();
 
         helpScreen = new ImageButton(new TextureRegionDrawable(atlas.findRegion("help")));
-        helpScreen.setColor(new Color(1f, 1f, 1f, 0.6f));
+        helpScreen.setColor(WHITE_ALPHA_60);
         helpScreen.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -379,7 +388,7 @@ public class MenuScreen extends HDScreen {
         helpScreen.setPosition(5f, 100f);
 
         creditsScreen = new ImageButton(new TextureRegionDrawable(atlas.findRegion("credits")));
-        creditsScreen.setColor(new Color(1f, 1f, 1f, 0.6f));
+        creditsScreen.setColor(WHITE_ALPHA_60);
         creditsScreen.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -471,10 +480,10 @@ public class MenuScreen extends HDScreen {
 
 
         assets.playMusic(Assets.MENU_MUSIC);
-        font = assets.get(Assets.FONT_SPACE_KILLER_LARGE);
-        fontVersion = new BitmapFont();
+        font = assets.getFont(Assets.FONT_SPACE_KILLER_LARGE);
+        fontVersion = new BitmapFontCache(new BitmapFont());
         fontVersion.setColor(YELLOW);
-        fontVersion.getData().setScale(0.5f);
+        fontVersion.getFont().getData().setScale(0.5f);
 
     }
 
@@ -489,12 +498,12 @@ public class MenuScreen extends HDScreen {
         batcher.setProjectionMatrix(viewport.getCamera().combined);
         stage.draw();
         batcher.begin();
-        font.draw(batcher, SPACE, SCREEN_WIDTH / 5f - 15f, SCREEN_HEIGHT * 3 / 4 + 100f);
-        font.draw(batcher, KILLER, SCREEN_WIDTH / 5f - 40f, SCREEN_HEIGHT * 3 / 4 + 50f);
-        fontVersion.draw(batcher, gameVersion, 10f, 20f);
+        drawText(batcher, font, SPACE, SCREEN_WIDTH/ 5f - 15f, SCREEN_HEIGHT * 3 / 4 + 100f);
+        drawText(batcher, font, KILLER, SCREEN_WIDTH / 5f - 40f, SCREEN_HEIGHT * 3 / 4 + 50f);
+        drawText(batcher, fontVersion, gameVersion, 10f, 20f);
         if (!game.playServices.isSignedIn()) {
             fontVersion.setColor(WHITE);
-            fontVersion.draw(batcher, GOOGLE_PLAY_PLEASE_SIGN_IN, 90f, 60f);
+            drawText(batcher, fontVersion, GOOGLE_PLAY_PLEASE_SIGN_IN, 90f, 60f);
             fontVersion.setColor(YELLOW);
         }
         batcher.end();
@@ -504,6 +513,7 @@ public class MenuScreen extends HDScreen {
     @Override
     public void dispose() {
         batcher.dispose();
+        fontVersion.getFont().dispose();
         assets.unloadResources(this.getClass());
         stage.dispose();
         Texture.clearAllTextures(Gdx.app);

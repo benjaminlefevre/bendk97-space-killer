@@ -30,6 +30,7 @@ import java.util.Random;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.entities.EntityFactoryIds.*;
+import static com.bendk97.pools.GamePools.poolVector2;
 
 public class SquadronFactory {
 
@@ -321,20 +322,24 @@ public class SquadronFactory {
         }
         int k = 50;
         Vector2[] points = new Vector2[2 * k];
-        Bezier<Vector2> bezier = new Bezier<>(new Vector2(0f, SCREEN_HEIGHT * 3f / 4f),
-                new Vector2(SCREEN_WIDTH / 2f - spriteWidth / 2f, SCREEN_HEIGHT),
-                new Vector2(SCREEN_WIDTH - spriteWidth, SCREEN_HEIGHT * 3f / 4f));
+        Bezier<Vector2> bezier = new Bezier<>(
+                poolVector2.getVector2(0f, SCREEN_HEIGHT * 3f / 4f),
+                poolVector2.getVector2(SCREEN_WIDTH / 2f - spriteWidth / 2f, SCREEN_HEIGHT),
+                poolVector2.getVector2(SCREEN_WIDTH - spriteWidth, SCREEN_HEIGHT * 3f / 4f));
         for (int i = 0; i < k; ++i) {
-            points[i] = new Vector2();
+            points[i] = poolVector2.obtain();
             bezier.valueAt(points[i], ((float) i) / ((float) k - 1));
         }
-        bezier = new Bezier<>(new Vector2(SCREEN_WIDTH - spriteWidth, SCREEN_HEIGHT * 3f / 4f),
-                new Vector2(SCREEN_WIDTH / 2f - spriteWidth / 2f, SCREEN_HEIGHT / 2f),
-                new Vector2(0f, SCREEN_HEIGHT * 3f / 4f));
+        poolVector2.free(bezier.points);
+        bezier = new Bezier<>(
+                poolVector2.getVector2(SCREEN_WIDTH - spriteWidth, SCREEN_HEIGHT * 3f / 4f),
+                poolVector2.getVector2(SCREEN_WIDTH / 2f - spriteWidth / 2f, SCREEN_HEIGHT / 2f),
+                poolVector2.getVector2(0f, SCREEN_HEIGHT * 3f / 4f));
         for (int i = 0; i < k; ++i) {
-            points[k + i] = new Vector2();
+            points[k + i] = poolVector2.obtain();
             bezier.valueAt(points[k + i], ((float) i) / ((float) k - 1));
         }
+        poolVector2.free(bezier.points);
         placeEntitiesOnSplineInfinite(entities, velocity, points);
     }
 
@@ -343,10 +348,12 @@ public class SquadronFactory {
         Bezier<Vector2> bezier = new Bezier<>(vector2s);
         Vector2[] points = new Vector2[k];
         for (int i = 0; i < k; ++i) {
-            points[i] = new Vector2();
+            points[i] = poolVector2.obtain();
             bezier.valueAt(points[i], ((float) i) / ((float) k - 1));
         }
         placeEntitiesOnSpline(entities, velocity, points, vector2s[0]);
+        poolVector2.free(vector2s);
+        poolVector2.free(points);
     }
 
 
@@ -355,10 +362,12 @@ public class SquadronFactory {
         CatmullRomSpline<Vector2> catmull = new CatmullRomSpline<>(vector2s, false);
         Vector2[] points = new Vector2[k];
         for (int i = 0; i < k; ++i) {
-            points[i] = new Vector2();
+            points[i] = poolVector2.obtain();
             catmull.valueAt(points[i], ((float) i) / ((float) k - 1));
         }
         placeEntitiesOnSpline(entities, velocity, points, vector2s[0]);
+        poolVector2.free(vector2s);
+        poolVector2.free(points);
     }
 
     private void placeEntitiesOnSpline(Entity[] entities, float velocity, Vector2[] points, Vector2 startPoint) {
@@ -385,24 +394,34 @@ public class SquadronFactory {
     }
 
     private void placeEntitiesOnSplineInfinite(Entity[] entities, final float velocity, final Vector2[] points) {
+        float[] pointsSpread = new float[points.length*2];
+        for(int i=0; i<points.length;++i) {
+            pointsSpread[i*2] = points[i].x;
+            pointsSpread[i*2+1] = points[i].y;
+        }
         for (final Entity entity : entities) {
             final PositionComponent position = ComponentMapperHelper.position.get(entity);
-            Tween.to(position, PositionComponentTweenAccessor.POSITION_XY, points[0].dst(position.x, position.y) / velocity)
+            Tween.to(position, PositionComponentTweenAccessor.POSITION_XY,
+                    points[0].dst(position.x, position.y) / velocity)
                     .ease(Linear.INOUT)
                     .target(points[0].x, points[0].y)
                     .setCallback((i, baseTween) -> {
                         if (i == TweenCallback.COMPLETE) {
                             Timeline timeline = Timeline.createSequence();
-                            for (int j = 1; j < points.length; ++j) {
-                                timeline.push(Tween.to(position, PositionComponentTweenAccessor.POSITION_XY, points[j].dst(points[j - 1].x, points[j - 1].y) / velocity)
+                            for (int j = 2; j < pointsSpread.length; j+=2) {
+                                Vector2 dest = poolVector2.getVector2(pointsSpread[j], pointsSpread[j+1]);
+                                timeline.push(Tween.to(position, PositionComponentTweenAccessor.POSITION_XY,
+                                        dest.dst(pointsSpread[j - 2], pointsSpread[j - 1]) / velocity)
                                         .ease(Linear.INOUT)
-                                        .target(points[j].x, points[j].y));
+                                        .target(pointsSpread[j], pointsSpread[j+1]));
+                                poolVector2.free(dest);
                             }
                             timeline.repeat(Tween.INFINITY, 0f)
                                     .start(entityFactory.tweenManager);
                         }
                     }).start(entityFactory.tweenManager);
         }
+        poolVector2.free(points);
     }
 
     private void removeEntitySquadron(Entity entity) {
@@ -457,12 +476,16 @@ public class SquadronFactory {
 
 
     private void createLinearXYSquadron(Entity[] entities, float velocity, float startX, float startY, float endX, float endY) {
+        Vector2 start = poolVector2.getVector2(startX, startY);
+        Vector2 end = poolVector2.getVector2(endX, endY);
         for (int i = 0; i < entities.length; ++i) {
             final Entity entity = entities[i];
             PositionComponent position = ComponentMapperHelper.position.get(entity);
             position.setPosition(startX, startY + i * ComponentMapperHelper.sprite.get(entity).sprite.getHeight());
             Timeline.createSequence()
-                    .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_XY, (new Vector2(startX, startY)).dst(new Vector2(endX, endY)) / velocity)
+                    .push(
+                            Tween.to(position, PositionComponentTweenAccessor.POSITION_XY,
+                                    (start).dst(end) / velocity)
                             .ease(Linear.INOUT)
                             .target(endX, endY))
                     .setCallback((i1, baseTween) -> {
@@ -472,17 +495,21 @@ public class SquadronFactory {
                     })
                     .start(entityFactory.tweenManager);
         }
+        poolVector2.free(start);
+        poolVector2.free(end);
+
     }
 
     private void createSemiCircleSquadron(Entity[] entities, float velocity, float posX, float posY, boolean comingFromLeft) {
         float worldWidth = SCREEN_WIDTH + 2 * OFFSET_WIDTH;
         int leftOrRight = comingFromLeft ? 0 : 1;
         int direction = comingFromLeft ? 1 : -1;
-        Vector2 center = new Vector2(SCREEN_WIDTH / 2f, SCREEN_HEIGHT);
-        Vector2 radius = new Vector2((worldWidth * -direction) / 2f, 0f);
+        Vector2 center = poolVector2.getVector2(SCREEN_WIDTH / 2f, SCREEN_HEIGHT);
+        Vector2 radius = poolVector2.getVector2((worldWidth * -direction) / 2f, 0f);
         Vector2[] array = new Vector2[20];
         for (int i = 0; i < array.length; ++i) {
-            array[i] = radius.cpy().rotate(((180f * direction) / array.length - 1) * i).add(center);
+            Vector2 radiusClone = poolVector2.getVector2(radius.x, radius.y);
+            array[i] = radiusClone.rotate(((180f * direction) / array.length - 1) * i).add(center);
         }
         for (int i = 0; i < entities.length; ++i) {
             final Entity entity = entities[i];
@@ -505,5 +532,9 @@ public class SquadronFactory {
             })
                     .start(entityFactory.tweenManager);
         }
+        poolVector2.free(radius);
+        poolVector2.free(array);
+        poolVector2.free(center);
+
     }
 }

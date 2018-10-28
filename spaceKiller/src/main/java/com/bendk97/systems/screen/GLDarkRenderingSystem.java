@@ -21,6 +21,7 @@ import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
 public abstract class GLDarkRenderingSystem extends IteratingSystem {
 
+    private static final Color BLACK_60 = new Color(0, 0, 0, 0.6f);
     protected final SpriteBatch batcher;
     private final ShapeRenderer shapeRenderer;
     private final Camera camera;
@@ -39,7 +40,7 @@ public abstract class GLDarkRenderingSystem extends IteratingSystem {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(new Color(0, 0, 0, 0.6f));
+        shapeRenderer.setColor(BLACK_60);
         shapeRenderer.rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);

@@ -10,8 +10,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.ObjectSet;
@@ -26,6 +25,7 @@ import com.bendk97.listeners.impl.PlayerListenerImpl;
 import com.bendk97.runner.GdxTestRunner;
 import com.bendk97.screens.levels.utils.ScreenShake;
 import com.bendk97.systems.*;
+import com.bendk97.systems.collision.CollisionSystem;
 import com.bendk97.systems.screen.GameOverRenderingSystem;
 import com.bendk97.systems.screen.PauseRenderingSystem;
 import org.junit.Before;
@@ -54,6 +54,9 @@ public class LevelScreenTest {
     @Mock
     private SpriteBatch spriteBatch;
 
+    @Mock
+    private Texture texture;
+
     private LevelScreen levelScreen;
 
     @BeforeClass
@@ -75,13 +78,15 @@ public class LevelScreenTest {
         TextureAtlas textureAtlas = mock(TextureAtlas.class);
         when(assets.get(GFX_LEVEL1)).thenReturn(textureAtlas);
         when(assets.get(GFX_LEVEL_COMMON)).thenReturn(textureAtlas);
-        when(assets.get(FONT_SPACE_KILLER_LARGE)).thenReturn(mock(BitmapFont.class));
-        when(assets.get(FONT_SPACE_KILLER_MEDIUM)).thenReturn(mock(BitmapFont.class));
-        when(assets.get(FONT_SPACE_KILLER_SMALLEST)).thenReturn(mock(BitmapFont.class));
+        when(assets.getFont(FONT_SPACE_KILLER_LARGE)).thenReturn(mock(BitmapFontCache.class));
+        when(assets.getFont(FONT_SPACE_KILLER_MEDIUM)).thenReturn(mock(BitmapFontCache.class));
+        when(assets.getFont(FONT_SPACE_KILLER_SMALLEST)).thenReturn(mock(BitmapFontCache.class));
+        when(assets.getFont(FONT_SPACE_KILLER)).thenReturn(mock(BitmapFontCache.class));
         when(assets.get(GFX_BGD_LEVEL1)).thenReturn(mock(Texture.class));
         when(assets.get(GFX_BGD_STARS)).thenReturn(mock(Texture.class));
-        when(textureAtlas.createSprite(anyString(), anyInt())).thenReturn(mock(Sprite.class));
-        when(textureAtlas.createSprite(anyString())).thenReturn(mock(Sprite.class));
+        TextureAtlas.AtlasRegion atlasRegion = new TextureAtlas.AtlasRegion(texture, 0,0,1,1);
+        when(textureAtlas.findRegion(anyString(), anyInt())).thenReturn(atlasRegion);
+        when(textureAtlas.findRegion(anyString())).thenReturn(atlasRegion);
         ObjectSet<Texture> textures = new ObjectSet<>();
         textures.add(mock(Texture.class));
         when(textures.first().getTextureData()).thenReturn(mock(TextureData.class));
@@ -139,7 +144,7 @@ public class LevelScreenTest {
         assertThat(levelScreen.engine.getSystems()).hasSize(29);
         assertThat(levelScreen.engine.getSystems())
                 .hasAtLeastOneElementOfType(
-                        FPSDisplayRenderingSystem.class
+                        DebugStatsSystem.class
                 );
     }
 
