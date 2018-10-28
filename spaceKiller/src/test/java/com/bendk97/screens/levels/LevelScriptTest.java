@@ -69,6 +69,8 @@ public abstract class LevelScriptTest {
         MockitoAnnotations.initMocks(this);
         entityFactory.stageSetEntityFactory = stageSetEntityFactory;
         entityFactory.enemyEntityFactory = enemyEntityFactory;
+        entityFactory.engine = engine;
+        entityFactory.tweenManager = tweenManager;
         entityFactory.enemyEntityFactory.squadronFactory = squadronFactory;
         entityFactory.enemyEntityFactory.soloEnemyFactory = soloEnemyFactory;
         player.add(engine.createComponent(PlayerComponent.class));

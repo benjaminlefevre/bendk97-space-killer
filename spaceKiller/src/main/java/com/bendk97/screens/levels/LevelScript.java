@@ -6,12 +6,16 @@
 
 package com.bendk97.screens.levels;
 
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.equations.Quad;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
 import com.bendk97.assets.Assets;
+import com.bendk97.components.BossAlertComponent;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.Level.MusicTrack;
 import com.bendk97.screens.levels.utils.ScriptItem;
@@ -26,7 +30,10 @@ import java.util.Random;
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.*;
 import static com.bendk97.entities.enemies.SquadronFactory.*;
+import static com.bendk97.screens.levels.Level.MusicTrack.BOSS;
 import static com.bendk97.screens.levels.Level.MusicTrack.LEVEL;
+import static com.bendk97.screens.levels.Level.SoundEffect.BOSS_ALERT;
+import static com.bendk97.tweens.BitmapFontTweenAccessor.ALPHA;
 
 public abstract class LevelScript {
 
@@ -36,6 +43,7 @@ public abstract class LevelScript {
     protected final Entity player;
     protected final Random random = new RandomXS128();
     protected ScriptItemExecutor scriptItemExecutor;
+    protected ScriptItem boss;
     protected final Level level;
     protected final LevelScreen levelScreen;
 
@@ -203,5 +211,23 @@ public abstract class LevelScript {
         return 1500 + random.nextInt(9);
     }
 
+    protected void bossIsComing() {
+        playSound(BOSS_ALERT);
+        player.add(entityFactory.engine.createComponent(BossAlertComponent.class));
+        Tween.to(assets.get(FONT_SPACE_KILLER_LARGE), ALPHA, 0.5f)
+                .ease(Quad.OUT).target(0f)
+                .setCallback((i, baseTween) -> {
+                    if (i == TweenCallback.COMPLETE) {
+                        player.remove(BossAlertComponent.class);
+                        assets.get(FONT_SPACE_KILLER_LARGE).getColor().a = 1f;
+                    }
+                }).repeatYoyo(6, 0f).start(entityFactory.tweenManager);
+    }
+
+    protected void bossIsHere() {
+        stopMusic(LEVEL);
+        playMusic(BOSS);
+        scriptItemExecutor.execute(boss);
+    }
 
 }

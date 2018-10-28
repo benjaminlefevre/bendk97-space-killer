@@ -35,9 +35,9 @@ import static com.bendk97.assets.Assets.GFX_LEVEL_COMMON;
 
 public class EntityFactory implements Disposable {
 
-    public final PooledEngine engine;
+    public PooledEngine engine;
     public final Assets assets;
-    public final TweenManager tweenManager;
+    public TweenManager tweenManager;
     public final ScreenShake screenShake;
     public final TextureAtlas commonAtlas;
     public final TextureAtlas levelAtlas;

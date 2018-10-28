@@ -36,9 +36,6 @@ import java.util.List;
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.entities.EntityFactoryIds.BOSS_LEVEL_2;
 import static com.bendk97.screens.levels.Level.Level2;
-import static com.bendk97.screens.levels.Level.MusicTrack.BOSS;
-import static com.bendk97.screens.levels.Level.MusicTrack.LEVEL;
-import static com.bendk97.screens.levels.Level.SoundEffect.BOSS_ALERT;
 import static com.bendk97.screens.levels.Level.SoundEffect.GO;
 
 public class Level2Script extends LevelScript {
@@ -48,8 +45,6 @@ public class Level2Script extends LevelScript {
     private LinkedList<ScriptItem> scriptItemsMediumRight;
     private LinkedList<ScriptItem> scriptItemsHardLeft;
     private LinkedList<ScriptItem> scriptItemsHardRight;
-    private ScriptItem boss;
-
 
     private final Array<Entity> backgrounds = new Array<>();
 
@@ -245,7 +240,7 @@ public class Level2Script extends LevelScript {
             return;
         }
         if (second == 255) {
-            playSound(BOSS_ALERT);
+            bossIsComing();
             for (Entity background : new Array.ArrayIterator<>(backgrounds)) {
                 Tween.to(ComponentMapperHelper.velocity.get(background), VelocityComponentTweenAccessor.VELOCITY_Y, 4).ease(Quad.IN)
                         .target(-ComponentMapperHelper.velocity.get(background).y / 10f).start(tweenManager);
@@ -253,9 +248,7 @@ public class Level2Script extends LevelScript {
             return;
         }
         if (second == 259) {
-            stopMusic(LEVEL);
-            playMusic(BOSS);
-            scriptItemExecutor.execute(boss);
+            bossIsHere();
         }
     }
 
