@@ -19,6 +19,7 @@ import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SocialScoreScreen;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
+import static com.bendk97.pools.GamePools.poolVector3;
 import static com.bendk97.screens.levels.Level.Level1;
 
 
@@ -51,12 +52,11 @@ public class GameOverTouchInputProcessor extends InputAdapter {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
+        Vector3 worldTouch = poolVector3.getVector3(screenX, screenY, 0f);
+        worldTouch = camera.unproject(worldTouch);
         if (playAgain.contains(worldTouch.x, worldTouch.y)) {
-            game.getScreen().dispose();
             game.goToLevelScreen(Level1);
         } else if (home.contains(worldTouch.x, worldTouch.y)) {
-            game.getScreen().dispose();
             game.goToScreen(MenuScreen.class);
         } else if (share.contains(worldTouch.x, worldTouch.y)) {
             SocialScoreScreen socialScoreScreen = new SocialScoreScreen(assets, game, ComponentMapperHelper.player.get(player).getScoreInt());
@@ -67,6 +67,7 @@ public class GameOverTouchInputProcessor extends InputAdapter {
         } else if (extraLife.contains(worldTouch.x, worldTouch.y)) {
             game.continueWithExtraLife();
         }
+        poolVector3.free(worldTouch);
         return true;
     }
 }

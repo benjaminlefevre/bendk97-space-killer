@@ -136,7 +136,7 @@ public class PlayerActionsEntityFactory {
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION_BOMB_EXPLOSION,
                 poolSprite.getSprites(entityFactory.commonAtlas.findRegions("bomb_explosion")), LOOP_PINGPONG));
-        spriteComponent.sprite = poolSprite.getSprite(entityFactory.commonAtlas.findRegion("bomb_explosion", 6));
+        spriteComponent.sprite = poolSprite.getSprite(entityFactory.commonAtlas.findRegions("bomb_explosion").get(6));
         spriteComponent.zIndex = 100;
         bombExplosion.add(spriteComponent);
         bombExplosion.add(animationComponent);

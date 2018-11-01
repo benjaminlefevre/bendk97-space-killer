@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.StringBuilder;
 import com.bendk97.pools.BitmapFontHelper;
 import com.bendk97.screens.levels.LevelScreen;
 
+import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.pools.GamePools.getPoolStats;
 
 public class DebugStatsSystem extends EntitySystem {
@@ -29,6 +30,7 @@ public class DebugStatsSystem extends EntitySystem {
     public static final String S = " s";
     private static final String SPRITE = "Sprite";
     private static final String SPRITE_POOL_SIZE = "Sprite Pool Size: ";
+    public static final String NEWLINE = "\n";
     private final SpriteBatch batcher;
     private final BitmapFontCache bitmapFont;
     private final LevelScreen screen;
@@ -61,17 +63,11 @@ public class DebugStatsSystem extends EntitySystem {
             }
         }
         sb.setLength(0);
-        sb.append(SCRIPT).append(Math.floor(screen.getCurrentTimeScript())).append(S);
-        drawText(0f, 10f);
-        sb.setLength(0);
-        sb.append(CURRENT).append(Gdx.graphics.getFramesPerSecond()).append(FPS);
-        drawText(75f, 10f);
-        sb.setLength(0);
-        sb.append(MIN).append(minFps).append(FPS);
-        drawText(150f, 10f);
-        sb.setLength(0);
-        sb.append(MAX).append(maxFps).append(FPS);
-        drawText(225f, 10f);
+        sb.append(SCRIPT).append(Math.floor(screen.getCurrentTimeScript())).append(S).append(NEWLINE);
+        sb.append(CURRENT).append(Gdx.graphics.getFramesPerSecond()).append(FPS).append(NEWLINE);
+        sb.append(MIN).append(minFps).append(FPS).append(NEWLINE);
+        sb.append(MAX).append(maxFps).append(FPS).append(NEWLINE);
+        drawText(145f, SCREEN_HEIGHT - 60f);
     }
 
     private void updatePoolStats(float deltaTime) {

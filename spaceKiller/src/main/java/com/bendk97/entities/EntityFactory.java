@@ -13,7 +13,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
@@ -40,8 +39,8 @@ public class EntityFactory implements Disposable {
     public final Assets assets;
     public TweenManager tweenManager;
     public final ScreenShake screenShake;
-    public final TextureAtlas commonAtlas;
-    public final TextureAtlas levelAtlas;
+    public final TextureAtlasCache commonAtlas;
+    public final TextureAtlasCache levelAtlas;
     public final RayHandler rayHandler;
     private final Pool<PointLight> lightPool = new Pool<PointLight>() {
         @Override
@@ -74,8 +73,8 @@ public class EntityFactory implements Disposable {
     }
         this.assets = assets;
         this.tweenManager = tweenManager;
-        this.commonAtlas = assets.get(GFX_LEVEL_COMMON);
-        this.levelAtlas = assets.get(level.sprites);
+        this.commonAtlas = new TextureAtlasCache(assets.get(GFX_LEVEL_COMMON));
+        this.levelAtlas = new TextureAtlasCache(assets.get(level.sprites));
         initSubFactories(game, level, camera);
     }
 
@@ -111,6 +110,8 @@ public class EntityFactory implements Disposable {
     @Override
     public void dispose() {
         lightPool.clear();
+        commonAtlas.dispose();
+        levelAtlas.dispose();
     }
 
 

@@ -13,9 +13,11 @@ public class GamePools {
     private static final int CIRCLE_MAX = 10;
     private static final int RECTANGLE_MAX = 10;
     private static final int VECTOR2_MAX = 10000;
+    private static final int VECTOR3_MAX = 10000;
 
     public static PoolCircle poolCircle = new PoolCircle(CIRCLE_MAX);
     public static PoolVector2 poolVector2 = new PoolVector2(VECTOR2_MAX);
+    public static PoolVector3 poolVector3 = new PoolVector3(VECTOR3_MAX);
     public static PoolRectangle poolRectangle = new PoolRectangle(RECTANGLE_MAX);
     public static PoolSprite poolSprite = new PoolSprite(SPRITE_MAX);
 
@@ -27,6 +29,7 @@ public class GamePools {
         sb.append(poolRectangle.getPoolStats());
         sb.append(poolVector2.getPoolStats());
         sb.append(poolSprite.getPoolStats());
+        sb.append(poolVector3.getPoolStats());
         return sb.toString();
     }
 

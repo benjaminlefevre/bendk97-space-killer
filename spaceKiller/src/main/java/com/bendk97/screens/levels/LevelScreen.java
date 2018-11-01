@@ -448,7 +448,6 @@ public final class LevelScreen extends ScreenAdapter {
     }
 
     public void quitGame() {
-        this.dispose();
         game.goToScreen(MenuScreen.class);
     }
 

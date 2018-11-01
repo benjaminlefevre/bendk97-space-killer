@@ -74,10 +74,12 @@ public class SpaceKillerGame extends Game implements Disposable {
 
     public void goToScreen(Class<? extends Screen> newScreen) {
         try {
+            if(this.getScreen() != null) {
+                this.getScreen().dispose();
+            }
             assets.loadResources(newScreen);
             //noinspection JavaReflectionMemberAccess
-            screen = newScreen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this);
-            this.setScreen(screen);
+            this.setScreen(newScreen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this));
         } catch (Exception e) {
             Gdx.app.log("Guru Meditation", "error: " + e.getMessage());
             Gdx.app.exit();
@@ -92,14 +94,14 @@ public class SpaceKillerGame extends Game implements Disposable {
 
     public void goToLevelScreen(Level level, PlayerData playerData, Sprite previousScreenSprite) {
         try {
+            this.getScreen().dispose();
             this.playerData = playerData;
-            screen = new LevelScreen(assets, this, level);
+            LevelScreen nextScreen = new LevelScreen(assets, this, level);
             if (previousScreenSprite != null) {
-                LevelScreen nextScreen = (LevelScreen) screen;
                 Sprite nextScreenSprite = nextScreen.takeScreenshot(Gdx.graphics.getDeltaTime(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
                 this.setScreen(new TransitionScreen(previousScreenSprite, nextScreenSprite, nextScreen, this));
             } else {
-                this.setScreen(screen);
+                this.setScreen(nextScreen);
             }
         } catch (Exception e) {
             Gdx.app.log("Guru Meditation", "error: " + e.getMessage());

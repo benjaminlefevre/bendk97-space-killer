@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.bendk97.screens.levels.LevelScreen;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
+import static com.bendk97.pools.GamePools.poolVector3;
 
 
 public class PauseInputProcessor extends InputAdapter {
@@ -37,7 +38,8 @@ public class PauseInputProcessor extends InputAdapter {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
+        Vector3 worldTouch = poolVector3.getVector3(screenX, screenY, 0f);
+        worldTouch = camera.unproject(worldTouch);
         if (resume.contains(worldTouch.x, worldTouch.y)) {
             screen.resumeGame();
         } else if (quit.contains(worldTouch.x, worldTouch.y)) {
