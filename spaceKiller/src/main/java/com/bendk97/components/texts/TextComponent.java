@@ -17,10 +17,6 @@ public abstract class TextComponent implements Component, Pool.Poolable {
     public float posY = 0f;
     public BitmapFontCache font = null;
 
-    public TextComponent() {
-
-    }
-
     @Override
     public void reset() {
         this.font = null;

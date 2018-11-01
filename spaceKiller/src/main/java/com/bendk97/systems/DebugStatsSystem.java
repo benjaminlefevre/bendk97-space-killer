@@ -28,9 +28,7 @@ public class DebugStatsSystem extends EntitySystem {
     private static final String MAX = "Max: ";
     private static final String FPS = " fps";
     public static final String S = " s";
-    private static final String SPRITE = "Sprite";
-    private static final String SPRITE_POOL_SIZE = "Sprite Pool Size: ";
-    public static final String NEWLINE = "\n";
+    private static final String NEWLINE = "\n";
     private final SpriteBatch batcher;
     private final BitmapFontCache bitmapFont;
     private final LevelScreen screen;
