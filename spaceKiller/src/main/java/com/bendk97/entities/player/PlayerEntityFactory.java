@@ -13,6 +13,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.bendk97.Settings;
@@ -64,15 +65,16 @@ public class PlayerEntityFactory {
         player.add(entityFactory.engine.createComponent(PositionComponent.class));
         player.add(entityFactory.engine.createComponent(VelocityComponent.class));
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
+        Array<AtlasRegion> playerRegions = entityFactory.levelAtlas.findRegions("player");
         Array<Sprite> spritesMAIN = new Array<>(true, 2, Sprite.class);
-        spritesMAIN.add(poolSprite.getSprite(entityFactory.levelAtlas.findRegion("player", 1)));
-        spritesMAIN.add(poolSprite.getSprite(entityFactory.levelAtlas.findRegion("player", 2)));
+        spritesMAIN.add(poolSprite.getSprite(playerRegions.get(1)));
+        spritesMAIN.add(poolSprite.getSprite(playerRegions.get(2)));
         Array<Sprite> spritesLEFT = new Array<>(true, 2, Sprite.class);
-        spritesLEFT.add(poolSprite.getSprite(entityFactory.levelAtlas.findRegion("player", 0)));
-        spritesLEFT.add(poolSprite.getSprite(entityFactory.levelAtlas.findRegion("player", 3)));
+        spritesLEFT.add(poolSprite.getSprite(playerRegions.get(0)));
+        spritesLEFT.add(poolSprite.getSprite(playerRegions.get(3)));
         Array<Sprite> spritesRIGHT = new Array<>(true, 2, Sprite.class);
-        spritesRIGHT.add(poolSprite.getSprite(entityFactory.levelAtlas.findRegion("player", 0)));
-        spritesRIGHT.add(poolSprite.getSprite(entityFactory.levelAtlas.findRegion("player", 3)));
+        spritesRIGHT.add(poolSprite.getSprite(playerRegions.get(0)));
+        spritesRIGHT.add(poolSprite.getSprite(playerRegions.get(3)));
         spritesRIGHT.get(0).flip(true, false);
         spritesRIGHT.get(1).flip(true, false);
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION, spritesMAIN, LOOP));
@@ -125,7 +127,7 @@ public class PlayerEntityFactory {
         for (int i = 0; i < playerComponent.lives - 1; ++i) {
             Entity life = entityFactory.engine.createEntity();
             SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-            Sprite sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("player", 1));
+            Sprite sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegions("player").get(1));
             component.setTexture(sprite, 1f, 0f, 0.5f);
             component.setPosition(LIVES_X + 20f * i, LIVES_Y - sprite.getHeight());
             life.add(component);
@@ -141,7 +143,7 @@ public class PlayerEntityFactory {
         for (int i = 0; i < playerComponent.bombs; ++i) {
             Entity bomb = entityFactory.engine.createEntity();
             SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-            Sprite sprite = poolSprite.getSprite(entityFactory.commonAtlas.findRegion("bomb", 1));
+            Sprite sprite = poolSprite.getSprite(entityFactory.commonAtlas.findRegions("bomb").get(1));
             component.zIndex = 100;
             component.setTexture(sprite, 1f, 0f, 1f);
             component.setPosition(BOMB_STOCK_X - (22f * (i % 4)), BOMB_STOCK_Y + (22f * (float) Math.floor(i/4d)));

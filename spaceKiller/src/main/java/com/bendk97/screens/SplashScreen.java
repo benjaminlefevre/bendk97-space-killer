@@ -104,7 +104,6 @@ public class SplashScreen extends HDScreen {
         logo.draw(spriteBatch);
         spriteBatch.end();
         if(stateTime>5 && stateTimeBefore <= 5){
-            this.dispose();
             game.goToScreen(MenuScreen.class);
         }
     }

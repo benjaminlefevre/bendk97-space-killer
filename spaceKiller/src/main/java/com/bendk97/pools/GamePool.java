@@ -33,16 +33,17 @@ public abstract class GamePool<T> {
     }
 
     public void free(T object) {
-        if(pool.getFree() < pool.max) {
-            alive--;
-        }
+        alive--;
         pool.free(object);
         reset(object);
     }
 
     public void clear() {
         pool.clear();
+        alive = 0;
+        pool.peak = 0;
     }
+
     public abstract void reset(T pooledObject);
 
     public String getPoolStats() {

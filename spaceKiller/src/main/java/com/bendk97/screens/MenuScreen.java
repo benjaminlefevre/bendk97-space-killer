@@ -154,7 +154,6 @@ public class MenuScreen extends HDScreen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 assets.playSound(Assets.MENU_CLICK);
                 assets.get(Assets.MENU_MUSIC).stop();
-                dispose();
                 game.goToLevelScreen(Level1);
                 return true;
             }

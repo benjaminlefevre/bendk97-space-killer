@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.bendk97.screens.levels.LevelScreen;
 
+import static com.bendk97.pools.GamePools.poolVector3;
+
 public class GestureHandler extends GestureAdapter {
     private final LevelScreen levelScreen;
     private final Camera camera;
@@ -24,17 +26,24 @@ public class GestureHandler extends GestureAdapter {
 
     @Override
     public boolean pinch (Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-        Vector3 d1 = camera.unproject(new Vector3(initialPointer1,0f));
-        Vector3 d2 = camera.unproject(new Vector3(initialPointer2,0f));
-        Vector3 d3 = camera.unproject(new Vector3(pointer1,0f));
-        Vector3 d4 = camera.unproject(new Vector3(pointer2,0f));
-        if(d1.dst(d2)>150 && d3.dst(d4)<100){
-            levelScreen.pause();
-            return true;
-        }else {
-            return false;
+        Vector3 d1 = poolVector3.getVector3(initialPointer1,0f);
+        d1 = camera.unproject(d1);
+        Vector3 d2 = poolVector3.getVector3(initialPointer2,0f);
+        d2 = camera.unproject(d2);
+        Vector3 d3 = poolVector3.getVector3(pointer1,0f);
+        d3 = camera.unproject(d3);
+        Vector3 d4 = poolVector3.getVector3(pointer2,0f);
+        d4 = camera.unproject(d4);
+        try {
+            if (d1.dst(d2) > 150 && d3.dst(d4) < 100) {
+                levelScreen.pause();
+                return true;
+            } else {
+                return false;
+            }
+        }finally {
+             poolVector3.free(d1, d2, d3, d4);
         }
-
     }
 
 }

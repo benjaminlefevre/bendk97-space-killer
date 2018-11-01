@@ -17,6 +17,7 @@ import com.bendk97.screens.levels.LevelScreen;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.bendk97.pools.GamePools.poolVector3;
 
 public class VirtualPadController extends AbstractPadController {
 
@@ -31,7 +32,8 @@ public class VirtualPadController extends AbstractPadController {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
+        Vector3 worldTouch = poolVector3.getVector3(screenX, screenY, 0f);
+        worldTouch = camera.unproject(worldTouch);
         touchDragged(screenX, screenY, pointer);
         if (bombButton.contains(worldTouch.x, worldTouch.y)) {
             listener.dropBomb();
@@ -48,9 +50,11 @@ public class VirtualPadController extends AbstractPadController {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        Vector3 worldTouch = camera.unproject(new Vector3(screenX, screenY, 0f));
+        Vector3 worldTouch = poolVector3.getVector3(screenX, screenY, 0f);
+        worldTouch = camera.unproject(worldTouch);
         computeVirtualButtons();
         moveShip(worldTouch);
+        poolVector3.free(worldTouch);
         return true;
     }
 

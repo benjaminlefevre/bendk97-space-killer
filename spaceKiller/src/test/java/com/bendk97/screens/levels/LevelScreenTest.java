@@ -13,6 +13,8 @@ import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.bendk97.Settings;
@@ -37,7 +39,6 @@ import org.mockito.MockitoAnnotations;
 
 import static com.bendk97.assets.Assets.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -84,8 +85,10 @@ public class LevelScreenTest {
         when(assets.getFont(FONT_SPACE_KILLER)).thenReturn(mock(BitmapFontCache.class));
         when(assets.get(GFX_BGD_LEVEL1)).thenReturn(mock(Texture.class));
         when(assets.get(GFX_BGD_STARS)).thenReturn(mock(Texture.class));
-        TextureAtlas.AtlasRegion atlasRegion = new TextureAtlas.AtlasRegion(texture, 0,0,1,1);
-        when(textureAtlas.findRegion(anyString(), anyInt())).thenReturn(atlasRegion);
+        AtlasRegion atlasRegion = new AtlasRegion(texture, 0,0,1,1);
+        when(textureAtlas.findRegions(anyString())).thenReturn(new Array<>(
+                new AtlasRegion[]{atlasRegion, atlasRegion, atlasRegion, atlasRegion}
+        ));
         when(textureAtlas.findRegion(anyString())).thenReturn(atlasRegion);
         ObjectSet<Texture> textures = new ObjectSet<>();
         textures.add(mock(Texture.class));
