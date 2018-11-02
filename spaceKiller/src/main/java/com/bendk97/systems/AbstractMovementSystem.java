@@ -25,13 +25,13 @@ public abstract class AbstractMovementSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         PositionComponent position = ComponentMapperHelper.position.get(entity);
         VelocityComponent velocity = ComponentMapperHelper.velocity.get(entity);
-        position.x += velocity.x * deltaTime;
-        position.y += velocity.y * deltaTime;
+        position.setX(position.x() + velocity.x * deltaTime);
+        position.setY(position.y() + velocity.y * deltaTime);
         LightComponent light = ComponentMapperHelper.light.get(entity);
         if (light != null) {
             Sprite sprite = ComponentMapperHelper.sprite.get(entity).sprite;
-            light.light.setPosition(position.x + sprite.getWidth() / 2f,
-                    position.y + sprite.getHeight() / 2f);
+            light.light.setPosition(position.x() + sprite.getWidth() / 2f,
+                    position.y() + sprite.getHeight() / 2f);
         }
     }
 }

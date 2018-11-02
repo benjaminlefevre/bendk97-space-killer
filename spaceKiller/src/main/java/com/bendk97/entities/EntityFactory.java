@@ -100,8 +100,8 @@ public class EntityFactory implements Disposable {
         light.setActive(true);
         light.setColor(color);
         light.setDistance(distance);
-        light.setPosition(position.x + sprite.sprite.getWidth() / 2f,
-                position.y + sprite.sprite.getHeight() / 2f);
+        light.setPosition(position.x() + sprite.sprite.getWidth() / 2f,
+                position.y() + sprite.sprite.getHeight() / 2f);
         lightComponent.light = light;
         lightComponent.lights = lightPool;
         entity.add(lightComponent);

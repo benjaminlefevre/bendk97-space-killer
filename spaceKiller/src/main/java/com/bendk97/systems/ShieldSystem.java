@@ -30,8 +30,8 @@ public class ShieldSystem extends IteratingSystem {
         PositionComponent playerPosition = ComponentMapperHelper.position.get(player);
         SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(entity);
         SpriteComponent playerSprite = ComponentMapperHelper.sprite.get(player);
-        positionComponent.setPosition(playerPosition.x - (spriteComponent.sprite.getWidth() - playerSprite.sprite.getWidth()) / 2f,
-                playerPosition.y - (spriteComponent.sprite.getHeight() - playerSprite.sprite.getHeight()) / 2f);
+        positionComponent.setXY(playerPosition.x() - (spriteComponent.sprite.getWidth() - playerSprite.sprite.getWidth()) / 2f,
+                playerPosition.y() - (spriteComponent.sprite.getHeight() - playerSprite.sprite.getHeight()) / 2f);
     }
 
 }

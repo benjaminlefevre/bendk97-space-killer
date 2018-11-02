@@ -32,7 +32,7 @@ public class BackgroundRenderingSystem extends SortedIteratingSystem {
         BackgroundComponent backgroundComponent = ComponentMapperHelper.background.get(entity);
         PositionComponent positionComponent = ComponentMapperHelper.position.get(entity);
         batcher.draw(backgroundComponent.texture, -OFFSET_WIDTH, -20,
-                (int) positionComponent.x, ((int) positionComponent.y) % (backgroundComponent.texture.getHeight()),
+                (int) positionComponent.x(), ((int) positionComponent.y()) % (backgroundComponent.texture.getHeight()),
                 (int) (WORLD_WIDTH), (int) (SCREEN_HEIGHT * 1.05f));
     }
 }

@@ -49,9 +49,9 @@ public class EnemyAttackSystem extends IteratingSystem {
         PositionComponent position = ComponentMapperHelper.position.get(entity);
         EnemyComponent enemy = ComponentMapperHelper.enemy.get(entity);
         SpriteComponent sprite = ComponentMapperHelper.sprite.get(entity);
-        return (position.x >= 0
-                && position.x <= SCREEN_WIDTH - sprite.sprite.getWidth()
-                && position.y <= SCREEN_HEIGHT - sprite.sprite.getHeight()
-                && (position.y >= 150f || (position.y >= 0 && enemy.isTank)));
+        return (position.x() >= 0
+                && position.x() <= SCREEN_WIDTH - sprite.sprite.getWidth()
+                && position.y() <= SCREEN_HEIGHT - sprite.sprite.getHeight()
+                && (position.y() >= 150f || (position.y() >= 0 && enemy.isTank)));
     }
 }

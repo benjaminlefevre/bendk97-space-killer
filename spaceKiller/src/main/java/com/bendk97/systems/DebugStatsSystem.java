@@ -22,6 +22,7 @@ import static com.bendk97.pools.GamePools.getPoolStats;
 public class DebugStatsSystem extends EntitySystem {
 
     private static final int FREQUENCY_POOL_STATS_MS = 5000;
+    private static final int FREQUENCY_MEM_STATS_MS = 5000;
     private static final String SCRIPT = "Script: ";
     private static final String CURRENT = "Current: ";
     private static final String MIN = "Min: ";
@@ -29,6 +30,11 @@ public class DebugStatsSystem extends EntitySystem {
     private static final String FPS = " fps";
     public static final String S = " s";
     private static final String NEWLINE = "\n";
+    private static final String JAVA_HEAP = "Java Heap: ";
+    private static final String NATIVE_HEAP = "Native Heap: ";
+    private static final int BYTES_TO_MB = 1024 * 1024;
+    private static final String MB = "MB";
+    private static final String EMPTY = "??";
     private final SpriteBatch batcher;
     private final BitmapFontCache bitmapFont;
     private final LevelScreen screen;
@@ -36,7 +42,10 @@ public class DebugStatsSystem extends EntitySystem {
 
     private int minFps = 999;
     private int maxFps = 0;
-    private float deltaCount = 0;
+    private long nativeHeap = 0;
+    private long javaHeap = 0;
+    private float poolStatsTimeCounter = 0;
+    private float memoryStatsTimeCounter = 0;
 
     public DebugStatsSystem(LevelScreen screen, SpriteBatch batcher, int priority) {
         super(priority);
@@ -44,13 +53,16 @@ public class DebugStatsSystem extends EntitySystem {
         this.batcher = batcher;
         bitmapFont = new BitmapFontCache(new BitmapFont());
         this.bitmapFont.getFont().getData().setScale(0.5f);
+        this.nativeHeap = Gdx.app.getNativeHeap();
+        this.javaHeap = Gdx.app.getJavaHeap();
     }
 
     @Override
     public void update(float deltaTime) {
-        int currentFps = Gdx.graphics.getFramesPerSecond();
 
+        int currentFps = Gdx.graphics.getFramesPerSecond();
         updatePoolStats(deltaTime);
+        updateMemoryStats(deltaTime);
 
         if (screen.getCurrentTimeScript() > 0) {
             if (currentFps > maxFps) {
@@ -63,15 +75,26 @@ public class DebugStatsSystem extends EntitySystem {
         sb.setLength(0);
         sb.append(SCRIPT).append(Math.floor(screen.getCurrentTimeScript())).append(S).append(NEWLINE);
         sb.append(CURRENT).append(Gdx.graphics.getFramesPerSecond()).append(FPS).append(NEWLINE);
-        sb.append(MIN).append(minFps).append(FPS).append(NEWLINE);
+        sb.append(MIN).append(minFps == 999 ? EMPTY : minFps).append(FPS).append(NEWLINE);
         sb.append(MAX).append(maxFps).append(FPS).append(NEWLINE);
+        sb.append(JAVA_HEAP).append(javaHeap / BYTES_TO_MB).append(MB).append(NEWLINE);
+        sb.append(NATIVE_HEAP).append(nativeHeap /BYTES_TO_MB).append(MB).append(NEWLINE);
         drawText(145f, SCREEN_HEIGHT - 60f);
     }
 
+    private void updateMemoryStats(float deltaTime) {
+        memoryStatsTimeCounter += deltaTime * 1000f;
+        if (memoryStatsTimeCounter >= FREQUENCY_MEM_STATS_MS) {
+            memoryStatsTimeCounter = 0f;
+            nativeHeap = Gdx.app.getNativeHeap();
+            javaHeap = Gdx.app.getJavaHeap();
+        }
+    }
+
     private void updatePoolStats(float deltaTime) {
-        deltaCount += deltaTime * 1000f;
-        if (deltaCount >= FREQUENCY_POOL_STATS_MS) {
-            deltaCount = 0f;
+        poolStatsTimeCounter += deltaTime * 1000f;
+        if (poolStatsTimeCounter >= FREQUENCY_POOL_STATS_MS) {
+            poolStatsTimeCounter = 0f;
             Gdx.app.log("POOLS", getPoolStats());
         }
     }

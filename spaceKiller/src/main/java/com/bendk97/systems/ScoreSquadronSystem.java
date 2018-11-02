@@ -35,6 +35,6 @@ public class ScoreSquadronSystem extends IteratingSystem {
         ScoreSquadronComponent squadron = ComponentMapperHelper.scoreSquadron.get(entity);
         PositionComponent position = ComponentMapperHelper.position.get(entity);
         font.setColor(Color.YELLOW);
-        drawText(batcher, font, squadron.score.toString(), position.x, position.y);
+        drawText(batcher, font, squadron.score.toString(), position.x(), position.y());
     }
 }

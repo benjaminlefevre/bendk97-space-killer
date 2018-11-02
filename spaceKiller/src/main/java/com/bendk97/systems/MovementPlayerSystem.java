@@ -37,25 +37,25 @@ public class MovementPlayerSystem extends AbstractMovementSystem {
         PositionComponent positionComponent = ComponentMapperHelper.position.get(entity);
         SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(entity);
         if (spriteComponent != null) {
-            if (positionComponent.x < -50) {
-                positionComponent.x = -50;
-            } else if (positionComponent.x > SCREEN_WIDTH - spriteComponent.sprite.getWidth() + 50) {
-                positionComponent.x = SCREEN_WIDTH - spriteComponent.sprite.getWidth() + 50;
+            if (positionComponent.x() < -50) {
+                positionComponent.setX(-50);
+            } else if (positionComponent.x() > SCREEN_WIDTH - spriteComponent.sprite.getWidth() + 50) {
+                positionComponent.setX(SCREEN_WIDTH - spriteComponent.sprite.getWidth() + 50);
             }
-            if (positionComponent.y < 0) {
-                positionComponent.y = 0;
-            } else if (positionComponent.y > SCREEN_HEIGHT - spriteComponent.sprite.getHeight()) {
-                positionComponent.y = SCREEN_HEIGHT - spriteComponent.sprite.getHeight();
+            if (positionComponent.y() < 0) {
+                positionComponent.setY(0);
+            } else if (positionComponent.y() > SCREEN_HEIGHT - spriteComponent.sprite.getHeight()) {
+                positionComponent.setY(SCREEN_HEIGHT - spriteComponent.sprite.getHeight());
             }
             cameraFollows(positionComponent, spriteComponent);
         }
     }
 
     private void cameraFollows(PositionComponent positionComponent, SpriteComponent spriteComponent) {
-        if (positionComponent.x < 0) {
-            camera.position.x = positionComponent.x + SCREEN_WIDTH / 2;
-        } else if (positionComponent.x > SCREEN_WIDTH - spriteComponent.sprite.getWidth()) {
-            camera.position.x = positionComponent.x + spriteComponent.sprite.getWidth() - SCREEN_WIDTH / 2;
+        if (positionComponent.x() < 0) {
+            camera.position.x = positionComponent.x() + SCREEN_WIDTH / 2;
+        } else if (positionComponent.x() > SCREEN_WIDTH - spriteComponent.sprite.getWidth()) {
+            camera.position.x = positionComponent.x() + spriteComponent.sprite.getWidth() - SCREEN_WIDTH / 2;
         } else {
             camera.position.x = SCREEN_WIDTH / 2;
         }

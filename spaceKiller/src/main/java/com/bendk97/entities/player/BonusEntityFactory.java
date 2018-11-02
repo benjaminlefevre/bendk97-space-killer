@@ -46,8 +46,8 @@ public class BonusEntityFactory {
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
         powerUp.add(component);
-        position.x = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.x;
-        position.y = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.y;
+        position.setXY(ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.x,
+                ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.y);
         powerUp.add(entityFactory.engine.createComponent(StateComponent.class));
         tweenBonus(powerUp, position, component);
         entityFactory.engine.addEntity(powerUp);
@@ -67,8 +67,8 @@ public class BonusEntityFactory {
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
         shieldUp.add(component);
-        position.x = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.x;
-        position.y = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.y;
+        position.setXY(ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.x,
+                ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.y);
         shieldUp.add(entityFactory.engine.createComponent(StateComponent.class));
         tweenBonus(shieldUp, position, component);
         entityFactory.engine.addEntity(shieldUp);
@@ -83,8 +83,8 @@ public class BonusEntityFactory {
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
         component.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("bombUp"));
         bombUp.add(component);
-        position.x = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.x;
-        position.y = ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.y;
+        position.setXY(ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.x,
+                ComponentMapperHelper.squadron.get(squadron).lastKilledPosition.y);
         tweenBonus(bombUp, position, component);
         entityFactory.engine.addEntity(bombUp);
     }

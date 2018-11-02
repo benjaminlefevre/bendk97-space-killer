@@ -52,7 +52,7 @@ public class StageSetEntityFactory {
         RemovableComponent removableComponent = engine.createComponent(RemovableComponent.class);
         removableComponent.setDuration(3.0f);
         foreground.add(removableComponent);
-        positionComponent.setPosition(0f, SpaceKillerGameConstants.SCREEN_HEIGHT + 20f);
+        positionComponent.setXY(0f, SpaceKillerGameConstants.SCREEN_HEIGHT + 20f);
         velocityComponent.y = -velocity;
         engine.addEntity(foreground);
     }

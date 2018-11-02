@@ -35,7 +35,7 @@ public class SquadronComponent implements Component, Pool.Poolable {
 
     public void removeEntity(Entity entity){
         PositionComponent position = ComponentMapperHelper.position.get(entity);
-        lastKilledPosition.set(position.x, position.y);
+        lastKilledPosition.set(position.x(), position.y());
         ships.removeValue(entity, true);
         toShoot--;
     }

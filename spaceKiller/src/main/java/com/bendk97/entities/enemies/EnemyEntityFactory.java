@@ -111,8 +111,8 @@ public class EnemyEntityFactory {
         enemy.add(spriteComponent);
         spriteComponent.sprite = sprites.get(0);
         spriteComponent.zIndex = 20;
-        positionComponent.x = fromLeft ? -spriteComponent.sprite.getWidth() : SCREEN_WIDTH;
-        positionComponent.y = SCREEN_HEIGHT - spriteComponent.sprite.getHeight();
+        positionComponent.setX(fromLeft ? -spriteComponent.sprite.getWidth() : SCREEN_WIDTH);
+        positionComponent.setY(SCREEN_HEIGHT - spriteComponent.sprite.getHeight());
         EnemyComponent enemyComponent = entityFactory.engine.createComponent(EnemyComponent.class);
         enemyComponent.initLifeGauge(gaugeLife);
         enemyComponent.points = points;
@@ -140,11 +140,11 @@ public class EnemyEntityFactory {
         tankCannon.add(enemyComponent);
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
         tankCannon.add(position);
-        SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
-        component.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("tankCannon"));
-        component.sprite.setOrigin(32f, 46f);
-        component.zIndex = -5;
-        tankCannon.add(component);
+        SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
+        spriteComponent.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("tankCannon"));
+        spriteComponent.sprite.setOrigin(32f, 46f);
+        spriteComponent.zIndex = -5;
+        tankCannon.add(spriteComponent);
         tankCannon.add(entityFactory.engine.createComponent(GroundEnemyComponent.class));
         FollowPlayerComponent followPlayerComponent = entityFactory.engine.createComponent(FollowPlayerComponent.class);
         followPlayerComponent.rotate = true;
@@ -188,6 +188,9 @@ public class EnemyEntityFactory {
         SpriteComponent component = entityFactory.engine.createComponent(SpriteComponent.class);
         component.sprite = sprites.get(0);
         enemy.add(component);
+        if(characteristics.directionable) {
+            enemy.add(entityFactory.engine.createComponent(DirectionableComponent.class));
+        }
         enemy.add(entityFactory.engine.createComponent(StateComponent.class));
         entityFactory.engine.addEntity(enemy);
         return enemy;
@@ -197,6 +200,7 @@ public class EnemyEntityFactory {
         EnemyCharacteristics characteristics = new EnemyCharacteristics()
                 .setAtlasName("soucoupe")
                 .setCanAttack(canAttack)
+                .directionable(false)
                 .setRateShoot(STANDARD_RATE_SHOOT)
                 .setVelocityBullet(velocityBullet)
                 .setPoints(100)
@@ -210,6 +214,7 @@ public class EnemyEntityFactory {
     protected Entity createEnemyShip(Entity squadron, boolean canAttack, float velocityBullet, int rateShoot, int enemyType) {
         String atlasRegion;
         int points = 200;
+        boolean directionable = true;
         int strength = 1;
         int attackCapacity = 1;
         Animation.PlayMode playMode = LOOP;
@@ -223,12 +228,14 @@ public class EnemyEntityFactory {
                 break;
             case SHIP_3:
                 atlasRegion = "enemy3";
+                directionable = false;
                 frameDuration = FRAME_DURATION_ENEMY_3;
                 break;
             case SHIP_4:
                 atlasRegion = "enemy4";
                 break;
             case SHIP_5:
+                directionable = false;
                 atlasRegion = "enemy5";
                 playMode = LOOP_PINGPONG;
                 break;
@@ -264,6 +271,7 @@ public class EnemyEntityFactory {
                 atlasRegion = "swarmer";
                 playMode = LOOP_PINGPONG;
                 attackCapacity = 2;
+                directionable = false;
                 strength = 1;
                 points = 250;
                 break;
@@ -293,6 +301,7 @@ public class EnemyEntityFactory {
         EnemyCharacteristics characteristics = new EnemyCharacteristics()
                 .setAtlasName(atlasRegion)
                 .setCanAttack(canAttack)
+                .directionable(directionable)
                 .setRateShoot(rateShoot)
                 .setVelocityBullet(velocityBullet)
                 .setPoints(points)
@@ -485,7 +494,7 @@ public class EnemyEntityFactory {
         Entity explosion = entityFactory.engine.createEntity();
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
         explosion.add(position);
-        position.setPosition(x, y);
+        position.setXY(x, y);
         AnimationComponent animationComponent = entityFactory.engine.createComponent(AnimationComponent.class);
         Array<Sprite> sprites = poolSprite.getSprites(entityFactory.commonAtlas.findRegions("explosion"));
         animationComponent.animations.put(ANIMATION_MAIN, new Animation<>(FRAME_DURATION_EXPLOSION, sprites, Animation.PlayMode.NORMAL));
@@ -512,8 +521,8 @@ public class EnemyEntityFactory {
                     entityFactory.assets.playSound(SOUND_EXPLOSION);
                     PositionComponent position = ComponentMapperHelper.position.get(enemy);
                     if (position != null) {
-                        createEntityExploding(position.x + random.nextFloat() * sprite.sprite.getWidth(),
-                                position.y + random.nextFloat() * sprite.sprite.getHeight());
+                        createEntityExploding(position.x() + random.nextFloat() * sprite.sprite.getWidth(),
+                                position.y() + random.nextFloat() * sprite.sprite.getHeight());
                     }
                 }
             }, i * 0.1f);
@@ -541,16 +550,16 @@ public class EnemyEntityFactory {
         PositionComponent position = entityFactory.engine.createComponent(PositionComponent.class);
         SquadronComponent squadronComponent = ComponentMapperHelper.squadron.get(squadron);
         score.score.append(squadronComponent.scoreBonus);
-        position.x = squadronComponent.lastKilledPosition.x;
-        position.y = squadronComponent.lastKilledPosition.y;
-        if (position.x < SCREEN_WIDTH) {
-            position.x = SCREEN_WIDTH / 2f;
+        position.setX(squadronComponent.lastKilledPosition.x);
+        position.setY(squadronComponent.lastKilledPosition.y);
+        if (position.x() < SCREEN_WIDTH) {
+            position.setX(SCREEN_WIDTH / 2f);
         }
-        if (position.x >= SCREEN_WIDTH - 20f) {
-            position.x -= 50f;
+        if (position.x() >= SCREEN_WIDTH - 20f) {
+            position.setX(position.x() - 50f);
         }
-        if (position.y > SCREEN_HEIGHT) {
-            position.y = SCREEN_HEIGHT * 0.8f;
+        if (position.y() > SCREEN_HEIGHT) {
+            position.setY(SCREEN_HEIGHT * 0.8f);
         }
         scoreSquadron.add(position);
         scoreSquadron.add(score);

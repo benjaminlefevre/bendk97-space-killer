@@ -241,7 +241,7 @@ public final class LevelScreen extends ScreenAdapter {
         this.time = playerComponent.secondScript;
         this.resumeScripting();
         playerListener.updateLivesAndBombsAfterContinue(player);
-        ComponentMapperHelper.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+        ComponentMapperHelper.position.get(player).setXY(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         ComponentMapperHelper.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         Gdx.input.setInputProcessor(inputProcessor);
         makePlayerInvulnerable();
@@ -305,6 +305,7 @@ public final class LevelScreen extends ScreenAdapter {
         // RENDERING
         engine.addSystem(new BatcherBeginSystem(viewport, batcher, 4));
         engine.addSystem(new BackgroundRenderingSystem(batcher, 5));
+        engine.addSystem(new DirectionableSpriteSystem(5));
         engine.addSystem(new DynamicEntitiesRenderingSystem(batcher, 6));
         engine.addSystem(new ScoreSquadronSystem(6, assets, batcher));
         engine.addSystem(new BatcherEndSystem(batcher, 7));
@@ -486,6 +487,7 @@ public final class LevelScreen extends ScreenAdapter {
         // RENDERING
         engine.removeSystem(engine.getSystem(BatcherBeginSystem.class));
         engine.removeSystem(engine.getSystem(BackgroundRenderingSystem.class));
+        engine.removeSystem(engine.getSystem(DirectionableSpriteSystem.class));
         engine.removeSystem(engine.getSystem(DynamicEntitiesRenderingSystem.class));
         engine.removeSystem(engine.getSystem(ScoreSquadronSystem.class));
         engine.removeSystem(engine.getSystem(BatcherEndSystem.class));

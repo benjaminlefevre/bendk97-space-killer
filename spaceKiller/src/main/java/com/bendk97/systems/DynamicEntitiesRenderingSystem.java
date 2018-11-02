@@ -34,7 +34,7 @@ public class DynamicEntitiesRenderingSystem extends SortedIteratingSystem {
         PositionComponent position = ComponentMapperHelper.position.get(entity);
         SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(entity);
         Sprite sprite = spriteComponent.sprite;
-        sprite.setPosition(position.x, position.y);
+        sprite.setPosition(position.x(), position.y());
         if ((sprite.getX() + sprite.getWidth() < -OFFSET_WIDTH)
                 || sprite.getX() > SCREEN_WIDTH + OFFSET_WIDTH
                 || sprite.getY() > SCREEN_HEIGHT

@@ -31,6 +31,7 @@ import static com.bendk97.entities.EntityFactoryIds.*;
 import static com.bendk97.pools.GamePools.poolVector2;
 import static com.bendk97.screens.levels.Level.Level2;
 import static com.bendk97.screens.levels.Level.Level3;
+import static com.bendk97.tweens.TweenCallbacks.removeEntity;
 
 public class SoloEnemyFactory {
 
@@ -83,14 +84,10 @@ public class SoloEnemyFactory {
         float posX = random.nextFloat() * (SCREEN_WIDTH - 64f);
         for (final Entity entity : entities) {
             PositionComponent position = ComponentMapperHelper.position.get(entity);
-            position.setPosition(posX, SCREEN_HEIGHT + 20f);
+            position.setXY(posX, SCREEN_HEIGHT + 20f);
             Tween.to(position, PositionComponentTweenAccessor.POSITION_Y, (SCREEN_HEIGHT + 100f) / velocity)
                     .ease(Linear.INOUT).targetRelative(-SCREEN_HEIGHT - 100f)
-                    .setCallback((i, baseTween) -> {
-                        if (i == TweenCallback.COMPLETE) {
-                            entityFactory.engine.removeEntity(entity);
-                        }
-                    }).start(entityFactory.tweenManager);
+                    .setCallback(removeEntity(entityFactory.engine, entity)).start(entityFactory.tweenManager);
         }
     }
 
@@ -116,7 +113,7 @@ public class SoloEnemyFactory {
                 .ease(Linear.INOUT).targetRelative(directionFactor * sprite.getWidth())
                 .setCallback((i, baseTween) -> {
                     Timeline timeline = Timeline.createSequence();
-                    timeline.push(Tween.to(position, PositionComponentTweenAccessor.POSITION_XY, vPoints[direction ? 0 : k - 1].dst(position.x, position.y) / velocity)
+                    timeline.push(Tween.to(position, PositionComponentTweenAccessor.POSITION_XY, vPoints[direction ? 0 : k - 1].dst(position.x(), position.y()) / velocity)
                             .ease(Linear.INOUT)
                             .target(vPoints[direction ? 0 : k - 1].x, vPoints[direction ? 0 : k - 1].y));
                     for (int j = 1; j < vPoints.length; ++j) {

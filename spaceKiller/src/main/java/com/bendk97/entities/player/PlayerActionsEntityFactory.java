@@ -45,8 +45,8 @@ public class PlayerActionsEntityFactory {
         PositionComponent positionBulletComponent = entityFactory.engine.createComponent(PositionComponent.class);
         Entity bullet = createBullet(playerComponent.powerLevel.bulletRegionName, spriteBulletComponent, velocityBulletComponent, positionBulletComponent);
         PositionComponent playerPosition = position.get(player);
-        positionBulletComponent.x = playerPosition.x + ComponentMapperHelper.sprite.get(player).sprite.getWidth() / 2f - spriteBulletComponent.sprite.getWidth() / 2f;
-        positionBulletComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
+        positionBulletComponent.setX(playerPosition.x() + ComponentMapperHelper.sprite.get(player).sprite.getWidth() / 2f - spriteBulletComponent.sprite.getWidth() / 2f);
+        positionBulletComponent.setY(playerPosition.y() + sprite.get(player).sprite.getHeight());
         velocityBulletComponent.y = PLAYER_BULLET_VELOCITY;
         if (entityFactory.rayHandler != null) {
             entityFactory.createLight(bullet, playerComponent.powerLevel.color, spriteBulletComponent.sprite.getWidth() * 7f);
@@ -65,8 +65,8 @@ public class PlayerActionsEntityFactory {
         PositionComponent positionBulletComponent = entityFactory.engine.createComponent(PositionComponent.class);
         Entity bullet = createBullet(playerComponent.powerLevel.bulletLeftSidedRegionName, spriteBulletComponent, velocityBulletComponent, positionBulletComponent);
         PositionComponent playerPosition = position.get(player);
-        positionBulletComponent.x = playerPosition.x - spriteBulletComponent.sprite.getWidth();
-        positionBulletComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
+        positionBulletComponent.setX(playerPosition.x() - spriteBulletComponent.sprite.getWidth());
+        positionBulletComponent.setY(playerPosition.y() + sprite.get(player).sprite.getHeight());
         Vector2 direction = poolVector2.getVector2(0, 1);
         direction.rotate(35f);
         direction.nor();
@@ -87,8 +87,8 @@ public class PlayerActionsEntityFactory {
         PositionComponent positionBulletComponent = entityFactory.engine.createComponent(PositionComponent.class);
         Entity bullet = createBullet(playerComponent.powerLevel.bulletRightSidedRegionName, spriteBulletComponent, velocityBulletComponent, positionBulletComponent);
         PositionComponent playerPosition = position.get(player);
-        positionBulletComponent.x = playerPosition.x + sprite.get(player).sprite.getWidth();
-        positionBulletComponent.y = playerPosition.y + sprite.get(player).sprite.getHeight();
+        positionBulletComponent.setX(playerPosition.x() + sprite.get(player).sprite.getWidth());
+        positionBulletComponent.setY(playerPosition.y() + sprite.get(player).sprite.getHeight());
         Vector2 direction = poolVector2.getVector2(0, 1);
         direction.rotate(-35f);
         direction.nor();
@@ -114,9 +114,9 @@ public class PlayerActionsEntityFactory {
         bomb.add(entityFactory.engine.createComponent(StateComponent.class));
         entityFactory.engine.addEntity(bomb);
         PositionComponent playerPosition = position.get(player);
-        positionComponent.x = playerPosition.x + ComponentMapperHelper.sprite.get(player).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f;
-        positionComponent.y = playerPosition.y + ComponentMapperHelper.sprite.get(player).sprite.getHeight() >= SCREEN_HEIGHT * 3f / 4f ?
-                playerPosition.y : playerPosition.y + sprite.get(player).sprite.getHeight();
+        positionComponent.setX(playerPosition.x() + ComponentMapperHelper.sprite.get(player).sprite.getWidth() / 2f - spriteComponent.sprite.getWidth() / 2f);
+        positionComponent.setY(playerPosition.y() + ComponentMapperHelper.sprite.get(player).sprite.getHeight() >= SCREEN_HEIGHT * 3f / 4f ?
+                playerPosition.y() : playerPosition.y() + sprite.get(player).sprite.getHeight());
         Tween.to(positionComponent, POSITION_XY, 0.6f).ease(Linear.INOUT)
                 .target(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f, SCREEN_HEIGHT * 3f / 4f)
                 .setCallback((event, baseTween) -> {
@@ -144,10 +144,10 @@ public class PlayerActionsEntityFactory {
         entityFactory.engine.addEntity(bombExplosion);
         entityFactory.assets.playSound(SOUND_BOMB_EXPLOSION);
         PositionComponent bombPosition = position.get(bomb);
-        positionComponent.x = bombPosition.x - spriteComponent.sprite.getWidth() / 2f;
-        positionComponent.y = bombPosition.y - spriteComponent.sprite.getHeight() / 2f;
+        positionComponent.setX(bombPosition.x() - spriteComponent.sprite.getWidth() / 2f);
+        positionComponent.setY(bombPosition.y() - spriteComponent.sprite.getHeight() / 2f);
         Tween.to(positionComponent, POSITION_Y, 0.7f).ease(Linear.INOUT)
-                .target(bombPosition.y - spriteComponent.sprite.getHeight() / 2f)
+                .target(bombPosition.y() - spriteComponent.sprite.getHeight() / 2f)
                 .setCallback((event, baseTween) -> {
                     if (event == TweenCallback.COMPLETE) {
                         bombExplosion.add(entityFactory.engine.createComponent(BombExplosionComponent.class));
