@@ -164,12 +164,12 @@ public class CollisionSystem extends EntitySystem {
     private boolean isPerfectPixelCollisionBetween(Sprite sprite1, Sprite sprite2) {
         Rectangle collision = poolRectangle.obtain();
         try {
+            viewport.apply();
+            spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
             if (Intersector.intersectRectangles(sprite1.getBoundingRectangle(), sprite2.getBoundingRectangle(), collision)) {
                 Pixmap pix1 = null;
                 Pixmap pix2 = null;
                 try {
-                    viewport.apply();
-                    spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
                     pix1 = transformToPixels(sprite1, collision);
                     pix2 = transformToPixels(sprite2, collision);
                     for (int i = 0; i < pix1.getWidth(); ++i) {

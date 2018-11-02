@@ -9,11 +9,15 @@ package com.bendk97.screens.levels;
 import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.badlogic.gdx.utils.Array;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.PlayerComponent;
+import com.bendk97.components.SpriteComponent;
+import com.bendk97.components.helpers.Families;
 import com.bendk97.components.texts.BossAlertComponent;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.entities.StageSetEntityFactory;
@@ -80,8 +84,15 @@ public abstract class LevelScriptTest {
         when(assets.get(any(AssetDescriptor.class))).thenReturn(mock(Texture.class));
         when(assets.getFont(FONT_SPACE_KILLER_LARGE)).thenReturn(mock(BitmapFontCache.class));
         doReturn(mock(BossAlertComponent.class)).when(entityFactory.engine).createComponent(BossAlertComponent.class);
+        doReturn(new ImmutableArray<>(new Array<>(new Entity[]{mockBoss()}))).when(entityFactory.engine).getEntitiesFor(Families.boss);
         initSpecificMocking();
         initLevelScript();
+    }
+
+    private Entity mockBoss() {
+        Entity entity = new Entity();
+        entity.add(engine.createComponent(SpriteComponent.class));
+        return entity;
     }
 
     protected  abstract void initSpecificMocking();
