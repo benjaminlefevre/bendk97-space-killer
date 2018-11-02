@@ -20,6 +20,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.bendk97.components.PositionComponent;
 import com.bendk97.components.SpriteComponent;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.components.helpers.Families;
@@ -27,12 +28,14 @@ import com.bendk97.listeners.CollisionListener;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
+import static com.bendk97.components.helpers.ComponentMapperHelper.position;
+import static com.bendk97.components.helpers.ComponentMapperHelper.sprite;
 import static com.bendk97.pools.GamePools.poolCircle;
 import static com.bendk97.pools.GamePools.poolRectangle;
 
 public class CollisionSystem extends EntitySystem {
 
-    private static final int FREQUENCY_MS = 50;
+    private static final int FREQUENCY_MS = 75;
     private final CollisionListener collisionListener;
     private final CollisionHelper collisionHelper = new CollisionHelper();
     private final SpriteBatch spriteBatch;
@@ -73,7 +76,7 @@ public class CollisionSystem extends EntitySystem {
             for (Entity bullet : getEngine().getEntitiesFor(Families.playerBullet)) {
                 for (Entity enemy : getEngine().getEntitiesFor(Families.enemies)) {
                     if (!ComponentMapperHelper.enemy.get(enemy).isDead()
-                            && isCollisionBetween(ComponentMapperHelper.sprite.get(enemy), ComponentMapperHelper.sprite.get(bullet))) {
+                            && isCollisionBetween(enemy, bullet)) {
                         collisionListener.enemyShoot(enemy, player, bullet);
                         return;
                     }
@@ -81,19 +84,19 @@ public class CollisionSystem extends EntitySystem {
             }
 
             for (Entity powerUp : getEngine().getEntitiesFor(Families.powerUp)) {
-                if (isCollisionBetween(ComponentMapperHelper.sprite.get(player), ComponentMapperHelper.sprite.get(powerUp))) {
+                if (isCollisionBetween(player, powerUp)) {
                     collisionListener.playerPowerUp(player, powerUp);
                     return;
                 }
             }
             for (Entity shieldUp : getEngine().getEntitiesFor(Families.shieldUp)) {
-                if (isCollisionBetween(ComponentMapperHelper.sprite.get(player), ComponentMapperHelper.sprite.get(shieldUp))) {
+                if (isCollisionBetween(player, shieldUp)) {
                     collisionListener.playerShieldUp(player, shieldUp);
                     return;
                 }
             }
             for (Entity bombUp : getEngine().getEntitiesFor(Families.bombUp)) {
-                if (isCollisionBetween(ComponentMapperHelper.sprite.get(player), ComponentMapperHelper.sprite.get(bombUp))) {
+                if (isCollisionBetween(player, bombUp)) {
                     collisionListener.playerBombUp(player, bombUp);
                     return;
                 }
@@ -104,15 +107,14 @@ public class CollisionSystem extends EntitySystem {
     private void detectCollisionWithPlayerVulnerable() {
         for (Entity player : getEngine().getEntitiesFor(Families.playerVulnerable)) {
             for (Entity enemy : getEngine().getEntitiesFor(Families.enemyBodies)) {
-                if (isCollisionBetween(ComponentMapperHelper.sprite.get(enemy), ComponentMapperHelper.sprite.get(player))) {
+                if (isCollisionBetween(enemy, player)) {
                     collisionListener.playerHitByEnemyBody(player);
                     return;
                 }
 
             }
             for (Entity bullet : getEngine().getEntitiesFor(Families.enemyBullet)) {
-                SpriteComponent enemyBullet = ComponentMapperHelper.sprite.get(bullet);
-                if (isCollisionBetween(enemyBullet, ComponentMapperHelper.sprite.get(player))) {
+                if (isCollisionBetween(bullet, player)) {
                     collisionListener.playerHitByEnemyBullet(player, bullet);
                     return;
                 }
@@ -123,8 +125,7 @@ public class CollisionSystem extends EntitySystem {
     private void detectCollisionWithShields() {
         for (Entity shield : getEngine().getEntitiesFor(Families.shield)) {
             for (Entity bullet : getEngine().getEntitiesFor(Families.enemyBullet)) {
-                SpriteComponent enemyBullet = ComponentMapperHelper.sprite.get(bullet);
-                if (isCollisionBetween(enemyBullet, ComponentMapperHelper.sprite.get(shield))) {
+                if (isCollisionBetween(bullet, shield)) {
                     collisionListener.bulletStoppedByShield(bullet);
                     return;
                 }
@@ -133,8 +134,7 @@ public class CollisionSystem extends EntitySystem {
                 if (ComponentMapperHelper.boss.get(enemy) != null || ComponentMapperHelper.enemy.get(enemy).isLaserShip) {
                     break;
                 }
-                SpriteComponent enemySprite = ComponentMapperHelper.sprite.get(enemy);
-                if (isCollisionBetween(enemySprite, ComponentMapperHelper.sprite.get(shield))) {
+                if (isCollisionBetween(enemy, shield)) {
                     collisionListener.enemyShootByShield(enemy);
                     return;
                 }
@@ -142,7 +142,15 @@ public class CollisionSystem extends EntitySystem {
         }
     }
 
-    private boolean isCollisionBetween(SpriteComponent spriteComponent1, SpriteComponent spriteComponent2) {
+    private boolean isCollisionBetween(Entity entity1, Entity entity2) {
+        PositionComponent positionComponent1 = position.get(entity1);
+        PositionComponent positionComponent2 = position.get(entity2);
+        SpriteComponent spriteComponent1 = sprite.get(entity1);
+        SpriteComponent spriteComponent2 = sprite.get(entity2);
+        if((positionComponent1.y() + spriteComponent1.sprite.getHeight()) < positionComponent2.y()
+        || (positionComponent2.y() + spriteComponent2.sprite.getHeight() < positionComponent1.y())){
+            return false;
+        }
         if (fbo != null && (spriteComponent1.pixelPerfectCollision || spriteComponent2.pixelPerfectCollision)) {
             return isPerfectPixelCollisionBetween(spriteComponent1.sprite, spriteComponent2.sprite);
         } else {

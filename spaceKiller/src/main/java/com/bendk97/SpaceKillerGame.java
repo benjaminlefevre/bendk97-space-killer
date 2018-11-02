@@ -83,8 +83,6 @@ public class SpaceKillerGame extends Game implements Disposable {
         } catch (Exception e) {
             Gdx.app.log("Guru Meditation", "error: " + e.getMessage());
             Gdx.app.exit();
-        } finally {
-            Runtime.getRuntime().gc();
         }
     }
 
@@ -106,8 +104,6 @@ public class SpaceKillerGame extends Game implements Disposable {
         } catch (Exception e) {
             Gdx.app.log("Guru Meditation", "error: " + e.getMessage());
             Gdx.app.exit();
-        } finally {
-            Runtime.getRuntime().gc();
         }
     }
 
