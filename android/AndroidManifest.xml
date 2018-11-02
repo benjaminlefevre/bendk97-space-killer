@@ -20,6 +20,7 @@
             android:icon="@mipmap/space_killer"
             android:hardwareAccelerated="true"
             android:isGame="true"
+            android:largeHeap="true"
             android:label="@string/app_name"
             android:theme="@style/GdxTheme">
         <activity
