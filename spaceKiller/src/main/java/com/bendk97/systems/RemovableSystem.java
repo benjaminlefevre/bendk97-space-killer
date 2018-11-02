@@ -32,10 +32,10 @@ public class RemovableSystem extends IteratingSystem {
         } else {
             PositionComponent position = ComponentMapperHelper.position.get(entity);
             SpriteComponent sprite = ComponentMapperHelper.sprite.get(entity);
-            if (position.x + sprite.sprite.getWidth() < -OFFSET_WIDTH
-                    || position.x > SCREEN_WIDTH + OFFSET_WIDTH
-                    || position.y > SCREEN_HEIGHT
-                    || position.y + sprite.sprite.getHeight() < 0) {
+            if (position.x() + sprite.sprite.getWidth() < -OFFSET_WIDTH
+                    || position.x() > SCREEN_WIDTH + OFFSET_WIDTH
+                    || position.y() > SCREEN_HEIGHT
+                    || position.y() + sprite.sprite.getHeight() < 0) {
                 getEngine().removeEntity(entity);
             }
         }

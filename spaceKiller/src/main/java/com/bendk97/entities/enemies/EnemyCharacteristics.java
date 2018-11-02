@@ -8,40 +8,46 @@ package com.bendk97.entities.enemies;
 
 public class EnemyCharacteristics {
 
-    public boolean canAttack;
-    public int rateShoot;
-    public int strength;
-    public int attackCapacity;
-    public float velocityBullet;
-    public String atlasName;
+    protected boolean canAttack;
+    public boolean directionable;
+    protected int rateShoot;
+    protected int strength;
+    protected int attackCapacity;
+    protected float velocityBullet;
+    protected String atlasName;
     public int points;
 
-    public EnemyCharacteristics setCanAttack(boolean canAttack) {
+    protected EnemyCharacteristics setCanAttack(boolean canAttack) {
         this.canAttack = canAttack;
         return this;
     }
 
-    public EnemyCharacteristics setRateShoot(int rateShoot) {
+    protected EnemyCharacteristics directionable(boolean directionable) {
+        this.directionable = directionable;
+        return this;
+    }
+
+    protected EnemyCharacteristics setRateShoot(int rateShoot) {
         this.rateShoot = rateShoot;
         return this;
     }
 
-    public EnemyCharacteristics setStrength(int strength) {
+    protected EnemyCharacteristics setStrength(int strength) {
         this.strength = strength;
         return this;
     }
 
-    public EnemyCharacteristics setAttackCapacity(int attackCapacity) {
+    protected EnemyCharacteristics setAttackCapacity(int attackCapacity) {
         this.attackCapacity = attackCapacity;
         return this;
     }
 
-    public EnemyCharacteristics setVelocityBullet(float velocityBullet) {
+    protected EnemyCharacteristics setVelocityBullet(float velocityBullet) {
         this.velocityBullet = velocityBullet;
         return this;
     }
 
-    public EnemyCharacteristics setAtlasName(String atlasName) {
+    protected EnemyCharacteristics setAtlasName(String atlasName) {
         this.atlasName = atlasName;
         return this;
     }

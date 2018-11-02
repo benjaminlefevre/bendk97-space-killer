@@ -7,6 +7,7 @@
 package com.bendk97.entities.enemies;
 
 import aurelienribon.tweenengine.TweenManager;
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -21,13 +22,17 @@ import com.bendk97.entities.EntityFactory;
 import com.bendk97.runner.GdxTestRunner;
 import com.bendk97.screens.levels.Level;
 import com.bendk97.screens.levels.utils.ScreenShake;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.bendk97.SpaceKillerGameConstants.STANDARD_RATE_SHOOT;
 import static com.bendk97.entities.EntityFactoryIds.*;
@@ -201,14 +206,7 @@ public class EnemyEntityFactoryTest {
                 true, 10f);
         assertThat(soucoupe).isNotNull();
         verify(sprites).findRegions("soucoupe");
-        assertThat(soucoupe.getComponents()).hasOnlyElementsOfTypes(
-                EnemyComponent.class,
-                PositionComponent.class,
-                VelocityComponent.class,
-                SpriteComponent.class,
-                AnimationComponent.class,
-                StateComponent.class
-        );
+        assertThatEntityIsNotDirectionableEnemyShip(soucoupe);
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(soucoupe);
         assertThat(enemyComponent.probabilityAttack).isEqualTo(STANDARD_RATE_SHOOT);
         assertThat(enemyComponent.points).isEqualTo(100);
@@ -221,7 +219,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 SHIP_1);
         assertThat(entity).isNotNull();
-        assertThatEntityIsEnemyShip(entity);
+        assertThatEntityIsDirectionableEnemyShip(entity);
         verify(sprites).findRegions("enemy");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
@@ -234,7 +232,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 SHIP_2);
         assertThat(entity).isNotNull();
-        assertThatEntityIsEnemyShip(entity);
+        assertThatEntityIsDirectionableEnemyShip(entity);
         verify(sprites).findRegions("enemy2");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
@@ -247,7 +245,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 SHIP_3);
         assertThat(entity).isNotNull();
-        assertThatEntityIsEnemyShip(entity);
+        assertThatEntityIsNotDirectionableEnemyShip(entity);
         verify(sprites).findRegions("enemy3");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
@@ -260,7 +258,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 SHIP_4);
         assertThat(entity).isNotNull();
-        assertThatEntityIsEnemyShip(entity);
+        assertThatEntityIsDirectionableEnemyShip(entity);
         verify(sprites).findRegions("enemy4");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
@@ -273,7 +271,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 SHIP_5);
         assertThat(entity).isNotNull();
-        assertThatEntityIsEnemyShip(entity);
+        assertThatEntityIsNotDirectionableEnemyShip(entity);
         verify(sprites).findRegions("enemy5");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
@@ -286,7 +284,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 SHIP_LV3_1);
         assertThat(entity).isNotNull();
-        assertThatEntityIsEnemyShip(entity);
+        assertThatEntityIsDirectionableEnemyShip(entity);
         verify(sprites).findRegions("lark");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(250);
@@ -299,7 +297,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 SHIP_LV3_2);
         assertThat(entity).isNotNull();
-        assertThatEntityIsEnemyShip(entity);
+        assertThatEntityIsDirectionableEnemyShip(entity);
         verify(sprites).findRegions("stab");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
@@ -312,7 +310,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 SHIP_LV3_3);
         assertThat(entity).isNotNull();
-        assertThatEntityIsEnemyShip(entity);
+        assertThatEntityIsDirectionableEnemyShip(entity);
         verify(sprites).findRegions("squid");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(250);
@@ -325,7 +323,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 SHIP_LV3_4);
         assertThat(entity).isNotNull();
-        assertThatEntityIsEnemyShip(entity);
+        assertThatEntityIsDirectionableEnemyShip(entity);
         verify(sprites).findRegions("bug");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
@@ -338,7 +336,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 SHIP_LV3_5);
         assertThat(entity).isNotNull();
-        assertThatEntityIsEnemyShip(entity);
+        assertThatEntityIsNotDirectionableEnemyShip(entity);
         verify(sprites).findRegions("swarmer");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(250);
@@ -351,7 +349,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 SHIP_LV3_6);
         assertThat(entity).isNotNull();
-        assertThatEntityIsEnemyShip(entity);
+        assertThatEntityIsDirectionableEnemyShip(entity);
         verify(sprites).findRegions("stingray");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
@@ -364,7 +362,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 SHIP_LV3_7);
         assertThat(entity).isNotNull();
-        assertThatEntityIsEnemyShip(entity);
+        assertThatEntityIsDirectionableEnemyShip(entity);
         verify(sprites).findRegions("fish");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(250);
@@ -377,7 +375,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 SHIP_LV3_8);
         assertThat(entity).isNotNull();
-        assertThatEntityIsEnemyShip(entity);
+        assertThatEntityIsDirectionableEnemyShip(entity);
         verify(sprites).findRegions("podfish");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
@@ -391,7 +389,7 @@ public class EnemyEntityFactoryTest {
         Entity entity = enemyEntityFactory.createEnemyShip(entityFactory.engine.createEntity(), true, 10f, 1,
                 666);
         assertThat(entity).isNotNull();
-        assertThatEntityIsEnemyShip(entity);
+        assertThatEntityIsDirectionableEnemyShip(entity);
         verify(sprites).findRegions("podfish");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(entity);
         assertThat(enemyComponent.points).isEqualTo(200);
@@ -535,15 +533,28 @@ public class EnemyEntityFactoryTest {
                 StateComponent.class);
     }
 
-    private void assertThatEntityIsEnemyShip(Entity entity) {
+    private void assertThatEntityIsDirectionableEnemyShip(Entity entity) {
+        assertThatEntityIsEnemyShip(entity, true);
+    }
+
+    private void assertThatEntityIsNotDirectionableEnemyShip(Entity entity) {
+        assertThatEntityIsEnemyShip(entity, false);
+    }
+
+    private void assertThatEntityIsEnemyShip(Entity entity,boolean directionable) {
         assertThat(entity).isNotNull();
-        assertThat(entity.getComponents()).hasOnlyElementsOfTypes(
+        List<Class> components = Lists.newArrayList(
                 PositionComponent.class,
                 VelocityComponent.class,
                 AnimationComponent.class,
                 SpriteComponent.class,
                 PositionComponent.class,
                 EnemyComponent.class,
+                DirectionableComponent.class,
                 StateComponent.class);
+        assertThat(entity.getComponents()).hasOnlyElementsOfTypes(components.toArray(new Class[components.size()]));
+        if(directionable) {
+            assertThat(entity.getComponents()).hasAtLeastOneElementOfType(DirectionableComponent.class);
+        }
     }
 }

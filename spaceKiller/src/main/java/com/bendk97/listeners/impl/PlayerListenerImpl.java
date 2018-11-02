@@ -111,7 +111,7 @@ public final class PlayerListenerImpl extends EntitySystem implements PlayerList
             if (playerComponent.lives > 0) {
                 getEngine().removeEntity(lives.removeIndex(playerComponent.lives - 1));
             }
-            ComponentMapperHelper.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+            ComponentMapperHelper.position.get(player).setXY(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
             ComponentMapperHelper.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
             screen.makePlayerInvulnerable();
         }

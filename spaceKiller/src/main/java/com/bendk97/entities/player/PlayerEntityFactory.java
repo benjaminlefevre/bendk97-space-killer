@@ -87,7 +87,7 @@ public class PlayerEntityFactory {
         player.add(component);
         player.add(entityFactory.engine.createComponent(StateComponent.class));
         entityFactory.engine.addEntity(player);
-        ComponentMapperHelper.position.get(player).setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+        ComponentMapperHelper.position.get(player).setXY(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         entityFactory.enemyEntityFactory.setPlayer(player);
         return player;
     }
@@ -101,8 +101,8 @@ public class PlayerEntityFactory {
         spriteComponent.zIndex = 99;
         spriteComponent.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("shield"));
         PositionComponent positionComponent = entityFactory.engine.createComponent(PositionComponent.class);
-        positionComponent.setPosition(playerPosition.x - (spriteComponent.sprite.getWidth() - playerSprite.sprite.getWidth()) / 2f,
-                playerPosition.y - (spriteComponent.sprite.getHeight() - playerSprite.sprite.getHeight()) / 2f);
+        positionComponent.setXY(playerPosition.x() - (spriteComponent.sprite.getWidth() - playerSprite.sprite.getWidth()) / 2f,
+                playerPosition.y() - (spriteComponent.sprite.getHeight() - playerSprite.sprite.getHeight()) / 2f);
         shield.add(positionComponent);
         shield.add(spriteComponent);
         shield.add(entityFactory.engine.createComponent(ShieldComponent.class));

@@ -73,7 +73,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     private void enemyIsShoot(Entity enemy, Entity player, Entity bullet) {
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(enemy);
         PositionComponent explodePosition = ComponentMapperHelper.position.get(enemy);
-        entityFactory.enemyEntityFactory.createEntityExploding(explodePosition.x, explodePosition.y);
+        entityFactory.enemyEntityFactory.createEntityExploding(explodePosition.x(), explodePosition.y());
         if (bullet != null) {
             getEngine().removeEntity(bullet);
         }
@@ -114,19 +114,20 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     }
 
     private void bossIsShoot(Entity boss, Entity player, Entity bullet) {
-        PositionComponent explodePosition;
+        PositionComponent impactPosition;
         EnemyComponent bossComponent = ComponentMapperHelper.enemy.get(boss);
         if (bullet != null) {
-            explodePosition = ComponentMapperHelper.position.get(bullet);
+            impactPosition = ComponentMapperHelper.position.get(bullet);
         } else {
-            explodePosition = ComponentMapperHelper.position.get(boss);
+            impactPosition = ComponentMapperHelper.position.get(boss);
         }
-        Entity explosion = entityFactory.enemyEntityFactory.createEntityExploding(explodePosition.x, explodePosition.y);
+        Entity explosion = entityFactory.enemyEntityFactory.createEntityExploding(impactPosition.x(), impactPosition.y());
+        PositionComponent explosionPosition = ComponentMapperHelper.position.get(explosion);
         if (bullet != null) {
-            ComponentMapperHelper.position.get(explosion).x -= ComponentMapperHelper.sprite.get(explosion).sprite.getWidth() / 2f;
+            explosionPosition.setX(explosionPosition.x() - ComponentMapperHelper.sprite.get(explosion).sprite.getWidth() / 2f);
         } else {
-            ComponentMapperHelper.position.get(explosion).x += ComponentMapperHelper.sprite.get(boss).sprite.getWidth() / 2f;
-            ComponentMapperHelper.position.get(explosion).y += ComponentMapperHelper.sprite.get(boss).sprite.getHeight() / 2f;
+            explosionPosition.setX(explosionPosition.x() + ComponentMapperHelper.sprite.get(boss).sprite.getWidth() / 2f);
+            explosionPosition.setY(explosionPosition.y() + ComponentMapperHelper.sprite.get(boss).sprite.getHeight() / 2f);
         }
         if (bullet != null) {
             getEngine().removeEntity(bullet);
@@ -215,7 +216,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     public void playerHitByEnemyBody(Entity player) {
         assets.playSound(Assets.SOUND_EXPLOSION);
         PositionComponent playerPosition = ComponentMapperHelper.position.get(player);
-        entityFactory.enemyEntityFactory.createEntityExploding(playerPosition.x, playerPosition.y);
+        entityFactory.enemyEntityFactory.createEntityExploding(playerPosition.x(), playerPosition.y());
         playerListener.loseLive(player);
     }
 
@@ -223,7 +224,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     public void playerHitByEnemyBullet(Entity player, Entity bullet) {
         assets.playSound(Assets.SOUND_EXPLOSION);
         PositionComponent playerPosition = ComponentMapperHelper.position.get(player);
-        entityFactory.enemyEntityFactory.createEntityExploding(playerPosition.x, playerPosition.y);
+        entityFactory.enemyEntityFactory.createEntityExploding(playerPosition.x(), playerPosition.y());
         getEngine().removeEntity(bullet);
         playerListener.loseLive(player);
     }
@@ -271,7 +272,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     public void enemyShootByShield(Entity enemy) {
         assets.playSound(Assets.SOUND_EXPLOSION);
         PositionComponent enemyPosition = ComponentMapperHelper.position.get(enemy);
-        entityFactory.enemyEntityFactory.createEntityExploding(enemyPosition.x, enemyPosition.y);
+        entityFactory.enemyEntityFactory.createEntityExploding(enemyPosition.x(), enemyPosition.y());
         tweenManager.killTarget(ComponentMapperHelper.position.get(enemy));
         if (ComponentMapperHelper.enemy.get(enemy).squadron != null) {
             ComponentMapperHelper.squadron.get(ComponentMapperHelper.enemy.get(enemy).squadron).removeEntity(enemy);

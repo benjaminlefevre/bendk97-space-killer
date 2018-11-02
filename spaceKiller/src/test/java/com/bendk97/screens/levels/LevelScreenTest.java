@@ -103,12 +103,13 @@ public class LevelScreenTest {
                 mock(SnapshotArray.class),
                 mock(SnapshotArray.class), mock(SpriteBatch.class), mock(ScreenShake.class));
 
-        assertThat(levelScreen.engine.getSystems()).hasSize(28);
+        assertThat(levelScreen.engine.getSystems()).hasSize(29);
         assertThat(levelScreen.engine.getSystems())
                 .hasOnlyElementsOfTypes(
                         PlayerListenerImpl.class,
                         InputListenerImpl.class,
                         CollisionListenerImpl.class,
+                        DirectionableSpriteSystem.class,
                         AnimationSystem.class,
                         BombExplosionSystem.class,
                         StateSystem.class,
@@ -144,7 +145,7 @@ public class LevelScreenTest {
                 mock(SnapshotArray.class),
                 mock(SnapshotArray.class), mock(SpriteBatch.class), mock(ScreenShake.class));
 
-        assertThat(levelScreen.engine.getSystems()).hasSize(29);
+        assertThat(levelScreen.engine.getSystems()).hasSize(30);
         assertThat(levelScreen.engine.getSystems())
                 .hasAtLeastOneElementOfType(
                         DebugStatsSystem.class

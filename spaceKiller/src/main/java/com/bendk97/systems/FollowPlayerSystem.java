@@ -35,7 +35,7 @@ public class FollowPlayerSystem extends IteratingSystem {
                 PositionComponent playerPosition = ComponentMapperHelper.position.get(getEngine().getEntitiesFor(player).first());
                 PositionComponent entityPosition = ComponentMapperHelper.position.get(entity);
                 VelocityComponent velocityComponent = ComponentMapperHelper.velocity.get(entity);
-                float diff = entityPosition.x - playerPosition.x;
+                float diff = entityPosition.x() - playerPosition.x();
                 if (Math.abs(diff) < 1) {
                     velocityComponent.x = 0;
                 } else {
@@ -50,7 +50,7 @@ public class FollowPlayerSystem extends IteratingSystem {
         PositionComponent positionComponent = ComponentMapperHelper.position.get(entity);
         PositionComponent playerPosition = ComponentMapperHelper.position.get(getEngine().getEntitiesFor(player).first());
         Vector2 v1 = poolVector2.getVector2(0,-1);
-        Vector2 v2 = poolVector2.getVector2(playerPosition.x-positionComponent.x, playerPosition.y-positionComponent.y);
+        Vector2 v2 = poolVector2.getVector2(playerPosition.x()-positionComponent.x(), playerPosition.y()-positionComponent.y());
         float angle = v2.angle(v1);
         poolVector2.free(v1, v2);
         spriteComponent.sprite.setRotation(-angle);

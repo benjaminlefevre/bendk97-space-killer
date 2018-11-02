@@ -18,14 +18,14 @@ public class PositionComponentTweenAccessor implements TweenAccessor<PositionCom
     public int getValues(PositionComponent target, int type, float[] returnValues) {
         switch (type) {
             case POSITION_X:
-                returnValues[0] = target.x;
+                returnValues[0] = target.x();
                 return 1;
             case POSITION_Y:
-                returnValues[0] = target.y;
+                returnValues[0] = target.y();
                 return 1;
             case POSITION_XY:
-                returnValues[0] = target.x;
-                returnValues[1] = target.y;
+                returnValues[0] = target.x();
+                returnValues[1] = target.y();
                 return 2;
             default:
                 return -1;
@@ -36,14 +36,13 @@ public class PositionComponentTweenAccessor implements TweenAccessor<PositionCom
     public void setValues(PositionComponent target, int type, float[] newValues) {
         switch (type) {
             case POSITION_X:
-                target.x = newValues[0];
+                target.setX(newValues[0]);
                 break;
             case POSITION_Y:
-                target.y = newValues[0];
+                target.setY(newValues[0]);
                 break;
             case POSITION_XY:
-                target.x = newValues[0];
-                target.y = newValues[1];
+                target.setXY(newValues[0], newValues[1]);
                 break;
             default:
                 break;
