@@ -42,8 +42,8 @@ public class DebugStatsSystem extends EntitySystem {
 
     private int minFps = 999;
     private int maxFps = 0;
-    private long nativeHeap = 0;
-    private long javaHeap = 0;
+    private long nativeHeap;
+    private long javaHeap;
     private float poolStatsTimeCounter = 0;
     private float memoryStatsTimeCounter = 0;
 

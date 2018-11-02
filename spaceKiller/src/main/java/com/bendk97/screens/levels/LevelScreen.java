@@ -65,8 +65,7 @@ import com.bitfire.postprocessing.effects.MotionBlur;
 import com.bitfire.utils.ShaderLoader;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
-import static com.bendk97.components.helpers.ComponentMapperHelper.gameOver;
-import static com.bendk97.components.helpers.ComponentMapperHelper.pause;
+import static com.bendk97.components.helpers.ComponentMapperHelper.*;
 import static com.bendk97.google.Achievement.*;
 import static com.bendk97.pools.GamePools.poolSprite;
 import static com.bendk97.screens.levels.Level.*;
@@ -81,7 +80,7 @@ public final class LevelScreen extends ScreenAdapter {
     private final Viewport viewport;
     public SpriteBatch batcher;
     private final Viewport viewportHUD;
-    private final OrthographicCamera camera;
+    protected final OrthographicCamera camera;
     private final OrthographicCamera cameraHUD;
     private SpriteBatch batcherHUD;
     protected final PooledEngine engine;
@@ -179,7 +178,7 @@ public final class LevelScreen extends ScreenAdapter {
                         }
                     }
                 } else {
-                    SpriteComponent spriteComponent = ComponentMapperHelper.sprite.get(entity);
+                    SpriteComponent spriteComponent = sprite.get(entity);
                     if (spriteComponent != null) {
                         poolSprite.free(spriteComponent.sprite);
                     }
@@ -242,20 +241,20 @@ public final class LevelScreen extends ScreenAdapter {
         this.resumeScripting();
         playerListener.updateLivesAndBombsAfterContinue(player);
         ComponentMapperHelper.position.get(player).setXY(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
-        ComponentMapperHelper.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
+        sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
         Gdx.input.setInputProcessor(inputProcessor);
-        makePlayerInvulnerable();
+        makeEntityInvulnerable(player);
     }
 
-    public void makePlayerInvulnerable() {
-        entityFactory.playerEntityFactory.addInvulnerableComponent(player);
+    public void makeEntityInvulnerable(Entity entity) {
+        entityFactory.playerEntityFactory.addInvulnerableComponent(entity);
         Timeline.createSequence()
-                .push(Tween.to(ComponentMapperHelper.sprite.get(player), ALPHA, 0.2f).target(0f))
-                .push(Tween.to(ComponentMapperHelper.sprite.get(player), ALPHA, 0.2f).target(1f))
+                .push(Tween.to(sprite.get(entity), ALPHA, 0.2f).target(0.2f))
+                .push(Tween.to(sprite.get(entity), ALPHA, 0.2f).target(1f))
                 .repeat(10, 0f)
                 .setCallback((i, baseTween) -> {
                     if (i == TweenCallback.COMPLETE) {
-                        entityFactory.playerEntityFactory.removeInvulnerableComponent(player);
+                        entityFactory.playerEntityFactory.removeInvulnerableComponent(entity);
                     }
                 })
                 .start(tweenManager);
@@ -278,6 +277,7 @@ public final class LevelScreen extends ScreenAdapter {
     }
 
     private void registerTweensAccessor() {
+        Tween.registerAccessor(Sprite.class, new SpriteTweenAccessor());
         Tween.registerAccessor(SpriteComponent.class, new SpriteComponentTweenAccessor());
         Tween.registerAccessor(TextComponent.class, new TextComponentTweenAccessor());
         Tween.registerAccessor(PositionComponent.class, new PositionComponentTweenAccessor());
@@ -341,7 +341,7 @@ public final class LevelScreen extends ScreenAdapter {
             Entity fireButton = entityFactory.playerEntityFactory.createEntityFireButton(0.2f, FIRE_X, FIRE_Y);
             Entity padController = entityFactory.playerEntityFactory.createEntitiesPadController(0.2f, 1.4f, PAD_X, PAD_Y);
             // define touch area as rectangles
-            Sprite padSprite = ComponentMapperHelper.sprite.get(padController).sprite;
+            Sprite padSprite = sprite.get(padController).sprite;
             float heightTouch = padSprite.getHeight() * 1.2f / 3f;
             float widthTouch = padSprite.getWidth() * 1.2f / 3f;
             Rectangle[] squareTouchesDirection = new Rectangle[8];
@@ -355,13 +355,13 @@ public final class LevelScreen extends ScreenAdapter {
             squareTouchesDirection[7] = new Rectangle(PAD_X + 2 * widthTouch, PAD_Y, widthTouch, heightTouch);
 
             inputProcessor.addProcessor(new RetroPadController(this, inputListener, cameraHUD, squareTouchesDirection,
-                    ComponentMapperHelper.sprite.get(fireButton).getBounds(),
-                    ComponentMapperHelper.sprite.get(bombButton).getBounds()));
+                    sprite.get(fireButton).getBounds(),
+                    sprite.get(bombButton).getBounds()));
 
         } else {
-            ComponentMapperHelper.sprite.get(bombButton).sprite.setY(BOMB_Y_VIRTUAL);
+            sprite.get(bombButton).sprite.setY(BOMB_Y_VIRTUAL);
             inputProcessor.addProcessor(new VirtualPadController(this, inputListener, cameraHUD, player,
-                    ComponentMapperHelper.sprite.get(bombButton).getBounds()));
+                    sprite.get(bombButton).getBounds()));
 
         }
         Gdx.input.setInputProcessor(inputProcessor);

@@ -311,7 +311,7 @@ public class EnemyEntityFactory {
     }
 
 
-    protected Entity createBoss(Entity squadron, float velocityBullet, float velocityCircle) {
+    public Entity createBoss(Entity squadron, float velocityBullet, float velocityCircle) {
         Entity boss = entityFactory.engine.createEntity();
         BossComponent bossComponent = entityFactory.engine.createComponent(BossComponent.class);
         bossComponent.velocityFire1 = velocityCircle;

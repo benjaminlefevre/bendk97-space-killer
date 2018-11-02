@@ -23,7 +23,6 @@ import com.bendk97.components.SpriteComponent;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.utils.ScriptItem;
-import com.bendk97.tweens.CameraTweenAccessor;
 import com.bendk97.tweens.PositionComponentTweenAccessor;
 
 import java.util.Random;
@@ -168,7 +167,6 @@ public class SquadronFactory {
         PositionComponent position = ComponentMapperHelper.position.get(entity);
         position.setXY(SCREEN_WIDTH / 2f - spriteComponent.sprite.getWidth() / 2f,
                 SCREEN_HEIGHT + 10f);
-        Tween.to(camera, CameraTweenAccessor.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(entityFactory.tweenManager);
         Timeline.createSequence()
                 .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_Y, (spriteComponent.sprite.getHeight() + 30f) / velocity)
                         .ease(Linear.INOUT)
@@ -196,8 +194,6 @@ public class SquadronFactory {
         PositionComponent position = ComponentMapperHelper.position.get(entity);
         position.setXY(SCREEN_WIDTH / 2f - sprite.getWidth() / 2f,
                 SCREEN_HEIGHT);
-        Tween.to(camera, CameraTweenAccessor.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(entityFactory.tweenManager);
-
         Timeline.createSequence()
                 .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_Y, (sprite.getHeight() + 30f) / velocity)
                         .ease(Linear.INOUT)
@@ -224,8 +220,6 @@ public class SquadronFactory {
         PositionComponent position = ComponentMapperHelper.position.get(entity);
         position.setXY(SCREEN_WIDTH / 2f - sprite.getWidth() / 2f,
                 SCREEN_HEIGHT);
-        Tween.to(camera, CameraTweenAccessor.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f).start(entityFactory.tweenManager);
-
         float velocityMin = velocity * 0.75f;
         float velocityMax = velocity * 2f;
 
@@ -298,10 +292,9 @@ public class SquadronFactory {
     private void arrowTween(Entity[] entities, float velocity) {
         for (final Entity entity : entities) {
             PositionComponent position = ComponentMapperHelper.position.get(entity);
-            Timeline.createSequence()
-                    .push(Tween.to(position, PositionComponentTweenAccessor.POSITION_Y, 3 * SCREEN_HEIGHT / velocity)
-                            .ease(Linear.INOUT)
-                            .targetRelative(-3f * SCREEN_HEIGHT))
+            Tween.to(position, PositionComponentTweenAccessor.POSITION_Y, 3 * SCREEN_HEIGHT / velocity)
+                    .ease(Linear.INOUT)
+                    .targetRelative(-3f * SCREEN_HEIGHT)
                     .setCallback((i, baseTween) -> {
                         if (i == COMPLETE) {
                             removeEntitySquadron(entity);

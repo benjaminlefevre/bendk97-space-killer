@@ -113,7 +113,7 @@ public final class PlayerListenerImpl extends EntitySystem implements PlayerList
             }
             ComponentMapperHelper.position.get(player).setXY(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
             ComponentMapperHelper.sprite.get(player).sprite.setPosition(PLAYER_ORIGIN_X, PLAYER_ORIGIN_Y);
-            screen.makePlayerInvulnerable();
+            screen.makeEntityInvulnerable(player);
         }
     }
 

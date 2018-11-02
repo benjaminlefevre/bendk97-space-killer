@@ -17,6 +17,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.helpers.ComponentMapperHelper;
+import com.bendk97.components.helpers.Families;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
@@ -26,15 +27,18 @@ import com.bendk97.tweens.ConeLightTweenAccessor;
 import java.util.LinkedList;
 import java.util.List;
 
+import static aurelienribon.tweenengine.Tween.INFINITY;
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.assets.Assets.GFX_BGD_LEVEL1;
 import static com.bendk97.assets.Assets.GFX_BGD_STARS;
 import static com.bendk97.components.helpers.ComponentMapperHelper.gameOver;
+import static com.bendk97.components.helpers.ComponentMapperHelper.sprite;
 import static com.bendk97.entities.EntityFactoryIds.BOSS_LEVEL_1;
 import static com.bendk97.entities.enemies.SquadronFactory.BOSS_MOVE;
 import static com.bendk97.entities.enemies.SquadronFactory.LINEAR_Y;
 import static com.bendk97.screens.levels.Level.Level1;
 import static com.bendk97.screens.levels.Level.SoundEffect.GO;
+import static com.bendk97.tweens.SpriteTweenAccessor.ROTATION;
 import static com.bendk97.tweens.VelocityComponentTweenAccessor.VELOCITY_Y;
 
 public final class Level1Script extends LevelScript {
@@ -97,7 +101,7 @@ public final class Level1Script extends LevelScript {
                         })
                         .target(0f)
         );
-        timeline.repeat(Tween.INFINITY, 5f).start(tweenManager);
+        timeline.repeat(INFINITY, 5f).start(tweenManager);
     }
 
     @Override
@@ -197,6 +201,27 @@ public final class Level1Script extends LevelScript {
         if (second == 189) {
             bossIsHere();
         }
+    }
+
+    @Override
+    public void bossIsHere() {
+        super.bossIsHere();
+        Entity theBoss = entityFactory.engine.getEntitiesFor(Families.boss).get(0);
+        Timeline.createSequence()
+                .delay(7f)
+                .push(Tween.to(sprite.get(theBoss).sprite, ROTATION, 3 + 2 * random.nextFloat())
+                        .target((random.nextBoolean() ? 1: -1)* (20 + 20 * random.nextFloat())))
+                .push(Tween.to(sprite.get(theBoss).sprite, ROTATION, 3 + 2* random.nextFloat()).target(0f))
+                .delay(5f)
+                .push(Tween.to(sprite.get(theBoss).sprite, ROTATION, 3 + 2 * random.nextFloat())
+                        .target((random.nextBoolean() ? 1: -1)* (20 + 20 * random.nextFloat())))
+                .push(Tween.to(sprite.get(theBoss).sprite, ROTATION, 3 + 2* random.nextFloat()).target(0f))
+                .delay(3f)
+                .push(Tween.to(sprite.get(theBoss).sprite, ROTATION, 3 + 2 * random.nextFloat())
+                        .target((random.nextBoolean() ? 1: -1)* (20 + 20 * random.nextFloat())))
+                .push(Tween.to(sprite.get(theBoss).sprite, ROTATION, 3 + 2* random.nextFloat()).target(0f))
+                .repeatYoyo(INFINITY, 2f)
+                .start(tweenManager);
     }
 
     private List<ScriptItem> randomEasySpawnEnemies(int nbSpawns) {

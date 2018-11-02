@@ -10,18 +10,21 @@ import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Bounce;
+import aurelienribon.tweenengine.equations.Linear;
 import aurelienribon.tweenengine.equations.Quad;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.Disposable;
 import com.bendk97.assets.Assets;
+import com.bendk97.components.helpers.Families;
 import com.bendk97.components.texts.BossAlertComponent;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.Level.MusicTrack;
 import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
 import com.bendk97.screens.levels.utils.ScriptItemExecutor;
+import com.bendk97.tweens.CameraTweenAccessor;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -239,6 +242,10 @@ public abstract class LevelScript implements Disposable {
         stopMusic(LEVEL);
         playMusic(BOSS);
         scriptItemExecutor.execute(boss);
+        Tween.to(levelScreen.camera, CameraTweenAccessor.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f)
+                .start(entityFactory.tweenManager);
+        Entity theBoss = entityFactory.engine.getEntitiesFor(Families.boss).get(0);
+        levelScreen.makeEntityInvulnerable(theBoss);
     }
 
     @Override
