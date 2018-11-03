@@ -136,7 +136,7 @@ public final class LevelScreen extends ScreenAdapter {
         if (fxLightEnabled) {
             initRayLightEffects(camera);
         }
-        entityFactory = new EntityFactory(game, engine, assets, tweenManager, rayHandler, screenShake, level, camera);
+        entityFactory = new EntityFactory(game, engine, assets, tweenManager, rayHandler, screenShake, level);
         player = entityFactory.playerEntityFactory.createEntityPlayer(level);
         SnapshotArray<Entity> lives = entityFactory.playerEntityFactory.createEntityPlayerLives(player);
         SnapshotArray<Entity> bombs = entityFactory.playerEntityFactory.createEntityPlayerBombs(player);

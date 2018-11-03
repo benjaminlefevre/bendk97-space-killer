@@ -12,7 +12,6 @@ import box2dLight.RayHandler;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
@@ -58,7 +57,7 @@ public class EntityFactory implements Disposable {
     public BonusEntityFactory bonusEntityFactory;
 
     public EntityFactory(SpaceKillerGame game, PooledEngine engine, Assets assets, TweenManager tweenManager, RayHandler rayHandler,
-                         ScreenShake screenShake, Level level, OrthographicCamera camera) {
+                         ScreenShake screenShake, Level level) {
         this.engine = engine;
         this.screenShake = screenShake;
         this.rayHandler = rayHandler;
@@ -75,16 +74,16 @@ public class EntityFactory implements Disposable {
         this.tweenManager = tweenManager;
         this.commonAtlas = new TextureAtlasCache(assets.get(GFX_LEVEL_COMMON));
         this.levelAtlas = new TextureAtlasCache(assets.get(level.sprites));
-        initSubFactories(game, level, camera);
+        initSubFactories(game, level);
     }
 
-    private void initSubFactories(SpaceKillerGame game, Level level, OrthographicCamera camera) {
+    private void initSubFactories(SpaceKillerGame game, Level level) {
         this.stageSetEntityFactory = new StageSetEntityFactory(engine);
         this.playerEntityFactory = new PlayerEntityFactory(this, game);
         this.playerActionsEntityFactory = new PlayerActionsEntityFactory(this);
         this.enemyActionEntityFactory = new EnemyActionEntityFactory(this);
         this.bonusEntityFactory = new BonusEntityFactory(this);
-        this.enemyEntityFactory = new EnemyEntityFactory(this, level, camera);
+        this.enemyEntityFactory = new EnemyEntityFactory(this, level);
     }
 
     public void createLight(Entity entity) {

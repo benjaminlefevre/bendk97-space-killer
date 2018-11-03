@@ -8,7 +8,6 @@ package com.bendk97.entities.enemies;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.RandomXS128;
@@ -39,10 +38,10 @@ public class EnemyEntityFactory {
     private final Random random = new RandomXS128();
 
 
-    public EnemyEntityFactory(EntityFactory entityFactory, Level level, OrthographicCamera camera) {
+    public EnemyEntityFactory(EntityFactory entityFactory, Level level) {
         this.entityFactory = entityFactory;
         this.soloEnemyFactory = new SoloEnemyFactory(entityFactory, level);
-        this.squadronFactory = new SquadronFactory(entityFactory, camera);
+        this.squadronFactory = new SquadronFactory(entityFactory);
     }
 
     protected Entity createLaserShip(int type, Float velocity, float bulletVelocity, int rateShoot, int gaugeLife, int points, boolean fromLeft) {

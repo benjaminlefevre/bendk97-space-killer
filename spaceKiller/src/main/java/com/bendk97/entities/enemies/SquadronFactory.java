@@ -10,7 +10,6 @@ import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.equations.Linear;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Bezier;
 import com.badlogic.gdx.math.CatmullRomSpline;
@@ -50,12 +49,10 @@ public class SquadronFactory {
 
 
     private final EntityFactory entityFactory;
-    private final OrthographicCamera camera;
     private final Random random = new RandomXS128();
 
-    protected SquadronFactory(EntityFactory entityFactory, OrthographicCamera camera) {
+    protected SquadronFactory(EntityFactory entityFactory) {
         this.entityFactory = entityFactory;
-        this.camera = camera;
     }
 
     public void createSquadron(ScriptItem scriptItem) {
