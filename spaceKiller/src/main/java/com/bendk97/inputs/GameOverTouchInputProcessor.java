@@ -17,10 +17,10 @@ import com.bendk97.assets.Assets;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SocialScoreScreen;
+import com.bendk97.screens.levels.Level1Screen;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.pools.GamePools.poolVector3;
-import static com.bendk97.screens.levels.Level.Level1;
 
 
 public class GameOverTouchInputProcessor extends InputAdapter {
@@ -55,7 +55,7 @@ public class GameOverTouchInputProcessor extends InputAdapter {
         Vector3 worldTouch = poolVector3.getVector3(screenX, screenY, 0f);
         worldTouch = camera.unproject(worldTouch);
         if (playAgain.contains(worldTouch.x, worldTouch.y)) {
-            game.goToLevelScreen(Level1);
+            game.goToScreen(Level1Screen.class);
         } else if (home.contains(worldTouch.x, worldTouch.y)) {
             game.goToScreen(MenuScreen.class);
         } else if (share.contains(worldTouch.x, worldTouch.y)) {

@@ -112,7 +112,6 @@ public class SplashScreen extends HDScreen {
     public void dispose() { // SpriteBatches and Textures must always be disposed
         spriteBatch.dispose();
         tweenManager.killAll();
-        assets.unloadResources(this.getClass());
         Texture.clearAllTextures(Gdx.app);
         poolSprite.free(logo);
     }

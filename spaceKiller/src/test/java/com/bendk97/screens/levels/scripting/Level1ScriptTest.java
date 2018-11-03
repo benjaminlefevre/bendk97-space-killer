@@ -1,10 +1,10 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 08/10/18 22:33
+ * Last modified 03/11/18 11:37
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97.screens.levels;
+package com.bendk97.screens.levels.scripting;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Texture;

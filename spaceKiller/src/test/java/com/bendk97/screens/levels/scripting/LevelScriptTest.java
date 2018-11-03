@@ -1,10 +1,10 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 10/10/18 21:34
+ * Last modified 03/11/18 11:37
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97.screens.levels;
+package com.bendk97.screens.levels.scripting;
 
 import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Entity;
@@ -25,6 +25,7 @@ import com.bendk97.entities.enemies.EnemyEntityFactory;
 import com.bendk97.entities.enemies.SoloEnemyFactory;
 import com.bendk97.entities.enemies.SquadronFactory;
 import com.bendk97.runner.GdxTestRunner;
+import com.bendk97.screens.levels.LevelScreen;
 import com.bendk97.screens.levels.utils.ScriptItemExecutor;
 import org.junit.Before;
 import org.junit.runner.RunWith;

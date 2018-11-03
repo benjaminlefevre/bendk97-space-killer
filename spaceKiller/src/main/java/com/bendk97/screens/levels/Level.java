@@ -16,6 +16,10 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.bendk97.assets.Assets;
 import com.bendk97.entities.EntityFactory;
+import com.bendk97.screens.levels.scripting.Level1Script;
+import com.bendk97.screens.levels.scripting.Level2Script;
+import com.bendk97.screens.levels.scripting.Level3Script;
+import com.bendk97.screens.levels.scripting.LevelScript;
 
 import java.util.Map;
 

@@ -72,7 +72,7 @@ public class LevelScreenTest {
     public void init() {
         MockitoAnnotations.initMocks(this);
         mockAssets();
-        levelScreen = new LevelScreen(assets, game, Level.Level1, spriteBatch);
+        levelScreen = new Level1Screen(assets, game, spriteBatch);
     }
 
     private void mockAssets() {
@@ -85,7 +85,7 @@ public class LevelScreenTest {
         when(assets.getFont(FONT_SPACE_KILLER)).thenReturn(mock(BitmapFontCache.class));
         when(assets.get(GFX_BGD_LEVEL1)).thenReturn(mock(Texture.class));
         when(assets.get(GFX_BGD_STARS)).thenReturn(mock(Texture.class));
-        AtlasRegion atlasRegion = new AtlasRegion(texture, 0,0,1,1);
+        AtlasRegion atlasRegion = new AtlasRegion(texture, 0, 0, 1, 1);
         when(textureAtlas.findRegions(anyString())).thenReturn(new Array<>(
                 new AtlasRegion[]{atlasRegion, atlasRegion, atlasRegion, atlasRegion}
         ));
