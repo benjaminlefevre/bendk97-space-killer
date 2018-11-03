@@ -71,7 +71,7 @@ public class TransitionScreen extends ScreenAdapter {
         currentScreenSprite.setPosition(0, 0);
         nextScreenSprite.setPosition(Gdx.graphics.getWidth(), 0);
 
-        Tween.to(nextScreenSprite, SpriteTweenAccessor.POS_XY, 2.5f)
+        Tween.to(nextScreenSprite, SpriteTweenAccessor.POS_XY, 1.0f)
                 .target(0, 0)
                 .setCallback(backgroundAnimationTweenComplete)
                 .setCallbackTriggers(TweenCallback.COMPLETE)
