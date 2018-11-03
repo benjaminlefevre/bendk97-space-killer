@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
+import com.bendk97.screens.menu.MenuScreen;
 import com.bendk97.tweens.SpriteTweenAccessor;
 
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
@@ -26,7 +27,7 @@ import static com.bendk97.tweens.SpriteTweenAccessor.ROTATION;
 import static com.bendk97.tweens.SpriteTweenAccessor.SCALE;
 
 
-public class SplashScreen extends HDScreen {
+public final class SplashScreen extends HDScreen {
 
     // A variable for tracking elapsed time for the animation
     private float stateTime;

@@ -25,7 +25,7 @@ import java.util.UUID;
 import static com.bendk97.pools.BitmapFontHelper.drawText;
 import static com.bendk97.pools.GamePools.poolSprite;
 
-public class SocialScoreScreen extends ScreenAdapter {
+public final class SocialScoreScreen extends ScreenAdapter {
 
     public static final String TEMP_DIRECTORY = "temp/spacekiller";
     private static final String TEMP_SPACEKILLER_SCORE_PNG = TEMP_DIRECTORY + "/score-";

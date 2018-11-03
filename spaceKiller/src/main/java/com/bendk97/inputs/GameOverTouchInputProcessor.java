@@ -15,9 +15,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
 import com.bendk97.components.helpers.ComponentMapperHelper;
-import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SocialScoreScreen;
 import com.bendk97.screens.levels.Level1Screen;
+import com.bendk97.screens.menu.MenuScreen;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.pools.GamePools.poolVector3;
