@@ -23,12 +23,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.bendk97.Settings;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.Assets;
+import com.bendk97.screens.levels.Level1Screen;
 
 import static com.badlogic.gdx.graphics.Color.WHITE;
 import static com.badlogic.gdx.graphics.Color.YELLOW;
 import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.pools.BitmapFontHelper.drawText;
-import static com.bendk97.screens.levels.Level.Level1;
 
 public class MenuScreen extends HDScreen {
 
@@ -154,7 +154,7 @@ public class MenuScreen extends HDScreen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 assets.playSound(Assets.MENU_CLICK);
                 assets.get(Assets.MENU_MUSIC).stop();
-                game.goToLevelScreen(Level1);
+                game.goToScreen(Level1Screen.class);
                 return true;
             }
         });
@@ -513,7 +513,6 @@ public class MenuScreen extends HDScreen {
     public void dispose() {
         batcher.dispose();
         fontVersion.getFont().dispose();
-        assets.unloadResources(this.getClass());
         stage.dispose();
         Texture.clearAllTextures(Gdx.app);
     }

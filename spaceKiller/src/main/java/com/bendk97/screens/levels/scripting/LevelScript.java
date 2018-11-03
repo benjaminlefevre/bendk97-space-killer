@@ -1,10 +1,10 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 10/10/18 08:16
+ * Last modified 02/11/18 18:17
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97.screens.levels;
+package com.bendk97.screens.levels.scripting;
 
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
@@ -20,7 +20,9 @@ import com.bendk97.assets.Assets;
 import com.bendk97.components.helpers.Families;
 import com.bendk97.components.texts.BossAlertComponent;
 import com.bendk97.entities.EntityFactory;
+import com.bendk97.screens.levels.Level;
 import com.bendk97.screens.levels.Level.MusicTrack;
+import com.bendk97.screens.levels.LevelScreen;
 import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
 import com.bendk97.screens.levels.utils.ScriptItemExecutor;
@@ -58,13 +60,14 @@ public abstract class LevelScript implements Disposable {
     /*
      for test purposes only
       */
-    protected LevelScript(final LevelScreen levelScreen, Level level, Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
-                          ScriptItemExecutor scriptItemExecutor) {
+    protected LevelScript(final LevelScreen levelScreen, Level level, Assets assets, EntityFactory entityFactory, TweenManager tweenManager,
+                          Entity player, ScriptItemExecutor scriptItemExecutor) {
         this(levelScreen, level, assets, entityFactory, tweenManager, player);
         this.scriptItemExecutor = scriptItemExecutor;
     }
 
-    protected LevelScript(final LevelScreen levelScreen, Level level, Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player) {
+    protected LevelScript(final LevelScreen levelScreen, Level level, Assets assets, EntityFactory entityFactory, TweenManager tweenManager,
+                          Entity player) {
         this.level = level;
         this.levelScreen = levelScreen;
         this.assets = assets;
@@ -242,7 +245,7 @@ public abstract class LevelScript implements Disposable {
         stopMusic(LEVEL);
         playMusic(BOSS);
         scriptItemExecutor.execute(boss);
-        Tween.to(levelScreen.camera, CameraTweenAccessor.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f)
+        Tween.to(levelScreen.getCamera(), CameraTweenAccessor.ZOOM, 2f).ease(Linear.INOUT).target(0.5f).repeatYoyo(1, 0.5f)
                 .start(entityFactory.tweenManager);
         Entity theBoss = entityFactory.engine.getEntitiesFor(Families.boss).get(0);
         levelScreen.makeEntityInvulnerable(theBoss);

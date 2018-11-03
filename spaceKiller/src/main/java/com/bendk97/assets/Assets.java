@@ -28,12 +28,17 @@ import com.bendk97.assets.helper.ArchiveFileHandleResolver;
 import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SocialScoreScreen;
 import com.bendk97.screens.SplashScreen;
-import com.bendk97.screens.levels.Level;
+import com.bendk97.screens.levels.Level1Screen;
+import com.bendk97.screens.levels.Level2Screen;
+import com.bendk97.screens.levels.Level3Screen;
 import com.bendk97.screens.levels.utils.TransitionScreen;
+import com.google.common.collect.Sets;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-import static com.bendk97.screens.levels.Level.*;
+import static java.util.Collections.emptySet;
 
 public class Assets {
 
@@ -170,8 +175,7 @@ public class Assets {
             new AssetDescriptor<>("font4.ttf", BitmapFont.class,
                     getFontParameters("fonts/regular.ttf", 20));
 
-    private static final Map<Class<? extends Screen>, List<AssetDescriptor>> assetsNeededByScreen = initializeAssetsNeededByScreen();
-    private static final Map<Level, List<AssetDescriptor>> assetsNeededByLevelScreen = initializeAssetsNeededByLevelScreen();
+    private static final Map<Class<? extends Screen>, Set<AssetDescriptor>> assetsNeededByScreen = initializeAssetsNeededByScreen();
 
     private static FreeTypeFontLoaderParameter getFontParameters(String filename, int size) {
         FreeTypeFontLoaderParameter parameter = new FreeTypeFontLoaderParameter();
@@ -180,23 +184,16 @@ public class Assets {
         return parameter;
     }
 
-    private static Map<Class<? extends Screen>, List<AssetDescriptor>> initializeAssetsNeededByScreen() {
-        Map<Class<? extends Screen>, List<AssetDescriptor>> assets = new HashMap<>();
-        assets.put(SplashScreen.class, Arrays.asList(
+    private static Map<Class<? extends Screen>, Set<AssetDescriptor>> initializeAssetsNeededByScreen() {
+        Map<Class<? extends Screen>, Set<AssetDescriptor>> assets = new HashMap<>();
+        assets.put(SplashScreen.class, Sets.newHashSet(
                 SPLASH_MUSIC, SPLASH_ATLAS, SPLASH_TXT_LOGO
         ));
-        assets.put(MenuScreen.class, Arrays.asList(
+        assets.put(MenuScreen.class, Sets.newHashSet(
                 MENU_BGD, FONT_SPACE_KILLER_LARGE, MENU_MUSIC, FONT_SPACE_KILLER_MEDIUM, MENU_CLICK,
                 MENU_ATLAS, FONT_SPACE_KILLER_SMALL
         ));
-        assets.put(TransitionScreen.class, Collections.emptyList());
-        assets.put(SocialScoreScreen.class, Collections.emptyList());
-        return assets;
-    }
-
-    private static Map<Level, List<AssetDescriptor>> initializeAssetsNeededByLevelScreen() {
-        Map<Level, List<AssetDescriptor>> assets = new HashMap<>();
-        assets.put(Level1, Arrays.asList(
+        assets.put(Level1Screen.class, Sets.newHashSet(
                 // MUSIC
                 MUSIC_LEVEL_1, MUSIC_LEVEL_1_BOSS,
                 // SOUNDS
@@ -213,7 +210,7 @@ public class Assets {
                 // FONTS
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_SMALLEST,
                 FONT_SPACE_KILLER_MEDIUM));
-        assets.put(Level2, Arrays.asList(
+        assets.put(Level2Screen.class, Sets.newHashSet(
                 // MUSIC
                 MUSIC_LEVEL_2, MUSIC_LEVEL_2_BOSS,
                 // SOUNDS
@@ -231,7 +228,7 @@ public class Assets {
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALLEST
         ));
 
-        assets.put(Level3, Arrays.asList(
+        assets.put(Level3Screen.class, Sets.newHashSet(
                 // MUSIC
                 MUSIC_LEVEL_3, MUSIC_LEVEL_3_BOSS,
                 // SOUNDS
@@ -248,6 +245,8 @@ public class Assets {
                 // FONTS
                 FONT_SPACE_KILLER, FONT_SPACE_KILLER_LARGE, FONT_SPACE_KILLER_MEDIUM, FONT_SPACE_KILLER_SMALLEST
         ));
+        assets.put(TransitionScreen.class, emptySet());
+        assets.put(SocialScoreScreen.class, emptySet());
         return assets;
     }
 
@@ -261,7 +260,7 @@ public class Assets {
 
     private AssetManager getAssetManager() {
         if (manager != null) {
-            manager.dispose();
+            return manager;
         }
         if (resolver == null) {
             resolver = new ArchiveFileHandleResolver(Gdx.files.internal("gfx.dat"));
@@ -271,35 +270,28 @@ public class Assets {
         manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
         manager.setLoader(TextureAtlas.class, new TextureAtlasLoader(resolver));
         manager.setLoader(Texture.class, new TextureLoader(resolver));
+        Texture.setAssetManager(manager);
         return manager;
     }
 
-    public void loadResources(Class<? extends Screen> screen) {
-        loadResources(assetsNeededByScreen.get(screen));
+    public void loadResources(Class<? extends Screen> previousScreen, Class<? extends Screen> screen) {
+        Set<AssetDescriptor> toUnload = previousScreen != null ? assetsNeededByScreen.get(previousScreen) : emptySet();
+        Set<AssetDescriptor> toLoad = assetsNeededByScreen.get(screen);
+        unloadResources(Sets.difference(toUnload, toLoad));
+        loadResources(Sets.difference(toLoad, toUnload));
     }
 
-    public void loadResources(Level level) {
-        loadResources(assetsNeededByLevelScreen.get(level));
-    }
 
-    private void loadResources(List<AssetDescriptor> assetDescriptors) {
+    private void loadResources(Set<AssetDescriptor> assetDescriptors) {
         manager = getAssetManager();
-        Texture.setAssetManager(manager);
-
         for (AssetDescriptor assetDescriptor : assetDescriptors) {
             manager.load(assetDescriptor);
         }
         manager.finishLoading();
     }
 
-    public void unloadResources(Class<? extends Screen> screen) {
-        for (AssetDescriptor assetDescriptor : assetsNeededByScreen.get(screen)) {
-            manager.unload(assetDescriptor.fileName);
-        }
-    }
-
-    public void unloadResources(Level level) {
-        for (AssetDescriptor assetDescriptor : assetsNeededByLevelScreen.get(level)) {
+    private void unloadResources(Set<AssetDescriptor> assetDescriptors) {
+        for (AssetDescriptor assetDescriptor : assetDescriptors) {
             manager.unload(assetDescriptor.fileName);
         }
     }

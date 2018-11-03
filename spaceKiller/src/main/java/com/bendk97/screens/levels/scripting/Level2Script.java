@@ -1,10 +1,10 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 07/10/18 22:24
+ * Last modified 01/11/18 14:07
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97.screens.levels;
+package com.bendk97.screens.levels.scripting;
 
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
@@ -22,6 +22,7 @@ import com.bendk97.assets.Assets;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.entities.enemies.SquadronFactory;
+import com.bendk97.screens.levels.LevelScreen;
 import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
 import com.bendk97.screens.levels.utils.ScriptItemExecutor;
@@ -53,7 +54,7 @@ public class Level2Script extends LevelScript {
                         PooledEngine engine) {
         super(levelScreen, Level2, assets, entityFactory, tweenManager, player);
         initLevel2(assets, entityFactory, engine);
-        if (levelScreen.fxLightEnabled) {
+        if (levelScreen.isFxLightEnabled()) {
             initAmbiantLights(entityFactory);
         }
     }

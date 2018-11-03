@@ -1,10 +1,10 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 08/10/18 19:43
+ * Last modified 02/11/18 18:17
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97.screens.levels;
+package com.bendk97.screens.levels.scripting;
 
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
@@ -19,6 +19,7 @@ import com.bendk97.assets.Assets;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.components.helpers.Families;
 import com.bendk97.entities.EntityFactory;
+import com.bendk97.screens.levels.LevelScreen;
 import com.bendk97.screens.levels.utils.ScriptItem;
 import com.bendk97.screens.levels.utils.ScriptItemBuilder;
 import com.bendk97.screens.levels.utils.ScriptItemExecutor;
@@ -60,7 +61,8 @@ public final class Level1Script extends LevelScript {
         initLevel1(assets, entityFactory);
     }
 
-    public Level1Script(final LevelScreen levelScreen, final Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player) {
+    public Level1Script(final LevelScreen levelScreen, final Assets assets, EntityFactory entityFactory, TweenManager tweenManager,
+                        Entity player) {
         super(levelScreen, Level1, assets, entityFactory, tweenManager, player);
         initLevel1(assets, entityFactory);
     }
@@ -68,7 +70,7 @@ public final class Level1Script extends LevelScript {
     private void initLevel1(Assets assets, EntityFactory entityFactory) {
         background = entityFactory.stageSetEntityFactory.createBackground(assets.get(GFX_BGD_LEVEL1), -BGD_VELOCITY);
         background2 = entityFactory.stageSetEntityFactory.createBackground(assets.get(GFX_BGD_STARS), -BGD_PARALLAX_VELOCITY);
-        if (levelScreen.fxLightEnabled) {
+        if (levelScreen.isFxLightEnabled()) {
             initAmbiantLights(entityFactory);
         }
     }

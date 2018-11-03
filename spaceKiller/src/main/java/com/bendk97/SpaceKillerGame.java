@@ -16,7 +16,6 @@ import com.bendk97.google.PlayServices;
 import com.bendk97.player.PlayerData;
 import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SplashScreen;
-import com.bendk97.screens.levels.Level;
 import com.bendk97.screens.levels.LevelScreen;
 import com.bendk97.screens.levels.utils.TransitionScreen;
 import com.bendk97.share.IntentShare;
@@ -73,31 +72,22 @@ public class SpaceKillerGame extends Game implements Disposable {
     }
 
     public void goToScreen(Class<? extends Screen> newScreen) {
+        goToScreen(newScreen, null, null);
+    }
+
+    public void goToScreen(Class<? extends Screen> newScreen, PlayerData playerData, Sprite previousScreenSprite) {
         try {
             if(this.getScreen() != null) {
-                this.getScreen().dispose();
+                screen.dispose();
             }
-            assets.loadResources(newScreen);
-            //noinspection JavaReflectionMemberAccess
-            this.setScreen(newScreen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this));
-        } catch (Exception e) {
-            Gdx.app.log("Guru Meditation", "error: " + e.getMessage());
-            Gdx.app.exit();
-        }
-    }
-
-    public void goToLevelScreen(Level level) {
-        goToLevelScreen(level, null, null);
-    }
-
-    public void goToLevelScreen(Level level, PlayerData playerData, Sprite previousScreenSprite) {
-        try {
-            this.getScreen().dispose();
+            assets.loadResources(screen != null ? screen.getClass() : null, newScreen);
             this.playerData = playerData;
-            LevelScreen nextScreen = new LevelScreen(assets, this, level);
-            if (previousScreenSprite != null) {
-                Sprite nextScreenSprite = nextScreen.takeScreenshot(Gdx.graphics.getDeltaTime(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-                this.setScreen(new TransitionScreen(previousScreenSprite, nextScreenSprite, nextScreen, this));
+            //noinspection JavaReflectionMemberAccess
+            Screen nextScreen = newScreen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this);
+            if (previousScreenSprite != null && LevelScreen.class.isAssignableFrom(newScreen)) {
+                LevelScreen nextLevelScreen = (LevelScreen) nextScreen;
+                Sprite nextScreenSprite = nextLevelScreen.takeScreenshot(Gdx.graphics.getDeltaTime(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                this.setScreen(new TransitionScreen(previousScreenSprite, nextScreenSprite, nextLevelScreen, this));
             } else {
                 this.setScreen(nextScreen);
             }
@@ -106,7 +96,6 @@ public class SpaceKillerGame extends Game implements Disposable {
             Gdx.app.exit();
         }
     }
-
 
     @Override
     public void dispose() {

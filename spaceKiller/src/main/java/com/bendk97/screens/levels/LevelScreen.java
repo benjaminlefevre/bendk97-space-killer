@@ -53,6 +53,7 @@ import com.bendk97.listeners.impl.PlayerListenerImpl;
 import com.bendk97.player.PlayerData;
 import com.bendk97.pools.GamePools;
 import com.bendk97.screens.MenuScreen;
+import com.bendk97.screens.levels.scripting.LevelScript;
 import com.bendk97.screens.levels.utils.ScreenShake;
 import com.bendk97.systems.*;
 import com.bendk97.systems.collision.CollisionSystem;
@@ -68,10 +69,11 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 import static com.bendk97.components.helpers.ComponentMapperHelper.*;
 import static com.bendk97.google.Achievement.*;
 import static com.bendk97.pools.GamePools.poolSprite;
-import static com.bendk97.screens.levels.Level.*;
+import static com.bendk97.screens.levels.Level.getLevelScript;
+import static com.bendk97.screens.levels.Level.nextLevelAfter;
 import static com.bendk97.tweens.SpriteComponentTweenAccessor.ALPHA;
 
-public final class LevelScreen extends ScreenAdapter {
+public abstract class LevelScreen extends ScreenAdapter {
 
     private float time;
     private InputMultiplexer inputProcessor = null;
@@ -95,8 +97,6 @@ public final class LevelScreen extends ScreenAdapter {
     private PostProcessor postProcessor;
 
     private PlayerListenerImpl playerListener;
-
-    private final Level level;
     private State state = State.RUNNING;
 
 
@@ -105,21 +105,19 @@ public final class LevelScreen extends ScreenAdapter {
 
     }
 
-    public LevelScreen(final Assets assets, final SpaceKillerGame game, final Level level) {
-        this(assets, game, level, null);
+    public LevelScreen(final Assets assets, final SpaceKillerGame game) {
+        this(assets, game, null);
     }
 
-    protected LevelScreen(final Assets assets, final SpaceKillerGame game, final Level level, SpriteBatch defaultBatcher) {
+    protected LevelScreen(final Assets assets, final SpaceKillerGame game, SpriteBatch defaultBatcher) {
         if (defaultBatcher == null) {
             this.initBatchers();
         } else {
             this.batcherHUD = defaultBatcher;
             this.batcher = defaultBatcher;
         }
-        assets.loadResources(level);
         PausableTimer.instance().stop();
         PausableTimer.instance().start();
-        this.level = level;
         this.game = game;
         this.fxLightEnabled = Settings.isLightFXEnabled();
         camera = new OrthographicCamera();
@@ -136,16 +134,18 @@ public final class LevelScreen extends ScreenAdapter {
         if (fxLightEnabled) {
             initRayLightEffects(camera);
         }
-        entityFactory = new EntityFactory(game, engine, assets, tweenManager, rayHandler, screenShake, level);
-        player = entityFactory.playerEntityFactory.createEntityPlayer(level);
+        entityFactory = new EntityFactory(game, engine, assets, tweenManager, rayHandler, screenShake, level());
+        player = entityFactory.playerEntityFactory.createEntityPlayer(level());
         SnapshotArray<Entity> lives = entityFactory.playerEntityFactory.createEntityPlayerLives(player);
         SnapshotArray<Entity> bombs = entityFactory.playerEntityFactory.createEntityPlayerBombs(player);
         createSystems(player, lives, bombs, batcher, screenShake);
         registerTweensAccessor();
         registerPostProcessingEffects();
-        this.levelScript = getLevelScript(level, this, assets, entityFactory, tweenManager, player, engine);
+        this.levelScript = getLevelScript(level(), this, assets, entityFactory, tweenManager, player, engine);
         time = -5;
     }
+
+    protected abstract Level level();
 
     private void engineListeners() {
         engine.addEntityListener(new EntityListener() {
@@ -209,19 +209,19 @@ public final class LevelScreen extends ScreenAdapter {
         playerComponent.level = nextLevelAfter(playerComponent.level);
         PlayerData playerData = playerComponent.copyPlayerData();
         Sprite screenshot = this.takeScreenshot(Gdx.graphics.getDeltaTime(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        switch (level) {
+        switch (level()) {
             case Level2:
                 game.playServices.unlockAchievement(KILL_BOSS_2);
-                game.goToLevelScreen(Level3, playerData, screenshot);
+                game.goToScreen(Level3Screen.class, playerData, screenshot);
                 break;
             case Level3:
                 game.playServices.unlockAchievement(KILL_BOSS_3);
-                game.goToLevelScreen(Level1, playerData, screenshot);
+                game.goToScreen(Level1Screen.class, playerData, screenshot);
                 break;
             case Level1:
             default:
                 game.playServices.unlockAchievement(KILL_BOSS);
-                game.goToLevelScreen(Level2, playerData, screenshot);
+                game.goToScreen(Level2Screen.class, playerData, screenshot);
                 break;
         }
     }
@@ -315,7 +315,7 @@ public final class LevelScreen extends ScreenAdapter {
         engine.addSystem(new StatusHealthRenderingSystem(batcherHUD, assets, 10));
         engine.addSystem(new GameOverRenderingSystem(batcherHUD, cameraHUD, assets, 10));
         engine.addSystem(new PauseRenderingSystem(batcherHUD, cameraHUD, assets, 10));
-        engine.addSystem(new LevelFinishedRenderingSystem(batcherHUD, assets, level, 10));
+        engine.addSystem(new LevelFinishedRenderingSystem(batcherHUD, assets, level(), 10));
         if (DEBUG) {
             engine.addSystem(new DebugStatsSystem(this, batcherHUD, 11));
         }
@@ -325,7 +325,7 @@ public final class LevelScreen extends ScreenAdapter {
         engine.addSystem(new TankAttackSystem(13));
         engine.addSystem(new EnemyAttackSystem(14, entityFactory));
         engine.addSystem(new BossAttackSystem(14, entityFactory));
-        engine.addSystem(new SquadronSystem(level, 15, entityFactory, player, playerListener));
+        engine.addSystem(new SquadronSystem(level(), 15, entityFactory, player, playerListener));
         engine.addSystem(new RemovableSystem(16));
     }
 
@@ -462,7 +462,6 @@ public final class LevelScreen extends ScreenAdapter {
             rayHandler.dispose();
             world.dispose();
         }
-        assets.unloadResources(this.level);
         engine.removeAllEntities();
         engine.clearPools();
         removeSystemsEngine();
@@ -531,7 +530,11 @@ public final class LevelScreen extends ScreenAdapter {
         }
     }
 
-    public Level getLevel() {
-        return level;
+    public OrthographicCamera getCamera() {
+        return camera;
+    }
+
+    public boolean isFxLightEnabled() {
+        return fxLightEnabled;
     }
 }
