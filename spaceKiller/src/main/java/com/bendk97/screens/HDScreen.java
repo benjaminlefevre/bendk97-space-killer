@@ -17,14 +17,14 @@ import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
 
 
-abstract class HDScreen extends ScreenAdapter {
+public abstract class HDScreen extends ScreenAdapter {
 
 
-    final Viewport viewport;
-    final SpaceKillerGame game;
-    final Assets assets;
+    protected final Viewport viewport;
+    protected final SpaceKillerGame game;
+    protected final Assets assets;
 
-    HDScreen(SpaceKillerGame game, Assets assets, float width, float height) {
+    protected HDScreen(SpaceKillerGame game, Assets assets, float width, float height) {
         this.game = game;
         this.assets = assets;
         OrthographicCamera camera = new OrthographicCamera();
@@ -32,7 +32,7 @@ abstract class HDScreen extends ScreenAdapter {
         camera.setToOrtho(false, width, height);
     }
 
-    HDScreen(SpaceKillerGame game, Assets assets) {
+    protected HDScreen(SpaceKillerGame game, Assets assets) {
         this(game, assets, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 

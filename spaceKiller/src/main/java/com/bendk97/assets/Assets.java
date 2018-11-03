@@ -25,13 +25,13 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.bendk97.Settings;
 import com.bendk97.assets.helper.ArchiveFileHandleResolver;
-import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SocialScoreScreen;
 import com.bendk97.screens.SplashScreen;
 import com.bendk97.screens.levels.Level1Screen;
 import com.bendk97.screens.levels.Level2Screen;
 import com.bendk97.screens.levels.Level3Screen;
 import com.bendk97.screens.levels.utils.TransitionScreen;
+import com.bendk97.screens.menu.MenuScreen;
 import com.google.common.collect.Sets;
 
 import java.util.HashMap;

@@ -14,10 +14,10 @@ import com.badlogic.gdx.utils.Disposable;
 import com.bendk97.assets.Assets;
 import com.bendk97.google.PlayServices;
 import com.bendk97.player.PlayerData;
-import com.bendk97.screens.MenuScreen;
 import com.bendk97.screens.SplashScreen;
 import com.bendk97.screens.levels.LevelScreen;
 import com.bendk97.screens.levels.utils.TransitionScreen;
+import com.bendk97.screens.menu.MenuScreen;
 import com.bendk97.share.IntentShare;
 
 import java.io.File;
