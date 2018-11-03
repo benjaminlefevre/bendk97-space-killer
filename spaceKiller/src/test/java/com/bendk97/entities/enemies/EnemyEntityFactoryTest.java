@@ -7,10 +7,8 @@
 package com.bendk97.entities.enemies;
 
 import aurelienribon.tweenengine.TweenManager;
-import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
@@ -23,16 +21,13 @@ import com.bendk97.runner.GdxTestRunner;
 import com.bendk97.screens.levels.Level;
 import com.bendk97.screens.levels.utils.ScreenShake;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.bendk97.SpaceKillerGameConstants.STANDARD_RATE_SHOOT;
 import static com.bendk97.entities.EntityFactoryIds.*;
@@ -72,8 +67,8 @@ public class EnemyEntityFactoryTest {
         PooledEngine engine = new PooledEngine();
         entityFactory = new EntityFactory(mock(SpaceKillerGame.class),
                 engine, assets, mock(TweenManager.class), null, mock(ScreenShake.class),
-                Level.Level2, mock(OrthographicCamera.class));
-        enemyEntityFactory = new EnemyEntityFactory(entityFactory, Level.Level2, mock(OrthographicCamera.class));
+                Level.Level2);
+        enemyEntityFactory = new EnemyEntityFactory(entityFactory, Level.Level2);
     }
 
     @Test

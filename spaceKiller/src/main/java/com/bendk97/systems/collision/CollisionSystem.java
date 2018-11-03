@@ -35,7 +35,7 @@ import static com.bendk97.pools.GamePools.poolRectangle;
 
 public class CollisionSystem extends EntitySystem {
 
-    private static final int FREQUENCY_MS = 75;
+    private static final int FREQUENCY_MS = 50;
     private final CollisionListener collisionListener;
     private final CollisionHelper collisionHelper = new CollisionHelper();
     private final SpriteBatch spriteBatch;
