@@ -92,7 +92,7 @@ public class SpaceKillerGame extends Game implements Disposable {
                 this.setScreen(nextScreen);
             }
         } catch (Exception e) {
-            Gdx.app.log("Guru Meditation", "error: " + e.getMessage());
+            Gdx.app.log("Guru Meditation", "error: " + e.getMessage(), e);
             Gdx.app.exit();
         }
     }

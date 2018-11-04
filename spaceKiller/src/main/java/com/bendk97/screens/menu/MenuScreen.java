@@ -10,7 +10,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -47,14 +50,14 @@ public final class MenuScreen extends HDScreen {
     private static final String LIGHT_FX = "light fx";
     private static final String VIBRATION = "vibration";
     private static final String BACK = "back";
-    private static final Color WHITE_ALPHA_60 = new Color(1f, 1f, 1f, 0.6f);
-    private final SpriteBatch batcher;
+    protected static final Color WHITE_ALPHA_60 = new Color(1f, 1f, 1f, 0.6f);
+    private SpriteBatch batcher;
     private final String gameVersion;
     private final TextureAtlas atlas;
     // fonts
     private BitmapFontCache font;
     private BitmapFontCache fontVersion;
-    private final Stage stage;
+    protected final Stage stage;
     // Google icons
     private ImageButton leaderBoard;
     private ImageButton achievements;
@@ -64,13 +67,18 @@ public final class MenuScreen extends HDScreen {
     private ImageButton gplayOff;
 
     public MenuScreen(final Assets assets, final SpaceKillerGame game) {
+        this(assets, game, null);
+    }
+
+    /* for test purposes */
+    protected MenuScreen(final Assets assets, final SpaceKillerGame game, final SpriteBatch providedBatcher) {
         super(game, assets);
+        initBatcher(providedBatcher);
         this.gameVersion = VERSION;
         if (!NO_GOOGLE && !game.signInFailed && !game.playServices.isSignedIn()) {
             game.playServices.signIn();
         }
         atlas = assets.get(Assets.MENU_ATLAS);
-        batcher = new SpriteBatch();
         stage = new Stage(viewport, batcher);
         TextButtonStyle buttonStyle = new TextButtonStyle();
         buttonStyle.font = assets.get(Assets.FONT_SPACE_KILLER_SMALL);
@@ -82,6 +90,14 @@ public final class MenuScreen extends HDScreen {
         setupMainMenu(buttonStyle);
         setupSoundsSettings(assets);
         setupGoogleSettings(assets, game);
+    }
+
+    private void initBatcher(SpriteBatch batcher) {
+        if (batcher != null) {
+            this.batcher = batcher;
+        } else {
+            this.batcher = new SpriteBatch();
+        }
     }
 
     private void initBackground(Assets assets) {
@@ -102,13 +118,13 @@ public final class MenuScreen extends HDScreen {
         TextureRegionDrawable drawable = new TextureRegionDrawable(atlas.findRegion("sound-off"));
         ImageButton soundOff = new ImageButton(drawable);
 
-        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("sound-on")));
+        drawable = new TextureRegionDrawable(atlas.findRegion("sound-on"));
         ImageButton soundOn = new ImageButton(drawable);
 
-        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-off")));
+        drawable = new TextureRegionDrawable(atlas.findRegion("music-off"));
         ImageButton musicOff = new ImageButton(drawable);
 
-        drawable = new TextureRegionDrawable(new TextureRegion(atlas.findRegion("music-on")));
+        drawable = new TextureRegionDrawable(atlas.findRegion("music-on"));
         ImageButton musicOn = new ImageButton(drawable);
         if (Settings.isSoundOn()) {
             table.add(soundOn).size(30f, 30f);
@@ -296,12 +312,16 @@ public final class MenuScreen extends HDScreen {
         });
     }
 
-    private void goBackToMainMenuWhenClick(Button displayScores, Set<? extends Button> mainMenuButtons) {
-        displayScores.addListener(new InputListener() {
+    private void goBackToMainMenuWhenClick(Button backButton, Set<? extends Button> mainMenuButtons) {
+        replaceButtonsByNewOnesOnClick(backButton, Sets.newHashSet(backButton), mainMenuButtons);
+    }
+
+    private void replaceButtonsByNewOnesOnClick(Button backButton, Set<? extends Button> buttonsToRemove, Set<? extends Button> mainMenuButtons) {
+        backButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int b) {
                 assets.playSound(Assets.MENU_CLICK);
-                displayScores.remove();
+                removeButtons(buttonsToRemove);
                 addButtons(mainMenuButtons);
                 return true;
             }
@@ -333,15 +353,7 @@ public final class MenuScreen extends HDScreen {
 
         Set<TextButton> settingsButtons = Sets.newHashSet(back, retroPad, virtualPad, lightFx, vibration);
 
-        settingsButton.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                assets.playSound(Assets.MENU_CLICK);
-                removeButtons(mainMenuButtons);
-                addButtons(settingsButtons);
-                return true;
-            }
-        });
+        replaceButtonsByNewOnesOnClick(settingsButton, mainMenuButtons, settingsButtons);
 
         onClickRetroPadButton(retroPad, virtualPad);
         onClickVirtualPadButton(virtualPad, retroPad);
@@ -352,14 +364,7 @@ public final class MenuScreen extends HDScreen {
     }
 
     private void onClickBackButton(TextButton back, Set<TextButton> mainMenuButtons, Set<TextButton> settingsButtons) {
-        back.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                addButtons(mainMenuButtons);
-                removeButtons(settingsButtons);
-                return true;
-            }
-        });
+        replaceButtonsByNewOnesOnClick(back, settingsButtons, mainMenuButtons);
     }
 
     private void onClickVibrationButton(TextButton vibration) {
