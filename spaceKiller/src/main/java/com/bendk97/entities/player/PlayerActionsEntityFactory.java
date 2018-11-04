@@ -21,7 +21,7 @@ import com.bendk97.timer.PausableTimer;
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP_PINGPONG;
 import static com.bendk97.SpaceKillerGameConstants.*;
-import static com.bendk97.assets.Assets.SOUND_BOMB_EXPLOSION;
+import static com.bendk97.assets.GameAssets.SOUND_BOMB_EXPLOSION;
 import static com.bendk97.components.helpers.ComponentMapperHelper.position;
 import static com.bendk97.components.helpers.ComponentMapperHelper.sprite;
 import static com.bendk97.pools.GamePools.poolSprite;

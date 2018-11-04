@@ -16,12 +16,13 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.bendk97.SpaceKillerGame;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.UUID;
 
+import static com.bendk97.assets.GameAssets.*;
 import static com.bendk97.pools.BitmapFontHelper.drawText;
 import static com.bendk97.pools.GamePools.poolSprite;
 
@@ -44,17 +45,17 @@ public final class SocialScoreScreen extends ScreenAdapter {
     private final BitmapFontCache font;
     private final BitmapFontCache fontSmall;
 
-    public SocialScoreScreen(Assets assets, SpaceKillerGame game, int score) {
+    public SocialScoreScreen(GameAssets assets, SpaceKillerGame game, int score) {
         this.game = game;
         this.score = score;
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, screen_width, screen_height);
         this.batcher = new SpriteBatch();
-        iconGame = poolSprite.getSprite(assets.get(Assets.ICON_GAME));
-        google = poolSprite.getSprite(assets.get(Assets.ICON_GOOGLE));
-        fontSmall = assets.getFont(Assets.FONT_SPACE_KILLER_SMALL);
+        iconGame = poolSprite.getSprite(assets.get(ICON_GAME));
+        google = poolSprite.getSprite(assets.get(ICON_GOOGLE));
+        fontSmall = assets.getFont(FONT_SPACE_KILLER_SMALL);
         fontSmall.setColor(Color.BLACK);
-        font = assets.getFont(Assets.FONT_SPACE_KILLER_MEDIUM);
+        font = assets.getFont(FONT_SPACE_KILLER_MEDIUM);
         font.setColor(Color.BLACK);
         iconGame.setPosition(10f, 25);
         google.setPosition(700f, 10f);

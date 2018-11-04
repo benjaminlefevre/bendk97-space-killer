@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.bendk97.SpaceKillerGame;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.LightComponent;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.SpriteComponent;
@@ -29,13 +29,13 @@ import com.bendk97.entities.player.PlayerEntityFactory;
 import com.bendk97.screens.levels.Level;
 import com.bendk97.screens.levels.utils.ScreenShake;
 
-import static com.bendk97.assets.Assets.GFX_LEVEL_COMMON;
+import static com.bendk97.assets.GameAssets.GFX_LEVEL_COMMON;
 
 public class EntityFactory implements Disposable {
 
     private static final Color LIGHT_EXPLOSION_COLOR = new Color(0.5f, 0f, 0f, 0.3f);
     public PooledEngine engine;
-    public final Assets assets;
+    public final GameAssets assets;
     public TweenManager tweenManager;
     public final ScreenShake screenShake;
     public final TextureAtlasCache commonAtlas;
@@ -56,7 +56,7 @@ public class EntityFactory implements Disposable {
     public EnemyActionEntityFactory enemyActionEntityFactory;
     public BonusEntityFactory bonusEntityFactory;
 
-    public EntityFactory(SpaceKillerGame game, PooledEngine engine, Assets assets, TweenManager tweenManager, RayHandler rayHandler,
+    public EntityFactory(SpaceKillerGame game, PooledEngine engine, GameAssets assets, TweenManager tweenManager, RayHandler rayHandler,
                          ScreenShake screenShake, Level level) {
         this.engine = engine;
         this.screenShake = screenShake;

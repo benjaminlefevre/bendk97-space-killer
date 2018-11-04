@@ -21,7 +21,7 @@ import com.bendk97.timer.PausableTimer;
 import java.util.Random;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
-import static com.bendk97.assets.Assets.SOUND_FIRE_ENEMY;
+import static com.bendk97.assets.GameAssets.SOUND_FIRE_ENEMY;
 import static com.bendk97.components.helpers.ComponentMapperHelper.*;
 import static com.bendk97.entities.EntityFactoryIds.ENEMY_FIRE_CIRCLE;
 import static com.bendk97.pools.GamePools.poolSprite;

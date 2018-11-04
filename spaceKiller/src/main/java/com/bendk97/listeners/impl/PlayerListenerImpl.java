@@ -11,7 +11,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.bendk97.Settings;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.EnemyComponent;
 import com.bendk97.components.GameOverComponent;
 import com.bendk97.components.PlayerComponent;
@@ -25,19 +25,19 @@ import com.bendk97.timer.PausableTimer;
 
 import static com.bendk97.SpaceKillerGameConstants.PLAYER_ORIGIN_X;
 import static com.bendk97.SpaceKillerGameConstants.PLAYER_ORIGIN_Y;
-import static com.bendk97.assets.Assets.*;
+import static com.bendk97.assets.GameAssets.*;
 
 
 public final class PlayerListenerImpl extends EntitySystem implements PlayerListener {
     private final EntityFactory entityFactory;
     protected SnapshotArray<Entity> lives;
     protected SnapshotArray<Entity> bombs;
-    private final Assets assets;
+    private final GameAssets assets;
     private final LevelScreen screen;
     private final ScreenShake screenShake;
 
 
-    public PlayerListenerImpl(Assets asset, EntityFactory entityFactory, SnapshotArray<Entity> lives,
+    public PlayerListenerImpl(GameAssets asset, EntityFactory entityFactory, SnapshotArray<Entity> lives,
                               SnapshotArray<Entity> bombs, ScreenShake screenShake, LevelScreen screen) {
         this.entityFactory = entityFactory;
         this.lives = lives;

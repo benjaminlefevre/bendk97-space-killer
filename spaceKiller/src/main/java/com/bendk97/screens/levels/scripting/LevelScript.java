@@ -16,7 +16,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.Disposable;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.helpers.Families;
 import com.bendk97.components.texts.BossAlertComponent;
 import com.bendk97.entities.EntityFactory;
@@ -35,7 +35,7 @@ import java.util.Random;
 
 import static com.badlogic.gdx.graphics.Color.RED;
 import static com.bendk97.SpaceKillerGameConstants.*;
-import static com.bendk97.assets.Assets.*;
+import static com.bendk97.assets.GameAssets.*;
 import static com.bendk97.entities.enemies.SquadronFactory.*;
 import static com.bendk97.pools.GamePools.poolVector2;
 import static com.bendk97.screens.levels.Level.MusicTrack.BOSS;
@@ -46,7 +46,7 @@ import static com.bendk97.tweens.TextComponentTweenAccessor.POSY;
 
 public abstract class LevelScript implements Disposable {
 
-    protected final Assets assets;
+    protected final GameAssets assets;
     protected final EntityFactory entityFactory;
     protected final TweenManager tweenManager;
     protected final Entity player;
@@ -60,13 +60,13 @@ public abstract class LevelScript implements Disposable {
     /*
      for test purposes only
       */
-    protected LevelScript(final LevelScreen levelScreen, Level level, Assets assets, EntityFactory entityFactory, TweenManager tweenManager,
+    protected LevelScript(final LevelScreen levelScreen, Level level, GameAssets assets, EntityFactory entityFactory, TweenManager tweenManager,
                           Entity player, ScriptItemExecutor scriptItemExecutor) {
         this(levelScreen, level, assets, entityFactory, tweenManager, player);
         this.scriptItemExecutor = scriptItemExecutor;
     }
 
-    protected LevelScript(final LevelScreen levelScreen, Level level, Assets assets, EntityFactory entityFactory, TweenManager tweenManager,
+    protected LevelScript(final LevelScreen levelScreen, Level level, GameAssets assets, EntityFactory entityFactory, TweenManager tweenManager,
                           Entity player) {
         this.level = level;
         this.levelScreen = levelScreen;

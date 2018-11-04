@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import java.util.LinkedList;
 
-import static com.bendk97.assets.Assets.*;
+import static com.bendk97.assets.GameAssets.*;
 import static com.bendk97.entities.EntityFactoryIds.BOSS_LEVEL_2;
 import static org.mockito.Mockito.*;
 

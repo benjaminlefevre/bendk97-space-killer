@@ -11,7 +11,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Disposable;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.google.PlayServices;
 import com.bendk97.player.PlayerData;
 import com.bendk97.screens.SplashScreen;
@@ -28,7 +28,7 @@ import static com.bendk97.screens.SocialScoreScreen.TEMP_DIRECTORY;
 public class SpaceKillerGame extends Game implements Disposable {
     private static final String INTENT_FILES = "intent files";
     private static final String WAS_UNABLE_TO_CLEAN_TEMP_DIRECTORY = "was unable to clean temp directory";
-    private final Assets assets = new Assets();
+    private final GameAssets assets = new GameAssets();
     public final PlayServices playServices;
     public PlayerData playerData;
     public final IntentShare intentShare;
@@ -83,7 +83,7 @@ public class SpaceKillerGame extends Game implements Disposable {
             assets.loadResources(screen != null ? screen.getClass() : null, newScreen);
             this.playerData = playerData;
             //noinspection JavaReflectionMemberAccess
-            Screen nextScreen = newScreen.getConstructor(Assets.class, SpaceKillerGame.class).newInstance(assets, this);
+            Screen nextScreen = newScreen.getConstructor(GameAssets.class, SpaceKillerGame.class).newInstance(assets, this);
             if (previousScreenSprite != null && LevelScreen.class.isAssignableFrom(newScreen)) {
                 LevelScreen nextLevelScreen = (LevelScreen) nextScreen;
                 Sprite nextScreenSprite = nextLevelScreen.takeScreenshot(Gdx.graphics.getDeltaTime(), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

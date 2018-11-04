@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.bendk97.SpaceKillerGame;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.screens.SocialScoreScreen;
 import com.bendk97.screens.levels.Level1Screen;
@@ -31,10 +31,10 @@ public class GameOverTouchInputProcessor extends InputAdapter {
     private final Rectangle home;
     private final Rectangle share;
     private final Rectangle extraLife;
-    private final Assets assets;
+    private final GameAssets assets;
     private final Entity player;
 
-    public GameOverTouchInputProcessor(Camera camera, SpaceKillerGame game, Assets assets, Entity player) {
+    public GameOverTouchInputProcessor(Camera camera, SpaceKillerGame game, GameAssets assets, Entity player) {
         this.camera = camera;
         this.player = player;
         this.game = game;

@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.bendk97.SpaceKillerGame;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_WIDTH;
@@ -22,9 +22,9 @@ public abstract class HDScreen extends ScreenAdapter {
 
     protected final Viewport viewport;
     protected final SpaceKillerGame game;
-    protected final Assets assets;
+    protected final GameAssets assets;
 
-    protected HDScreen(SpaceKillerGame game, Assets assets, float width, float height) {
+    protected HDScreen(SpaceKillerGame game, GameAssets assets, float width, float height) {
         this.game = game;
         this.assets = assets;
         OrthographicCamera camera = new OrthographicCamera();
@@ -32,7 +32,7 @@ public abstract class HDScreen extends ScreenAdapter {
         camera.setToOrtho(false, width, height);
     }
 
-    protected HDScreen(SpaceKillerGame game, Assets assets) {
+    protected HDScreen(SpaceKillerGame game, GameAssets assets) {
         this(game, assets, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 

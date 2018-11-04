@@ -40,7 +40,7 @@ import java.util.Set;
 
 import static java.util.Collections.emptySet;
 
-public class Assets {
+public class GameAssets {
 
     private FileHandleResolver resolver;
     private AssetManager manager;

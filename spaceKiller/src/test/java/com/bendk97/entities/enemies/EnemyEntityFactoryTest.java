@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 import com.bendk97.SpaceKillerGame;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.*;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
@@ -30,6 +30,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 
 import static com.bendk97.SpaceKillerGameConstants.STANDARD_RATE_SHOOT;
+import static com.bendk97.assets.GameAssets.GFX_LEVEL_COMMON;
 import static com.bendk97.entities.EntityFactoryIds.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -42,7 +43,7 @@ public class EnemyEntityFactoryTest {
     private EnemyEntityFactory enemyEntityFactory;
 
     @Mock
-    private Assets assets;
+    private GameAssets assets;
 
     @Mock
     private TextureAtlas sprites;
@@ -56,7 +57,7 @@ public class EnemyEntityFactoryTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        when(assets.get(Assets.GFX_LEVEL_COMMON)).thenReturn(noMaskSprites);
+        when(assets.get(GFX_LEVEL_COMMON)).thenReturn(noMaskSprites);
         when(assets.get(Level.Level2.sprites)).thenReturn(sprites);
         TextureAtlas.AtlasRegion atlasRegion = new TextureAtlas.AtlasRegion(texture, 0, 0, 100, 200);
         atlasRegion.setTexture(texture);

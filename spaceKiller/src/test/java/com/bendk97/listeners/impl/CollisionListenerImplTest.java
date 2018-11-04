@@ -10,7 +10,7 @@ import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.*;
 import com.bendk97.components.PlayerComponent.PowerLevel;
 import com.bendk97.components.helpers.ComponentMapperHelper;
@@ -28,7 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static com.bendk97.assets.Assets.*;
+import static com.bendk97.assets.GameAssets.*;
 import static com.bendk97.components.PlayerComponent.PowerLevel.*;
 import static com.bendk97.helpers.EntityTestHelper.createEntity;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.*;
 public class CollisionListenerImplTest {
 
     @Mock
-    private Assets assets;
+    private GameAssets assets;
 
     @Mock
     private EntityFactory entityFactory;

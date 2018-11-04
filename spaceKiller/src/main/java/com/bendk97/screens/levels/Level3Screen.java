@@ -8,17 +8,17 @@ package com.bendk97.screens.levels;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.bendk97.SpaceKillerGame;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 
 import static com.bendk97.screens.levels.Level.Level3;
 
 public final class Level3Screen extends LevelScreen {
 
-    public Level3Screen(Assets assets, SpaceKillerGame game) {
+    public Level3Screen(GameAssets assets, SpaceKillerGame game) {
         this(assets, game, null);
     }
 
-    protected Level3Screen(Assets assets, SpaceKillerGame game, SpriteBatch defaultBatcher) {
+    protected Level3Screen(GameAssets assets, SpaceKillerGame game, SpriteBatch defaultBatcher) {
         super(assets, game, defaultBatcher);
     }
 

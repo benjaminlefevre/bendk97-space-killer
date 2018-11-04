@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.SnapshotArray;
 import com.bendk97.Settings;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.SpaceKillerGameConstants;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.listeners.impl.CollisionListenerImpl;
 import com.bendk97.listeners.impl.InputListenerImpl;
 import com.bendk97.listeners.impl.PlayerListenerImpl;
@@ -37,7 +37,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static com.bendk97.assets.Assets.*;
+import static com.bendk97.assets.GameAssets.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -47,7 +47,7 @@ import static org.mockito.Mockito.when;
 public class LevelScreenTest {
 
     @Mock
-    private Assets assets;
+    private GameAssets assets;
 
     @Mock
     private SpaceKillerGame game;
