@@ -13,7 +13,7 @@ import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.equations.Linear;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.*;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.entities.EntityFactory;
@@ -25,18 +25,19 @@ import com.bendk97.timer.PausableTimer;
 import com.bendk97.tweens.PositionComponentTweenAccessor;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
+import static com.bendk97.assets.GameAssets.*;
 import static com.bendk97.tweens.SpriteComponentTweenAccessor.ALPHA;
 
 public class CollisionListenerImpl extends EntitySystem implements CollisionListener {
 
-    private final Assets assets;
+    private final GameAssets assets;
     private final EntityFactory entityFactory;
     private final PlayerListener playerListener;
     private final TweenManager tweenManager;
     private final LevelScreen screen;
     private final ScreenShake screenShake;
 
-    public CollisionListenerImpl(TweenManager tweenManager, ScreenShake screenShake, Assets assets,
+    public CollisionListenerImpl(TweenManager tweenManager, ScreenShake screenShake, GameAssets assets,
                                  EntityFactory entityFactory, PlayerListener playerListener,
                                  LevelScreen screen) {
         this.playerListener = playerListener;
@@ -60,7 +61,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
             return;
         }
         // create explosion
-        assets.playSound(Assets.SOUND_EXPLOSION);
+        assets.playSound(SOUND_EXPLOSION);
 
         if (enemyComponent.isBoss) {
             bossIsShoot(enemy, player, bullet);
@@ -160,7 +161,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     }
 
     private void bossIdDead(Entity boss, Entity player, EnemyComponent enemyComponent) {
-        assets.playSound(Assets.SOUND_BOSS_FINISHED);
+        assets.playSound(SOUND_BOSS_FINISHED);
         boss.remove(StatusHealthComponent.class);
         if (ComponentMapperHelper.levelFinished.get(player) == null) {
             ComponentMapperHelper.player.get(player).enemyKilled();
@@ -214,7 +215,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
 
     @Override
     public void playerHitByEnemyBody(Entity player) {
-        assets.playSound(Assets.SOUND_EXPLOSION);
+        assets.playSound(SOUND_EXPLOSION);
         PositionComponent playerPosition = ComponentMapperHelper.position.get(player);
         entityFactory.enemyEntityFactory.createEntityExploding(playerPosition.x(), playerPosition.y());
         playerListener.loseLive(player);
@@ -222,7 +223,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
 
     @Override
     public void playerHitByEnemyBullet(Entity player, Entity bullet) {
-        assets.playSound(Assets.SOUND_EXPLOSION);
+        assets.playSound(SOUND_EXPLOSION);
         PositionComponent playerPosition = ComponentMapperHelper.position.get(player);
         entityFactory.enemyEntityFactory.createEntityExploding(playerPosition.x(), playerPosition.y());
         getEngine().removeEntity(bullet);
@@ -231,10 +232,10 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
 
     @Override
     public void playerPowerUp(Entity player, Entity powerUp) {
-        assets.playSound(Assets.SOUND_POWER_UP);
+        assets.playSound(SOUND_POWER_UP);
         PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
         if (!playerComponent.powerLevel.equals(PlayerComponent.PowerLevel.TRIPLE_VERY_FAST)) {
-            assets.playSound(Assets.SOUND_POWER_UP_VOICE);
+            assets.playSound(SOUND_POWER_UP_VOICE);
         }
         playerComponent.powerUp();
         tweenManager.killTarget(ComponentMapperHelper.position.get(powerUp));
@@ -245,7 +246,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
 
     @Override
     public void playerShieldUp(Entity player, Entity shieldUp) {
-        assets.playSound(Assets.SOUND_SHIELD_UP);
+        assets.playSound(SOUND_SHIELD_UP);
         entityFactory.playerEntityFactory.createShield(player);
         tweenManager.killTarget(ComponentMapperHelper.position.get(shieldUp));
         tweenManager.killTarget(ComponentMapperHelper.sprite.get(shieldUp));
@@ -254,7 +255,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
 
     @Override
     public void playerBombUp(Entity player, Entity bombUp) {
-        assets.playSound(Assets.SOUND_SHIELD_UP);
+        assets.playSound(SOUND_SHIELD_UP);
         playerListener.newBombObtained(player);
         tweenManager.killTarget(ComponentMapperHelper.position.get(bombUp));
         tweenManager.killTarget(ComponentMapperHelper.sprite.get(bombUp));
@@ -264,13 +265,13 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
 
     @Override
     public void bulletStoppedByShield(Entity bullet) {
-        assets.playSound(Assets.SOUND_SHIELD_BULLET);
+        assets.playSound(SOUND_SHIELD_BULLET);
         getEngine().removeEntity(bullet);
     }
 
     @Override
     public void enemyShootByShield(Entity enemy) {
-        assets.playSound(Assets.SOUND_EXPLOSION);
+        assets.playSound(SOUND_EXPLOSION);
         PositionComponent enemyPosition = ComponentMapperHelper.position.get(enemy);
         entityFactory.enemyEntityFactory.createEntityExploding(enemyPosition.x(), enemyPosition.y());
         tweenManager.killTarget(ComponentMapperHelper.position.get(enemy));

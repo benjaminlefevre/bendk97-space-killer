@@ -17,11 +17,12 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.bendk97.SpaceKillerGame;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.screens.menu.MenuScreen;
 import com.bendk97.tweens.SpriteTweenAccessor;
 
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
+import static com.bendk97.assets.GameAssets.*;
 import static com.bendk97.pools.GamePools.poolSprite;
 import static com.bendk97.tweens.SpriteTweenAccessor.ROTATION;
 import static com.bendk97.tweens.SpriteTweenAccessor.SCALE;
@@ -39,15 +40,15 @@ public final class SplashScreen extends HDScreen {
     private TweenManager tweenManager = new TweenManager();
 
 
-    public SplashScreen(Assets assets, SpaceKillerGame game) {
+    public SplashScreen(GameAssets assets, SpaceKillerGame game) {
         super(game, assets,1080,1920);
-        assets.playMusic(Assets.SPLASH_MUSIC);
+        assets.playMusic(SPLASH_MUSIC);
         initGraphics();
         initFader();
     }
 
     private void initGraphics() {
-        TextureAtlas atlas = assets.get(Assets.SPLASH_ATLAS);
+        TextureAtlas atlas = assets.get(SPLASH_ATLAS);
         // Initialize the Animation with the frame interval and array of frames
         walkAnimation = new Animation<>(0.025f, atlas.findRegions("human_running"), LOOP);
 
@@ -55,7 +56,7 @@ public final class SplashScreen extends HDScreen {
         // time to 0
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
-        logo = poolSprite.getSprite(assets.get(Assets.SPLASH_TXT_LOGO));
+        logo = poolSprite.getSprite(assets.get(SPLASH_TXT_LOGO));
         logo.setPosition(viewport.getWorldWidth() / 2f - logo.getWidth() / 2f,
                 viewport.getWorldHeight() / 2f - logo.getHeight() / 2f);
         logo.setScale(0f);

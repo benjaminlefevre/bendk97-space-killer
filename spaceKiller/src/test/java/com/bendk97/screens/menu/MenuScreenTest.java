@@ -18,7 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.bendk97.Settings;
 import com.bendk97.SpaceKillerGame;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.google.FakePlayServices;
 import com.bendk97.google.PlayServices;
 import com.bendk97.runner.GdxTestRunner;
@@ -26,6 +26,7 @@ import com.bendk97.screens.levels.Level1Screen;
 import com.bendk97.share.IntentShare;
 import org.assertj.core.util.Sets;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -37,7 +38,7 @@ import java.util.function.Function;
 
 import static com.badlogic.gdx.graphics.Color.WHITE;
 import static com.badlogic.gdx.graphics.Color.YELLOW;
-import static com.bendk97.assets.Assets.*;
+import static com.bendk97.assets.GameAssets.*;
 import static com.bendk97.screens.menu.MenuScreen.WHITE_ALPHA_60;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -47,7 +48,7 @@ import static org.mockito.Mockito.*;
 public class MenuScreenTest {
 
     @Mock
-    private Assets assets;
+    private GameAssets assets;
 
 
     private PlayServices playServices = new FakePlayServices();
@@ -79,9 +80,19 @@ public class MenuScreenTest {
         doNothing().when(game).goToScreen(any(Class.class));
 
         screen = new MenuScreen(assets, game, spriteBatch);
-
-        Settings.setVirtualPad();
     }
+
+    @BeforeClass
+    public static void initSettings() {
+        Settings.setVirtualPad();
+        if (!Settings.isLightFXEnabled()) {
+            Settings.changeLightFXEnabled();
+        }
+        if (!Settings.isVibrationEnabled()) {
+            Settings.changeVibrationEnabled();
+        }
+    }
+
 
     @Test
     public void game_starts_on_main_menu() {

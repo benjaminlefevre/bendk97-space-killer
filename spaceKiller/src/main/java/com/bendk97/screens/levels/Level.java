@@ -14,7 +14,7 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.screens.levels.scripting.Level1Script;
 import com.bendk97.screens.levels.scripting.Level2Script;
@@ -23,7 +23,7 @@ import com.bendk97.screens.levels.scripting.LevelScript;
 
 import java.util.Map;
 
-import static com.bendk97.assets.Assets.*;
+import static com.bendk97.assets.GameAssets.*;
 import static com.bendk97.screens.levels.Level.MusicTrack.BOSS;
 import static com.bendk97.screens.levels.Level.MusicTrack.LEVEL;
 import static com.bendk97.screens.levels.Level.SoundEffect.BOSS_ALERT;
@@ -59,7 +59,7 @@ public enum Level {
         BOSS
     }
 
-    public static LevelScript getLevelScript(Level level, LevelScreen screen, Assets assets, EntityFactory entityFactory,
+    public static LevelScript getLevelScript(Level level, LevelScreen screen, GameAssets assets, EntityFactory entityFactory,
                                              TweenManager tweenManager, Entity player,
                                              PooledEngine engine) {
         switch (level) {

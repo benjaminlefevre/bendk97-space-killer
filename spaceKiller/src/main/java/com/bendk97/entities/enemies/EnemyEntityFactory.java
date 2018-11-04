@@ -25,7 +25,7 @@ import java.util.Random;
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP_PINGPONG;
 import static com.bendk97.SpaceKillerGameConstants.*;
-import static com.bendk97.assets.Assets.SOUND_EXPLOSION;
+import static com.bendk97.assets.GameAssets.SOUND_EXPLOSION;
 import static com.bendk97.entities.EntityFactoryIds.*;
 import static com.bendk97.pools.GamePools.poolSprite;
 

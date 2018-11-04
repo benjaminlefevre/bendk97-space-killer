@@ -36,7 +36,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.bendk97.Settings;
 import com.bendk97.SpaceKillerGame;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.*;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.components.texts.TextComponent;
@@ -88,7 +88,7 @@ public abstract class LevelScreen extends ScreenAdapter {
     protected final PooledEngine engine;
     private final EntityFactory entityFactory;
     private final TweenManager tweenManager;
-    private final Assets assets;
+    private final GameAssets assets;
     private final SpaceKillerGame game;
     private final Entity player;
     private World world;
@@ -105,11 +105,11 @@ public abstract class LevelScreen extends ScreenAdapter {
 
     }
 
-    public LevelScreen(final Assets assets, final SpaceKillerGame game) {
+    public LevelScreen(final GameAssets assets, final SpaceKillerGame game) {
         this(assets, game, null);
     }
 
-    protected LevelScreen(final Assets assets, final SpaceKillerGame game, SpriteBatch defaultBatcher) {
+    protected LevelScreen(final GameAssets assets, final SpaceKillerGame game, SpriteBatch defaultBatcher) {
         if (defaultBatcher == null) {
             this.initBatchers();
         } else {

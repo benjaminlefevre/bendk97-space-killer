@@ -10,7 +10,7 @@ import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.utils.Array;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.TankComponent;
 import com.bendk97.entities.EntityFactory;
 import com.bendk97.entities.enemies.SquadronFactory;
@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
+import static com.bendk97.assets.GameAssets.GFX_BGD_LEVEL3;
 import static com.bendk97.components.helpers.ComponentMapperHelper.gameOver;
 import static com.bendk97.entities.EntityFactoryIds.*;
 import static com.bendk97.screens.levels.Level.Level3;
@@ -37,7 +38,7 @@ public class Level3Script extends LevelScript {
     private LinkedList<ScriptItem> scriptItemsHardLeft;
     private LinkedList<ScriptItem> scriptItemsHardRight;
 
-    public Level3Script(final LevelScreen levelScreen, final Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
+    public Level3Script(final LevelScreen levelScreen, final GameAssets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
                         PooledEngine engine) {
         super(levelScreen, Level3, assets, entityFactory, tweenManager, player);
         initLevel3(assets, entityFactory, engine);
@@ -46,15 +47,15 @@ public class Level3Script extends LevelScript {
     /*
      for test purposes only
    */
-    protected Level3Script(final LevelScreen levelScreen, Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
+    protected Level3Script(final LevelScreen levelScreen, GameAssets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
                            ScriptItemExecutor scriptItemExecutor, PooledEngine engine) {
         super(levelScreen, Level3, assets, entityFactory, tweenManager, player, scriptItemExecutor);
         initLevel3(assets, entityFactory, engine);
     }
 
-    private void initLevel3(Assets assets, EntityFactory entityFactory, PooledEngine engine) {
+    private void initLevel3(GameAssets assets, EntityFactory entityFactory, PooledEngine engine) {
         Array<Entity> backgrounds = new Array<>();
-        backgrounds.add(entityFactory.stageSetEntityFactory.createBackground(assets.get(Assets.GFX_BGD_LEVEL3), 0, -BGD_VELOCITY_LEVEL3));
+        backgrounds.add(entityFactory.stageSetEntityFactory.createBackground(assets.get(GFX_BGD_LEVEL3), 0, -BGD_VELOCITY_LEVEL3));
         engine.addSystem(new FollowPlayerSystem(2));
     }
 

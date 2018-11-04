@@ -15,7 +15,7 @@ import aurelienribon.tweenengine.equations.Quad;
 import box2dLight.ConeLight;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.components.helpers.Families;
 import com.bendk97.entities.EntityFactory;
@@ -30,8 +30,8 @@ import java.util.List;
 
 import static aurelienribon.tweenengine.Tween.INFINITY;
 import static com.bendk97.SpaceKillerGameConstants.*;
-import static com.bendk97.assets.Assets.GFX_BGD_LEVEL1;
-import static com.bendk97.assets.Assets.GFX_BGD_STARS;
+import static com.bendk97.assets.GameAssets.GFX_BGD_LEVEL1;
+import static com.bendk97.assets.GameAssets.GFX_BGD_STARS;
 import static com.bendk97.components.helpers.ComponentMapperHelper.gameOver;
 import static com.bendk97.components.helpers.ComponentMapperHelper.sprite;
 import static com.bendk97.entities.EntityFactoryIds.BOSS_LEVEL_1;
@@ -55,19 +55,19 @@ public final class Level1Script extends LevelScript {
     /*
     for test purposes only
      */
-    protected Level1Script(final LevelScreen levelScreen, Assets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
+    protected Level1Script(final LevelScreen levelScreen, GameAssets assets, EntityFactory entityFactory, TweenManager tweenManager, Entity player,
                            ScriptItemExecutor scriptItemExecutor) {
         super(levelScreen, Level1, assets, entityFactory, tweenManager, player, scriptItemExecutor);
         initLevel1(assets, entityFactory);
     }
 
-    public Level1Script(final LevelScreen levelScreen, final Assets assets, EntityFactory entityFactory, TweenManager tweenManager,
+    public Level1Script(final LevelScreen levelScreen, final GameAssets assets, EntityFactory entityFactory, TweenManager tweenManager,
                         Entity player) {
         super(levelScreen, Level1, assets, entityFactory, tweenManager, player);
         initLevel1(assets, entityFactory);
     }
 
-    private void initLevel1(Assets assets, EntityFactory entityFactory) {
+    private void initLevel1(GameAssets assets, EntityFactory entityFactory) {
         background = entityFactory.stageSetEntityFactory.createBackground(assets.get(GFX_BGD_LEVEL1), -BGD_VELOCITY);
         background2 = entityFactory.stageSetEntityFactory.createBackground(assets.get(GFX_BGD_STARS), -BGD_PARALLAX_VELOCITY);
         if (levelScreen.isFxLightEnabled()) {

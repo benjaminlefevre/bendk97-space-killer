@@ -14,13 +14,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.GameOverComponent;
 import com.bendk97.components.PlayerComponent;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
-import static com.bendk97.assets.Assets.*;
+import static com.bendk97.assets.GameAssets.*;
 import static com.bendk97.pools.BitmapFontHelper.drawText;
 import static com.bendk97.pools.GamePools.poolSprite;
 
@@ -36,7 +36,7 @@ public class GameOverRenderingSystem extends GLDarkRenderingSystem {
     private final Sprite home;
     private final Sprite share;
 
-    public GameOverRenderingSystem(SpriteBatch batcher, Camera camera, Assets assets, int priority) {
+    public GameOverRenderingSystem(SpriteBatch batcher, Camera camera, GameAssets assets, int priority) {
         super(Family.all(PlayerComponent.class, GameOverComponent.class).get(), batcher, camera, priority);
         this.largeFont = assets.getFont(FONT_SPACE_KILLER_LARGE);
         this.largeFont.setColor(Color.RED);

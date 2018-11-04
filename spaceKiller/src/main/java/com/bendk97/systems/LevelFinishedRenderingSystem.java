@@ -12,7 +12,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.LevelFinishedComponent;
 import com.bendk97.components.PauseComponent;
 import com.bendk97.components.PlayerComponent;
@@ -20,6 +20,7 @@ import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.screens.levels.Level;
 
 import static com.bendk97.SpaceKillerGameConstants.SCREEN_HEIGHT;
+import static com.bendk97.assets.GameAssets.FONT_SPACE_KILLER_SMALLEST;
 import static com.bendk97.pools.BitmapFontHelper.drawText;
 import static com.bendk97.screens.levels.Level.Level2;
 import static com.bendk97.screens.levels.Level.Level3;
@@ -36,11 +37,11 @@ public class LevelFinishedRenderingSystem extends IteratingSystem {
     private final BitmapFontCache mediumFont;
     private final Level level;
 
-    public LevelFinishedRenderingSystem(SpriteBatch batcher, Assets assets, Level level, int priority) {
+    public LevelFinishedRenderingSystem(SpriteBatch batcher, GameAssets assets, Level level, int priority) {
         super(Family.all(PlayerComponent.class, LevelFinishedComponent.class).exclude(PauseComponent.class).get(), priority);
         this.level = level;
         this.batcher = batcher;
-        this.mediumFont = assets.getFont(Assets.FONT_SPACE_KILLER_SMALLEST);
+        this.mediumFont = assets.getFont(FONT_SPACE_KILLER_SMALLEST);
         this.mediumFont.setColor(Color.WHITE);
     }
 

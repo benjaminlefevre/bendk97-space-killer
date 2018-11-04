@@ -14,7 +14,7 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.utils.Array;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.PlayerComponent;
 import com.bendk97.components.SpriteComponent;
 import com.bendk97.components.helpers.Families;
@@ -32,7 +32,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static com.bendk97.assets.Assets.FONT_SPACE_KILLER_LARGE;
+import static com.bendk97.assets.GameAssets.FONT_SPACE_KILLER_LARGE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.*;
 public abstract class LevelScriptTest {
 
     @Mock
-    protected Assets assets;
+    protected GameAssets assets;
 
     @Mock
     protected TweenManager tweenManager;

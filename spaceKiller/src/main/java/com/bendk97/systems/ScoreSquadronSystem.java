@@ -12,11 +12,12 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.PositionComponent;
 import com.bendk97.components.ScoreSquadronComponent;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 
+import static com.bendk97.assets.GameAssets.FONT_SPACE_KILLER;
 import static com.bendk97.pools.BitmapFontHelper.drawText;
 
 public class ScoreSquadronSystem extends IteratingSystem {
@@ -24,9 +25,9 @@ public class ScoreSquadronSystem extends IteratingSystem {
     private final BitmapFontCache font;
     private final SpriteBatch batcher;
 
-    public ScoreSquadronSystem(int priority, Assets assets, SpriteBatch batcher) {
+    public ScoreSquadronSystem(int priority, GameAssets assets, SpriteBatch batcher) {
         super(Family.all(ScoreSquadronComponent.class).get(), priority);
-        this.font = assets.getFont(Assets.FONT_SPACE_KILLER);
+        this.font = assets.getFont(FONT_SPACE_KILLER);
         this.batcher = batcher;
     }
 

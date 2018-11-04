@@ -10,7 +10,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.bendk97.assets.Assets;
+import com.bendk97.assets.GameAssets;
 import com.bendk97.components.PlayerComponent;
 import com.bendk97.components.helpers.ComponentMapperHelper;
 import com.bendk97.components.helpers.Families;
@@ -18,13 +18,14 @@ import com.bendk97.entities.EntityFactory;
 import com.bendk97.listeners.PlayerListener;
 
 import static com.bendk97.SpaceKillerGameConstants.*;
+import static com.bendk97.assets.GameAssets.SOUND_FIRE;
 import static com.bendk97.pools.GamePools.poolVector2;
 
 public class InputListenerImpl extends EntitySystem implements com.bendk97.listeners.InputListener {
     private static final float AUTOFIRE_DELAY = 1 / 10f;
     private final Entity player;
     private final EntityFactory entityFactory;
-    private final Assets assets;
+    private final GameAssets assets;
     private final boolean autoFire;
     private final PlayerListener playerListener;
     private long lastShoot = 0;
@@ -32,7 +33,7 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
     private float autofireTrigger = 0;
 
     public InputListenerImpl(Entity player, PlayerListener playerListener, EntityFactory entityFactory,
-                             Assets assets,
+                             GameAssets assets,
                              boolean autoFire) {
         this.player = player;
         this.playerListener = playerListener;
@@ -59,7 +60,7 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
         if (Families.player.matches(player)) {
             PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
             if (TimeUtils.timeSinceMillis(lastShoot) > playerComponent.fireDelay) {
-                assets.playSound(Assets.SOUND_FIRE, 0.5f);
+                assets.playSound(SOUND_FIRE, 0.5f);
                 entityFactory.playerActionsEntityFactory.createPlayerFire(player);
                 lastShoot = TimeUtils.millis();
             }
