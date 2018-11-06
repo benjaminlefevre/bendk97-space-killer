@@ -49,7 +49,7 @@ public class EnemyEntityFactoryTest {
     private TextureAtlas sprites;
 
     @Mock
-    private TextureAtlas noMaskSprites;
+    private TextureAtlas commonSprites;
 
     @Mock
     private Texture texture;
@@ -57,7 +57,7 @@ public class EnemyEntityFactoryTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        when(assets.get(GFX_LEVEL_COMMON)).thenReturn(noMaskSprites);
+        when(assets.get(GFX_LEVEL_COMMON)).thenReturn(commonSprites);
         when(assets.get(Level.Level2.sprites)).thenReturn(sprites);
         TextureAtlas.AtlasRegion atlasRegion = new TextureAtlas.AtlasRegion(texture, 0, 0, 100, 200);
         atlasRegion.setTexture(texture);
@@ -180,19 +180,19 @@ public class EnemyEntityFactoryTest {
     public void a_tank_is_created() {
         List<Entity> tank = enemyEntityFactory.createTank(TankComponent.TankLevel.MEDIUM, 10, 100);
         assertThat(tank).hasSize(2);
+        assertThat(tank.get(0).getComponents()).hasSize(3);
         assertThat(tank.get(0).getComponents()).hasOnlyElementsOfTypes(
                 PositionComponent.class,
                 SpriteComponent.class,
                 GroundEnemyComponent.class);
+        assertThat(tank.get(1).getComponents()).hasSize(6);
         assertThat(tank.get(1).getComponents()).hasOnlyElementsOfTypes(
                 PositionComponent.class,
                 GroundEnemyComponent.class,
                 TankComponent.class,
                 FollowPlayerComponent.class,
                 SpriteComponent.class,
-                PositionComponent.class,
-                EnemyComponent.class,
-                StateComponent.class);
+                EnemyComponent.class);
         verify(sprites).findRegion("tankCannon");
     }
 
@@ -397,6 +397,7 @@ public class EnemyEntityFactoryTest {
     public void boss_1_is_created() {
         Entity boss = enemyEntityFactory.createBoss(entityFactory.engine.createEntity(), 1f, 1f);
         assertThat(boss).isNotNull();
+        assertThat(boss.getComponents()).hasSize(5);
         assertThat(boss.getComponents()).hasOnlyElementsOfTypes(
                 BossComponent.class,
                 EnemyComponent.class,
@@ -413,6 +414,7 @@ public class EnemyEntityFactoryTest {
     public void boss_2_is_created() {
         Entity boss = enemyEntityFactory.createBoss2(entityFactory.engine.createEntity(), 1f, 1f, 1f);
         assertThat(boss).isNotNull();
+        assertThat(boss.getComponents()).hasSize(5);
         assertThat(boss.getComponents()).hasOnlyElementsOfTypes(
                 BossComponent.class,
                 EnemyComponent.class,
@@ -429,6 +431,7 @@ public class EnemyEntityFactoryTest {
     public void boss_3_is_created() {
         Entity boss = enemyEntityFactory.createBoss3(entityFactory.engine.createEntity(), 1f, 1f, 1f);
         assertThat(boss).isNotNull();
+        assertThat(boss.getComponents()).hasSize(7);
         assertThat(boss.getComponents()).hasOnlyElementsOfTypes(
                 BossComponent.class,
                 EnemyComponent.class,
@@ -447,6 +450,7 @@ public class EnemyEntityFactoryTest {
     public void asteroid_is_created() {
         Entity asteroid = enemyEntityFactory.createAsteroid(entityFactory.engine.createEntity(), ASTEROID_1);
         assertThat(asteroid).isNotNull();
+        assertThat(asteroid.getComponents()).hasSize(5);
         assertThat(asteroid.getComponents()).hasOnlyElementsOfTypes(
                 EnemyComponent.class,
                 PositionComponent.class,
@@ -461,14 +465,15 @@ public class EnemyEntityFactoryTest {
     public void house_is_created() {
         Array<Entity> house = enemyEntityFactory.createHouse(entityFactory.engine.createEntity(), HOUSE_1);
         assertThat(house).hasSize(2);
+        assertThat(house.get(0).getComponents()).hasSize(4);
         assertThat(house.get(0).getComponents()).hasOnlyElementsOfTypes(
                 EnemyComponent.class,
                 SpriteComponent.class,
                 PositionComponent.class,
                 GroundEnemyComponent.class
         );
+        assertThat(house.get(1).getComponents()).hasSize(3);
         assertThat(house.get(1).getComponents()).hasOnlyElementsOfTypes(
-                EnemyComponent.class,
                 SpriteComponent.class,
                 PositionComponent.class,
                 GroundEnemyComponent.class
@@ -481,9 +486,10 @@ public class EnemyEntityFactoryTest {
     public void explosion_is_created() {
         Array<TextureAtlas.AtlasRegion> regionArray = new Array<>();
         regionArray.add(new TextureAtlas.AtlasRegion(texture, 0, 0, 50, 50));
-        when(noMaskSprites.findRegions(anyString())).thenReturn(regionArray);
+        when(commonSprites.findRegions(anyString())).thenReturn(regionArray);
         Entity explosion = enemyEntityFactory.createEntityExploding(10f, 10f);
         assertThat(explosion).isNotNull();
+        assertThat(explosion.getComponents()).hasSize(4);
         assertThat(explosion.getComponents()).hasOnlyElementsOfTypes(
                 PositionComponent.class,
                 AnimationComponent.class,
@@ -510,6 +516,7 @@ public class EnemyEntityFactoryTest {
         squadron.add(squadronComponent);
         Entity entity = enemyEntityFactory.createScoreSquadron(squadron);
         assertThat(entity).isNotNull();
+        assertThat(entity.getComponents()).hasSize(2);
         assertThat(entity.getComponents()).hasOnlyElementsOfTypes(
                 ScoreSquadronComponent.class,
                 PositionComponent.class
@@ -518,12 +525,12 @@ public class EnemyEntityFactoryTest {
 
     private void assertThatEntityIsLaserShip(Entity entity) {
         assertThat(entity).isNotNull();
+        assertThat(entity.getComponents()).hasSize(7);
         assertThat(entity.getComponents()).hasOnlyElementsOfTypes(
-                PositionComponent.class,
                 VelocityComponent.class,
                 FollowPlayerComponent.class,
-                AnimationComponent.class,
                 SpriteComponent.class,
+                AnimationComponent.class,
                 PositionComponent.class,
                 EnemyComponent.class,
                 StateComponent.class);
