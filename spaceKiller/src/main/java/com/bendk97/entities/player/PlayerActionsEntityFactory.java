@@ -32,6 +32,7 @@ import static com.bendk97.tweens.PositionComponentTweenAccessor.POSITION_Y;
 public class PlayerActionsEntityFactory {
 
     private static final Color WHITE_80 = new Color(1f, 1f, 1f, 0.8f);
+    private static final String UNABLE_TO_FIRE_SIDED_AT_THIS_LEVEL = "Unable to fire sided at this level";
     private final EntityFactory entityFactory;
 
     public PlayerActionsEntityFactory(EntityFactory entityFactory) {
@@ -54,6 +55,9 @@ public class PlayerActionsEntityFactory {
     }
 
     public void createPlayerFireSide(Entity player) {
+        if(ComponentMapperHelper.player.get(player).powerLevel.compareTo(PlayerComponent.PowerLevel.TRIPLE_SIDE) < 0) {
+            throw new IllegalArgumentException(UNABLE_TO_FIRE_SIDED_AT_THIS_LEVEL);
+        }
         createPlayerLeftFire(player);
         createPlayerRightFire(player);
     }
@@ -78,7 +82,6 @@ public class PlayerActionsEntityFactory {
             entityFactory.createLight(bullet, playerComponent.powerLevel.color, spriteBulletComponent.sprite.getWidth() * 7f);
         }
     }
-
 
     private void createPlayerRightFire(Entity player) {
         PlayerComponent playerComponent = ComponentMapperHelper.player.get(player);
@@ -128,7 +131,7 @@ public class PlayerActionsEntityFactory {
                 .start(entityFactory.tweenManager);
     }
 
-    private void createBombExplosion(Entity bomb) {
+    protected void createBombExplosion(Entity bomb) {
         final Entity bombExplosion = entityFactory.engine.createEntity();
         PositionComponent positionComponent = entityFactory.engine.createComponent(PositionComponent.class);
         bombExplosion.add(positionComponent);
