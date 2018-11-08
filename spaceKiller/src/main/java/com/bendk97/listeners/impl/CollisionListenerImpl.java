@@ -227,6 +227,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
         PositionComponent playerPosition = ComponentMapperHelper.position.get(player);
         entityFactory.enemyEntityFactory.createEntityExploding(playerPosition.x(), playerPosition.y());
         getEngine().removeEntity(bullet);
+        tweenManager.killTarget(ComponentMapperHelper.sprite.get(bullet));
         playerListener.loseLive(player);
     }
 
@@ -267,6 +268,7 @@ public class CollisionListenerImpl extends EntitySystem implements CollisionList
     public void bulletStoppedByShield(Entity bullet) {
         assets.playSound(SOUND_SHIELD_BULLET);
         getEngine().removeEntity(bullet);
+        tweenManager.killTarget(ComponentMapperHelper.sprite.get(bullet));
     }
 
     @Override

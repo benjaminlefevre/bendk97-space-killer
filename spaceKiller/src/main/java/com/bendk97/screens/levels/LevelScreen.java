@@ -326,7 +326,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         engine.addSystem(new EnemyAttackSystem(14, entityFactory));
         engine.addSystem(new BossAttackSystem(14, entityFactory));
         engine.addSystem(new SquadronSystem(level(), 15, entityFactory, player, playerListener));
-        engine.addSystem(new RemovableSystem(16));
+        engine.addSystem(new RemovableSystem(16, tweenManager));
     }
 
 
