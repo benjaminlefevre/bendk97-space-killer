@@ -81,7 +81,7 @@ public class EntityFactory implements Disposable {
         this.stageSetEntityFactory = new StageSetEntityFactory(engine);
         this.playerEntityFactory = new PlayerEntityFactory(this, game);
         this.playerActionsEntityFactory = new PlayerActionsEntityFactory(this);
-        this.enemyActionEntityFactory = new EnemyActionEntityFactory(this);
+        this.enemyActionEntityFactory = new EnemyActionEntityFactory(this, tweenManager);
         this.bonusEntityFactory = new BonusEntityFactory(this);
         this.enemyEntityFactory = new EnemyEntityFactory(this, level);
     }

@@ -6,6 +6,7 @@
 
 package com.bendk97.systems;
 
+import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -19,8 +20,11 @@ import static com.bendk97.SpaceKillerGameConstants.*;
 
 public class RemovableSystem extends IteratingSystem {
 
-    public RemovableSystem(int priority) {
+    private final TweenManager tweenManager;
+
+    public RemovableSystem(int priority, TweenManager tweenManager) {
         super(Family.all(RemovableComponent.class, PositionComponent.class, VelocityComponent.class).get(), priority);
+        this.tweenManager = tweenManager;
     }
 
 
@@ -37,6 +41,7 @@ public class RemovableSystem extends IteratingSystem {
                     || position.y() > SCREEN_HEIGHT
                     || position.y() + sprite.sprite.getHeight() < 0) {
                 getEngine().removeEntity(entity);
+                tweenManager.killTarget(sprite);
             }
         }
     }
@@ -45,6 +50,7 @@ public class RemovableSystem extends IteratingSystem {
         removableComponent.elapseTime += deltaTime;
         if (removableComponent.elapseTime > removableComponent.duration) {
             getEngine().removeEntity(entity);
+            tweenManager.killTarget(ComponentMapperHelper.sprite.get(entity));
         }
     }
 }

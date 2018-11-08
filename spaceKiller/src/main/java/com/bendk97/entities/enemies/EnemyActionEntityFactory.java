@@ -6,6 +6,9 @@
 
 package com.bendk97.entities.enemies;
 
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.RandomXS128;
@@ -28,14 +31,17 @@ import static com.bendk97.pools.GamePools.poolSprite;
 import static com.bendk97.pools.GamePools.poolVector2;
 import static com.bendk97.screens.levels.Level.Level1;
 import static com.bendk97.screens.levels.Level.Level3;
+import static com.bendk97.tweens.SpriteComponentTweenAccessor.ALPHA;
 
 public class EnemyActionEntityFactory {
 
     private final EntityFactory entityFactory;
+    private final TweenManager tweenManager;
     private final Random random = new RandomXS128();
 
-    public EnemyActionEntityFactory(EntityFactory entityFactory) {
+    public EnemyActionEntityFactory(EntityFactory entityFactory, TweenManager tweenManager) {
         this.entityFactory = entityFactory;
+        this.tweenManager = tweenManager;
     }
 
 
@@ -201,6 +207,11 @@ public class EnemyActionEntityFactory {
         SpriteComponent spriteComponent = entityFactory.engine.createComponent(SpriteComponent.class);
         spriteComponent.sprite = poolSprite.getSprite(entityFactory.levelAtlas.findRegion("bulletEnemy"));
         bullet.add(spriteComponent);
+        Timeline.createSequence()
+                .push(Tween.to(spriteComponent, ALPHA, 0.09f).target(0.5f))
+                .push(Tween.to(spriteComponent, ALPHA, 0.09f).target(1f))
+                .repeat(Tween.INFINITY, 0f)
+                .start(tweenManager);
         RemovableComponent removableComponent = entityFactory.engine.createComponent(RemovableComponent.class);
         removableComponent.setDuration(5.0f);
         bullet.add(removableComponent);
