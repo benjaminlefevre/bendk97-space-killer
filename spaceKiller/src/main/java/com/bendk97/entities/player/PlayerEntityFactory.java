@@ -40,10 +40,10 @@ public class PlayerEntityFactory {
 
 
     public Entity createEntityPlayer(Level level) {
-        Entity player = entityFactory.engine.createEntity();
         if (entityFactory.engine.getEntitiesFor(Family.one(PlayerComponent.class).get()).size() > 0) {
             throw new IllegalArgumentException("A player entity already exists!");
         }
+        Entity player = entityFactory.engine.createEntity();
         PlayerComponent playerComponent = entityFactory.engine.createComponent(PlayerComponent.class);
         playerComponent.setHighScore(Settings.getHighscore());
         if (game.playerData != null) {
