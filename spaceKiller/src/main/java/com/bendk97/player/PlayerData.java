@@ -22,8 +22,4 @@ public final class PlayerData {
     public  PlayerComponent.PowerLevel powerLevel;
     public  int numberOfContinue;
     public Level level;
-
-    protected PlayerData() {
-
-    }
 }
