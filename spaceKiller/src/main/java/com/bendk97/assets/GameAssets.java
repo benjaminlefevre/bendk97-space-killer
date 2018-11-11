@@ -56,6 +56,12 @@ public class GameAssets {
             new AssetDescriptor<>("gfx/space_killer.png", Texture.class);
     public static final AssetDescriptor<Texture> ICON_GOOGLE =
             new AssetDescriptor<>("gfx/google.png", Texture.class);
+    public static final AssetDescriptor<Texture> LIGHT_BOLT_HALF_CIRCLE =
+            new AssetDescriptor<>("gfx/backgrounds/HalfCircle.png", Texture.class);
+    public static final AssetDescriptor<Texture> LIGHT_BOLT_SEGMENT =
+            new AssetDescriptor<>("gfx/backgrounds/LightningSegment.png", Texture.class);
+    public static final AssetDescriptor<Texture> LIGHT_BOLT_PIXEL =
+            new AssetDescriptor<>("gfx/backgrounds/Pixel.png", Texture.class);
 
     // MENU SCREEN
     public static final AssetDescriptor<Texture> MENU_BGD =
@@ -159,6 +165,9 @@ public class GameAssets {
     public static final AssetDescriptor<Sound> SOUND_GO =
             new AssetDescriptor<>("sounds/go.ogg", Sound.class);
     // FONTS
+    public static final AssetDescriptor<BitmapFont> FONT_SPLASH =
+            new AssetDescriptor<>("fontsplash.ttf", BitmapFont.class,
+                    getFontParameters("fonts/arcade.ttf", 56));
     public static final AssetDescriptor<BitmapFont> FONT_SPACE_KILLER =
             new AssetDescriptor<>("font1.ttf", BitmapFont.class,
                     getFontParameters("fonts/arcade.ttf", 28));
@@ -187,7 +196,8 @@ public class GameAssets {
     private static Map<Class<? extends Screen>, Set<AssetDescriptor>> initializeAssetsNeededByScreen() {
         Map<Class<? extends Screen>, Set<AssetDescriptor>> assets = new HashMap<>();
         assets.put(SplashScreen.class, Sets.newHashSet(
-                SPLASH_MUSIC, SPLASH_ATLAS, SPLASH_TXT_LOGO
+                SPLASH_MUSIC, SPLASH_ATLAS, SPLASH_TXT_LOGO, FONT_SPLASH,
+                LIGHT_BOLT_HALF_CIRCLE, LIGHT_BOLT_PIXEL, LIGHT_BOLT_SEGMENT
         ));
         assets.put(MenuScreen.class, Sets.newHashSet(
                 MENU_BGD, FONT_SPACE_KILLER_LARGE, MENU_MUSIC, FONT_SPACE_KILLER_MEDIUM, MENU_CLICK,

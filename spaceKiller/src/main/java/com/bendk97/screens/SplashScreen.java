@@ -14,44 +14,66 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.RandomXS128;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.utils.Array;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.GameAssets;
+import com.bendk97.lightningbolt.LightningBolt;
+import com.bendk97.lightningbolt.LightningBoltArt;
 import com.bendk97.screens.menu.MenuScreen;
 import com.bendk97.tweens.SpriteTweenAccessor;
 
+import java.util.Random;
+
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
+import static com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType.Line;
 import static com.bendk97.assets.GameAssets.*;
+import static com.bendk97.pools.GamePools.poolCircle;
 import static com.bendk97.pools.GamePools.poolSprite;
 import static com.bendk97.tweens.SpriteTweenAccessor.ROTATION;
 import static com.bendk97.tweens.SpriteTweenAccessor.SCALE;
 
 
 public final class SplashScreen extends HDScreen {
-
+    private static final String mention =
+            "c 2018 BENDK97 GAMES\nALL RIGHTS RESERVED";
+    private static final Circle copyright = poolCircle.obtain();
+    public static final int SCREEN_WIDTH = 1080;
+    public static final int SCREEN_HEIGHT = 1920;
     // A variable for tracking elapsed time for the animation
     private float stateTime;
     // Objects used
     private Animation<TextureRegion> walkAnimation; // Must declare frame type (TextureRegion)
     private Sprite logo;
     private SpriteBatch spriteBatch;
+    private ShapeRenderer shapeRenderer;
+    private BitmapFontCache font;
     private final Actor fader = new Actor();
     private TweenManager tweenManager = new TweenManager();
-
+    private Array<LightningBolt> bolts = new Array<>();
+    private LightningBoltArt boltArt;
+    private final Random random = new RandomXS128();
 
     public SplashScreen(GameAssets assets, SpaceKillerGame game) {
-        super(game, assets,1080,1920);
+        super(game, assets, SCREEN_WIDTH, SCREEN_HEIGHT);
         assets.playMusic(SPLASH_MUSIC);
         initGraphics();
         initFader();
     }
 
     private void initGraphics() {
+        font = assets.getFont(FONT_SPLASH);
+        copyright.set(1080 / 4.5f + 95f, 1920 / 6f + 100f, 25f);
+        font.setText(mention, 1080 / 4.5f, 1920 / 6f);
         TextureAtlas atlas = assets.get(SPLASH_ATLAS);
         // Initialize the Animation with the frame interval and array of frames
         walkAnimation = new Animation<>(0.025f, atlas.findRegions("human_running"), LOOP);
-
+        shapeRenderer = new ShapeRenderer();
         // Instantiate a SpriteBatch for drawing and reset the elapsed animation
         // time to 0
         spriteBatch = new SpriteBatch();
@@ -68,6 +90,22 @@ public final class SplashScreen extends HDScreen {
                 .ease(Linear.INOUT).target(1f, 1f)
                 .start(tweenManager);
 
+        initBolts();
+    }
+
+    private void initBolts() {
+        boltArt = new LightningBoltArt(assets);
+        createBolt();
+        createBolt();
+    }
+
+    private void createBolt() {
+        bolts.add(
+                new LightningBolt(boltArt,
+                        new Vector2(random.nextFloat() * SCREEN_WIDTH, random.nextFloat() * SCREEN_HEIGHT),
+                        new Vector2(random.nextFloat() * SCREEN_WIDTH, random.nextFloat() * SCREEN_HEIGHT)
+                )
+        );
     }
 
     private void initFader() {
@@ -89,6 +127,7 @@ public final class SplashScreen extends HDScreen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glLineWidth(5);
         float stateTimeBefore = stateTime;
         stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
 
@@ -104,15 +143,42 @@ public final class SplashScreen extends HDScreen {
         spriteBatch.draw(currentFrame, ((viewport.getWorldWidth() / 3) * stateTime), 0, 150, 150);
         logo.setAlpha(fader.getColor().a);
         logo.draw(spriteBatch);
+        font.draw(spriteBatch);
+        renderBolts();
         spriteBatch.end();
-        if(stateTime>5 && stateTimeBefore <= 5){
+        shapeRenderer.begin(Line);
+        shapeRenderer.circle(copyright.x, copyright.y, copyright.radius);
+        shapeRenderer.end();
+        if (stateTime > 5 && stateTimeBefore <= 5) {
             game.goToScreen(MenuScreen.class);
+        }
+    }
+
+    private void renderBolts() {
+        for (int i = 0; i < bolts.size; i++) {
+            bolts.get(i).update();
+        }
+        for (int i = 0; i < bolts.size; i++) {
+            bolts.get(i).draw(spriteBatch);
+        }
+
+        int count = bolts.size;
+        for (int i = 0; i < count; i++) {
+            if (bolts.get(i).isComplete()) {
+                bolts.removeIndex(i);
+                count--;
+            }
+        }
+        if (random.nextInt(10) == 4) {
+            createBolt();
         }
     }
 
     @Override
     public void dispose() { // SpriteBatches and Textures must always be disposed
         spriteBatch.dispose();
+        shapeRenderer.dispose();
+        poolCircle.free(copyright);
         tweenManager.killAll();
         Texture.clearAllTextures(Gdx.app);
         poolSprite.free(logo);
