@@ -297,7 +297,7 @@ public abstract class LevelScreen extends ScreenAdapter {
         CollisionListenerImpl collisionListener = new CollisionListenerImpl(tweenManager, screenShake, assets, entityFactory, playerListener, this);
         engine.addSystem(collisionListener);
         engine.addSystem(new AnimationSystem(0));
-        engine.addSystem(new BombExplosionSystem(0, collisionListener, player));
+        engine.addSystem(new BombExplosionSystem(0, collisionListener, player, tweenManager));
         engine.addSystem(new StateSystem(1));
         engine.addSystem(new MovementPlayerSystem(2, camera));
         engine.addSystem(new MovementSystem(2));

@@ -54,7 +54,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            buildConfigField "boolean", "SPLASH_SCREEN_SKIP", project.property('space.killer.debug.mode.when.debug.build') as String
+            buildConfigField "boolean", "SPLASH_SCREEN_SKIP", project.property('space.killer.splash.screen.skip') as String
             buildConfigField "boolean", "GOOGLE_PLAY_SKIP", project.property('space.killer.debug.mode.when.debug.build') as String
             buildConfigField "boolean", "DEBUG_GAME", project.property('space.killer.debug.mode.when.debug.build') as String
         }

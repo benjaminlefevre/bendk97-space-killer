@@ -1,11 +1,20 @@
-package com.bendk97.lightningbolt;
+/*
+ * Developed by Benjamin Lefèvre
+ * Last modified 11/11/18 12:15
+ * Copyright (c) 2018. All rights reserved.
+ */
+
+package com.bendk97.lightning.bolt;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap.Blending;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 
-public class Line {
+import static com.bendk97.pools.GamePools.poolVector2;
+
+public class Line implements Disposable {
 
     public Vector2 a;
     public Vector2 b;
@@ -20,8 +29,9 @@ public class Line {
     }
 
     public void draw(SpriteBatch spriteBatch, Color tint) {
-        Vector2 tangent = new Vector2(b).sub(new Vector2(a));
+        Vector2 tangent = poolVector2.getVector2(b.x, b.y).sub(a);
         float theta = (float) Math.toDegrees(Math.atan2(tangent.y, tangent.x));
+        poolVector2.free(tangent);
 
         float scale = thickness / lightningBoltArt.halfCircle.getRegionHeight();
         Color prevColor = spriteBatch.getColor();
@@ -41,4 +51,8 @@ public class Line {
         return (float) Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
     }
 
+    public void dispose() {
+        poolVector2.free(a, b);
+
+    }
 }

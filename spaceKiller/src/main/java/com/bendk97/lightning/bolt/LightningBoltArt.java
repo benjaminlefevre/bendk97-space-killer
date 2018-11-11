@@ -1,10 +1,10 @@
 /*
  * Developed by Benjamin Lefèvre
- * Last modified 11/11/18 10:41
+ * Last modified 11/11/18 12:15
  * Copyright (c) 2018. All rights reserved.
  */
 
-package com.bendk97.lightningbolt;
+package com.bendk97.lightning.bolt;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.bendk97.assets.GameAssets;
@@ -15,10 +15,12 @@ import static com.bendk97.assets.GameAssets.*;
 public class LightningBoltArt {
 
     protected TextureRegion lightningSegment, halfCircle, halfCircle2, pixel;
+    protected final float thickness;
     private final GameAssets assets;
 
-    public LightningBoltArt(GameAssets gameAssets) {
+    public LightningBoltArt(GameAssets gameAssets, float thickness) {
         this.assets = gameAssets;
+        this.thickness = thickness;
         assignResource();
     }
 

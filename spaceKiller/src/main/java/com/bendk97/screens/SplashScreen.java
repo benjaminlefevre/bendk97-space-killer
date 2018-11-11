@@ -17,14 +17,14 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.RandomXS128;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.GameAssets;
-import com.bendk97.lightningbolt.LightningBolt;
-import com.bendk97.lightningbolt.LightningBoltArt;
+import com.bendk97.lightning.bolt.LightningBolt;
+import com.bendk97.lightning.bolt.LightningBoltArt;
+import com.bendk97.pools.GamePools;
 import com.bendk97.screens.menu.MenuScreen;
 import com.bendk97.tweens.SpriteTweenAccessor;
 
@@ -94,7 +94,7 @@ public final class SplashScreen extends HDScreen {
     }
 
     private void initBolts() {
-        boltArt = new LightningBoltArt(assets);
+        boltArt = new LightningBoltArt(assets, 12);
         createBolt();
         createBolt();
     }
@@ -102,9 +102,8 @@ public final class SplashScreen extends HDScreen {
     private void createBolt() {
         bolts.add(
                 new LightningBolt(boltArt,
-                        new Vector2(random.nextFloat() * SCREEN_WIDTH, random.nextFloat() * SCREEN_HEIGHT),
-                        new Vector2(random.nextFloat() * SCREEN_WIDTH, random.nextFloat() * SCREEN_HEIGHT)
-                )
+                        random.nextFloat() * SCREEN_WIDTH, random.nextFloat() * SCREEN_HEIGHT,
+                        random.nextFloat() * SCREEN_WIDTH, random.nextFloat() * SCREEN_HEIGHT)
         );
     }
 
@@ -165,6 +164,7 @@ public final class SplashScreen extends HDScreen {
         int count = bolts.size;
         for (int i = 0; i < count; i++) {
             if (bolts.get(i).isComplete()) {
+                bolts.get(i).dispose();
                 bolts.removeIndex(i);
                 count--;
             }
@@ -182,6 +182,10 @@ public final class SplashScreen extends HDScreen {
         tweenManager.killAll();
         Texture.clearAllTextures(Gdx.app);
         poolSprite.free(logo);
+        for (int i = 0; i < bolts.size; ++i) {
+            bolts.get(i).dispose();
+        }
+        GamePools.clearPools();
     }
 
 }
