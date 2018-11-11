@@ -16,6 +16,7 @@ public class PoolColor extends GamePool<Color> {
 
     @Override
     public void reset(Color color) {
+        // nothing special to do, color will be initizialed juster after obtain
     }
 
     public Color getColor(Color color) {
