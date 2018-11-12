@@ -12,6 +12,8 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties['storeFile'] = 'fake'
 }
 
+apply plugin: "com.android.application"
+//noinspection GroovyMissingReturnStatement
 android {
     buildToolsVersion "28.0.3"
     compileSdkVersion 28
@@ -26,16 +28,19 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
+    //noinspection GroovyMissingReturnStatement
     packagingOptions {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
+    //noinspection GroovyMissingReturnStatement
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    //noinspection GroovyMissingReturnStatement
     defaultConfig {
         applicationId project.property('space.killer.app.id')
-        minSdkVersion 15
+        minSdkVersion 14
         targetSdkVersion 28
         versionCode project.property('space.killer.version.code') as Integer
         versionName project.property('space.killer.version')
@@ -52,6 +57,7 @@ android {
         }
     }
     buildTypes {
+        //noinspection GroovyMissingReturnStatement
         debug {
             applicationIdSuffix ".debug"
             buildConfigField "boolean", "SPLASH_SCREEN_SKIP", project.property('space.killer.splash.screen.skip') as String
@@ -79,6 +85,7 @@ android {
             signingConfig signingConfigs.releaseSigned
         }
     }
+    //noinspection GroovyMissingReturnStatement
     splits {
         // Configures multiple APKs based on ABI.
         abi {
