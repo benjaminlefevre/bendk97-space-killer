@@ -18,11 +18,11 @@ Several libraries are used:
 The game is only tested and compiled for android platforms :
 ```bash
 # debug 
-./gradlew clean assembleUnsignedDebug check
+./gradlew clean bundleUnsignedDebug check
 # release
-./gradlew clean assembleUnsignedRelease check
+./gradlew clean bundleUnsignedRelease check
 # release signed and aligned (you have to provide a keystore.properties in root directory and a keystore file in android directory)
-./gradlew clean assembleSignedRelease check 
+./gradlew clean bundleSignedRelease check 
 ```
 But as libgdx is cross-platform, it should be easy to compile for HTML5, iOS...and so on
 
