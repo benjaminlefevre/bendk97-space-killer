@@ -17,6 +17,7 @@ public class SpaceKillerGameConstants {
     public static boolean NO_GOOGLE = false;
     public static boolean SKIP_SPLASH = false;
     public static String VERSION = "x.y.z";
+    public static String ABI_DEVICE = "???";
     // player
     public final static int LIVES = 4;
     public final static int NUMBER_OF_CONTINUE = 2;

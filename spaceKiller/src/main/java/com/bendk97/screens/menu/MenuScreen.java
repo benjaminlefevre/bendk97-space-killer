@@ -75,7 +75,7 @@ public final class MenuScreen extends HDScreen {
     protected MenuScreen(final GameAssets assets, final SpaceKillerGame game, final SpriteBatch providedBatcher) {
         super(game, assets);
         initBatcher(providedBatcher);
-        this.gameVersion = VERSION;
+        this.gameVersion = VERSION + "_" + ABI_DEVICE;
         if (!NO_GOOGLE && !game.signInFailed && !game.playServices.isSignedIn()) {
             game.playServices.signIn();
         }
@@ -190,12 +190,12 @@ public final class MenuScreen extends HDScreen {
         achievements_off = new ImageButton(new TextureRegionDrawable(atlas.findRegion("achievements_off")));
         leaderBoard = new ImageButton((new TextureRegionDrawable(atlas.findRegion("leaderboard"))));
         leaderBoard_off = new ImageButton((new TextureRegionDrawable(atlas.findRegion("leaderboard_off"))));
-        achievements.setPosition(150f, 10f);
-        leaderBoard.setPosition(200f, 10f);
-        achievements_off.setPosition(150f, 10f);
-        leaderBoard_off.setPosition(200f, 10f);
-        gplay.setPosition(90f, 0f);
-        gplayOff.setPosition(90f, 0f);
+        achievements.setPosition(190f, 10f);
+        leaderBoard.setPosition(240f, 10f);
+        achievements_off.setPosition(190f, 10f);
+        leaderBoard_off.setPosition(240f, 10f);
+        gplay.setPosition(130f, 0f);
+        gplayOff.setPosition(130f, 0f);
 
         gplayOff.addListener(new InputListener() {
             @Override
@@ -458,7 +458,7 @@ public final class MenuScreen extends HDScreen {
         drawText(batcher, fontVersion, gameVersion, 10f, 20f);
         if (!game.playServices.isSignedIn()) {
             fontVersion.setColor(WHITE);
-            drawText(batcher, fontVersion, GOOGLE_PLAY_PLEASE_SIGN_IN, 90f, 60f);
+            drawText(batcher, fontVersion, GOOGLE_PLAY_PLEASE_SIGN_IN, 130f, 60f);
             fontVersion.setColor(YELLOW);
         }
         batcher.end();

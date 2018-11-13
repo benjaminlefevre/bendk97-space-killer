@@ -25,6 +25,7 @@ import com.bendk97.space.killer.BuildConfig;
 import com.bendk97.space.killer.R;
 import com.google.android.gms.games.Games;
 
+import static android.os.Build.*;
 import static com.bendk97.SpaceKillerGameConstants.NO_GOOGLE;
 
 
@@ -72,6 +73,19 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices,
         NO_GOOGLE = BuildConfig.GOOGLE_PLAY_SKIP;
         SpaceKillerGameConstants.VERSION = BuildConfig.VERSION_NAME;
         SpaceKillerGameConstants.SKIP_SPLASH = BuildConfig.SPLASH_SCREEN_SKIP;
+        SpaceKillerGameConstants.ABI_DEVICE = getAbi();
+    }
+
+    private String getAbi() {
+        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+            // on newer Android versions, we'll return only the most important Abi version
+            return SUPPORTED_ABIS[0];
+        }
+        else {
+            // on pre-Lollip versions, we got only one Abi
+            //noinspection deprecation
+            return CPU_ABI;
+        }
     }
 
     private void setupGooglePlay() {
