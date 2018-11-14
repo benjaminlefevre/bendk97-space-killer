@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 import com.bendk97.SpaceKillerGame;
+import com.bendk97.SpaceKillerGameConstants;
 import com.bendk97.assets.GameAssets;
 import com.bendk97.lightning.bolt.LightningBolt;
 import com.bendk97.lightning.bolt.LightningBoltArt;
@@ -40,8 +41,7 @@ import static com.bendk97.tweens.SpriteTweenAccessor.SCALE;
 
 
 public final class SplashScreen extends HDScreen {
-    private static final String mention =
-            "c 2018 BENDK97 GAMES\nALL RIGHTS RESERVED";
+
     private static final Circle copyright = poolCircle.obtain();
     public static final int SCREEN_WIDTH = 1080;
     public static final int SCREEN_HEIGHT = 1920;
@@ -68,8 +68,8 @@ public final class SplashScreen extends HDScreen {
 
     private void initGraphics() {
         font = assets.getFont(FONT_SPLASH);
-        copyright.set(1080 / 4.5f + 95f, 1920 / 6f + 100f, 25f);
-        font.setText(mention, 1080 / 4.5f, 1920 / 6f);
+        copyright.set(SCREEN_WIDTH / 4.5f + 95f, SCREEN_HEIGHT / 6f + 100f, 25f);
+        font.setText(SpaceKillerGameConstants.COPYRIGHT, SCREEN_WIDTH / 4.5f, SCREEN_HEIGHT / 6f);
         TextureAtlas atlas = assets.get(SPLASH_ATLAS);
         // Initialize the Animation with the frame interval and array of frames
         walkAnimation = new Animation<>(0.025f, atlas.findRegions("human_running"), LOOP);
@@ -139,11 +139,11 @@ public final class SplashScreen extends HDScreen {
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 
         spriteBatch.begin();
+        renderBolts();
         spriteBatch.draw(currentFrame, ((viewport.getWorldWidth() / 3) * stateTime), 0, 150, 150);
         logo.setAlpha(fader.getColor().a);
         logo.draw(spriteBatch);
         font.draw(spriteBatch);
-        renderBolts();
         spriteBatch.end();
         shapeRenderer.begin(Line);
         shapeRenderer.circle(copyright.x, copyright.y, copyright.radius);

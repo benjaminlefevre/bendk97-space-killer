@@ -8,6 +8,7 @@
 package com.bendk97;
 
 public class SpaceKillerGameConstants {
+    public static final String COPYRIGHT = "c 2017 BENDK97 GAMES\nALL RIGHTS RESERVED";
     // general settings
     public final static float WORLD_WIDTH = 500;
     public final static float SCREEN_WIDTH = 400;

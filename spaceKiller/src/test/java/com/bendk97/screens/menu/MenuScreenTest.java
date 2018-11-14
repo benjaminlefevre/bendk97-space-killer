@@ -39,7 +39,7 @@ import java.util.function.Function;
 import static com.badlogic.gdx.graphics.Color.WHITE;
 import static com.badlogic.gdx.graphics.Color.YELLOW;
 import static com.bendk97.assets.GameAssets.*;
-import static com.bendk97.screens.menu.MenuScreen.WHITE_ALPHA_60;
+import static com.bendk97.screens.menu.MenuScreen.WHITE_ALPHA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -389,7 +389,7 @@ public class MenuScreenTest {
     private ImageButton getImageInfoButton() {
         return (ImageButton) Arrays.stream(screen.stage.getActors().toArray())
                 .filter(actor -> ImageButton.class.isAssignableFrom(actor.getClass()))
-                .filter(actor -> actor.getColor().equals(WHITE_ALPHA_60))
+                .filter(actor -> actor.getColor().equals(WHITE_ALPHA))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("ImageButton not found on stage"));
     }

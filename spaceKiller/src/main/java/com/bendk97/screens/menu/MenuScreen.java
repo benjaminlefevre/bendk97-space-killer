@@ -51,7 +51,7 @@ public final class MenuScreen extends HDScreen {
     private static final String LIGHT_FX = "light fx";
     private static final String VIBRATION = "vibration";
     private static final String BACK = "back";
-    protected static final Color WHITE_ALPHA_60 = new Color(1f, 1f, 1f, 0.6f);
+    protected static final Color WHITE_ALPHA = new Color(1f, 1f, 1f, 0.75f);
     private SpriteBatch batcher;
     private final String gameVersion;
     private final TextureAtlas atlas;
@@ -268,7 +268,7 @@ public final class MenuScreen extends HDScreen {
 
     private void onClickCreditsButton(TextButton creditsButton, Set<TextButton> mainMenuButtons) {
         ImageButton creditsScreen = new ImageButton(new TextureRegionDrawable(atlas.findRegion("credits")));
-        creditsScreen.setColor(WHITE_ALPHA_60);
+        creditsScreen.setColor(WHITE_ALPHA);
         creditsScreen.setPosition(5f, 100f);
         goBackToMainMenuWhenClick(creditsScreen, mainMenuButtons);
         actionWhenClick(creditsButton, mainMenuButtons, creditsScreen);
@@ -276,7 +276,7 @@ public final class MenuScreen extends HDScreen {
 
     private void onClickHelpButton(TextButton helpButton, Set<TextButton> mainMenuButtons) {
         ImageButton helpScreen = new ImageButton(new TextureRegionDrawable(atlas.findRegion("help")));
-        helpScreen.setColor(WHITE_ALPHA_60);
+        helpScreen.setColor(WHITE_ALPHA);
         helpScreen.setPosition(5f, 100f);
         goBackToMainMenuWhenClick(helpScreen, mainMenuButtons);
         actionWhenClick(helpButton, mainMenuButtons, helpScreen);
