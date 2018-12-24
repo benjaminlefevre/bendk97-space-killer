@@ -43,8 +43,6 @@ public class PlayerActionsEntityFactoryTest {
 
     private PlayerActionsEntityFactory playerActionsEntityFactory;
 
-    private EntityFactory entityFactory;
-
     @Mock
     private GameAssets assets;
 
@@ -73,7 +71,7 @@ public class PlayerActionsEntityFactoryTest {
         when(sprites.findRegion(anyString())).thenReturn(atlasRegion);
         when(sprites.findRegions(anyString())).thenReturn(Array.with(atlasRegion, atlasRegion,
                 atlasRegion, atlasRegion, atlasRegion, atlasRegion, atlasRegion));
-        entityFactory = new EntityFactory(mock(SpaceKillerGame.class),
+        EntityFactory entityFactory = new EntityFactory(mock(SpaceKillerGame.class),
                 engine, assets, tweenManager, null, screenShake,
                 Level.Level2);
 

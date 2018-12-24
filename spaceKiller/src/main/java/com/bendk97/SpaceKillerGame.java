@@ -82,7 +82,6 @@ public class SpaceKillerGame extends Game implements Disposable {
             }
             assets.loadResources(screen != null ? screen.getClass() : null, newScreen);
             this.playerData = playerData;
-            //noinspection JavaReflectionMemberAccess
             Screen nextScreen = newScreen.getConstructor(GameAssets.class, SpaceKillerGame.class).newInstance(assets, this);
             if (previousScreenSprite != null && LevelScreen.class.isAssignableFrom(newScreen)) {
                 LevelScreen nextLevelScreen = (LevelScreen) nextScreen;
