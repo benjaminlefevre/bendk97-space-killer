@@ -68,7 +68,7 @@ public final class SplashScreen extends HDScreen {
 
     private void initGraphics() {
         font = assets.getFont(FONT_SPLASH);
-        copyright.set(SCREEN_WIDTH / 4.5f + 95f, SCREEN_HEIGHT / 6f + 100f, 25f);
+        copyright.set(SCREEN_WIDTH / 4.5f + 12f, SCREEN_HEIGHT / 6f -2f, 25f);
         font.setText(SpaceKillerGameConstants.COPYRIGHT, SCREEN_WIDTH / 4.5f, SCREEN_HEIGHT / 6f);
         TextureAtlas atlas = assets.get(SPLASH_ATLAS);
         // Initialize the Animation with the frame interval and array of frames
@@ -137,7 +137,7 @@ public final class SplashScreen extends HDScreen {
         // Get current frame of animation for the current stateTime
         TextureRegion currentFrame = walkAnimation.getKeyFrame(stateTime, true);
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
-
+        shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
         renderBolts();
         spriteBatch.draw(currentFrame, ((viewport.getWorldWidth() / 3) * stateTime), 0, 150, 150);
