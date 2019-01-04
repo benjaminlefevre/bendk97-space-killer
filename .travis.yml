@@ -9,7 +9,9 @@ jdk:
 
 android:
   components:
-    - tools-26.1.1
+    - tools
+    - platform-tools
+    - tools
     - build-tools-28.0.3
     - android-28
     - extra-android-support
