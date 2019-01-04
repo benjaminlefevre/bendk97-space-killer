@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 
+import static com.bendk97.pools.GamePools.poolColor;
 import static com.bendk97.pools.GamePools.poolVector2;
 
 public class Line implements Disposable {
@@ -34,7 +35,7 @@ public class Line implements Disposable {
         poolVector2.free(tangent);
 
         float scale = thickness / lightningBoltArt.halfCircle.getRegionHeight();
-        Color prevColor = spriteBatch.getColor();
+        Color prevColor = poolColor.getColor(spriteBatch.getColor());
         spriteBatch.setColor(tint);
         int blfn = spriteBatch.getBlendDstFunc();
         spriteBatch.setBlendFunction(spriteBatch.getBlendSrcFunc(), Blending.SourceOver.ordinal());
@@ -45,6 +46,7 @@ public class Line implements Disposable {
 
         spriteBatch.setColor(prevColor);
         spriteBatch.setBlendFunction(spriteBatch.getBlendSrcFunc(), blfn);
+        poolColor.free(prevColor);
     }
 
     public float getLength() {

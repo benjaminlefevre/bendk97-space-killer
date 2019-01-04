@@ -8,7 +8,7 @@
 package com.bendk97;
 
 public class SpaceKillerGameConstants {
-    public static final String COPYRIGHT = "c 2017 BENDK97 GAMES\nALL RIGHTS RESERVED";
+    public static final String COPYRIGHT = "2017 - BENDK97 GAMES\nALL RIGHTS RESERVED";
     // general settings
     public final static float WORLD_WIDTH = 500;
     public final static float SCREEN_WIDTH = 400;
@@ -126,14 +126,14 @@ public class SpaceKillerGameConstants {
 
 
     // TEXT HUD
-    public static final float SCORE_X = 20f;
-    public static final float SCORE_Y = SCREEN_HEIGHT - 10f;
-    public static final float LIVES_X = SCREEN_WIDTH / 2f - 50f;
-    public static final float LIVES_Y = SCREEN_HEIGHT - 10f;
-    public static final float HIGH_X = SCREEN_WIDTH - 100f;
-    public static final float HIGH_Y = SCREEN_HEIGHT - 10f;
+    public static final float SCORE_X = 30f;
+    public static final float SCORE_Y = SCREEN_HEIGHT - 20f;
+    public static final float LIVES_X = SCREEN_WIDTH / 2f - 40f;
+    public static final float LIVES_Y = SCREEN_HEIGHT - 20f;
+    public static final float HIGH_X = SCREEN_WIDTH - 90f;
+    public static final float HIGH_Y = SCREEN_HEIGHT - 20f;
     public static final float BOMB_STOCK_X = SCREEN_WIDTH - 22f;
-    public static final float BOMB_STOCK_Y = 10f;
+    public static final float BOMB_STOCK_Y = 5f;
     public static final float BOSS_ALERT_X = SCREEN_WIDTH / 4;
     public static final float BOSS_ALERT_Y = SCREEN_HEIGHT * 3 / 4;
 
