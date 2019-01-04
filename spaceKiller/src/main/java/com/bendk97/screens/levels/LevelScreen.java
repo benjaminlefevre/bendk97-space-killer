@@ -313,8 +313,8 @@ public abstract class LevelScreen extends ScreenAdapter {
         engine.addSystem(new StaticEntitiesRenderingSystem(batcherHUD, 9));
         engine.addSystem(new TextHUDRenderingSystem(batcherHUD, assets, 11));
         engine.addSystem(new StatusHealthRenderingSystem(batcherHUD, assets, 10));
-        engine.addSystem(new GameOverRenderingSystem(batcherHUD, cameraHUD, assets, 10));
-        engine.addSystem(new PauseRenderingSystem(batcherHUD, cameraHUD, assets, 10));
+        engine.addSystem(new GameOverRenderingSystem(batcherHUD, cameraHUD, assets, 12));
+        engine.addSystem(new PauseRenderingSystem(batcherHUD, cameraHUD, assets, 12));
         engine.addSystem(new LevelFinishedRenderingSystem(batcherHUD, assets, level(), 10));
         if (DEBUG) {
             engine.addSystem(new DebugStatsSystem(this, batcherHUD, 11));
