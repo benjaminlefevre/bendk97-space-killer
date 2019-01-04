@@ -365,12 +365,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
         } else {
             debugLog("Not attempting to connect because mConnectOnStart=false");
             debugLog("Instead, reporting a sign-in failure.");
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    notifyListener(false);
-                }
-            }, 1000);
+            mHandler.postDelayed(() -> notifyListener(false), 1000);
         }
     }
 
