@@ -9,7 +9,7 @@ Several libraries are used:
 
 | Library                     | Version | Link                                                                                     |
 | --------------------------- | ------- | ---------------------------------------------------------------------------------------- |
-| libgdx                      | 1.9.8   | [Libgdx](https://libgdx.badlogicgames.com/) - [GitHub](https://github.com/libgdx/libgdx) |
+| libgdx                      | 1.9.9   | [Libgdx](https://libgdx.badlogicgames.com/) - [GitHub](https://github.com/libgdx/libgdx) |
 | ashley (ECS design pattern) | 1.7.3   | [Ashley](https://github.com/libgdx/ashley)                                               |
 | box2DLights                 | 1.4     | [Box2DLights](https://github.com/libgdx/box2dlights)                                     |
 | Tween Universal Engine      | 6.3.3   | [Tween](https://github.com/AurelienRibon/universal-tween-engine)                         |
