@@ -79,7 +79,7 @@ public class DebugStatsSystem extends EntitySystem {
         sb.append(MAX).append(maxFps).append(FPS).append(NEWLINE);
         sb.append(JAVA_HEAP).append(javaHeap / BYTES_TO_MB).append(MB).append(NEWLINE);
         sb.append(NATIVE_HEAP).append(nativeHeap /BYTES_TO_MB).append(MB).append(NEWLINE);
-        drawText(145f, SCREEN_HEIGHT - 60f);
+        drawText(165f, SCREEN_HEIGHT - 70f);
     }
 
     private void updateMemoryStats(float deltaTime) {
@@ -100,7 +100,7 @@ public class DebugStatsSystem extends EntitySystem {
     }
 
     private void drawText(float x, float y) {
-        BitmapFontHelper.drawText(batcher, bitmapFont, sb.toString(), x, y);
+        BitmapFontHelper.drawText(batcher, bitmapFont, 0.6f, sb.toString(), x, y);
     }
 
     @Override

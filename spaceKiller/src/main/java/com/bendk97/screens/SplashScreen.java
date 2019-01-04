@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -32,7 +31,6 @@ import com.bendk97.tweens.SpriteTweenAccessor;
 import java.util.Random;
 
 import static com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP;
-import static com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType.Line;
 import static com.bendk97.assets.GameAssets.*;
 import static com.bendk97.pools.GamePools.poolCircle;
 import static com.bendk97.pools.GamePools.poolSprite;
@@ -51,7 +49,6 @@ public final class SplashScreen extends HDScreen {
     private Animation<TextureRegion> walkAnimation; // Must declare frame type (TextureRegion)
     private Sprite logo;
     private SpriteBatch spriteBatch;
-    private ShapeRenderer shapeRenderer;
     private BitmapFontCache font;
     private final Actor fader = new Actor();
     private TweenManager tweenManager = new TweenManager();
@@ -68,12 +65,11 @@ public final class SplashScreen extends HDScreen {
 
     private void initGraphics() {
         font = assets.getFont(FONT_SPLASH);
-        copyright.set(SCREEN_WIDTH / 4.5f + 12f, SCREEN_HEIGHT / 6f -2f, 25f);
+        copyright.set(SCREEN_WIDTH / 4.5f + 12f, SCREEN_HEIGHT / 6f - 2f, 25f);
         font.setText(SpaceKillerGameConstants.COPYRIGHT, SCREEN_WIDTH / 4.5f, SCREEN_HEIGHT / 6f);
         TextureAtlas atlas = assets.get(SPLASH_ATLAS);
         // Initialize the Animation with the frame interval and array of frames
         walkAnimation = new Animation<>(0.025f, atlas.findRegions("human_running"), LOOP);
-        shapeRenderer = new ShapeRenderer();
         // Instantiate a SpriteBatch for drawing and reset the elapsed animation
         // time to 0
         spriteBatch = new SpriteBatch();
@@ -137,17 +133,13 @@ public final class SplashScreen extends HDScreen {
         // Get current frame of animation for the current stateTime
         TextureRegion currentFrame = walkAnimation.getKeyFrame(stateTime, true);
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
-        shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
-        renderBolts();
         spriteBatch.draw(currentFrame, ((viewport.getWorldWidth() / 3) * stateTime), 0, 150, 150);
         logo.setAlpha(fader.getColor().a);
         logo.draw(spriteBatch);
         font.draw(spriteBatch);
+        renderBolts();
         spriteBatch.end();
-        shapeRenderer.begin(Line);
-        shapeRenderer.circle(copyright.x, copyright.y, copyright.radius);
-        shapeRenderer.end();
         if (stateTime > 5 && stateTimeBefore <= 5) {
             game.goToScreen(MenuScreen.class);
         }
@@ -177,7 +169,6 @@ public final class SplashScreen extends HDScreen {
     @Override
     public void dispose() { // SpriteBatches and Textures must always be disposed
         spriteBatch.dispose();
-        shapeRenderer.dispose();
         poolCircle.free(copyright);
         tweenManager.killAll();
         Texture.clearAllTextures(Gdx.app);
