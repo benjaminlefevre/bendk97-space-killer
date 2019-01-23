@@ -108,11 +108,11 @@ public final class Level1Script extends LevelScript {
 
     @Override
     public void initSpawns() {
-        scriptItemsEasy = new LinkedList<>(randomEasySpawnEnemies(13));
-        scriptItemsMediumLeft = new LinkedList<>(randomMediumSpawnEnemiesComingFromLeft(12));
-        scriptItemsMediumRight = new LinkedList<>(randomMediumSpawnEnemiesComingFromRight(12));
-        scriptItemsHardLeft = new LinkedList<>(randomHardSpawnEnemiesComingFromLeft(12));
-        scriptItemsHardRight = new LinkedList<>(randomHardSpawnEnemiesComingFromRight(12));
+        scriptItemsEasy = new LinkedList<>(randomEasySpawnEnemies(20));
+        scriptItemsMediumLeft = new LinkedList<>(randomMediumSpawnEnemiesComingFromLeft(20));
+        scriptItemsMediumRight = new LinkedList<>(randomMediumSpawnEnemiesComingFromRight(20));
+        scriptItemsHardLeft = new LinkedList<>(randomHardSpawnEnemiesComingFromLeft(20));
+        scriptItemsHardRight = new LinkedList<>(randomHardSpawnEnemiesComingFromRight(20));
         boss = new ScriptItemBuilder().typeShip(BOSS_LEVEL_1).typeSquadron(BOSS_MOVE).velocity(75f).number(1).powerUp(false).displayBonus(true).withBonus(10000).bulletVelocity(ENEMY_BULLET_EASY_VELOCITY).createScriptItem();
     }
 
@@ -157,7 +157,7 @@ public final class Level1Script extends LevelScript {
     }
 
     private void scriptEasyPart(int second) {
-        if (second % 5 == 0) {
+        if (second % 4 == 0) {
             executeScriptFromList(scriptItemsEasy);
         }
     }
@@ -167,10 +167,10 @@ public final class Level1Script extends LevelScript {
             playSound(GO);
         }
         boolean left = random.nextBoolean();
-        if (second % 5 == 0) {
+        if (second % 4 == 0) {
             executeScriptFromList(left ? scriptItemsMediumLeft : scriptItemsMediumRight);
         }
-        if (second % 10 == 0) {
+        if (second % 8 == 0) {
             executeScriptFromList(left ? scriptItemsMediumRight : scriptItemsMediumLeft);
         }
     }
@@ -180,10 +180,10 @@ public final class Level1Script extends LevelScript {
             playSound(GO);
         }
         boolean left = random.nextBoolean();
-        if (second % 5 == 0) {
+        if (second % 3 == 0) {
             executeScriptFromList(left ? scriptItemsHardLeft : scriptItemsHardRight);
         }
-        if (second % 10 == 0) {
+        if (second % 6 == 0) {
             executeScriptFromList(left ? scriptItemsHardRight : scriptItemsHardLeft);
         }
     }

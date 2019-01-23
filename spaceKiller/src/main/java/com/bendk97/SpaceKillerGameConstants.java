@@ -37,25 +37,25 @@ public class SpaceKillerGameConstants {
     public final static float PLAYER_BULLET_VELOCITY = 400.0f;
 
     // enemies level 1
-    public final static int BOSS_LEVEL1_GAUGE = 300;
+    public final static int BOSS_LEVEL1_GAUGE = 350;
     public final static float SHIP_WIDTH = 5f;
-    public final static float ENEMY_VELOCITY_EASY = 200f;
-    public final static float ENEMY_VELOCITY_MEDIUM = 250f;
-    public final static float ENEMY_VELOCITY_HARD = 300f;
+    public final static float ENEMY_VELOCITY_EASY = 250f;
+    public final static float ENEMY_VELOCITY_MEDIUM = 300f;
+    public final static float ENEMY_VELOCITY_HARD = 325f;
     public final static int BONUS_SQUADRON_EASY = 100;
     public final static int BONUS_SQUADRON_MEDIUM = 150;
     public final static int BONUS_SQUADRON_HARD = 200;
 
-    public final static float ENEMY_BULLET_EASY_VELOCITY = 250.0f;
-    public final static float ENEMY_BULLET_MEDIUM_VELOCITY = 300.0f;
+    public final static float ENEMY_BULLET_EASY_VELOCITY = 275.0f;
+    public final static float ENEMY_BULLET_MEDIUM_VELOCITY = 350.0f;
     public final static float ENEMY_BULLET_HARD_VELOCITY = 450.0f;
 
-    public final static int STANDARD_RATE_SHOOT = 150;
-    public final static int MEDIUM_RATE_SHOOT = 130;
+    public final static int STANDARD_RATE_SHOOT = 130;
+    public final static int MEDIUM_RATE_SHOOT = 110;
 
     // enemies level 2
     public final static int BOSS_LEVEL2_GAUGE = 400;
-    public final static float ENEMY_LEVEL2_VELOCITY_EASY = 225f;
+    public final static float ENEMY_LEVEL2_VELOCITY_EASY = 250f;
     public final static float ENEMY_LEVEL2_VELOCITY_MEDIUM = 275f;
     public final static float ENEMY_LEVEL2_VELOCITY_HARD = 300f;
     public final static int BONUS_LEVEL2_SQUADRON_EASY = 150;
