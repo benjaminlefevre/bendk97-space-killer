@@ -407,7 +407,7 @@ public class EnemyEntityFactoryTest {
         );
         verify(sprites).findRegion("boss-level1");
         EnemyComponent enemyComponent = ComponentMapperHelper.enemy.get(boss);
-        assertThat(enemyComponent.getLifeGauge()).isEqualTo(300);
+        assertThat(enemyComponent.getLifeGauge()).isEqualTo(350);
     }
 
     @Test

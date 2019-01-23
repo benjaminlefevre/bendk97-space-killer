@@ -55,21 +55,21 @@ public class Level1ScriptTest extends LevelScriptTest{
     public void thirteen_enemies_squadrons_happen_during_first_part_of_level() {
         scripting = spy(scripting);
         launchScriptTimer(60);
-        verify(scripting, times(13)).executeScriptFromList(any(LinkedList.class));
+        verify(scripting, times(16)).executeScriptFromList(any(LinkedList.class));
     }
 
     @Test
     public void eighteen_enemies_squadrons_happen_during_second_part_of_level() {
         scripting = spy(scripting);
         launchScriptTimer(61, 120);
-        verify(scripting, times(18)).executeScriptFromList(any(LinkedList.class));
+        verify(scripting, times(23)).executeScriptFromList(any(LinkedList.class));
     }
 
     @Test
     public void eighteen_enemies_squadrons_happen_during_last_part_of_level() {
         scripting = spy(scripting);
         launchScriptTimer(121, 180);
-        verify(scripting, times(18)).executeScriptFromList(any(LinkedList.class));
+        verify(scripting, times(30)).executeScriptFromList(any(LinkedList.class));
     }
 
     @Test
