@@ -34,7 +34,7 @@ Generated with this [gradle plugin](https://github.com/vanniktech/gradle-depende
 
 ## LICENSE
 
-This project is licenced under the MIT license.
+This project is licenced under the GPLv3 license.
 
 For more details check the [LICENCE](LICENSE) file
 
