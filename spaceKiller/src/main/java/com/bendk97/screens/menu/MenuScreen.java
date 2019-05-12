@@ -24,7 +24,7 @@ import com.bendk97.Settings;
 import com.bendk97.SpaceKillerGame;
 import com.bendk97.assets.GameAssets;
 import com.bendk97.screens.HDScreen;
-import com.bendk97.screens.levels.Level1Screen;
+import com.bendk97.screens.levels.*;
 import com.google.common.collect.Sets;
 
 import java.util.Set;
@@ -50,6 +50,9 @@ public final class MenuScreen extends HDScreen {
     private static final String VIRTUAL_PAD_AUTOFIRE = "virtual pad\n\n   / autofire";
     private static final String LIGHT_FX = "light fx";
     private static final String VIBRATION = "vibration";
+    private static final String LEVEL_1 = "level 1";
+    private static final String LEVEL_2 = "level 2";
+    private static final String LEVEL_3 = "level 3";
     private static final String BACK = "back";
     protected static final Color WHITE_ALPHA = new Color(1f, 1f, 1f, 0.75f);
     private SpriteBatch batcher;
@@ -259,7 +262,7 @@ public final class MenuScreen extends HDScreen {
 
         addButtons(mainMenuButtons);
 
-        onClickPlayButton(playButton);
+        onClickPlayButton(playButton, buttonStyle, mainMenuButtons);
         onClickHighscoresButton(highscoresButton, buttonStyle, mainMenuButtons);
         onClickSettingsButton(settingsButton, buttonStyle, mainMenuButtons);
         onClickHelpButton(helpButton, mainMenuButtons);
@@ -282,13 +285,46 @@ public final class MenuScreen extends HDScreen {
         actionWhenClick(helpButton, mainMenuButtons, helpScreen);
     }
 
-    private void onClickPlayButton(TextButton playButton) {
-        playButton.addListener(new InputListener() {
+    private void onClickPlayButton(TextButton playButton, TextButtonStyle buttonStyle, Set<TextButton> mainMenuButtons) {
+        TextButton back = createTextButton(BACK, buttonStyle, 100, 75, 200, 75);
+
+        TextButtonStyle style = new TextButtonStyle();
+        style.font = assets.get(FONT_SPACE_KILLER_SMALL);
+        style.fontColor = WHITE;
+
+        TextButton level1 = createTextButton(LEVEL_1, style, 100, 425, 200, 75);
+        TextButton level2 = createTextButton(LEVEL_2, style, 100, 350, 200, 75);
+        TextButton level3 = createTextButton(LEVEL_3, style, 100, 275, 200, 75);
+
+        Set<TextButton> levelButtons = Sets.newHashSet(back, level1, level2, level3);
+
+        replaceButtonsByNewOnesOnClick(playButton, mainMenuButtons, levelButtons);
+
+        onClickLevelButton(level1, Level.Level1);
+        onClickLevelButton(level2, Level.Level2);
+        onClickLevelButton(level3, Level.Level3);
+        onClickBackButton(back, mainMenuButtons, levelButtons);
+    }
+
+    private void onClickLevelButton(TextButton levelButton, Level level) {
+        levelButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 assets.playSound(MENU_CLICK);
                 assets.get(MENU_MUSIC).stop();
-                game.goToScreen(Level1Screen.class);
+                Class<? extends LevelScreen> levelScreen;
+                switch(level) {
+                    case Level2:
+                        levelScreen = Level2Screen.class;
+                        break;
+                    case Level3:
+                        levelScreen = Level3Screen.class;
+                        break;
+                    case Level1:
+                    default:
+                        levelScreen = Level1Screen.class;
+                }
+                game.goToScreen(levelScreen);
                 return true;
             }
         });
