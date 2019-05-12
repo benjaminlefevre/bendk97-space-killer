@@ -23,6 +23,8 @@ import com.bendk97.google.FakePlayServices;
 import com.bendk97.google.PlayServices;
 import com.bendk97.runner.GdxTestRunner;
 import com.bendk97.screens.levels.Level1Screen;
+import com.bendk97.screens.levels.Level2Screen;
+import com.bendk97.screens.levels.Level3Screen;
 import com.bendk97.share.IntentShare;
 import org.assertj.core.util.Sets;
 import org.junit.Before;
@@ -129,13 +131,38 @@ public class MenuScreenTest {
     }
 
     @Test
-    public void player_clicks_play_button() {
+    public void player_clicks_play_button_level1() {
         TextButton playButton = getButton("play");
         touch(playButton);
-        verify(assets).playSound(MENU_CLICK);
+        TextButton level1Button = getButton("level 1");
+        touch(level1Button);
+        verify(assets, times(2)).playSound(MENU_CLICK);
         verify(assets.get(MENU_MUSIC)).stop();
         verify(game).goToScreen(Level1Screen.class);
     }
+
+    @Test
+    public void player_clicks_play_button_level2() {
+        TextButton playButton = getButton("play");
+        touch(playButton);
+        TextButton level1Button = getButton("level 2");
+        touch(level1Button);
+        verify(assets, times(2)).playSound(MENU_CLICK);
+        verify(assets.get(MENU_MUSIC)).stop();
+        verify(game).goToScreen(Level2Screen.class);
+    }
+
+    @Test
+    public void player_clicks_play_button_level3() {
+        TextButton playButton = getButton("play");
+        touch(playButton);
+        TextButton level1Button = getButton("level 3");
+        touch(level1Button);
+        verify(assets, times(2)).playSound(MENU_CLICK);
+        verify(assets.get(MENU_MUSIC)).stop();
+        verify(game).goToScreen(Level3Screen.class);
+    }
+
 
     @Test
     public void player_clicks_scores_button() {
