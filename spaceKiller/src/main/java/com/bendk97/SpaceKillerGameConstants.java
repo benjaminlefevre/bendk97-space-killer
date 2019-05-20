@@ -34,6 +34,7 @@ public class SpaceKillerGameConstants {
     public final static long FIRE_DELAY_SIDE_FAST = 400;
     public final static long FIRE_DELAY_SIDE_VERY_FAST = 200;
     public final static float PLAYER_VELOCITY = 300.0f;
+    public final static float PLAYER_VELOCITY_VIRTUAL_PAD = 500.0f;
     public final static float PLAYER_BULLET_VELOCITY = 400.0f;
 
     // enemies level 1

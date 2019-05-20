@@ -27,6 +27,7 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
     private final EntityFactory entityFactory;
     private final GameAssets assets;
     private final boolean autoFire;
+    private final float playerVelocity;
     private final PlayerListener playerListener;
     private long lastShoot = 0;
     private long lastShootSide = 0;
@@ -34,12 +35,13 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
 
     public InputListenerImpl(Entity player, PlayerListener playerListener, EntityFactory entityFactory,
                              GameAssets assets,
-                             boolean autoFire) {
+                             boolean isVirtualPad) {
         this.player = player;
         this.playerListener = playerListener;
         this.assets = assets;
         this.entityFactory = entityFactory;
-        this.autoFire = autoFire;
+        this.autoFire = isVirtualPad;
+        this.playerVelocity = isVirtualPad ? PLAYER_VELOCITY_VIRTUAL_PAD : PLAYER_VELOCITY;
     }
 
 
@@ -79,27 +81,27 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
 
     @Override
     public void goLeft() {
-        ComponentMapperHelper.velocity.get(player).x = -PLAYER_VELOCITY;
+        ComponentMapperHelper.velocity.get(player).x = -playerVelocity;
         ComponentMapperHelper.state.get(player).set(GO_LEFT);
     }
 
     @Override
     public void goRight() {
-        ComponentMapperHelper.velocity.get(player).x = PLAYER_VELOCITY;
+        ComponentMapperHelper.velocity.get(player).x = playerVelocity;
         ComponentMapperHelper.state.get(player).set(GO_RIGHT);
     }
 
     @Override
     public void goTop() {
         ComponentMapperHelper.velocity.get(player).x = 0;
-        ComponentMapperHelper.velocity.get(player).y = PLAYER_VELOCITY;
+        ComponentMapperHelper.velocity.get(player).y = playerVelocity;
         ComponentMapperHelper.state.get(player).set(ANIMATION_MAIN);
     }
 
     @Override
     public void goDown() {
         ComponentMapperHelper.velocity.get(player).x = 0;
-        ComponentMapperHelper.velocity.get(player).y = -PLAYER_VELOCITY;
+        ComponentMapperHelper.velocity.get(player).y = -playerVelocity;
         ComponentMapperHelper.state.get(player).set(ANIMATION_MAIN);
     }
 
@@ -107,8 +109,8 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
     public void goLeftTop() {
         Vector2 vector2 = poolVector2.getVector2(-1f, 1f);
         vector2.nor();
-        ComponentMapperHelper.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
-        ComponentMapperHelper.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
+        ComponentMapperHelper.velocity.get(player).x = playerVelocity * vector2.x;
+        ComponentMapperHelper.velocity.get(player).y = playerVelocity * vector2.y;
         ComponentMapperHelper.state.get(player).set(GO_LEFT);
         poolVector2.free(vector2);
     }
@@ -117,8 +119,8 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
     public void goLeftDown() {
         Vector2 vector2 = poolVector2.getVector2(-1f, -1f);
         vector2.nor();
-        ComponentMapperHelper.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
-        ComponentMapperHelper.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
+        ComponentMapperHelper.velocity.get(player).x = playerVelocity * vector2.x;
+        ComponentMapperHelper.velocity.get(player).y = playerVelocity * vector2.y;
         ComponentMapperHelper.state.get(player).set(GO_LEFT);
         poolVector2.free(vector2);
     }
@@ -127,8 +129,8 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
     public void goRightTop() {
         Vector2 vector2 = poolVector2.getVector2(1f, 1f);
         vector2.nor();
-        ComponentMapperHelper.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
-        ComponentMapperHelper.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
+        ComponentMapperHelper.velocity.get(player).x = playerVelocity * vector2.x;
+        ComponentMapperHelper.velocity.get(player).y = playerVelocity * vector2.y;
         ComponentMapperHelper.state.get(player).set(GO_RIGHT);
         poolVector2.free(vector2);
     }
@@ -137,8 +139,8 @@ public class InputListenerImpl extends EntitySystem implements com.bendk97.liste
     public void goRightBottom() {
         Vector2 vector2 = poolVector2.getVector2(1f, -1f);
         vector2.nor();
-        ComponentMapperHelper.velocity.get(player).x = PLAYER_VELOCITY * vector2.x;
-        ComponentMapperHelper.velocity.get(player).y = PLAYER_VELOCITY * vector2.y;
+        ComponentMapperHelper.velocity.get(player).x = playerVelocity * vector2.x;
+        ComponentMapperHelper.velocity.get(player).y = playerVelocity * vector2.y;
         ComponentMapperHelper.state.get(player).set(GO_RIGHT);
         poolVector2.free(vector2);
     }
