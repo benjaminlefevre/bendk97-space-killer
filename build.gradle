@@ -32,7 +32,7 @@ allprojects {
         mockitoVersion = '3.0.0'
         junitVersion = '4.12'
         assertJVersion = '3.12.2'
-        guavaVersion = '28.0-android'
+        guavaVersion = '30.0-android'
     }
 
     repositories {
