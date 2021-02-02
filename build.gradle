@@ -21,7 +21,7 @@ allprojects {
     version = '1.0'
     ext {
         appName = "space-killer"
-        gdxVersion = '1.9.10'
+        gdxVersion = '1.9.14'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.3'
         postprocessingVersion = '1.0.8'
